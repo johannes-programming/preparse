@@ -19,13 +19,14 @@ dependencies = [
     "click>=8.1.7",
     "datarepr>=0.0.4",
     "makeprop>=0.1.0",
+    "tofunc>=1.0",
 ]
 description = "preparse arguments"
 keywords = []
 name = "preparse"
 readme = "README.rst"
 requires-python = ">=3.8"
-version = "0.0.2"
+version = "0.0.3+local"
 
 [project.license]
 file = "LICENSE.txt"

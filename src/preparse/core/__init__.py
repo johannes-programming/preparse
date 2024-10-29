@@ -1,6 +1,7 @@
 import dataclasses
 import enum
 import functools
+import inspect
 import operator
 import os
 import sys
@@ -11,8 +12,9 @@ from typing import *
 import click as cl
 from datarepr import datarepr
 from makeprop import makeprop
+from tofunc import tofunc
 
-__all__ = ["PreParser"]
+__all__ = ["Abbrev", "Nargs", "PreParser"]
 
 
 class Abbrev(enum.IntEnum):
@@ -36,7 +38,7 @@ class PreParser:
         abbrev: Any = Abbrev.COMPLETE,
         permutate: Any = True,
         posix: Any = "infer",
-    ):
+    ) -> None:
         self._optdict = dict()
         self.optdict = optdict
         self.prog = prog
@@ -45,16 +47,53 @@ class PreParser:
         self.posix = posix
 
     def __repr__(self) -> str:
+        """Return repr(self)."""
         return datarepr(type(self).__name__, **self.todict())
 
     @makeprop()
-    def abbrev(self, value):
+    def abbrev(self, value: SupportsInt) -> Abbrev:
+        """Property that decides how to handle abbreviations."""
         return Abbrev(value)
 
-    def click(self, *, cmd=True, ctx=True):
-        return Click(parser=self, cmd=cmd, ctx=ctx)
+    @tofunc
+    @dataclasses.dataclass
+    class click:
+        """Return a decorator that infuses the current instance into parse_args."""
 
-    def clickCommand(self, cmd: cl.Command):
+        _self: Any
+        cmd: Any = True
+        ctx: Any = True
+
+        @functools.singledispatchmethod
+        def __call__(self, target):
+            target.parse_args = self(target.parse_args)
+            return target
+
+        @__call__.register
+        def _(self, target: types.FunctionType):
+            @functools.wraps(target)
+            def ans(cmd, ctx, args):
+                p = self._self.copy()
+                if self.cmd:
+                    p.clickCommand(cmd)
+                if self.ctx:
+                    p.clickContext(ctx)
+                return target(cmd, ctx, p.parse_args(args))
+
+            return ans
+
+        @__call__.register
+        def _(self, target: types.MethodType):
+            func = self(target.__func__)
+            ans = types.MethodType(func, target.__self__)
+            return ans
+
+    click.__signature__ = inspect.signature(click).replace(
+        return_annotation=click.__wrapped__
+    )
+
+    def clickCommand(self, cmd: cl.Command) -> None:
+        """Reflect a click.Command object."""
         optdict = dict()
         for p in cmd.params:
             if not isinstance(p, cl.Option):
@@ -70,14 +109,17 @@ class PreParser:
         self.optdict.clear()
         self.optdict.update(optdict)
 
-    def clickContext(self, ctx: cl.Context):
+    def clickContext(self, ctx: cl.Context) -> None:
+        """Reflect a click.Context object."""
         self.prog = ctx.info_name
 
-    def copy(self):
+    def copy(self) -> Self:
+        """Return a copy."""
         return type(self)(**self.todict())
 
     @makeprop()
-    def optdict(self, value):
+    def optdict(self, value: Any) -> dict:
+        """Dictionary of options."""
         if value is None:
             self._optdict.clear()
             return self._optdict
@@ -86,32 +128,42 @@ class PreParser:
         self._optdict.update(value)
         return self._optdict
 
-    def parse_args(self, args: Optional[Iterable] = None) -> List[str]:
+    def parse_args(
+        self,
+        args: Optional[Iterable] = None,
+    ) -> List[str]:
+        """Parse args."""
         if args is None:
             args = sys.argv[1:]
-        return _Parsing(
+        return Parsing(
             parser=self.copy(),
-            args=list(args),
+            args=[str(a) for a in args],
         ).ans
 
     @makeprop()
-    def permutate(self, value):
+    def permutate(self, value: Any) -> bool:
+        """Property that decides if the arguments will be permutated."""
         return bool(value)
 
     @makeprop()
-    def posix(self, value):
+    def posix(self, value: Any) -> bool:
+        """Property that decides if posix parsing is used, \
+i.e. a positional argument causes all the arguments after it \
+to be also interpreted as positional."""
         if value == "infer":
             value = os.environ.get("POSIXLY_CORRECT")
         value = bool(value)
         return value
 
     @makeprop()
-    def prog(self, value):
+    def prog(self, value: Any) -> str:
+        """Property that represents the name of the program."""
         if value is None:
             value = os.path.basename(sys.argv[0])
         return str(value)
 
     def todict(self) -> dict:
+        """Return a dict representing the current instance."""
         return dict(
             optdict=self.optdict,
             prog=self.prog,
@@ -120,76 +172,40 @@ class PreParser:
             posix=self.posix,
         )
 
-    def warn(self, message):
+    def warn(self, message: Any) -> None:
+        """Warn about something."""
         warnings.warn("%s: %s" % (self.prog, message))
 
-    def warnAboutUnrecognizedOption(self, option):
+    def warnAboutUnrecognizedOption(self, option: Any) -> None:
+        """Warn about an unrecognized option."""
         self.warn("unrecognized option %r" % option)
 
-    def warnAboutInvalidOption(self, option):
+    def warnAboutInvalidOption(self, option: Any) -> None:
+        """Warn about an invalid option."""
         self.warn("invalid option -- %r" % option)
 
-    def warnAboutAmbigousOption(self, option, possibilities):
+    def warnAboutAmbiguousOption(self, option: Any, possibilities: Iterable) -> None:
+        """Warn about an ambiguous option."""
         msg = "option %r is ambiguous; possibilities:" % option
         for x in possibilities:
             msg += " %r" % x
         self.warn(msg)
 
-    def warnAboutNotAllowedArgument(self, option):
+    def warnAboutUnallowedArgument(self, option: Any) -> None:
+        """Warn about an unallowed argument."""
         self.warn("option %r doesn't allow an argument" % option)
 
-    def warnAboutRequiredArgument(self, option):
+    def warnAboutRequiredArgument(self, option: Any) -> None:
+        """Warn about a required argument."""
         self.warn("option requires an argument -- %r" % option)
 
 
 @dataclasses.dataclass
-class Click:
-    parser: Any
-    cmd: Any
-    ctx: Any
-
-    def __call__(self, target: Any):
-        if isinstance(target, types.FunctionType):
-            return self._f(target)
-        elif isinstance(target, types.MethodType):
-            return self._m(target)
-        elif isinstance(target, type):
-            return self._t(target)
-        else:
-            return self._o(target)
-
-    def _f(self, target):
-        @functools.wraps(target)
-        def ans(cmd, ctx, args):
-            p = self.parser.copy()
-            if self.cmd:
-                p.clickCommand(cmd)
-            if self.ctx:
-                p.clickContext(ctx)
-            return target(cmd, ctx, p.parse_args(args))
-
-        return ans
-
-    def _m(self, target):
-        func = self._f(target.__func__)
-        ans = types.MethodType(func, target.__self__)
-        return ans
-
-    def _t(self, target):
-        target.parse_args = self._f(target.parse_args)
-        return target
-
-    def _o(self, target):
-        target.parse_args = self._m(target.parse_args)
-        return target
-
-
-@dataclasses.dataclass
-class _Parsing:
+class Parsing:
     parser: PreParser
     args: list[str]
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self.ans = list()
         self.spec = list()
         optn = 0
@@ -197,10 +213,14 @@ class _Parsing:
             optn = self.tick(optn)
         if optn == 1:
             self.parser.warnAboutRequiredArgument(self.ans[-1])
+        self.dumpspec()
+
+    def dumpspec(self):
         self.ans += self.spec
+        self.spec.clear()
 
     @functools.cached_property
-    def islongonly(self):
+    def islongonly(self) -> bool:
         for k in self.optdict.keys():
             if len(k) < 3:
                 continue
@@ -212,7 +232,7 @@ class _Parsing:
         return False
 
     @functools.cached_property
-    def optdict(self):
+    def optdict(self) -> Dict[str, Nargs]:
         ans = dict()
         for k, v in self.parser.optdict.items():
             ans[str(k)] = Nargs(v)
@@ -242,21 +262,13 @@ class _Parsing:
             return "break"
         elif arg.startswith("-") and arg != "-":
             if arg.startswith("--") or self.islongonly:
-                return self.tick_long(arg)
+                return self.tick_opt_long(arg)
             else:
-                return self.tick_short(arg)
+                return self.tick_opt_short(arg)
         else:
-            if self.parser.posix:
-                self.spec.append(arg)
-                return "break"
-            elif self.parser.permutate:
-                self.spec.append(arg)
-                return 0
-            else:
-                self.ans.append(arg)
-                return 0
+            return self.tick_pos(arg)
 
-    def tick_long(self, arg: str):
+    def tick_opt_long(self, arg: str):
         try:
             i = arg.index("=")
         except ValueError:
@@ -268,7 +280,7 @@ class _Parsing:
             self.ans.append(arg)
             return 0
         if len(possibilities) > 1:
-            self.parser.warnAboutAmbigousOption(arg, possibilities)
+            self.parser.warnAboutAmbiguousOption(arg, possibilities)
             self.ans.append(arg)
             return 0
         opt = possibilities[0]
@@ -278,12 +290,12 @@ class _Parsing:
             self.ans.append(arg)
         if "=" in arg:
             if self.optdict[opt] == 0:
-                self.parser.warnAboutNotAllowedArgument(opt)
+                self.parser.warnAboutUnallowedArgument(opt)
             return 0
         else:
             return self.optdict[opt]
 
-    def tick_short(self, arg: str):
+    def tick_opt_short(self, arg: str):
         self.ans.append(arg)
         for i in range(1 - len(arg), 0):
             optn = self.optdict.get("-" + arg[i])
@@ -295,3 +307,14 @@ class _Parsing:
             if i == -1 and optn == 1:
                 return 1
         return 0
+
+    def tick_pos(self, arg:str):
+        if self.parser.posix:
+            self.spec.append(arg)
+            return "break"
+        elif self.parser.permutate:
+            self.spec.append(arg)
+            return 0
+        else:
+            self.ans.append(arg)
+            return 0
