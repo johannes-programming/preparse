@@ -9,19 +9,24 @@ authors = [
     { email = "johannes-programming@mailfence.com", name = "Johannes" },
 ]
 classifiers = [
-    "Development Status :: 1 - Planning",
+    "Development Status :: 2 - Pre-Alpha",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
 ]
-dependencies = []
-description = "preparse"
+dependencies = [
+    "click>=8.1.7",
+    "datarepr>=0.0.4",
+    "makefunc>=0.0.3",
+    "makeprop>=0.1.0",
+]
+description = "preparse arguments"
 keywords = []
 name = "preparse"
 readme = "README.rst"
-requires-python = ">=3.12.5"
-version = "0.0.0.dev0"
+requires-python = ">=3.8"
+version = "0.0.1.dev0"
 
 [project.license]
 file = "LICENSE.txt"
@@ -29,4 +34,6 @@ file = "LICENSE.txt"
 [project.urls]
 Documentation = "https://pypi.org/project/preparse"
 Download = "https://pypi.org/project/preparse/#files"
+Index = "https://pypi.org/project/preparse"
 Source = "https://github.com/johannes-programming/preparse"
+Website = "https://preparse.johannes-programming.online/"
