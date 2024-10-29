@@ -163,9 +163,9 @@ class Click:
         def ans(cmd, ctx, args):
             p = self.parser.copy()
             if self.cmd:
-                p = p.clickCommand(cmd)
+                p.clickCommand(cmd)
             if self.ctx:
-                p = p.clickContext(ctx)
+                p.clickContext(ctx)
             return target(cmd, ctx, p.parse_args(args))
 
         return ans
@@ -176,11 +176,11 @@ class Click:
         return ans
 
     def _t(self, target):
-        target.parse_args = self._f(target)
+        target.parse_args = self._f(target.parse_args)
         return target
 
     def _o(self, target):
-        target.parse_args = self._m(target)
+        target.parse_args = self._m(target.parse_args)
         return target
 
 
@@ -214,7 +214,7 @@ class _Parsing:
     @functools.cached_property
     def optdict(self):
         ans = dict()
-        for k, v in self.parser.items():
+        for k, v in self.parser.optdict.items():
             ans[str(k)] = Nargs(v)
         return ans
 
