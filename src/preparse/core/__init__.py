@@ -12,7 +12,7 @@ import click as cl
 from datarepr import datarepr
 from makeprop import makeprop
 
-__all__ = ["PreParser"]
+__all__ = ["Abbrev", "Nargs", "PreParser"]
 
 
 class Abbrev(enum.IntEnum):
