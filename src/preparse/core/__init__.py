@@ -10,7 +10,6 @@ from typing import *
 
 import click as cl
 from datarepr import datarepr
-from makefunc import makefunc
 from makeprop import makeprop
 
 __all__ = ["PreParser"]
