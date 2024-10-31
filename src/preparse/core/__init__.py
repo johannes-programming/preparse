@@ -89,7 +89,7 @@ class PreParser:
     def parse_args(self, args: Optional[Iterable] = None) -> List[str]:
         if args is None:
             args = sys.argv[1:]
-        return _Parsing(
+        return Parsing(
             parser=self.copy(),
             args=list(args),
         ).ans
@@ -185,7 +185,7 @@ class Click:
 
 
 @dataclasses.dataclass
-class _Parsing:
+class Parsing:
     parser: PreParser
     args: list[str]
 
