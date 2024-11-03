@@ -322,5 +322,6 @@ class Parsing:
             self.spec.append(arg)
             return 0
         else:
-            self.ans.append(arg)
+            self.spec.append(arg)
+            self.dumpspec()
             return 0
