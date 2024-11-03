@@ -25,8 +25,8 @@ description = "preparse arguments"
 keywords = []
 name = "preparse"
 readme = "README.rst"
-requires-python = ">=3.8"
-version = "0.0.4"
+requires-python = ">=3.11"
+version = "0.0.5"
 
 [project.license]
 file = "LICENSE.txt"
