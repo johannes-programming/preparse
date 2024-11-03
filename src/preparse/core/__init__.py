@@ -308,7 +308,7 @@ class Parsing:
                 return 1
         return 0
 
-    def tick_pos(self, arg:str):
+    def tick_pos(self, arg: str):
         if self.parser.posix:
             self.spec.append(arg)
             return "break"

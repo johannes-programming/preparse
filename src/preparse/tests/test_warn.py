@@ -1,6 +1,8 @@
 import unittest
 import warnings
+
 from preparse.core import PreParser
+
 
 class TestPreParserWarnings(unittest.TestCase):
 
@@ -20,7 +22,10 @@ class TestPreParserWarnings(unittest.TestCase):
     def test_warn_about_ambiguous_option(self):
         with self.assertWarns(UserWarning) as warn:
             self.parser.warnAboutAmbiguousOption("--amb", ["--amber", "--ambush"])
-        self.assertIn("option '--amb' is ambiguous; possibilities: '--amber' '--ambush'", str(warn.warning))
+        self.assertIn(
+            "option '--amb' is ambiguous; possibilities: '--amber' '--ambush'",
+            str(warn.warning),
+        )
 
     def test_warn_about_unallowed_argument(self):
         with self.assertWarns(UserWarning) as warn:
@@ -31,6 +36,7 @@ class TestPreParserWarnings(unittest.TestCase):
         with self.assertWarns(UserWarning) as warn:
             self.parser.warnAboutRequiredArgument("--requires")
         self.assertIn("option requires an argument -- '--requires'", str(warn.warning))
+
 
 if __name__ == "__main__":
     unittest.main()
