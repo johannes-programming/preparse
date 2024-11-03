@@ -315,13 +315,11 @@ class Parsing:
         return 0
 
     def tick_pos(self, arg: str):
+        self.spec.append(arg)
         if self.parser.posix:
-            self.spec.append(arg)
             return "break"
         elif self.parser.permutate:
-            self.spec.append(arg)
             return 0
         else:
-            self.spec.append(arg)
             self.dumpspec()
             return 0
