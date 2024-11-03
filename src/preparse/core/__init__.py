@@ -47,18 +47,18 @@ class PreParser:
         self.posix = posix
 
     def __repr__(self) -> str:
-        """Return repr(self)."""
+        "Return repr(self)."
         return datarepr(type(self).__name__, **self.todict())
 
     @makeprop()
     def abbrev(self, value: SupportsInt) -> Abbrev:
-        """Property that decides how to handle abbreviations."""
+        "Property that decides how to handle abbreviations."
         return Abbrev(value)
 
     @tofunc
     @dataclasses.dataclass
     class click:
-        """Return a decorator that infuses the current instance into parse_args."""
+        "Return a decorator that infuses the current instance into parse_args."
 
         _self: Any
         cmd: Any = True
@@ -93,7 +93,7 @@ class PreParser:
     )
 
     def clickCommand(self, cmd: cl.Command) -> None:
-        """Reflect a click.Command object."""
+        "Reflect a click.Command object."
         optdict = dict()
         for p in cmd.params:
             if not isinstance(p, cl.Option):
@@ -110,16 +110,16 @@ class PreParser:
         self.optdict.update(optdict)
 
     def clickContext(self, ctx: cl.Context) -> None:
-        """Reflect a click.Context object."""
+        "Reflect a click.Context object."
         self.prog = ctx.info_name
 
     def copy(self) -> Self:
-        """Return a copy."""
+        "Return a copy."
         return type(self)(**self.todict())
 
     @makeprop()
     def optdict(self, value: Any) -> dict:
-        """Dictionary of options."""
+        "Dictionary of options."
         if value is None:
             self._optdict.clear()
             return self._optdict
@@ -132,7 +132,7 @@ class PreParser:
         self,
         args: Optional[Iterable] = None,
     ) -> List[str]:
-        """Parse args."""
+        "Parse args."
         if args is None:
             args = sys.argv[1:]
         return Parsing(
@@ -142,14 +142,14 @@ class PreParser:
 
     @makeprop()
     def permutate(self, value: Any) -> bool:
-        """Property that decides if the arguments will be permutated."""
+        "Property that decides if the arguments will be permutated."
         return bool(value)
 
     @makeprop()
     def posix(self, value: Any) -> bool:
-        """Property that decides if posix parsing is used, \
-i.e. a positional argument causes all the arguments after it \
-to be also interpreted as positional."""
+        "Property that decides if posix parsing is used, "\
+        "i.e. a positional argument causes all the arguments after it "\
+        "to be also interpreted as positional."
         if value == "infer":
             value = os.environ.get("POSIXLY_CORRECT")
         value = bool(value)
@@ -157,13 +157,13 @@ to be also interpreted as positional."""
 
     @makeprop()
     def prog(self, value: Any) -> str:
-        """Property that represents the name of the program."""
+        "Property that represents the name of the program."
         if value is None:
             value = os.path.basename(sys.argv[0])
         return str(value)
 
     def todict(self) -> dict:
-        """Return a dict representing the current instance."""
+        "Return a dict representing the current instance."
         return dict(
             optdict=self.optdict,
             prog=self.prog,
@@ -173,30 +173,30 @@ to be also interpreted as positional."""
         )
 
     def warn(self, message: Any) -> None:
-        """Warn about something."""
+        "Warn about something."
         warnings.warn("%s: %s" % (self.prog, message))
 
     def warnAboutUnrecognizedOption(self, option: Any) -> None:
-        """Warn about an unrecognized option."""
+        "Warn about an unrecognized option."
         self.warn("unrecognized option %r" % option)
 
     def warnAboutInvalidOption(self, option: Any) -> None:
-        """Warn about an invalid option."""
+        "Warn about an invalid option."
         self.warn("invalid option -- %r" % option)
 
     def warnAboutAmbiguousOption(self, option: Any, possibilities: Iterable) -> None:
-        """Warn about an ambiguous option."""
+        "Warn about an ambiguous option."
         msg = "option %r is ambiguous; possibilities:" % option
         for x in possibilities:
             msg += " %r" % x
         self.warn(msg)
 
     def warnAboutUnallowedArgument(self, option: Any) -> None:
-        """Warn about an unallowed argument."""
+        "Warn about an unallowed argument."
         self.warn("option %r doesn't allow an argument" % option)
 
     def warnAboutRequiredArgument(self, option: Any) -> None:
-        """Warn about a required argument."""
+        "Warn about a required argument."
         self.warn("option requires an argument -- %r" % option)
 
 
@@ -212,7 +212,7 @@ class Parsing:
         while self.args:
             optn = self.tick(optn)
         if optn == 1:
-            self.parser.warnAboutRequiredArgument(self.ans[-1])
+            self.lasttick()
         self.dumpspec()
 
     def dumpspec(self):
@@ -230,6 +230,9 @@ class Parsing:
                 continue
             return True
         return False
+    
+    def lasttick(self):
+        self.parser.warnAboutRequiredArgument(self.ans[-1])
 
     @functools.cached_property
     def optdict(self) -> Dict[str, Nargs]:
@@ -261,12 +264,15 @@ class Parsing:
             self.ans.append("--")
             return "break"
         elif arg.startswith("-") and arg != "-":
-            if arg.startswith("--") or self.islongonly:
-                return self.tick_opt_long(arg)
-            else:
-                return self.tick_opt_short(arg)
+            return self.tick_opt(arg)
         else:
             return self.tick_pos(arg)
+    
+    def tick_opt(self, arg: str):
+        if arg.startswith("--") or self.islongonly:
+            return self.tick_opt_long(arg)
+        else:
+            return self.tick_opt_short(arg)
 
     def tick_opt_long(self, arg: str):
         try:
@@ -309,12 +315,11 @@ class Parsing:
         return 0
 
     def tick_pos(self, arg: str):
+        self.spec.append(arg)
         if self.parser.posix:
-            self.spec.append(arg)
             return "break"
         elif self.parser.permutate:
-            self.spec.append(arg)
             return 0
         else:
-            self.ans.append(arg)
+            self.dumpspec()
             return 0
