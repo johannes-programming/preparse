@@ -261,6 +261,8 @@ class Parsing:
             self.ans.append(arg)
             return 0
         elif arg == "--":
+            if not self.parser.posix and not self.parser.permutate:
+                self.dumpspec()
             self.ans.append("--")
             return "break"
         elif arg.startswith("-") and arg != "-":
@@ -269,6 +271,8 @@ class Parsing:
             return self.tick_pos(arg)
     
     def tick_opt(self, arg: str):
+        if not self.parser.posix and not self.parser.permutate:
+            self.dumpspec()
         if arg.startswith("--") or self.islongonly:
             return self.tick_opt_long(arg)
         else:
@@ -318,8 +322,5 @@ class Parsing:
         self.spec.append(arg)
         if self.parser.posix:
             return "break"
-        elif self.parser.permutate:
-            return 0
         else:
-            self.dumpspec()
             return 0
