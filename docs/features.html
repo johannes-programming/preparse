@@ -98,6 +98,24 @@
                     Its keys are the options. 
                     Its values specify nargs.
                 </section>
+                <h4 id="PreParser.parse_args"><code><b>parse_args</b></code></h4>
+                <section>
+                    This method is at the core of the class. 
+                    It returns a preparsed list of arguments.
+                </section>
+                <h4 id="PreParser.permutate"><code><b>permutate</b></code></h4>
+                <section>
+                    This property decides whether the arguments are permutated in parsing.
+                </section>
+                <h4 id="PreParser.posix"><code><b>posix</b></code></h4>
+                <section>
+                    This property decides if posix parsing is used, 
+                    i.e. a positional argument causes all the arguments after it 
+                    to be also interpreted as positional.
+                    If <code>"infer"</code> is passed to the property 
+                    then the environmental variable <code>POSIXLY_CORRECT</code>
+                    is used.
+                </section>
             </section>
         </div>
     </body>

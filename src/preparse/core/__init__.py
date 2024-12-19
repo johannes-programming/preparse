@@ -14,7 +14,7 @@ from datarepr import datarepr
 from makeprop import makeprop
 from tofunc import tofunc
 
-__all__ = ["Abbrev", "Nargs", "PreParser"]
+__all__ = ["Abbrev", "Click", "Nargs", "PreParser"]
 
 
 class Abbrev(enum.IntEnum):
