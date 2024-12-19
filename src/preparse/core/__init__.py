@@ -1,8 +1,6 @@
 import dataclasses
 import enum
 import functools
-import inspect
-import operator
 import os
 import sys
 import types
@@ -12,7 +10,6 @@ from typing import *
 import click as cl
 from datarepr import datarepr
 from makeprop import makeprop
-from tofunc import tofunc
 
 __all__ = ["Abbrev", "Click", "Nargs", "PreParser"]
 
