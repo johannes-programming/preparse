@@ -22,6 +22,37 @@ class Abbrev(enum.IntEnum):
     COMPLETE = 1
     KEEP = 2
 
+@dataclasses.dataclass
+class Click:
+    
+    parser: Any
+    cmd: Any = True
+    ctx: Any = True
+
+    @functools.singledispatchmethod
+    def __call__(self, target):
+        target.parse_args = self(target.parse_args)
+        return target
+
+    @__call__.register
+    def _(self, target: types.FunctionType):
+        @functools.wraps(target)
+        def ans(cmd, ctx, args):
+            p = self._self.copy()
+            if self.cmd:
+                p.clickCommand(cmd)
+            if self.ctx:
+                p.clickContext(ctx)
+            return target(cmd, ctx, p.parse_args(args))
+
+        return ans
+
+    @__call__.register
+    def _(self, target: types.MethodType):
+        func = self(target.__func__)
+        ans = types.MethodType(func, target.__self__)
+        return ans
+    
 
 class Nargs(enum.IntEnum):
     NO_ARGUMENT = 0
@@ -55,42 +86,9 @@ class PreParser:
         "Property that decides how to handle abbreviations."
         return Abbrev(value)
 
-    @tofunc
-    @dataclasses.dataclass
-    class click:
+    def click(self, cmd:Any=True, ctx:Any=True) -> Click:
         "Return a decorator that infuses the current instance into parse_args."
-
-        _self: Any
-        cmd: Any = True
-        ctx: Any = True
-
-        @functools.singledispatchmethod
-        def __call__(self, target):
-            target.parse_args = self(target.parse_args)
-            return target
-
-        @__call__.register
-        def _(self, target: types.FunctionType):
-            @functools.wraps(target)
-            def ans(cmd, ctx, args):
-                p = self._self.copy()
-                if self.cmd:
-                    p.clickCommand(cmd)
-                if self.ctx:
-                    p.clickContext(ctx)
-                return target(cmd, ctx, p.parse_args(args))
-
-            return ans
-
-        @__call__.register
-        def _(self, target: types.MethodType):
-            func = self(target.__func__)
-            ans = types.MethodType(func, target.__self__)
-            return ans
-
-    click.__signature__ = inspect.signature(click).replace(
-        return_annotation=click.__wrapped__
-    )
+        return Click(parser=self, cmd=cmd, ctx=ctx)
 
     def clickCommand(self, cmd: cl.Command) -> None:
         "Reflect a click.Command object."
