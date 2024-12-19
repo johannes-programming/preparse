@@ -120,6 +120,38 @@
                     This property represents the name of the program. 
                     If the value passed to the property is <code>None</code>
                     then <code>str(sys.argv[0])</code> is saved.
+                </section>
+                <h4 id="PreParser.todict"><code><b>todict()</b> -&gt; <i>dict</i></code></h4>
+                <section>
+                    This method a dict representing the current instance.
+                </section>
+                <h4 id="PreParser.warn"><code><b>warn(<i>message</i>: <i>Any</i>)</b> -&gt; <i>None</i></code></h4>
+                <section>
+                    This method lauches a warning about something. 
+                </section>
+                <h4 id="PreParser.warnAboutUnrecognizedOption"><code><b>warnAboutUnrecognizedOption(<i>option</i>: <i>Any</i>)</b> -&gt; <i>None</i></code></h4>
+                <section>
+                    This method lauches a warning about an unrecognized option.
+                </section>
+                <h4 id="PreParser.warnAboutInvalidOption"><code><b>warnAboutInvalidOption(<i>option</i>: <i>Any</i>)</b> -&gt; <i>None</i></code></h4>
+                <section>
+                    This method lauches a warning about an invalid option.
+                </section>
+                <h4 id="PreParser.warnAboutAmbiguousOption">
+                    <code><b>warnAboutAmbiguousOption(<i>option</i>: <i>Any</i>,
+                    <i>possibilities</i>: <i>Iterable</i>)</b> -&gt; <i>None</i></code>
+                </h4>
+                <section>
+                    This method lauches a warning about an ambiguous option.
+                </section>
+                <h4 id="PreParser.warnAboutUnallowedArgument"><code><b>warnAboutUnallowedArgument(<i>option</i>: <i>Any</i>)</b> -&gt; <i>None</i></code></h4>
+                <section>
+                    This method lauches a warning about an unallowed argument.
+                </section>
+                <h4 id="PreParser.warnAboutRequiredArgument"><code><b>warnAboutRequiredArgument(<i>option</i>: <i>Any</i>)</b> -&gt; <i>None</i></code></h4>
+                <section>
+                    This method lauches a warning about a required argument.
+                </section>
             </section>
         </div>
     </body>
