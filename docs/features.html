@@ -7,16 +7,24 @@
             <p>This class is a subclass of <code><a href="https://docs.python.org/3/library/enum.html">enum</a>.IntEnum</code>.</p>
             <table>
                 <tr>
+                    <th>Name</th>
+                    <th>Value</th>
+                    <th>Explanation</th>
+                </tr>
+                <tr>
                     <td><code>REJECT</code></td>
                     <td><code>0</code></td>
+                    <td>The parser rejects abbreviations and interprets them as unknown options instead.</td>
                 </tr>
                 <tr>
                     <td><code>COMPLETE</code></td>
                     <td><code>1</code></td>
+                    <td>The parser replaces abbreviations with the full options.</td>
                 </tr>
                 <tr>
                     <td><code>KEEP</code></td>
                     <td><code>2</code></td>
+                    <td>The parser keeps abbreviations as abbreviations.</td>
                 </tr>
             </table>
         </div>
