@@ -38,7 +38,7 @@ class Click:
     def _(self, target: types.FunctionType):
         @functools.wraps(target)
         def ans(cmd, ctx, args):
-            p = self._self.copy()
+            p = self.parser.copy()
             if self.cmd:
                 p.clickCommand(cmd)
             if self.ctx:
