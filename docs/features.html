@@ -112,10 +112,14 @@
                     This property decides if posix parsing is used, 
                     i.e. a positional argument causes all the arguments after it 
                     to be also interpreted as positional.
-                    If <code>"infer"</code> is passed to the property 
-                    then the environmental variable <code>POSIXLY_CORRECT</code>
-                    is used.
+                    If the value passed to the property equals <code>"infer"</code> 
+                    then <code>os.environ.get("POSIXLY_CORRECT")</code> is saved.
                 </section>
+                <h4 id="PreParser.prog"><code><b>prog</b></code></h4>
+                <section>
+                    This property represents the name of the program. 
+                    If the value passed to the property is <code>None</code>
+                    then <code>str(sys.argv[0])</code> is saved.
             </section>
         </div>
     </body>
