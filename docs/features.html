@@ -1,7 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
     <head></head>
-    <body></body>
+    <body>
+        <div id="Abbrev">
+            <h2>The <code>Abbrev</code> class</h2>
+            <p>This class is an enum.</p>
+        </div>
+        <div id="Nargs">
+            <h2>The <code>Nargs</code> class</h2>
+            <p>This class is an enum.</p>
+        </div>
+        <div id="PreParser">
+            <h2>The <code>PreParser</code> class </h2>
+            <p>
+                This class is the centerpiece of the <a>preparse</a>.
+            </p>
+            <h4>
+                <code>
+                    <i>class</i> 
+                    preparse.<b>PreParser(</b><i>optdict</i>: <i>Any</i> = <i>None</i>,
+                    <i>prog</i>: <i>Any</i> = <i>None</i>,
+                    <i>abbrev</i>: <i>Any</i> = <i>preparse.Abbrev.COMPLETE</i>,
+                    <i>permutate</i>: <i>Any</i> = <i>True</i>,
+                    <i>posix</i>: <i>Any</i> = "infer"<b>)</b>
+                </code>
+            </h4>
+            <section>
+                <p>Create a new <code>
+                        <a href="#PreParser">PreParser</a>
+                    </code> object. 
+                </p>
+                <h4 id="PreParser.abbrev"><code><b>abbrev</b></code></h4>
+                <section>
+                    This property determines the approach of the instance 
+                    to abbreviations of long options.
+                </section>
+            </section>
+        </div>
+    </body>
     <script src="https://www.johannes-programming.online/script.js"></script>
     <script>setupFeaturesPage("preparse");</script>
 </html>
