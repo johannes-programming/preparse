@@ -307,7 +307,8 @@ class Parsing:
                 nargs = 0
         if nargs == 1:
             return 1
-        return 0
+        else:
+            return 0
 
     def tick_pos(self, arg: str):
         self.spec.append(arg)
