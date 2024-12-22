@@ -298,13 +298,13 @@ class Parsing:
     def tick_opt_short(self, arg: str):
         self.ans.append(arg)
         for i in range(1 - len(arg), 0):
-            optn = self.optdict.get("-" + arg[i])
-            if optn is None:
+            nargs = self.optdict.get("-" + arg[i])
+            if nargs is None:
                 self.parser.warnAboutInvalidOption(arg[i])
-                optn = 0
-            if i != -1 and optn != 0:
+                nargs = 0
+            if i != -1 and nargs != 0:
                 return 0
-            if i == -1 and optn == 1:
+            if i == -1 and nargs == 1:
                 return 1
         return 0
 
