@@ -304,8 +304,8 @@ class Parsing:
                 nargs = 0
             if i != -1 and nargs != 0:
                 return 0
-            if i == -1 and nargs == 1:
-                return 1
+        if nargs == 1:
+            return 1
         return 0
 
     def tick_pos(self, arg: str):
