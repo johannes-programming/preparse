@@ -9,7 +9,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Value</th>
-                    <th>Explanation</th>
+                    <th width="100%">Explanation</th>
                 </tr>
                 <tr>
                     <td><code>REJECT</code></td>
@@ -31,7 +31,8 @@
         <div id="Click">
             <h2>The <code><a href="#Click">Click</a></code> class</h2>
             <p>
-                This dataclass provides decorators for embedding a <a href="#PreParser">PreParser</a> object.
+                This dataclass provides decorators 
+                for embedding a <a href="#PreParser">PreParser</a> object.
             </p>
             <h4>
                 <code>
@@ -78,7 +79,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Value</th>
-                    <th>Explanation</th>
+                    <th width="100%">Explanation</th>
                 </tr>
                 <tr>
                     <td><code>NO_ARGUMENT</code></td>
@@ -186,6 +187,7 @@
                 <section>
                     This method alters the current instance 
                     to reflect a <code><a href="https://click.palletsprojects.com/en/stable/api/#click.Command">click.Command</a></code> object. 
+                    Concretely the <code><a href="#PreParser.optdict">optdict</a></code> property is changed.
                 </section>
                 <h4 id="PreParser.reflectClickContext">
                     <code>
@@ -196,6 +198,7 @@
                 <section>
                     This method alters the current instance 
                     to reflect a <code><a href="https://click.palletsprojects.com/en/stable/api/#click.Context">click.Context</a></code> object. 
+                    Concretely the <code><a href="#PreParser.prog">prog</a></code> property is changed.
                 </section>
                 <h4 id="PreParser.todict"><code><b>todict()</b> -&gt; <i>dict</i></code></h4>
                 <section>
