@@ -202,10 +202,10 @@ class Parsing:
     def __post_init__(self) -> None:
         self.ans = list()
         self.spec = list()
-        optn = 0
+        optn = "0"
         while self.args:
             optn = self.tick(optn)
-        if optn == 1:
+        if optn == "1":
             self.lasttick()
         self.dumpspec()
 
@@ -249,17 +249,22 @@ class Parsing:
     def tick(self, optn):
         arg = self.args.pop(0)
         if optn == "break":
+            # we are already in the positional-only part
             self.spec.append(arg)
             return "break"
-        if optn == 1:
+        if optn == "1":
+            # an argument is expected
             self.ans.append(arg)
-            return 0
-        elif arg == "--":
+            return "0"
+        if arg == "--":
+            # we are explicitly switching to the positional-only part
             self.ans.append("--")
             return "break"
-        elif arg.startswith("-") and arg != "-":
+        if arg.startswith("-") and arg != "-":
+            # an option is recognized
             return self.tick_opt(arg)
         else:
+            # a positional argument because nothing else fits
             return self.tick_pos(arg)
 
     def tick_opt(self, arg: str):
@@ -297,23 +302,28 @@ class Parsing:
 
     def tick_opt_short(self, arg: str):
         self.ans.append(arg)
+        nargs = 0
         for i in range(1 - len(arg), 0):
-            optn = self.optdict.get("-" + arg[i])
-            if optn is None:
+            if nargs != 0:
+                # if we are not at the end and the current letter is not a flag
+                # then no later value is expected
+                return "0"
+            nargs = self.optdict.get("-" + arg[i])
+            if nargs is None:
+                # invalid short options are assumed to be flags
                 self.parser.warnAboutInvalidOption(arg[i])
-                optn = 0
-            if i != -1 and optn != 0:
-                return 0
-            if i == -1 and optn == 1:
-                return 1
-        return 0
+                nargs = 0
+        if nargs == 1:
+            return "1"
+        else:
+            return "0"
 
     def tick_pos(self, arg: str):
         self.spec.append(arg)
         if self.parser.posix:
             return "break"
         elif self.parser.permutate:
-            return 0
+            return "0"
         else:
             self.dumpspec()
-            return 0
+            return "0"
