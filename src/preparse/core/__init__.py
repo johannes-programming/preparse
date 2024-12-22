@@ -106,7 +106,7 @@ class PreParser:
     def parse_args(
         self,
         args: Optional[Iterable] = None,
-    ) -> List[str]:
+    ) -> list[str]:
         "Parse args."
         if args is None:
             args = sys.argv[1:]
@@ -122,7 +122,9 @@ class PreParser:
 
     @makeprop()
     def posix(self, value: Any) -> bool:
-        "Property that decides if posix parsing is used, " "i.e. a positional argument causes all the arguments after it " "to be also interpreted as positional."
+        "Property that decides if posix parsing is used,"
+        "i.e. a positional argument causes all the arguments after it "
+        "to be also interpreted as positional."
         if value == "infer":
             value = os.environ.get("POSIXLY_CORRECT")
         value = bool(value)
@@ -202,15 +204,14 @@ class Parsing:
     def __post_init__(self) -> None:
         self.ans = list()
         self.spec = list()
-        optn = 0
+        optn = "closed"
         while self.args:
             optn = self.tick(optn)
-        if optn == 1:
-            self.lasttick()
+        self.lasttick(optn)
         self.dumpspec()
 
-    def dumpspec(self):
-        self.ans += self.spec
+    def dumpspec(self) -> None:
+        self.ans.extend(self.spec)
         self.spec.clear()
 
     @functools.cached_property
@@ -222,10 +223,13 @@ class Parsing:
                 continue
             if not k.startswith("-"):
                 continue
+            # example: -foo
             return True
         return False
 
-    def lasttick(self):
+    def lasttick(self, optn: str) -> None:
+        if optn != "open":
+            return
         self.parser.warnAboutRequiredArgument(self.ans[-1])
 
     @functools.cached_property
@@ -235,7 +239,7 @@ class Parsing:
             ans[str(k)] = Nargs(v)
         return ans
 
-    def possibilities(self, opt):
+    def possibilities(self, opt: str) -> list[str]:
         if opt in self.optdict.keys():
             return [opt]
         if self.parser.abbrev == Abbrev.REJECT:
@@ -246,29 +250,30 @@ class Parsing:
                 ans.append(k)
         return ans
 
-    def tick(self, optn):
-        arg = self.args.pop(0)
+    def tick(self, optn: str) -> str:
         if optn == "break":
-            self.spec.append(arg)
+            self.spec.extend(self.args)
+            self.args.clear()
             return "break"
-        if optn == 1:
+        arg = self.args.pop(0)
+        if optn == "open":
             self.ans.append(arg)
-            return 0
-        elif arg == "--":
+            return "closed"
+        if arg == "--":
             self.ans.append("--")
             return "break"
-        elif arg.startswith("-") and arg != "-":
+        if arg.startswith("-") and arg != "-":
             return self.tick_opt(arg)
         else:
             return self.tick_pos(arg)
 
-    def tick_opt(self, arg: str):
+    def tick_opt(self, arg: str) -> str:
         if arg.startswith("--") or self.islongonly:
             return self.tick_opt_long(arg)
         else:
             return self.tick_opt_short(arg)
 
-    def tick_opt_long(self, arg: str):
+    def tick_opt_long(self, arg: str) -> str:
         try:
             i = arg.index("=")
         except ValueError:
@@ -278,11 +283,11 @@ class Parsing:
         if len(possibilities) == 0:
             self.parser.warnAboutUnrecognizedOption(arg)
             self.ans.append(arg)
-            return 0
+            return "closed"
         if len(possibilities) > 1:
             self.parser.warnAboutAmbiguousOption(arg, possibilities)
             self.ans.append(arg)
-            return 0
+            return "closed"
         opt = possibilities[0]
         if self.parser.abbrev == Abbrev.COMPLETE:
             self.ans.append(opt + arg[i:])
@@ -291,29 +296,34 @@ class Parsing:
         if "=" in arg:
             if self.optdict[opt] == 0:
                 self.parser.warnAboutUnallowedArgument(opt)
-            return 0
+            return "closed"
         else:
-            return self.optdict[opt]
+            if self.optdict[opt] == 1:
+                return "open"
+            else:
+                return "closed"
 
-    def tick_opt_short(self, arg: str):
+    def tick_opt_short(self, arg: str) -> str:
         self.ans.append(arg)
+        nargs = 0
         for i in range(1 - len(arg), 0):
-            optn = self.optdict.get("-" + arg[i])
-            if optn is None:
+            if nargs != 0:
+                return "closed"
+            nargs = self.optdict.get("-" + arg[i])
+            if nargs is None:
                 self.parser.warnAboutInvalidOption(arg[i])
-                optn = 0
-            if i != -1 and optn != 0:
-                return 0
-            if i == -1 and optn == 1:
-                return 1
-        return 0
+                nargs = 0
+        if nargs == 1:
+            return "open"
+        else:
+            return "closed"
 
-    def tick_pos(self, arg: str):
+    def tick_pos(self, arg: str) -> str:
         self.spec.append(arg)
         if self.parser.posix:
             return "break"
         elif self.parser.permutate:
-            return 0
+            return "closed"
         else:
             self.dumpspec()
-            return 0
+            return "closed"
