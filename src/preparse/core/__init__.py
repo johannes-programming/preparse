@@ -65,6 +65,7 @@ class PreParser:
         optdict: Any = None,
         prog: Any = None,
         abbrev: Any = Abbrev.COMPLETE,
+        enforceSpecialArg: Any = True,
         permutate: Any = True,
         posix: Any = "infer",
     ) -> None:
@@ -72,6 +73,7 @@ class PreParser:
         self.optdict = optdict
         self.prog = prog
         self.abbrev = abbrev
+        self.enforceSpecialArg = enforceSpecialArg
         self.permutate = permutate
         self.posix = posix
 
@@ -92,6 +94,11 @@ class PreParser:
         "Return a copy."
         return type(self)(**self.todict())
 
+    @makeprop()
+    def enforceSpecialArg(self, value: Any) -> bool:
+        "Property that decides if the special argument will be inserted when not initially present."
+        return bool(value)
+    
     @makeprop()
     def optdict(self, value: Any) -> dict:
         "Dictionary of options."
@@ -207,7 +214,10 @@ class Parsing:
         optn = "closed"
         while self.args:
             optn = self.tick(optn)
-        self.lasttick(optn)
+        if optn == "open":
+            self.lasttick(optn)
+        if self.parser.enforceSpecialArg:
+            self.ans.append("--")
         self.dumpspec()
 
     def dumpspec(self) -> None:
@@ -228,9 +238,10 @@ class Parsing:
         return False
 
     def lasttick(self, optn: str) -> None:
-        if optn != "open":
-            return
+        if self.parser.enforceSpecialArg:
+            self.ans.append("--")
         self.parser.warnAboutRequiredArgument(self.ans[-1])
+        
 
     @functools.cached_property
     def optdict(self) -> Dict[str, Nargs]:
@@ -260,7 +271,8 @@ class Parsing:
             self.ans.append(arg)
             return "closed"
         if arg == "--":
-            self.ans.append("--")
+            if not self.parser.enforceSpecialArg:
+                self.ans.append("--")
             return "break"
         if arg.startswith("-") and arg != "-":
             return self.tick_opt(arg)
