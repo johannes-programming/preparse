@@ -122,7 +122,9 @@ class PreParser:
 
     @makeprop()
     def posix(self, value: Any) -> bool:
-        "Property that decides if posix parsing is used, " "i.e. a positional argument causes all the arguments after it " "to be also interpreted as positional."
+        "Property that decides if posix parsing is used, "
+        "i.e. a positional argument causes all the arguments after it "
+        "to be also interpreted as positional."
         if value == "infer":
             value = os.environ.get("POSIXLY_CORRECT")
         value = bool(value)
