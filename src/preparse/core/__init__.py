@@ -211,7 +211,7 @@ class Parsing:
         self.dumpspec()
 
     def dumpspec(self) -> None:
-        self.ans += self.spec
+        self.ans.extend(self.spec)
         self.spec.clear()
 
     @functools.cached_property
