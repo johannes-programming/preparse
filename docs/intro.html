@@ -1,39 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Installing preparse</title>
-        <link rel="stylesheet" href="https://www.johannes-programming.online/styles.css">
     </head>
     <body>
-        <header id="header">
-            <h1>Introduction to <code><a href="https://preparse.johannes-programming.online">preparse</a></code></h1>
-        </header>
-        <div id="intro">
-            <p>
-                The preparse project allows for preprocessing a list 
-                of arguments so that they can be parsed properly in a later step. 
-                This way, the functionality of another parsing system can be modified. 
-                The <a>preparse</a> project is especially adapted to work with the <a href="https://click.palletsprojects.com/en/stable/">click</a> project.
-            </p>
-        </div>
-        <nav>
-            <ul>
-                <li>
-                    <a href="/install.html">
-                        <p>&larr; Previous</p>
-                        <p>Installing <code>preparse</code></p>
-                    </a>
-                </li>
-                <li>
-                    <a href="/features.html">
-                        <p>Next &rarr;</p>
-                        <p>Features of <code>preparse</code></p>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+        <p>
+            The preparse project allows for preprocessing a list 
+            of arguments so that they can be parsed properly in a later step. 
+            This way, the functionality of another parsing system can be modified. 
+            The <a>preparse</a> project is especially adapted to work with the <a href="https://click.palletsprojects.com/en/stable/">click</a> project.
+        </p>
+        <p>
+            Here is the implementation of the <a>expit</a> project (Version 1.0.10)
+            to illustrate how <a>preparse</a> can be used to modify <a href="https://click.palletsprojects.com/en/stable/">click</a>.
+        </p>
+        <pre class="block"><code>import math
 
+import click
+import preparse
+
+__all__ = ["function", "main"]
+
+
+def function(x: float) -&gt; float:
+    "The expit function."
+    try:
+        p = math.exp(-x)
+    except OverflowError:
+        p = float("+inf")
+    return 1 / (1 + p)
+
+
+@preparse.PreParser(posix=False).click()
+@click.command(add_help_option=False)
+@click.help_option("-h", "--help")
+@click.version_option(None, "-V", "--version")
+@click.argument("x", type=float)
+def main(x: float) -&gt; None:
+    "Apply the expit function to x."
+    click.echo(function(x))</code></pre>
     </body>
+
+    <script src="https://www.johannes-programming.online/script.js"></script>
+    <script>
+        setupIntroPage("preparse");
+    </script>
 </html>
