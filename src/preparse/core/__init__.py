@@ -38,9 +38,9 @@ class Click:
         def ans(cmd, ctx, args):
             p = self.parser.copy()
             if self.cmd:
-                p.clickCommand(cmd)
+                p.reflectClickCommand(cmd)
             if self.ctx:
-                p.clickContext(ctx)
+                p.reflectClickContext(ctx)
             return target(cmd, ctx, p.parse_args(args))
 
         return ans
