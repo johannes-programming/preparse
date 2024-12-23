@@ -106,7 +106,7 @@ class PreParser:
     def parse_args(
         self,
         args: Optional[Iterable] = None,
-    ) -> List[str]:
+    ) -> list[str]:
         "Parse args."
         if args is None:
             args = sys.argv[1:]
@@ -204,14 +204,13 @@ class Parsing:
     def __post_init__(self) -> None:
         self.ans = list()
         self.spec = list()
-        optn = 0
+        optn = "closed"
         while self.args:
             optn = self.tick(optn)
-        if optn == 1:
-            self.lasttick()
+        self.lasttick(optn)
         self.dumpspec()
 
-    def dumpspec(self):
+    def dumpspec(self) -> None:
         self.ans += self.spec
         self.spec.clear()
 
@@ -227,7 +226,9 @@ class Parsing:
             return True
         return False
 
-    def lasttick(self):
+    def lasttick(self, optn:str) -> None:
+        if optn != "open":
+            return
         self.parser.warnAboutRequiredArgument(self.ans[-1])
 
     @functools.cached_property
@@ -237,7 +238,7 @@ class Parsing:
             ans[str(k)] = Nargs(v)
         return ans
 
-    def possibilities(self, opt):
+    def possibilities(self, opt:str) -> list[str]:
         if opt in self.optdict.keys():
             return [opt]
         if self.parser.abbrev == Abbrev.REJECT:
@@ -248,14 +249,14 @@ class Parsing:
                 ans.append(k)
         return ans
 
-    def tick(self, optn):
+    def tick(self, optn:str) -> str:
         arg = self.args.pop(0)
         if optn == "break":
             self.spec.append(arg)
             return "break"
-        if optn == 1:
+        if optn == "open":
             self.ans.append(arg)
-            return 0
+            return "closed"
         elif arg == "--":
             self.ans.append("--")
             return "break"
@@ -264,13 +265,13 @@ class Parsing:
         else:
             return self.tick_pos(arg)
 
-    def tick_opt(self, arg: str):
+    def tick_opt(self, arg: str) -> str:
         if arg.startswith("--") or self.islongonly:
             return self.tick_opt_long(arg)
         else:
             return self.tick_opt_short(arg)
 
-    def tick_opt_long(self, arg: str):
+    def tick_opt_long(self, arg: str) -> str:
         try:
             i = arg.index("=")
         except ValueError:
@@ -280,11 +281,11 @@ class Parsing:
         if len(possibilities) == 0:
             self.parser.warnAboutUnrecognizedOption(arg)
             self.ans.append(arg)
-            return 0
+            return "closed"
         if len(possibilities) > 1:
             self.parser.warnAboutAmbiguousOption(arg, possibilities)
             self.ans.append(arg)
-            return 0
+            return "closed"
         opt = possibilities[0]
         if self.parser.abbrev == Abbrev.COMPLETE:
             self.ans.append(opt + arg[i:])
@@ -293,31 +294,34 @@ class Parsing:
         if "=" in arg:
             if self.optdict[opt] == 0:
                 self.parser.warnAboutUnallowedArgument(opt)
-            return 0
+            return "closed"
         else:
-            return self.optdict[opt]
+            if self.optdict[opt] == 1:
+                return "open"
+            else:
+                return "closed"
 
-    def tick_opt_short(self, arg: str):
+    def tick_opt_short(self, arg: str) -> str:
         self.ans.append(arg)
         nargs = 0
         for i in range(1 - len(arg), 0):
             if nargs != 0:
-                return 0
+                return "closed"
             nargs = self.optdict.get("-" + arg[i])
             if nargs is None:
                 self.parser.warnAboutInvalidOption(arg[i])
                 nargs = 0
         if nargs == 1:
-            return 1
+            return "open"
         else:
-            return 0
+            return "closed"
 
-    def tick_pos(self, arg: str):
+    def tick_pos(self, arg: str) -> str:
         self.spec.append(arg)
         if self.parser.posix:
             return "break"
         elif self.parser.permutate:
-            return 0
+            return "closed"
         else:
             self.dumpspec()
-            return 0
+            return "closed"
