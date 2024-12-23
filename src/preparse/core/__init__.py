@@ -122,7 +122,7 @@ class PreParser:
 
     @makeprop()
     def posix(self, value: Any) -> bool:
-        "Property that decides if posix parsing is used, "
+        "Property that decides if posix parsing is used,"
         "i.e. a positional argument causes all the arguments after it "
         "to be also interpreted as positional."
         if value == "infer":
@@ -227,7 +227,7 @@ class Parsing:
             return True
         return False
 
-    def lasttick(self, optn:str) -> None:
+    def lasttick(self, optn: str) -> None:
         if optn != "open":
             return
         self.parser.warnAboutRequiredArgument(self.ans[-1])
@@ -239,7 +239,7 @@ class Parsing:
             ans[str(k)] = Nargs(v)
         return ans
 
-    def possibilities(self, opt:str) -> list[str]:
+    def possibilities(self, opt: str) -> list[str]:
         if opt in self.optdict.keys():
             return [opt]
         if self.parser.abbrev == Abbrev.REJECT:
@@ -250,7 +250,7 @@ class Parsing:
                 ans.append(k)
         return ans
 
-    def tick(self, optn:str) -> str:
+    def tick(self, optn: str) -> str:
         if optn == "break":
             self.spec.extend(self.args)
             self.args.clear()
