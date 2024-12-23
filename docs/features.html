@@ -37,9 +37,9 @@
             <h4>
                 <code>
                     <i>class</i> 
-                    preparse.<b>Click(</b><i>parser</i>: <i>Any</i>,
-                    <i>cmd</i>: <i>Any</i> = <i>True</i>,
-                    <i>ctx</i>: <i>Any</i> = <i>True</i><b>)</b>
+                    preparse.<b>Click</b><em>(</em><i>parser: Any</i>,
+                    <i>cmd: Any = True</i>,
+                    <i>ctx: Any = True</i><em>)</em>
                 </code>
             </h4>
             <section>
@@ -49,7 +49,7 @@
                 </p>
                 <h4>
                     <code>
-                        <b>__call__(</b><i>target</i>: <i>Any</i><b>)</b> -&gt; <i>Any</i>
+                        <b>__call__</b><em>(</em><i>target: Any</i><em>)</em><i> -&gt; Any</i>
                     </code>
                 </h4>
                 <section>
@@ -106,11 +106,11 @@
             <h4>
                 <code>
                     <i>class</i> 
-                    preparse.<b>PreParser(</b><i>optdict</i>: <i>Any</i> = <i>None</i>,
-                    <i>prog</i>: <i>Any</i> = <i>None</i>,
-                    <i>abbrev</i>: <i>Any</i> = <i>preparse</i>.<i>Abbrev</i>.<i>COMPLETE</i>,
-                    <i>permutate</i>: <i>Any</i> = <i>True</i>,
-                    <i>posix</i>: <i>Any</i> = "infer"<b>)</b>
+                    preparse.<b>PreParser</b><em>(</em><i>optdict: Any = None</i>,
+                    <i>prog: Any = None</i>,
+                    <i>abbrev: Any = preparse.Abbrev.COMPLETE</i>,
+                    <i>permutate: Any = True</i>,
+                    <i>posix: Any</i> = "infer"<em>)</em>
                 </code>
             </h4>
             <section>
@@ -125,10 +125,10 @@
                 </section>
                 <h4 id="PreParser.click">
                     <code>
-                        <b>click(</b><i>parser</i>: <i>Any</i>,
-                        <i>cmd</i>: <i>Any</i> = <i>True</i>,
-                        <i>ctx</i>: <i>Any</i> = <i>True</i><b>)</b>
-                        -&gt; <i>preparse</i>.<i>Click</i>
+                        <b>click</b><em>(</em><i>parser: Any</i>,
+                        <i>cmd: Any = True</i>,
+                        <i>ctx: Any = True</i><em>)</em>
+                        <i> -&gt; preparse.Click</i>
                     </code>
                 </h4>
                 <section>
@@ -136,7 +136,7 @@
                 </section>
                 <h4 id="PreParser.copy">
                     <code>
-                        <b>copy()</b> -&gt; <i>Self</i>
+                        <b>copy</b><em>()</em><i> -&gt; Self</i>
                     </code>
                 </h4>
                 <section>
@@ -150,8 +150,8 @@
                 </section>
                 <h4 id="PreParser.parse_args">
                     <code>
-                        <b>parse_args(</b><i>args</i>: <i>Optional</i>[<i>Iterable</i>] = <i>None</i><b>)</b> 
-                        -&gt; <i>List</i>[<i>str</i>]
+                        <b>parse_args</b><em>(</em><i>args: Optional[Iterable] = None</i><em>)</em> 
+                        <i> -&gt; List[str]</i>
                     </code>
                 </h4>
                 <section>
@@ -180,8 +180,8 @@
                 </section>
                 <h4 id="PreParser.reflectClickCommand">
                     <code>
-                        <b>reflectClickCommand(</b><i>cmd</i>: <i>click</i>.<i>Command</i><b>)</b>
-                        -&gt; <i>None</i>
+                        <b>reflectClickCommand</b><em>(</em><i>cmd: click.Command</i><em>)</em>
+                        <i> -&gt; None</i>
                     </code>
                 </h4>
                 <section>
@@ -191,8 +191,8 @@
                 </section>
                 <h4 id="PreParser.reflectClickContext">
                     <code>
-                        <b>reflectClickContext(</b><i>ctx</i>: <i>click</i>.<i>Context</i><b>)</b>
-                        -&gt; <i>None</i>
+                        <b>reflectClickContext</b><em>(</em><i>ctx: click.Context</i><em>)</em>
+                        <i> -&gt; None</i>
                     </code>
                 </h4>
                 <section>
@@ -200,34 +200,34 @@
                     to reflect a <code><a href="https://click.palletsprojects.com/en/stable/api/#click.Context">click.Context</a></code> object. 
                     Concretely the <code><a href="#PreParser.prog">prog</a></code> property is changed.
                 </section>
-                <h4 id="PreParser.todict"><code><b>todict()</b> -&gt; <i>dict</i></code></h4>
+                <h4 id="PreParser.todict"><code><b>todict</b><em>()</em><i> -&gt; dict</i></code></h4>
                 <section>
                     This method a dict representing the current instance.
                 </section>
-                <h4 id="PreParser.warn"><code><b>warn(</b><i>message</i>: <i>Any</i><b>)</b> -&gt; <i>None</i></code></h4>
+                <h4 id="PreParser.warn"><code><b>warn</b><em>(</em><i>message: Any</i><em>)</em><i> -&gt; None</i></code></h4>
                 <section>
                     This method lauches a warning about something. 
                 </section>
-                <h4 id="PreParser.warnAboutUnrecognizedOption"><code><b>warnAboutUnrecognizedOption(</b><i>option</i>: <i>Any</i><b>)</b> -&gt; <i>None</i></code></h4>
+                <h4 id="PreParser.warnAboutUnrecognizedOption"><code><b>warnAboutUnrecognizedOption</b><em>(</em><i>option: Any</i><em>)</em><i> -&gt; None</i></code></h4>
                 <section>
                     This method lauches a warning about an unrecognized option.
                 </section>
-                <h4 id="PreParser.warnAboutInvalidOption"><code><b>warnAboutInvalidOption(</b><i>option</i>: <i>Any</i><b>)</b> -&gt; <i>None</i></code></h4>
+                <h4 id="PreParser.warnAboutInvalidOption"><code><b>warnAboutInvalidOption</b><em>(</em><i>option: Any</i><em>)</em><i> -&gt; None</i></code></h4>
                 <section>
                     This method lauches a warning about an invalid option.
                 </section>
                 <h4 id="PreParser.warnAboutAmbiguousOption">
-                    <code><b>warnAboutAmbiguousOption(</b><i>option</i>: <i>Any</i>,
-                    <i>possibilities</i>: <i>Iterable</i><b>)</b> -&gt; <i>None</i></code>
+                    <code><b>warnAboutAmbiguousOption</b><em>(</em><i>option: Any</i>,
+                    <i>possibilities: Iterable</i><em>)</em><i> -&gt; None</i></code>
                 </h4>
                 <section>
                     This method lauches a warning about an ambiguous option.
                 </section>
-                <h4 id="PreParser.warnAboutUnallowedArgument"><code><b>warnAboutUnallowedArgument(</b><i>option</i>: <i>Any</i><b>)</b> -&gt; <i>None</i></code></h4>
+                <h4 id="PreParser.warnAboutUnallowedArgument"><code><b>warnAboutUnallowedArgument</b><em>(</em><i>option: Any</i><em>)</em><i> -&gt; None</i></code></h4>
                 <section>
                     This method lauches a warning about an unallowed argument.
                 </section>
-                <h4 id="PreParser.warnAboutRequiredArgument"><code><b>warnAboutRequiredArgument(</b><i>option</i>: <i>Any</i><b>)</b> -&gt; <i>None</i></code></h4>
+                <h4 id="PreParser.warnAboutRequiredArgument"><code><b>warnAboutRequiredArgument</b><em>(</em><i>option: Any</i><em>)</em><i> -&gt; None</i></code></h4>
                 <section>
                     This method lauches a warning about a required argument.
                 </section>
