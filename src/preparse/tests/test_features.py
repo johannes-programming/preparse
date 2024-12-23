@@ -1,14 +1,14 @@
 import unittest
 
-from preparse import Abbrev, Click, Nargs, PreParser
+from preparse import Click, LongOptionAbbreviations, Nargs, PreParser
 
 
 class TestPreparse(unittest.TestCase):
 
     def test_abbrev_enum(self):
-        self.assertEqual(Abbrev.REJECT, 0)
-        self.assertEqual(Abbrev.COMPLETE, 1)
-        self.assertEqual(Abbrev.KEEP, 2)
+        self.assertEqual(LongOptionAbbreviations.REJECT, 0)
+        self.assertEqual(LongOptionAbbreviations.COMPLETE, 1)
+        self.assertEqual(LongOptionAbbreviations.KEEP, 2)
 
     def test_nargs_enum(self):
         self.assertEqual(Nargs.NO_ARGUMENT, 0)
@@ -18,7 +18,9 @@ class TestPreparse(unittest.TestCase):
     def test_preparser_copy(self):
         parser = PreParser()
         parser_copy = parser.copy()
-        self.assertEqual(parser.abbrev, parser_copy.abbrev)
+        self.assertEqual(
+            parser.longOptionAbbreviations, parser_copy.longOptionAbbreviations
+        )
         self.assertEqual(parser.permutate, parser_copy.permutate)
         self.assertEqual(parser.posix, parser_copy.posix)
         self.assertEqual(parser.optdict, parser_copy.optdict)
@@ -32,7 +34,13 @@ class TestPreparse(unittest.TestCase):
     def test_preparser_todict(self):
         parser = PreParser()
         result = parser.todict()
-        expected_keys = ["abbrev", "optdict", "permutate", "posix", "prog"]
+        expected_keys = [
+            "longOptionAbbreviations",
+            "optdict",
+            "permutate",
+            "posix",
+            "prog",
+        ]
         self.assertTrue(all(key in result for key in expected_keys))
 
     def test_preparser_click_decorator(self):
