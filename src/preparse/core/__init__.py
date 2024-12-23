@@ -223,6 +223,7 @@ class Parsing:
                 continue
             if not k.startswith("-"):
                 continue
+            # example: -foo
             return True
         return False
 
@@ -250,17 +251,18 @@ class Parsing:
         return ans
 
     def tick(self, optn:str) -> str:
-        arg = self.args.pop(0)
         if optn == "break":
-            self.spec.append(arg)
+            self.spec.extend(self.args)
+            self.args.clear()
             return "break"
+        arg = self.args.pop(0)
         if optn == "open":
             self.ans.append(arg)
             return "closed"
-        elif arg == "--":
+        if arg == "--":
             self.ans.append("--")
             return "break"
-        elif arg.startswith("-") and arg != "-":
+        if arg.startswith("-") and arg != "-":
             return self.tick_opt(arg)
         else:
             return self.tick_pos(arg)
