@@ -2,76 +2,95 @@
 <html lang="en">
     <head></head>
     <body>
-        <div id="Abbrev">
-            <h2>The <code><a href="#Abbrev">Abbrev</a></code> class</h2>
-            <p>This class is a subclass of <code><a href="https://docs.python.org/3/library/enum.html#enum.IntEnum">enum.IntEnum</a></code>.</p>
-            <table>
-                <tr>
-                    <th>Name</th>
-                    <th>Value</th>
-                    <th width="100%">Explanation</th>
-                </tr>
-                <tr>
-                    <td><code>REJECT</code></td>
-                    <td><code>0</code></td>
-                    <td>The parser rejects abbreviations and interprets them as unknown options instead.</td>
-                </tr>
-                <tr>
-                    <td><code>COMPLETE</code></td>
-                    <td><code>1</code></td>
-                    <td>The parser replaces abbreviations with the full options.</td>
-                </tr>
-                <tr>
-                    <td><code>KEEP</code></td>
-                    <td><code>2</code></td>
-                    <td>The parser keeps abbreviations as abbreviations.</td>
-                </tr>
-            </table>
-        </div>
-        <div id="Click">
-            <h2>The <code><a href="#Click">Click</a></code> class</h2>
-            <p>
-                This dataclass provides decorators 
-                for embedding a <a href="#PreParser">PreParser</a> object.
-            </p>
-            <h4>
-                <code>
-                    <i>class</i> 
-                    preparse.<b>Click</b><em>(</em><i>parser: Any</i>,
-                    <i>cmd: Any = True</i>,
-                    <i>ctx: Any = True</i><em>)</em>
-                </code>
-            </h4>
-            <section>
-                <p>Create a new <code>
-                        <a href="#Click">Click</a>
-                    </code> object. 
+        <dl id="Abbrev" class="heading2">
+            <dt>The <code><a href="#Abbrev">Abbrev</a></code> class</dt>
+            <dd>
+                <p>This class is a subclass of <code><a href="https://docs.python.org/3/library/enum.html#enum.IntEnum">enum.IntEnum</a></code>.</p>
+                <table>
+                    <tr>
+                        <th>Name</th>
+                        <th>Value</th>
+                        <th width="100%">Explanation</th>
+                    </tr>
+                    <tr>
+                        <td><code>REJECT</code></td>
+                        <td><code>0</code></td>
+                        <td>The parser rejects abbreviations and interprets them as unknown options instead.</td>
+                    </tr>
+                    <tr>
+                        <td><code>COMPLETE</code></td>
+                        <td><code>1</code></td>
+                        <td>The parser replaces abbreviations with the full options.</td>
+                    </tr>
+                    <tr>
+                        <td><code>KEEP</code></td>
+                        <td><code>2</code></td>
+                        <td>The parser keeps abbreviations as abbreviations.</td>
+                    </tr>
+                </table>
+            </dd>
+        </dl>
+        <dl id="Click" class="heading2">
+            <dt>The <code><a href="#Click">Click</a></code> class</dt>
+            <dd>
+                <p>
+                    This dataclass provides decorators 
+                    for embedding a <a href="#PreParser">PreParser</a> object.
                 </p>
-                <h4>
-                    <code>
-                        <b>__call__</b><em>(</em><i>target: Any</i><em>)</em><i> -&gt; Any</i>
-                    </code>
-                </h4>
-                <section>
-                    Calling the decorator embeds its <code><a href="#Click.parser">parser</a></code> 
-                    into a given <code>target</code> 
-                    from the library 
-                    <a href="https://click.palletsprojects.com/en/stable/">click</a>.
-                </section>
-                <h4><code><b>cmd</b></code></h4>
-                <section>
-                    This property determines if the <a href="#PreParser.reflectClickCommand"><code>reflectClickCommand</code></a> method of <a href="#Click.parser"><code>parser</code></a> is to be called.
-                </section>
-                <h4><code><b>ctx</b></code></h4>
-                <section>
-                    This property determines if the <a href="#PreParser.reflectClickContext"><code>reflectClickContext</code></a> method of <a href="#Click.parser"><code>parser</code></a> is to be called.
-                </section>
-                <h4><code><b>parser</b></code></h4>
-                <section>
-                    This property holds the parser to be embedded.
-                </section>
-            </section>
-        </div>
+                <dl id="Click" class="heading4">
+                    <dt>
+                        <code>
+                            <i>class</i> 
+                            preparse.<b>Click</b><em>(</em><i>parser: Any</i>,
+                            <i>cmd: Any = True</i>,
+                            <i>ctx: Any = True</i><em>)</em>
+                        </code>
+                    </dt>
+                    <dd>
+                        <p>
+                            Create a new <code>
+                                <a href="#Click">Click</a>
+                            </code> object. 
+                        </p>
+                        <dl id="Click.__call__" class="heading4">
+                            <dt>
+                                <code>
+                                    <b>__call__</b><em>(</em><i>target: Any</i><em>)</em><i> -&gt; Any</i>
+                                </code>
+                            </dt>
+                            <dd>
+                                <p>
+                                    Calling the decorator embeds its <code><a href="#Click.parser">parser</a></code> 
+                                    into a given <code>target</code> 
+                                    from the library 
+                                    <a href="https://click.palletsprojects.com/en/stable/">click</a>.
+                                </p>
+                            </dd>
+                        </dl>
+                        <dl id="Click.cmd" class="heading4">
+                            <dt><code><b>cmd</b></code></dt>
+                            <dd>
+                                <p>
+                                    This property determines if the <a href="#PreParser.reflectClickCommand"><code>reflectClickCommand</code></a> method of <a href="#Click.parser"><code>parser</code></a> is to be called.
+                                </p>
+                            </dd>
+                        </dl>
+                        <dl id="Click.ctx" class="heading4">
+                            <dt><code><b>ctx</b></code></dt>
+                            <dd>
+                                <p>
+                                    This property determines if the <a href="#PreParser.reflectClickContext"><code>reflectClickContext</code></a> method of <a href="#Click.parser"><code>parser</code></a> is to be called.
+                                </p>
+                            </dd>
+                        </dl>
+                        <dl id="Click.parser" class="heading4">
+                            <dt><code><b>parser</b></code></dt>
+                            <dd><p>This property holds the parser to be embedded.</p></dd>
+                        </dl>
+                    </dd>
+                </dl>
+            </dd>
+        </dl>
         <div id="Nargs">
             <h2>The <code><a href="#Nargs">Nargs</a></code> class</h2>
             <p>This class is a subclass of <code><a href="https://docs.python.org/3/library/enum.html#enum.IntEnum">enum.IntEnum</a></code>.</p>
