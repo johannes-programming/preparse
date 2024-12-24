@@ -18,8 +18,7 @@
                 Here is the implementation of the <a>expit</a> project (Version 1.0.10)
                 to illustrate how <a>preparse</a> can be used to modify <a href="https://click.palletsprojects.com/en/stable/">click</a>.
             </p>
-            <pre><code>
-import math
+            <pre class="block"><code>import math
 
 import click
 import preparse
@@ -43,9 +42,7 @@ def function(x: float) -&gt; float:
 @click.argument("x", type=float)
 def main(x: float) -&gt; None:
     "Apply the expit function to x."
-    click.echo(function(x))
-    
-</code></pre>
+    click.echo(function(x))</code></pre>
         </div>
         <nav>
             <ul>
