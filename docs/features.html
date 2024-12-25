@@ -52,7 +52,8 @@
                         <dl class="heading4">
                             <dt id="Click.__call__">
                                 <code>
-                                    <b>__call__</b><em>(</em><i>target: Any</i><em>)</em><i> -&gt; Any</i>
+                                    <b>__call__</b><em>(</em><i>target: Any</i><em>)</em>
+                                    <i>-&gt; Any</i>
                                 </code>
                             </dt>
                             <dd>
@@ -153,7 +154,7 @@
                                     <b>click</b><em>(</em><i>parser: Any</i>,
                                     <i>cmd: Any = True</i>,
                                     <i>ctx: Any = True</i><em>)</em>
-                                    <i> -&gt; preparse.Click</i>
+                                    <i>-&gt; preparse.Click</i>
                                 </code>
                             </dt>
                             <dd>
@@ -163,7 +164,8 @@
                             </dd>
                             <dt id="PreParser.copy">
                                 <code>
-                                    <b>copy</b><em>()</em><i> -&gt; Self</i>
+                                    <b>copy</b><em>()</em>
+                                    <i>-&gt; Self</i>
                                 </code>
                             </dt>
                             <dd>
@@ -182,7 +184,7 @@
                             <dt id="PreParser.parse_args">
                                 <code>
                                     <b>parse_args</b><em>(</em><i>args: Optional[Iterable] = None</i><em>)</em> 
-                                    <i> -&gt; List[str]</i>
+                                    <i>-&gt; List[str]</i>
                                 </code>
                             </dt>
                             <dd>
@@ -191,6 +193,8 @@
                                     It returns a preparsed list of arguments.
                                     If <code>None</code> is passed as <code>args</code> 
                                     then <code>sys.argv[1:]</code> is used. 
+                                    If the method is applied repeatedly 
+                                    to a list there will be no changes after the first run.
                                 </p>
                             </dd>
                             <dt id="PreParser.permutate"><code><b>permutate</b></code></dt>
@@ -220,7 +224,7 @@
                             <dt id="PreParser.reflectClickCommand">
                                 <code>
                                     <b>reflectClickCommand</b><em>(</em><i>cmd: click.Command</i><em>)</em>
-                                    <i> -&gt; None</i>
+                                    <i>-&gt; None</i>
                                 </code>
                             </dt>
                             <dd>
@@ -243,14 +247,14 @@
                                     Concretely the <code><a href="#PreParser.prog">prog</a></code> property is changed.
                                 </p>
                             </dd>
-                            <dt id="PreParser.todict"><code><b>todict</b><em>()</em><i> -&gt; dict</i></code></dt>
+                            <dt id="PreParser.todict"><code><b>todict</b><em>()</em><i>-&gt; dict</i></code></dt>
                             <dd>
                                 <p>This method a dict representing the current instance.</p>
                             </dd>
                             <dt id="PreParser.warn">
                                 <code>
                                     <b>warn</b><em>(</em><i>message: Any</i><em>)</em>
-                                    <i> -&gt; None</i>
+                                    <i>-&gt; None</i>
                                 </code>
                             </dt>
                             <dd>
