@@ -1,7 +1,7 @@
 import unittest
 from typing import *
 
-from preparse.core import PreParser
+from preparse.core import *
 
 
 class holder:
