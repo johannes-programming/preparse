@@ -1,14 +1,14 @@
 import unittest
 
-from preparse import Abbrev, Click, Nargs, PreParser
+from preparse import LongOptionAbbreviations, Click, Nargs, PreParser
 
 
 class TestPreparse(unittest.TestCase):
 
     def test_abbrev_enum(self):
-        self.assertEqual(Abbrev.REJECT, 0)
-        self.assertEqual(Abbrev.COMPLETE, 1)
-        self.assertEqual(Abbrev.KEEP, 2)
+        self.assertEqual(LongOptionAbbreviations.REJECT, 0)
+        self.assertEqual(LongOptionAbbreviations.COMPLETE, 1)
+        self.assertEqual(LongOptionAbbreviations.KEEP, 2)
 
     def test_nargs_enum(self):
         self.assertEqual(Nargs.NO_ARGUMENT, 0)
