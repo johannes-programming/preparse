@@ -1,6 +1,6 @@
 import unittest
 
-from preparse.core import PreParser
+from preparse.core import *
 
 
 class TestPreParserCustomWarnings(unittest.TestCase):
