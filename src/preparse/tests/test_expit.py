@@ -4,7 +4,7 @@ import unittest
 import click
 from click.testing import CliRunner
 
-import preparse
+from preparse.core import *
 
 
 class expit:
@@ -16,7 +16,7 @@ class expit:
             p = float("+inf")
         return 1 / (1 + p)
 
-    @preparse.PreParser(posix=False).click()
+    @PreParser(posix=False).click()
     @click.command(add_help_option=False)
     @click.help_option("-h", "--help")
     @click.version_option("1.2.3", "-V", "--version")
