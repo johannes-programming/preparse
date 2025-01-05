@@ -1,7 +1,7 @@
 import unittest
 from typing import *
 
-from preparse.core import PreParser
+from preparse.core import *
 
 
 # Temporary holder class for sharing data between the test cases and the custom parser
