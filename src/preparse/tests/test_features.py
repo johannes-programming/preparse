@@ -1,6 +1,6 @@
 import unittest
 
-from preparse import Click, LongOptionAbbreviations, Nargs, PreParser
+from preparse.core import *
 
 
 class TestPreparse(unittest.TestCase):
