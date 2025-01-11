@@ -11,6 +11,7 @@ from makeprop import makeprop
 from preparse._parsing.Parsing import *
 from preparse.core.Click import *
 from preparse.core.enums import *
+from preparse.warnings import *
 
 __all__ = ["PreParser"]
 
@@ -24,6 +25,7 @@ class PreParser:
         longOptionAbbreviations: Any = LongOptionAbbreviations.COMPLETE,
         permutate: Any = True,
         posix: Any = "infer",
+        warnstream: Any = "",
     ) -> None:
         self._optdict = dict()
         self.optdict = optdict
@@ -31,6 +33,7 @@ class PreParser:
         self.longOptionAbbreviations = longOptionAbbreviations
         self.permutate = permutate
         self.posix = posix
+        self.warnstream = warnstream
 
     def __repr__(self) -> str:
         "This magic methods gives repr(self)."
@@ -127,7 +130,7 @@ class PreParser:
 
     def warn(self, message: Any) -> None:
         "Warn about something."
-        warnings.warn("%s: %s" % (self.prog, message))
+        warnings.warn("%s: %s" % (self.prog, message), PreparseWarning)
 
     def warnAboutUnrecognizedOption(self, option: Any) -> None:
         "Warn about an unrecognized option."
