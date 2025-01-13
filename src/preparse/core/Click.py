@@ -15,6 +15,7 @@ class Click:
 
     @functools.singledispatchmethod
     def __call__(self, target: Any) -> Any:
+        "This magic method implements self(target)."
         target.parse_args = self(target.parse_args)
         return target
 

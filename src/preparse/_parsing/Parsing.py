@@ -3,6 +3,7 @@ import functools
 from typing import *
 
 from preparse.core.enums import *
+from preparse.core.warnings import *
 
 if TYPE_CHECKING:
     from preparse.core.PreParser import PreParser
@@ -44,7 +45,11 @@ class Parsing:
     def lasttick(self, optn: str) -> None:
         if optn != "open":
             return
-        self.parser.warnAboutRequiredArgument(self.ans[-1])
+        warning = PreparseRequiredArgumentWarning(
+            prog=self.parser.prog,
+            option=self.ans[-1],
+        )
+        self.parser.warn(warning)
 
     @functools.cached_property
     def optdict(self) -> Dict[str, Nargs]:
@@ -95,11 +100,20 @@ class Parsing:
         opt = arg[:i]
         possibilities = self.possibilities(opt)
         if len(possibilities) == 0:
-            self.parser.warnAboutUnrecognizedOption(arg)
+            warning = PreparseUnrecognizedOptionWarning(
+                prog=self.parser.prog,
+                option=arg,
+            )
+            self.parser.warn(warning)
             self.ans.append(arg)
             return "closed"
         if len(possibilities) > 1:
-            self.parser.warnAboutAmbiguousOption(arg, possibilities)
+            warning = PreparseAmbiguousOptionWarning(
+                prog=self.parser.prog,
+                option=arg,
+                possibilities=possibilities,
+            )
+            self.parser.warn(warning)
             self.ans.append(arg)
             return "closed"
         opt = possibilities[0]
@@ -109,7 +123,11 @@ class Parsing:
             self.ans.append(arg)
         if "=" in arg:
             if self.optdict[opt] == 0:
-                self.parser.warnAboutUnallowedArgument(opt)
+                warning = PreparseUnallowedArgumentWarning(
+                    prog=self.parser.prog,
+                    option=opt,
+                )
+                self.parser.warn(warning)
             return "closed"
         else:
             if self.optdict[opt] == 1:
@@ -125,7 +143,11 @@ class Parsing:
                 return "closed"
             nargs = self.optdict.get("-" + arg[i])
             if nargs is None:
-                self.parser.warnAboutInvalidOption(arg[i])
+                warning = PreparseInvalidOptionWarning(
+                    prog=self.parser.prog,
+                    option=arg[i],
+                )
+                self.parser.warn(warning)
                 nargs = 0
         if nargs == 1:
             return "open"
