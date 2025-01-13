@@ -1,12 +1,13 @@
 import dataclasses
 import os
 import sys
-import warnings
+import types
 from typing import *
 
 import click as cl
 from datarepr import datarepr
 from makeprop import makeprop
+from tofunc import tofunc
 
 from preparse._parsing.Parsing import *
 from preparse.core.Click import *
@@ -15,8 +16,22 @@ from preparse.core.enums import *
 __all__ = ["PreParser"]
 
 
+def doNothing(*args: Any, **kwargs: Any) -> None:
+    "This function does nothing."
+    return
+
+
 @dataclasses.dataclass(kw_only=True)
 class PreParser:
+    __slots__ = (
+        "_longOptionAbbreviations",
+        "_optdict",
+        "_permutate",
+        "_posix",
+        "_prog",
+        "_warn",
+    )
+
     def __init__(
         self,
         optdict: Any = None,
@@ -24,13 +39,16 @@ class PreParser:
         longOptionAbbreviations: Any = LongOptionAbbreviations.COMPLETE,
         permutate: Any = True,
         posix: Any = "infer",
+        warn: Callable = doNothing,
     ) -> None:
+        "This magic method initializes self."
         self._optdict = dict()
         self.optdict = optdict
         self.prog = prog
         self.longOptionAbbreviations = longOptionAbbreviations
         self.permutate = permutate
         self.posix = posix
+        self.warn = warn
 
     def __repr__(self) -> str:
         "This magic methods gives repr(self)."
@@ -123,31 +141,10 @@ class PreParser:
             longOptionAbbreviations=self.longOptionAbbreviations,
             permutate=self.permutate,
             posix=self.posix,
+            warn=self.warn,
         )
 
-    def warn(self, message: Any) -> None:
-        "Warn about something."
-        warnings.warn("%s: %s" % (self.prog, message))
-
-    def warnAboutUnrecognizedOption(self, option: Any) -> None:
-        "Warn about an unrecognized option."
-        self.warn("unrecognized option %r" % option)
-
-    def warnAboutInvalidOption(self, option: Any) -> None:
-        "Warn about an invalid option."
-        self.warn("invalid option -- %r" % option)
-
-    def warnAboutAmbiguousOption(self, option: Any, possibilities: Iterable) -> None:
-        "Warn about an ambiguous option."
-        msg = "option %r is ambiguous; possibilities:" % option
-        for x in possibilities:
-            msg += " %r" % x
-        self.warn(msg)
-
-    def warnAboutUnallowedArgument(self, option: Any) -> None:
-        "Warn about an unallowed argument."
-        self.warn("option %r doesn't allow an argument" % option)
-
-    def warnAboutRequiredArgument(self, option: Any) -> None:
-        "Warn about a required argument."
-        self.warn("option requires an argument -- %r" % option)
+    @makeprop()
+    def warn(self, value: Callable) -> types.FunctionType:
+        "This property gives a function that takes in the warnings."
+        return tofunc(value)

@@ -1,16 +1,20 @@
 import unittest
-import warnings
+import warnings as wrn
 
 from preparse.core import *
+
+
+def warn(warning: Warning) -> None:
+    wrn.warn(warning)
 
 
 class TestPreParserWarnings(unittest.TestCase):
 
     def parse_with_warning(self, optdict, query):
         """Helper method to parse args and catch warnings."""
-        parser = PreParser(posix=False, optdict=optdict)
-        with warnings.catch_warnings(record=True) as w:
-            warnings.simplefilter("always")
+        parser = PreParser(posix=False, optdict=optdict, warn=warn)
+        with wrn.catch_warnings(record=True) as w:
+            wrn.simplefilter("always")
             parser.parse_args(query)
             return w
 
