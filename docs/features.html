@@ -3,118 +3,6 @@
     <head></head>
     <body>
         <dl class="heading2">
-            <dt id="LongOptionAbbreviations">The <code><a href="#LongOptionAbbreviations">LongOptionAbbreviations</a></code> class</dt>
-            <dd>
-                <p>This class is a subclass of <code><a href="https://docs.python.org/3/library/enum.html#enum.IntEnum">enum.IntEnum</a></code>.</p>
-                <table>
-                    <tr>
-                        <th>Name</th>
-                        <th>Value</th>
-                        <th width="100%">Explanation</th>
-                    </tr>
-                    <tr>
-                        <td><code>REJECT</code></td>
-                        <td><code>0</code></td>
-                        <td>The parser rejects abbreviations and interprets them as unknown options instead.</td>
-                    </tr>
-                    <tr>
-                        <td><code>COMPLETE</code></td>
-                        <td><code>1</code></td>
-                        <td>The parser replaces abbreviations with the full options.</td>
-                    </tr>
-                    <tr>
-                        <td><code>KEEP</code></td>
-                        <td><code>2</code></td>
-                        <td>The parser keeps abbreviations as abbreviations.</td>
-                    </tr>
-                </table>
-            </dd>
-            <dt id="Click">The <code><a href="#Click">Click</a></code> class</dt>
-            <dd>
-                <p>
-                    This dataclass provides decorators 
-                    for embedding a <a href="#PreParser">PreParser</a> object.
-                </p>
-                <dl class="heading4">
-                    <dt id="Click.__new__">
-                        <code>
-                            <i>class</i> 
-                            preparse.<b>Click</b><em>(</em><i>parser: Any</i>,
-                            <i>cmd: Any = True</i>,
-                            <i>ctx: Any = True</i><em>)</em>
-                        </code>
-                    </dt>
-                    <dd>
-                        <p>Calling the class creates und returns a new instance.</p>
-                        <dl class="heading4">
-                            <dt id="Click.__call__">
-                                <code>
-                                    <b>__call__</b><em>(</em><i>target: Any</i><em>)</em>
-                                    <i>-&gt; Any</i>
-                                </code>
-                            </dt>
-                            <dd>
-                                <p>
-                                    Calling the decorator embeds its <code><a href="#Click.parser">parser</a></code> 
-                                    into a given <code>target</code> 
-                                    from the library 
-                                    <a href="https://click.palletsprojects.com/en/stable/">click</a>.
-                                </p>
-                            </dd>
-                            <dt id="Click.cmd"><code><b>cmd</b></code></dt>
-                            <dd>
-                                <p>
-                                    This property determines if the <a href="#PreParser.reflectClickCommand"><code>reflectClickCommand</code></a> method of <a href="#Click.parser"><code>parser</code></a> is to be called.
-                                </p>
-                            </dd>
-                            <dt id="Click.ctx">
-                                <code><b>ctx</b></code>
-                            </dt>
-                            <dd>
-                                <p>
-                                    This property determines if the <a href="#PreParser.reflectClickContext"><code>reflectClickContext</code></a> method of <a href="#Click.parser"><code>parser</code></a> is to be called.
-                                </p>
-                            </dd>
-                            <dt id="Click.parser">
-                                <code><b>parser</b></code>
-                            </dt>
-                            <dd>
-                                <p>
-                                    This property holds the parser to be embedded.
-                                </p>
-                            </dd>
-                        </dl>
-                    </dd>
-                </dl>
-            </dd>
-            <dt>The <code><a href="#Nargs">Nargs</a></code> class</dt>
-            <dd>
-                <p>
-                    This class is a subclass of <code><a href="https://docs.python.org/3/library/enum.html#enum.IntEnum">enum.IntEnum</a></code>.
-                </p>
-                <table>
-                    <tr>
-                        <th>Name</th>
-                        <th>Value</th>
-                        <th width="100%">Explanation</th>
-                    </tr>
-                    <tr>
-                        <td><code>NO_ARGUMENT</code></td>
-                        <td><code>0</code></td>
-                        <td>The option does not take an argument.</td>
-                    </tr>
-                    <tr>
-                        <td><code>REQUIRED_ARGUMENT</code></td>
-                        <td><code>1</code></td>
-                        <td>The option requires an argument.</td>
-                    </tr>
-                    <tr>
-                        <td><code>OPTIONAL_ARGUMENT</code></td>
-                        <td><code>2</code></td>
-                        <td>The option may take an argument.</td>
-                    </tr>
-                </table>
-            </dd>
             <dt id="PreParser">
                 The <code><a href="#PreParser">PreParser</a></code> class
             </dt>
@@ -125,32 +13,20 @@
                 </p>
                 <dl class="heading4">
                     <dt id="PreParser.__new__">
-                        <code>
-                            <i>class</i> 
-                            preparse.<b>PreParser</b><em>(</em><i>optdict: Any = None</i>,
-                            <i>prog: Any = None</i>,
-                            <i>longOptionAbbreviations: Any = preparse.LongOptionAbbreviations.COMPLETE</i>,
-                            <i>permutate: Any = True</i>,
-                            <i>posix: Any = "infer"</i><em>)</em>
-                        </code>
+                        class preparse.PreParser(optdict: Any = None,
+                            prog: Any = None,
+                            longOptionAbbreviations: Any = preparse.LongOptionAbbreviations.COMPLETE,
+                            permutate: Any = True,
+                            posix: Any = "infer")
                     </dt>
                     <dd>
                         <p>Calling the class creates und returns a new instance.</p>
                         <dl class="heading4">
-                            <dt id="PreParser.longOptionAbbreviations"><code><b>longOptionAbbreviations</b></code></dt>
-                            <dd>
-                                <p>
-                                    This property determines the approach of the instance 
-                                    to abbreviations of long options.
-                                </p>
-                            </dd>
                             <dt id="PreParser.click">
-                                <code>
-                                    <b>click</b><em>(</em><i>parser: Any</i>,
-                                    <i>cmd: Any = True</i>,
-                                    <i>ctx: Any = True</i><em>)</em>
-                                    <i>-&gt; preparse.Click</i>
-                                </code>
+                                click(parser: Any,
+                                    cmd: Any = True,
+                                    ctx: Any = True)
+                                    -&gt; preparse.Click
                             </dt>
                             <dd>
                                 <p>
@@ -158,17 +34,21 @@
                                 </p>
                             </dd>
                             <dt id="PreParser.copy">
-                                <code>
-                                    <b>copy</b><em>()</em>
-                                    <i>-&gt; Self</i>
-                                </code>
+                                copy() -&gt; Self
                             </dt>
                             <dd>
                                 <p>
                                     This method returns a copy of the current instance. 
                                 </p>
                             </dd>
-                            <dt id="PreParser.optdict"><code><b>optdict</b></code></dt>
+                            <dt id="PreParser.longOptionAbbreviations">longOptionAbbreviations</dt>
+                            <dd>
+                                <p>
+                                    This property determines the approach of the instance 
+                                    to abbreviations of long options.
+                                </p>
+                            </dd>
+                            <dt id="PreParser.optdict">optdict</dt>
                             <dd>
                                 <p>
                                     This property holds a dictionary. 
@@ -177,10 +57,7 @@
                                 </p>
                             </dd>
                             <dt id="PreParser.parse_args">
-                                <code>
-                                    <b>parse_args</b><em>(</em><i>args: Optional[Iterable] = None</i><em>)</em> 
-                                    <i>-&gt; List[str]</i>
-                                </code>
+                                parse_args(args: Optional[Iterable] = None) -&gt; List[str]
                             </dt>
                             <dd>
                                 <p>
@@ -192,13 +69,13 @@
                                     to a list there will be no changes after the first run.
                                 </p>
                             </dd>
-                            <dt id="PreParser.permutate"><code><b>permutate</b></code></dt>
+                            <dt id="PreParser.permutate">permutate</dt>
                             <dd>
                                 <p>
                                     This property decides whether the arguments are permutated in parsing.
                                 </p>
                             </dd>
-                            <dt id="PreParser.posix"><code><b>posix</b></code></dt>
+                            <dt id="PreParser.posix">posix</dt>
                             <dd>
                                 <p>
                                     This property decides if posix parsing is used, 
@@ -208,7 +85,7 @@
                                     then <code>os.environ.get("POSIXLY_CORRECT")</code> is saved.
                                 </p>
                             </dd>
-                            <dt id="PreParser.prog"><code><b>prog</b></code></dt>
+                            <dt id="PreParser.prog">prog</dt>
                             <dd>
                                 <p>
                                     This property represents the name of the program. 
@@ -217,10 +94,7 @@
                                 </p>
                             </dd>
                             <dt id="PreParser.reflectClickCommand">
-                                <code>
-                                    <b>reflectClickCommand</b><em>(</em><i>cmd: click.Command</i><em>)</em>
-                                    <i>-&gt; None</i>
-                                </code>
+                                reflectClickCommand(cmd: click.Command) -&gt; None
                             </dt>
                             <dd>
                                 <p>
@@ -230,10 +104,7 @@
                                 </p>
                             </dd>
                             <dt id="PreParser.reflectClickContext">
-                                <code>
-                                    <b>reflectClickContext</b><em>(</em><i>ctx: click.Context</i><em>)</em>
-                                    <i>-&gt; None</i>
-                                </code>
+                                reflectClickContext(ctx: click.Context) -&gt; None
                             </dt>
                             <dd>
                                 <p>
@@ -242,74 +113,190 @@
                                     Concretely the <code><a href="#PreParser.prog">prog</a></code> property is changed.
                                 </p>
                             </dd>
-                            <dt id="PreParser.todict"><code><b>todict</b><em>()</em><i>-&gt; dict</i></code></dt>
+                            <dt id="PreParser.todict">todict() -&gt; dict</dt>
                             <dd>
                                 <p>This method a dict representing the current instance.</p>
                             </dd>
                             <dt id="PreParser.warn">
-                                <code>
-                                    <b>warn</b><em>(</em><i>message: Any</i><em>)</em>
-                                    <i>-&gt; None</i>
-                                </code>
+                                warn
                             </dt>
                             <dd>
                                 <p>
-                                    This method lauches a warning about something. 
+                                    This property holds a function that is called 
+                                    whenever <code><a href="PreParser.parse_args">parse_args</a></code> 
+                                    encounters a warning. 
+                                    The warning is given as the only positional arguments.
+                                    No keyword arguments are given.
+                                    Its return value is discarded. 
+                                    Therefore, <code>str</code> is used to discard the warnings.
                                 </p>
-                            </dd>
-                            <dt id="PreParser.warnAboutUnrecognizedOption">
-                                <code>
-                                    <b>warnAboutUnrecognizedOption</b><em>(</em><i>option: Any</i><em>)</em>
-                                    <i>-&gt; None</i>
-                                </code>
-                            </dt>
-                            <dd>
-                                <p>This method lauches a warning about an unrecognized option.</p>
-                            </dd>
-                            <dt id="PreParser.warnAboutInvalidOption">
-                                <code>
-                                    <b>warnAboutInvalidOption</b><em>(</em><i>option: Any</i><em>)</em>
-                                    <i>-&gt; None</i>
-                                </code>
-                            </dt>
-                            <dd>
-                                <p>
-                                    This method lauches a warning about an invalid option.
-                                </p>
-                            </dd>
-                            <dt id="PreParser.warnAboutAmbiguousOption">
-                                <code>
-                                    <b>warnAboutAmbiguousOption</b><em>(</em><i>option: Any</i>,
-                                    <i>possibilities: Iterable</i><em>)</em>
-                                    <i>-&gt; None</i>
-                                </code>
-                            </dt>
-                            <dd>
-                                <p>
-                                    This method lauches a warning about an ambiguous option.
-                                </p>
-                            </dd>
-                            <dt id="PreParser.warnAboutUnallowedArgument">
-                                <code>
-                                    <b>warnAboutUnallowedArgument</b><em>(</em><i>option: Any</i><em>)</em>
-                                    <i>-&gt; None</i>
-                                </code>
-                            </dt>
-                            <dd>
-                                <p>
-                                    This method lauches a warning about an unallowed argument.
-                                </p>
-                            </dd>
-                            <dt id="PreParser.warnAboutRequiredArgument">
-                                <code>
-                                    <b>warnAboutRequiredArgument</b><em>(</em><i>option: Any</i><em>)</em>
-                                    <i>-&gt; None</i>
-                                </code>
-                            </dt>
-                            <dd>
-                                <p>This method lauches a warning about a required argument.</p>
                             </dd>
                         </dl>
+                    </dd>
+                </dl>
+            </dd>
+            <dt id="Click">The <code><a href="#Click">Click</a></code> class</dt>
+            <dd>
+                <p>
+                    This dataclass provides decorators 
+                    for embedding a <a href="#PreParser">PreParser</a> object.
+                </p>
+                <dl class="heading4">
+                    <dt id="Click.__new__">
+                        class preparse.Click(parser: Any, cmd: Any = True, ctx: Any = True)
+                    </dt>
+                    <dd>
+                        <p>Calling the class creates und returns a new instance.</p>
+                        <dl class="heading4">
+                            <dt id="Click.__call__">
+                                __call__(target: Any) -&gt; Any
+                            </dt>
+                            <dd>
+                                <p>
+                                    This magic method implements <code>self(target)</code>.
+                                    It works as a decorator that embeds its <code><a href="#Click.parser">parser</a></code> 
+                                    into a given <code>target</code> 
+                                    from the library 
+                                    <a href="https://click.palletsprojects.com/en/stable/">click</a>.
+                                </p>
+                            </dd>
+                            <dt id="Click.cmd">cmd</dt>
+                            <dd>
+                                <p>
+                                    This property determines if the <a href="#PreParser.reflectClickCommand"><code>reflectClickCommand</code></a> method of <a href="#Click.parser"><code>parser</code></a> is to be called.
+                                </p>
+                            </dd>
+                            <dt id="Click.ctx">ctx</dt>
+                            <dd>
+                                <p>
+                                    This property determines if the <a href="#PreParser.reflectClickContext"><code>reflectClickContext</code></a> method of <a href="#Click.parser"><code>parser</code></a> is to be called.
+                                </p>
+                            </dd>
+                            <dt id="Click.parser">parser</dt>
+                            <dd>
+                                <p>
+                                    This property holds the parser to be embedded.
+                                </p>
+                            </dd>
+                        </dl>
+                    </dd>
+                </dl>
+            </dd>
+
+            <dt id="enums">The Enums</dt>
+            <dd>
+                <p>
+                    These classes are subclasses 
+                    of <code><a href="https://docs.python.org/3/library/enum.html#enum.IntEnum">enum.IntEnum</a></code>.
+                    Any value different from <code>0</code> (meaning <i>no</i>) and <code>1</code> (meaning <i>yes</i>)
+                    is interpreted as <code>2</code> (meaning <i>intermediate</i>).
+                </p>
+                <dl class="heading4">
+                    <dt id="LongOptionAbbreviations.__new__">
+                        class preparse.LongOptionAbbreviations
+                    </dt>
+                    <dd>
+                        <table>
+                            <tr>
+                                <th>Name</th>
+                                <th>Value</th>
+                                <th width="100%">Explanation</th>
+                            </tr>
+                            <tr>
+                                <td><code>REJECT</code></td>
+                                <td><code>0</code></td>
+                                <td>The parser rejects abbreviations and interprets them as unknown options instead.</td>
+                            </tr>
+                            <tr>
+                                <td><code>COMPLETE</code></td>
+                                <td><code>1</code></td>
+                                <td>The parser replaces abbreviations with the full options.</td>
+                            </tr>
+                            <tr>
+                                <td><code>KEEP</code></td>
+                                <td><code>2</code></td>
+                                <td>The parser keeps abbreviations as abbreviations.</td>
+                            </tr>
+                        </table>
+                    </dd>
+                    <dt id="Nargs.__new__">
+                        class preparse.LongOptionAbbreviations
+                    </dt>
+                    <dd>
+                        <table>
+                            <tr>
+                                <th>Name</th>
+                                <th>Value</th>
+                                <th width="100%">Explanation</th>
+                            </tr>
+                            <tr>
+                                <td><code>NO_ARGUMENT</code></td>
+                                <td><code>0</code></td>
+                                <td>The option does not take an argument.</td>
+                            </tr>
+                            <tr>
+                                <td><code>REQUIRED_ARGUMENT</code></td>
+                                <td><code>1</code></td>
+                                <td>The option requires an argument.</td>
+                            </tr>
+                            <tr>
+                                <td><code>OPTIONAL_ARGUMENT</code></td>
+                                <td><code>2</code></td>
+                                <td>The option may take an argument.</td>
+                            </tr>
+                        </table>
+                    </dd>
+                </dl>
+            </dd>
+            <dt id="warnings">The Warnings</dt>
+            <dd>
+                <p>
+                    These classes are subclasses of <code>Warning</code>
+                    that are specifically designed to communicate issues 
+                    with parsing. 
+                </p>
+                <dl class="heading4">
+                    <dt id="PreparseWarning.__new__">
+                        class preparse.PreparseWarning
+                    </dt>
+                    <dd>
+                        <p>This abstract base class is the base for all other warning types.</p>
+                    </dd>
+                    <dt id="PreparseAmbiguousOptionWarning.__new__">
+                        class preparse.PreparseAmbiguousOptionWarning(prog: Any,
+                            option: Any,
+                            possibilities: Any)
+                    </dt>
+                    <dd>
+                        <p>This class warns about ambiguous options.</p>
+                    </dd>
+                    <dt id="PreparseInvalidOptionWarning.__new__">
+                        class preparse.PreparseInvalidOptionWarning(prog: Any,
+                            option: Any)
+                    </dt>
+                    <dd>
+                        <p>This class warns about invalid options.</p>
+                    </dd>
+                    <dt id="PreparseRequiredArgumentWarning.__new__">
+                        class preparse.PreparseRequiredArgumentWarning(prog: Any,
+                            option: Any)
+                    </dt>
+                    <dd>
+                        <p>This class warns about missing required arguments.</p>
+                    </dd>
+                    <dt id="PreparseUnallowedArgumentWarning.__new__">
+                        class preparse.PreparseUnallowedArgumentWarning(prog: Any,
+                            option: Any)
+                    </dt>
+                    <dd>
+                        <p>This class warns about unallowed arguments.</p>
+                    </dd>
+                    <dt id="PreparseUnrecognizedOptionWarning.__new__">
+                        class preparse.PreparseUnrecognizedOptionWarning(prog: Any, 
+                            option: Any)
+                    </dt>
+                    <dd>
+                        <p>This class warns about unrecognized options.</p>
                     </dd>
                 </dl>
             </dd>
