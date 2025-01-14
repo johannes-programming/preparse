@@ -133,7 +133,7 @@ class PreParser:
         ans = dict()
         for slot in type(self).__slots__:
             name = slot.lstrip("_")
-            ans[slot] = getattr(self, name)
+            ans[name] = getattr(self, slot)
         return ans
 
     @makeprop()
