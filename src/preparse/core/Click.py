@@ -9,8 +9,6 @@ __all__ = ["Click"]
 @dataclasses.dataclass
 class Click:
 
-    __slots__ = ("parser", "cmd", "ctx")
-
     parser: Any
     cmd: Any = True
     ctx: Any = True
