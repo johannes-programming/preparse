@@ -1,5 +1,4 @@
-import enum
-import sys
+import abc
 from typing import *
 
 __all__ = [
@@ -9,11 +8,10 @@ __all__ = [
     "PreparseUnallowedArgumentWarning",
     "PreparseUnrecognizedOptionWarning",
     "PreparseWarning",
-    "doNothing",
 ]
 
 
-class PreparseWarning(Warning):
+class PreparseWarning(Warning, metaclass=abc.ABCMeta):
     def __init__(self, **kwargs: Any) -> None:
         "This magic method initializes the current instance."
         for n in type(self).__slots__:
@@ -22,7 +20,7 @@ class PreparseWarning(Warning):
             setattr(self, k, v)
 
     def __str__(self) -> str:
-        "This magic method returns str(self)."
+        "This magic method implements str(self)."
         return f"{self.prog}: {self.getmsg()}"
 
     @property
@@ -30,14 +28,15 @@ class PreparseWarning(Warning):
         "This property returns (str(self),)."
         return (str(self),)
 
-    def getmsg(self) -> str:
-        raise NotImplementedError
+    @abc.abstractmethod
+    def getmsg(self) -> str: ...
 
 
 class PreparseAmbiguousOptionWarning(PreparseWarning):
     __slots__ = ("prog", "option", "possibilities")
 
     def getmsg(self) -> str:
+        "This method returns the core message."
         ans = "option %r is ambiguous; possibilities:" % self.option
         for x in self.possibilities:
             ans += " %r" % x
@@ -48,6 +47,7 @@ class PreparseInvalidOptionWarning(PreparseWarning):
     __slots__ = ("prog", "option")
 
     def getmsg(self) -> str:
+        "This method returns the core message."
         return "invalid option -- %r" % self.option
 
 
@@ -55,6 +55,7 @@ class PreparseRequiredArgumentWarning(PreparseWarning):
     __slots__ = ("prog", "option")
 
     def getmsg(self) -> str:
+        "This method returns the core message."
         return "option requires an argument -- %r" % self.option
 
 
@@ -62,6 +63,7 @@ class PreparseUnallowedArgumentWarning(PreparseWarning):
     __slots__ = ("prog", "option")
 
     def getmsg(self) -> str:
+        "This method returns the core message."
         return "option %r doesn't allow an argument" % self.option
 
 
@@ -69,9 +71,5 @@ class PreparseUnrecognizedOptionWarning(PreparseWarning):
     __slots__ = ("prog", "option")
 
     def getmsg(self) -> str:
+        "This method returns the core message."
         return "unrecognized option %r" % self.option
-
-
-def doNothing(*args: Any, **kwargs: Any) -> None:
-    "This function does nothing."
-    return
