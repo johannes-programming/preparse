@@ -9,12 +9,15 @@ __all__ = ["Click"]
 @dataclasses.dataclass
 class Click:
 
+    __slots__ = ("parser", "cmd", "ctx")
+
     parser: Any
     cmd: Any = True
     ctx: Any = True
 
     @functools.singledispatchmethod
     def __call__(self, target: Any) -> Any:
+        "This magic method implements self(target)."
         target.parse_args = self(target.parse_args)
         return target
 

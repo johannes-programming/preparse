@@ -16,11 +16,6 @@ from preparse.core.enums import *
 __all__ = ["PreParser"]
 
 
-def doNothing(*args: Any, **kwargs: Any) -> None:
-    "This function does nothing."
-    return
-
-
 @dataclasses.dataclass(kw_only=True)
 class PreParser:
     __slots__ = (
@@ -39,7 +34,7 @@ class PreParser:
         longOptionAbbreviations: Any = LongOptionAbbreviations.COMPLETE,
         permutate: Any = True,
         posix: Any = "infer",
-        warn: Callable = doNothing,
+        warn: Callable = str,
     ) -> None:
         "This magic method initializes self."
         self._optdict = dict()
@@ -51,7 +46,7 @@ class PreParser:
         self.warn = warn
 
     def __repr__(self) -> str:
-        "This magic methods gives repr(self)."
+        "This magic method implements repr(self)."
         return datarepr(type(self).__name__, **self.todict())
 
     @makeprop()
@@ -135,14 +130,11 @@ class PreParser:
 
     def todict(self) -> dict:
         "This method returns a dict representing the current instance."
-        return dict(
-            optdict=self.optdict,
-            prog=self.prog,
-            longOptionAbbreviations=self.longOptionAbbreviations,
-            permutate=self.permutate,
-            posix=self.posix,
-            warn=self.warn,
-        )
+        ans = dict()
+        for slot in type(self).__slots__:
+            name = slot.lstrip("_")
+            ans[slot] = getattr(self, name)
+        return ans
 
     @makeprop()
     def warn(self, value: Callable) -> types.FunctionType:
