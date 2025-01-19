@@ -16,6 +16,7 @@ classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
+    "Typing :: Typed",
 ]
 dependencies = [
     "click>=8.1.7",
@@ -28,7 +29,7 @@ keywords = []
 name = "preparse"
 readme = "README.rst"
 requires-python = ">=3.11"
-version = "0.0.11+local.9"
+version = "0.0.11+local.10"
 
 [project.license]
 file = "LICENSE.txt"
