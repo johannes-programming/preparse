@@ -1,8 +1,15 @@
+"""This module holds the enums for the project. \
+Following the precedent of getopt, \
+the value of two represents always an intermediary answer \
+between the values zero, meaning no, and one, meaning yes."""
+
 import enum
+import os
 from typing import *
 
 __all__ = [
-    "LongOptionAbbreviations",
+    "Abbr",
+    "Order",
     "Nargs",
 ]
 
@@ -13,10 +20,28 @@ class BaseEnum(enum.IntEnum):
         return cls(2)
 
 
-class LongOptionAbbreviations(BaseEnum):
+class Abbr(BaseEnum):
     REJECT = 0
-    COMPLETE = 1
-    KEEP = 2
+    KEEP = 1
+    COMPLETE = 2
+
+
+class Order(BaseEnum):
+    GIVEN = 0
+    POSIX = 1
+    PERMUTE = 2
+
+    @classmethod
+    def _infer(cls: type) -> bool:
+        return bool(os.environ.get("POSIXLY_CORRECT"))
+
+    @classmethod
+    def infer_given(cls: type) -> Self:
+        return cls.POSIX if cls._infer() else cls.GIVEN
+
+    @classmethod
+    def infer_permute(cls: type) -> Self:
+        return cls.POSIX if cls._infer() else cls.PERMUTE
 
 
 class Nargs(BaseEnum):
