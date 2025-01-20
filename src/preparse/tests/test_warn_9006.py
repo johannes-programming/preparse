@@ -31,7 +31,7 @@ class CustomPreParser(PreParser):
 class TestPreParserCustomWarnings(unittest.TestCase):
 
     def test_custom_unrecognized_option_handler(self):
-        parser = CustomPreParser(posix=False)
+        parser = CustomPreParser(order=Order.PERMUTE)
         holder.test = self
         holder.option = "--unknown"
         parser.optdict = {"--foo": 1, "--bar": 1, "-x": 0}
@@ -39,7 +39,7 @@ class TestPreParserCustomWarnings(unittest.TestCase):
         parser.parse_args(query)
 
     def test_custom_invalid_option_handler(self):
-        parser = CustomPreParser(posix=False)
+        parser = CustomPreParser(order=Order.PERMUTE)
         holder.test = self
         holder.option = "z"  # Testing short option without the `-` prefix as expected
         parser.optdict = {"--foo": 1, "--bar": 1, "-x": 0}
@@ -47,7 +47,7 @@ class TestPreParserCustomWarnings(unittest.TestCase):
         parser.parse_args(query)
 
     def test_custom_ambiguous_option_handler(self):
-        parser = CustomPreParser(posix=False)
+        parser = CustomPreParser(order=Order.PERMUTE)
         holder.test = self
         holder.option = "--fo"
         holder.possibilities = ["--foo", "--foobar", "--foxtrot"]
@@ -56,7 +56,7 @@ class TestPreParserCustomWarnings(unittest.TestCase):
         parser.parse_args(query)
 
     def test_custom_unallowed_argument_handler(self):
-        parser = CustomPreParser(posix=False)
+        parser = CustomPreParser(order=Order.PERMUTE)
         holder.test = self
         holder.option = "--flag"
         parser.optdict = {"--flag": 0, "-x": 0}
@@ -64,7 +64,7 @@ class TestPreParserCustomWarnings(unittest.TestCase):
         parser.parse_args(query)
 
     def test_custom_required_argument_handler(self):
-        parser = CustomPreParser(posix=False)
+        parser = CustomPreParser(order=Order.PERMUTE)
         holder.test = self
         holder.option = "--foo"
         parser.optdict = {"--foo": 1, "--bar": 0}
