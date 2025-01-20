@@ -58,183 +58,171 @@ def main(x: float) -&gt; None:
                     </dd>
                     <dt id="features">Features</dt>
                     <dd id="featuresCorpus">
-                        <dl class="heading2">
-                            <dt id="PreParser">
-                                The <code><a href="#PreParser">PreParser</a></code> class
+                        <dl class="heading4">
+                            <dt id="PreParser.__new__">
+                                class preparse.PreParser(optdict: Any = None,
+                                    prog: Any = None,
+                                    longOptionAbbreviations: Any = preparse.LongOptionAbbreviations.COMPLETE,
+                                    permutate: Any = True,
+                                    posix: Any = "infer")
                             </dt>
                             <dd>
                                 <p>
                                     This class is the centerpiece of the <a>preparse</a>. 
                                     Its behaviour follows the principles of <code>getopt</code> from C.
+                                    Calling the class creates und returns a new instance.
                                 </p>
                                 <dl class="heading4">
-                                    <dt id="PreParser.__new__">
-                                        class preparse.PreParser(optdict: Any = None,
-                                            prog: Any = None,
-                                            longOptionAbbreviations: Any = preparse.LongOptionAbbreviations.COMPLETE,
-                                            permutate: Any = True,
-                                            posix: Any = "infer")
+                                    <dt id="PreParser.click">
+                                        click(parser: Any,
+                                            cmd: Any = True,
+                                            ctx: Any = True)
+                                            -&gt; preparse.Click
                                     </dt>
                                     <dd>
-                                        <p>Calling the class creates und returns a new instance.</p>
-                                        <dl class="heading4">
-                                            <dt id="PreParser.click">
-                                                click(parser: Any,
-                                                    cmd: Any = True,
-                                                    ctx: Any = True)
-                                                    -&gt; preparse.Click
-                                            </dt>
-                                            <dd>
-                                                <p>
-                                                    This method returns a decorator that infuses the current instance into parse_args.
-                                                </p>
-                                            </dd>
-                                            <dt id="PreParser.copy">
-                                                copy() -&gt; Self
-                                            </dt>
-                                            <dd>
-                                                <p>
-                                                    This method returns a copy of the current instance. 
-                                                </p>
-                                            </dd>
-                                            <dt id="PreParser.longOptionAbbreviations">longOptionAbbreviations</dt>
-                                            <dd>
-                                                <p>
-                                                    This property determines the approach of the instance 
-                                                    to abbreviations of long options.
-                                                </p>
-                                            </dd>
-                                            <dt id="PreParser.optdict">optdict</dt>
-                                            <dd>
-                                                <p>
-                                                    This property holds a dictionary. 
-                                                    Its keys are the options. 
-                                                    Its values specify nargs.
-                                                </p>
-                                            </dd>
-                                            <dt id="PreParser.parse_args">
-                                                parse_args(args: Optional[Iterable] = None) -&gt; List[str]
-                                            </dt>
-                                            <dd>
-                                                <p>
-                                                    This method is at the core of the class. 
-                                                    It returns a preparsed list of arguments.
-                                                    If <code>None</code> is passed as <code>args</code> 
-                                                    then <code>sys.argv[1:]</code> is used. 
-                                                    If the method is applied repeatedly 
-                                                    to a list there will be no changes after the first run.
-                                                </p>
-                                            </dd>
-                                            <dt id="PreParser.permutate">permutate</dt>
-                                            <dd>
-                                                <p>
-                                                    This property decides whether the arguments are permutated in parsing.
-                                                </p>
-                                            </dd>
-                                            <dt id="PreParser.posix">posix</dt>
-                                            <dd>
-                                                <p>
-                                                    This property decides if posix parsing is used, 
-                                                    i.e. a positional argument causes all the arguments after it 
-                                                    to be also interpreted as positional.
-                                                    If the value passed to the property equals <code>"infer"</code> 
-                                                    then <code>os.environ.get("POSIXLY_CORRECT")</code> is saved.
-                                                </p>
-                                            </dd>
-                                            <dt id="PreParser.prog">prog</dt>
-                                            <dd>
-                                                <p>
-                                                    This property represents the name of the program. 
-                                                    If the value passed to the property is <code>None</code>
-                                                    then <code>str(sys.argv[0])</code> is saved.
-                                                </p>
-                                            </dd>
-                                            <dt id="PreParser.reflectClickCommand">
-                                                reflectClickCommand(cmd: click.Command) -&gt; None
-                                            </dt>
-                                            <dd>
-                                                <p>
-                                                    This method alters the current instance 
-                                                    to reflect a <code><a href="https://click.palletsprojects.com/en/stable/api/#click.Command">click.Command</a></code> object. 
-                                                    Concretely the <code><a href="#PreParser.optdict">optdict</a></code> property is changed.
-                                                </p>
-                                            </dd>
-                                            <dt id="PreParser.reflectClickContext">
-                                                reflectClickContext(ctx: click.Context) -&gt; None
-                                            </dt>
-                                            <dd>
-                                                <p>
-                                                    This method alters the current instance 
-                                                    to reflect a <code><a href="https://click.palletsprojects.com/en/stable/api/#click.Context">click.Context</a></code> object. 
-                                                    Concretely the <code><a href="#PreParser.prog">prog</a></code> property is changed.
-                                                </p>
-                                            </dd>
-                                            <dt id="PreParser.todict">todict() -&gt; dict</dt>
-                                            <dd>
-                                                <p>This method a dict representing the current instance.</p>
-                                            </dd>
-                                            <dt id="PreParser.warn">
-                                                warn
-                                            </dt>
-                                            <dd>
-                                                <p>
-                                                    This property holds a function that is called 
-                                                    whenever <code><a href="PreParser.parse_args">parse_args</a></code> 
-                                                    encounters a warning. 
-                                                    The warning is given as the only positional arguments.
-                                                    No keyword arguments are given.
-                                                    Its return value is discarded. 
-                                                    Therefore, <code>str</code> is used to discard the warnings.
-                                                </p>
-                                            </dd>
-                                        </dl>
+                                        <p>
+                                            This method returns a decorator that infuses the current instance into parse_args.
+                                        </p>
+                                    </dd>
+                                    <dt id="PreParser.copy">
+                                        copy() -&gt; Self
+                                    </dt>
+                                    <dd>
+                                        <p>
+                                            This method returns a copy of the current instance. 
+                                        </p>
+                                    </dd>
+                                    <dt id="PreParser.longOptionAbbreviations">longOptionAbbreviations</dt>
+                                    <dd>
+                                        <p>
+                                            This property determines the approach of the instance 
+                                            to abbreviations of long options.
+                                        </p>
+                                    </dd>
+                                    <dt id="PreParser.optdict">optdict</dt>
+                                    <dd>
+                                        <p>
+                                            This property holds a dictionary. 
+                                            Its keys are the options. 
+                                            Its values specify nargs.
+                                        </p>
+                                    </dd>
+                                    <dt id="PreParser.parse_args">
+                                        parse_args(args: Optional[Iterable] = None) -&gt; List[str]
+                                    </dt>
+                                    <dd>
+                                        <p>
+                                            This method is at the core of the class. 
+                                            It returns a preparsed list of arguments.
+                                            If <code>None</code> is passed as <code>args</code> 
+                                            then <code>sys.argv[1:]</code> is used. 
+                                            If the method is applied repeatedly 
+                                            to a list there will be no changes after the first run.
+                                        </p>
+                                    </dd>
+                                    <dt id="PreParser.permutate">permutate</dt>
+                                    <dd>
+                                        <p>
+                                            This property decides whether the arguments are permutated in parsing.
+                                        </p>
+                                    </dd>
+                                    <dt id="PreParser.posix">posix</dt>
+                                    <dd>
+                                        <p>
+                                            This property decides if posix parsing is used, 
+                                            i.e. a positional argument causes all the arguments after it 
+                                            to be also interpreted as positional.
+                                            If the value passed to the property equals <code>"infer"</code> 
+                                            then <code>os.environ.get("POSIXLY_CORRECT")</code> is saved.
+                                        </p>
+                                    </dd>
+                                    <dt id="PreParser.prog">prog</dt>
+                                    <dd>
+                                        <p>
+                                            This property represents the name of the program. 
+                                            If the value passed to the property is <code>None</code>
+                                            then <code>str(sys.argv[0])</code> is saved.
+                                        </p>
+                                    </dd>
+                                    <dt id="PreParser.reflectClickCommand">
+                                        reflectClickCommand(cmd: click.Command) -&gt; None
+                                    </dt>
+                                    <dd>
+                                        <p>
+                                            This method alters the current instance 
+                                            to reflect a <code><a href="https://click.palletsprojects.com/en/stable/api/#click.Command">click.Command</a></code> object. 
+                                            Concretely the <code><a href="#PreParser.optdict">optdict</a></code> property is changed.
+                                        </p>
+                                    </dd>
+                                    <dt id="PreParser.reflectClickContext">
+                                        reflectClickContext(ctx: click.Context) -&gt; None
+                                    </dt>
+                                    <dd>
+                                        <p>
+                                            This method alters the current instance 
+                                            to reflect a <code><a href="https://click.palletsprojects.com/en/stable/api/#click.Context">click.Context</a></code> object. 
+                                            Concretely the <code><a href="#PreParser.prog">prog</a></code> property is changed.
+                                        </p>
+                                    </dd>
+                                    <dt id="PreParser.todict">todict() -&gt; dict</dt>
+                                    <dd>
+                                        <p>This method a dict representing the current instance.</p>
+                                    </dd>
+                                    <dt id="PreParser.warn">
+                                        warn
+                                    </dt>
+                                    <dd>
+                                        <p>
+                                            This property holds a function that is called 
+                                            whenever <code><a href="PreParser.parse_args">parse_args</a></code> 
+                                            encounters a warning. 
+                                            The warning is given as the only positional arguments.
+                                            No keyword arguments are given.
+                                            Its return value is discarded. 
+                                            Therefore, <code>str</code> is used to discard the warnings.
+                                        </p>
                                     </dd>
                                 </dl>
                             </dd>
-                            <dt id="Click">The <code><a href="#Click">Click</a></code> class</dt>
+                            <dt id="Click.__new__">
+                                class preparse.Click(parser: Any, cmd: Any = True, ctx: Any = True)
+                            </dt>
                             <dd>
                                 <p>
                                     This dataclass provides decorators 
                                     for embedding a <a href="#PreParser">PreParser</a> object.
+                                    Calling the class creates und returns a new instance.
                                 </p>
                                 <dl class="heading4">
-                                    <dt id="Click.__new__">
-                                        class preparse.Click(parser: Any, cmd: Any = True, ctx: Any = True)
+                                    <dt id="Click.__call__">
+                                        __call__(target: Any) -&gt; Any
                                     </dt>
                                     <dd>
-                                        <p>Calling the class creates und returns a new instance.</p>
-                                        <dl class="heading4">
-                                            <dt id="Click.__call__">
-                                                __call__(target: Any) -&gt; Any
-                                            </dt>
-                                            <dd>
-                                                <p>
-                                                    This magic method implements <code>self(target)</code>.
-                                                    It works as a decorator that embeds its <code><a href="#Click.parser">parser</a></code> 
-                                                    into a given <code>target</code> 
-                                                    from the library 
-                                                    <a href="https://click.palletsprojects.com/en/stable/">click</a>.
-                                                </p>
-                                            </dd>
-                                            <dt id="Click.cmd">cmd</dt>
-                                            <dd>
-                                                <p>
-                                                    This property determines if the <a href="#PreParser.reflectClickCommand"><code>reflectClickCommand</code></a> method of <a href="#Click.parser"><code>parser</code></a> is to be called.
-                                                </p>
-                                            </dd>
-                                            <dt id="Click.ctx">ctx</dt>
-                                            <dd>
-                                                <p>
-                                                    This property determines if the <a href="#PreParser.reflectClickContext"><code>reflectClickContext</code></a> method of <a href="#Click.parser"><code>parser</code></a> is to be called.
-                                                </p>
-                                            </dd>
-                                            <dt id="Click.parser">parser</dt>
-                                            <dd>
-                                                <p>
-                                                    This property holds the parser to be embedded.
-                                                </p>
-                                            </dd>
-                                        </dl>
+                                        <p>
+                                            This magic method implements <code>self(target)</code>.
+                                            It works as a decorator that embeds its <code><a href="#Click.parser">parser</a></code> 
+                                            into a given <code>target</code> 
+                                            from the library 
+                                            <a href="https://click.palletsprojects.com/en/stable/">click</a>.
+                                        </p>
+                                    </dd>
+                                    <dt id="Click.cmd">cmd</dt>
+                                    <dd>
+                                        <p>
+                                            This property determines if the <a href="#PreParser.reflectClickCommand"><code>reflectClickCommand</code></a> method of <a href="#Click.parser"><code>parser</code></a> is to be called.
+                                        </p>
+                                    </dd>
+                                    <dt id="Click.ctx">ctx</dt>
+                                    <dd>
+                                        <p>
+                                            This property determines if the <a href="#PreParser.reflectClickContext"><code>reflectClickContext</code></a> method of <a href="#Click.parser"><code>parser</code></a> is to be called.
+                                        </p>
+                                    </dd>
+                                    <dt id="Click.parser">parser</dt>
+                                    <dd>
+                                        <p>
+                                            This property holds the parser to be embedded.
+                                        </p>
                                     </dd>
                                 </dl>
                             </dd>
