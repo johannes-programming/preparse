@@ -118,13 +118,15 @@
                                 <p>This method a dict representing the current instance.</p>
                             </dd>
                             <dt id="PreParser.warn">
-                                warn(warning: PreparseWarning) -&gt; None
+                                warn
                             </dt>
                             <dd>
                                 <p>
                                     This property holds a function that is called 
                                     whenever <code><a href="PreParser.parse_args">parse_args</a></code> 
                                     encounters a warning. 
+                                    The warning is given as the only positional arguments.
+                                    No keyword arguments are given.
                                     Its return value is discarded. 
                                     Therefore, <code>str</code> is used to discard the warnings.
                                 </p>
@@ -298,7 +300,6 @@
                     </dd>
                 </dl>
             </dd>
-            
         </dl>
     </body>
     <script src="https://www.johannes-programming.online/script.js"></script>
