@@ -16,21 +16,21 @@ class Parsing:
     parser: "PreParser"
     args: list[str]
 
-    def __post_init__(self) -> None:
+    def __post_init__(self: Self) -> None:
         self.ans = list()
         self.spec = list()
-        optn = "closed"
+        optn: str = "closed"
         while self.args:
             optn = self.tick(optn)
         self.lasttick(optn)
         self.dumpspec()
 
-    def dumpspec(self) -> None:
+    def dumpspec(self: Self) -> None:
         self.ans.extend(self.spec)
         self.spec.clear()
 
     @functools.cached_property
-    def islongonly(self) -> bool:
+    def islongonly(self: Self) -> bool:
         for k in self.optdict.keys():
             if len(k) < 3:
                 continue
@@ -42,39 +42,39 @@ class Parsing:
             return True
         return False
 
-    def lasttick(self, optn: str) -> None:
+    def lasttick(self: Self, optn: str) -> None:
         if optn != "open":
             return
-        warning = PreparseRequiredArgumentWarning(
+        self.warn(
+            PreparseRequiredArgumentWarning,
             prog=self.parser.prog,
             option=self.ans[-1],
         )
-        self.parser.warn(warning)
 
     @functools.cached_property
-    def optdict(self) -> Dict[str, Nargs]:
-        ans = dict()
+    def optdict(self: Self) -> Dict[str, Nargs]:
+        ans: dict = dict()
         for k, v in self.parser.optdict.items():
             ans[str(k)] = Nargs(v)
         return ans
 
-    def possibilities(self, opt: str) -> list[str]:
+    def possibilities(self: Self, opt: str) -> list[str]:
         if opt in self.optdict.keys():
             return [opt]
         if self.parser.longOptionAbbreviations == LongOptionAbbreviations.REJECT:
             return list()
-        ans = list()
+        ans: list = list()
         for k in self.optdict.keys():
             if k.startswith(opt):
                 ans.append(k)
         return ans
 
-    def tick(self, optn: str) -> str:
+    def tick(self: Self, optn: str) -> str:
         if optn == "break":
             self.spec.extend(self.args)
             self.args.clear()
             return "break"
-        arg = self.args.pop(0)
+        arg: str = self.args.pop(0)
         if optn == "open":
             self.ans.append(arg)
             return "closed"
@@ -86,34 +86,34 @@ class Parsing:
         else:
             return self.tick_pos(arg)
 
-    def tick_opt(self, arg: str) -> str:
+    def tick_opt(self: Self, arg: str) -> str:
         if arg.startswith("--") or self.islongonly:
             return self.tick_opt_long(arg)
         else:
             return self.tick_opt_short(arg)
 
-    def tick_opt_long(self, arg: str) -> str:
+    def tick_opt_long(self: Self, arg: str) -> str:
         try:
-            i = arg.index("=")
+            i: int = arg.index("=")
         except ValueError:
-            i = len(arg)
-        opt = arg[:i]
-        possibilities = self.possibilities(opt)
+            i: int = len(arg)
+        opt: str = arg[:i]
+        possibilities: list = self.possibilities(opt)
         if len(possibilities) == 0:
-            warning = PreparseUnrecognizedOptionWarning(
+            self.warn(
+                PreparseUnrecognizedOptionWarning,
                 prog=self.parser.prog,
                 option=arg,
             )
-            self.parser.warn(warning)
             self.ans.append(arg)
             return "closed"
         if len(possibilities) > 1:
-            warning = PreparseAmbiguousOptionWarning(
+            self.warn(
+                PreparseAmbiguousOptionWarning,
                 prog=self.parser.prog,
                 option=arg,
                 possibilities=possibilities,
             )
-            self.parser.warn(warning)
             self.ans.append(arg)
             return "closed"
         opt = possibilities[0]
@@ -135,7 +135,7 @@ class Parsing:
             else:
                 return "closed"
 
-    def tick_opt_short(self, arg: str) -> str:
+    def tick_opt_short(self: Self, arg: str) -> str:
         self.ans.append(arg)
         nargs = 0
         for i in range(1 - len(arg), 0):
@@ -154,7 +154,7 @@ class Parsing:
         else:
             return "closed"
 
-    def tick_pos(self, arg: str) -> str:
+    def tick_pos(self: Self, arg: str) -> str:
         self.spec.append(arg)
         if self.parser.posix:
             return "break"
@@ -163,3 +163,7 @@ class Parsing:
         else:
             self.dumpspec()
             return "closed"
+
+    def warn(self: Self, wrncls: type, /, **kwargs: Any) -> None:
+        wrn: PreparseWarning = wrncls(**kwargs)
+        self.parser.warn(wrn)
