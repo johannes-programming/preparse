@@ -16,7 +16,7 @@ class CustomPreParser(PreParser):
 class TestPreParserCustomWarnings(unittest.TestCase):
 
     def test_custom_unrecognized_option_handler(self):
-        parser = CustomPreParser(posix=False)
+        parser = CustomPreParser(order=Order.PERMUTE)
         holder.test = self
         holder.option = "--unknown"
         parser.optdict = {"--foo": 1, "--bar": 1, "-x": 0}
