@@ -21,8 +21,7 @@ class PreParser:
     __slots__ = (
         "_abbr",
         "_optdict",
-        "_permutate",
-        "_posix",
+        "_order",
         "_prog",
         "_warn",
     )
@@ -32,8 +31,7 @@ class PreParser:
         optdict: Any = None,
         prog: Any = None,
         abbr: Any = Abbr.COMPLETE,
-        permutate: Any = True,
-        posix: Any = "infer",
+        order: Any = Order.PERMUTE,
         warn: Callable = str,
     ) -> None:
         "This magic method initializes self."
@@ -41,8 +39,7 @@ class PreParser:
         self.optdict = optdict
         self.prog = prog
         self.abbr = abbr
-        self.permutate = permutate
-        self.posix = posix
+        self.order = order
         self.warn = warn
 
     def __repr__(self: Self) -> str:
@@ -86,17 +83,13 @@ class PreParser:
         ).ans
 
     @makeprop()
-    def permutate(self: Self, value: Any) -> bool:
-        "This property decides if the arguments will be permutated."
-        return bool(value)
-
-    @makeprop()
-    def posix(self: Self, value: Any) -> bool:
-        "This property decides if posix parsing is used, i.e. a positional argument causes all the arguments after it to be also interpreted as positional."
-        if value == "infer":
-            value = os.environ.get("POSIXLY_CORRECT")
-        value = bool(value)
-        return value
+    def order(self: Self, value: Any) -> Order:
+        "This property decides how to order flags and positional arguments."
+        if value == "infer_given":
+            return Order.infer_given()
+        if value == "infer_permute":
+            return Order.infer_permute()
+        return Order(value)
 
     @makeprop()
     def prog(self: Self, value: Any) -> str:

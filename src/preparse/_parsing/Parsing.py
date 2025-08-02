@@ -156,12 +156,12 @@ class Parsing:
 
     def tick_pos(self: Self, arg: str) -> str:
         self.spec.append(arg)
-        if self.parser.posix:
+        if self.parser.order == Order.POSIX:
             return "break"
-        elif self.parser.permutate:
+        elif self.parser.order == Order.GIVEN:
+            self.dumpspec()
             return "closed"
         else:
-            self.dumpspec()
             return "closed"
 
     def warn(self: Self, wrncls: type, /, **kwargs: Any) -> None:

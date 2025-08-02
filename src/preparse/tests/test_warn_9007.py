@@ -32,7 +32,7 @@ class TestPreParserCustomWarnings(unittest.TestCase):
 
     # Unrecognized Option Tests
     def test_custom_unrecognized_option_handler_single_option(self):
-        parser = CustomPreParser(posix=False)
+        parser = CustomPreParser(order=Order.PERMUTE)
         holder.test = self
         holder.option = "--unknown"
         parser.optdict = {"--foo": 1, "--bar": 1, "-x": 0}
@@ -40,7 +40,7 @@ class TestPreParserCustomWarnings(unittest.TestCase):
         parser.parse_args(query)
 
     def test_custom_unrecognized_option_handler_multiple_unrecognized(self):
-        parser = CustomPreParser(posix=False)
+        parser = CustomPreParser(order=Order.PERMUTE)
         holder.test = self
         holder.option = "--mystery"
         parser.optdict = {"--alpha": 1, "--beta": 1, "-y": 0}
@@ -49,7 +49,7 @@ class TestPreParserCustomWarnings(unittest.TestCase):
 
     # Invalid Option Tests
     def test_custom_invalid_option_handler_single_invalid(self):
-        parser = CustomPreParser(posix=False)
+        parser = CustomPreParser(order=Order.PERMUTE)
         holder.test = self
         holder.option = "z"  # Only the letter is expected
         parser.optdict = {"--foo": 1, "--bar": 1, "-x": 0}
@@ -57,7 +57,7 @@ class TestPreParserCustomWarnings(unittest.TestCase):
         parser.parse_args(query)
 
     def test_custom_invalid_option_handler_with_combined_short_options(self):
-        parser = CustomPreParser(posix=False)
+        parser = CustomPreParser(order=Order.PERMUTE)
         holder.test = self
         holder.option = "y"  # 'y' is not recognized among combined options
         parser.optdict = {"-a": 0, "-b": 0, "-c": 0}
@@ -66,7 +66,7 @@ class TestPreParserCustomWarnings(unittest.TestCase):
 
     # Ambiguous Option Tests
     def test_custom_ambiguous_option_handler_with_partial_match(self):
-        parser = CustomPreParser(posix=False)
+        parser = CustomPreParser(order=Order.PERMUTE)
         holder.test = self
         holder.option = "--fo"
         holder.possibilities = ["--foo", "--foobar", "--foxtrot"]
@@ -75,7 +75,7 @@ class TestPreParserCustomWarnings(unittest.TestCase):
         parser.parse_args(query)
 
     def test_custom_ambiguous_option_handler_multiple_matches(self):
-        parser = CustomPreParser(posix=False)
+        parser = CustomPreParser(order=Order.PERMUTE)
         holder.test = self
         holder.option = "--ba"
         holder.possibilities = ["--bar", "--baz", "--bam"]
@@ -85,7 +85,7 @@ class TestPreParserCustomWarnings(unittest.TestCase):
 
     # Unallowed Argument Tests
     def test_custom_unallowed_argument_handler_flag_with_argument(self):
-        parser = CustomPreParser(posix=False)
+        parser = CustomPreParser(order=Order.PERMUTE)
         holder.test = self
         holder.option = "--flag"
         parser.optdict = {"--flag": 0, "-x": 0}
@@ -93,7 +93,7 @@ class TestPreParserCustomWarnings(unittest.TestCase):
         parser.parse_args(query)
 
     def test_custom_unallowed_argument_handler_combined_flags_with_argument(self):
-        parser = CustomPreParser(posix=False)
+        parser = CustomPreParser(order=Order.PERMUTE)
         holder.test = self
         holder.option = "-q"
         parser.optdict = {"-q": 0, "-v": 0, "-longonly": 0}
@@ -102,7 +102,7 @@ class TestPreParserCustomWarnings(unittest.TestCase):
 
     # Required Argument Tests
     def test_custom_required_argument_handler_missing_argument(self):
-        parser = CustomPreParser(posix=False)
+        parser = CustomPreParser(order=Order.PERMUTE)
         holder.test = self
         holder.option = "--foo"
         parser.optdict = {"--foo": 1, "--bar": 0}
@@ -110,7 +110,7 @@ class TestPreParserCustomWarnings(unittest.TestCase):
         parser.parse_args(query)
 
     def test_custom_required_argument_handler_multiple_required_arguments_missing(self):
-        parser = CustomPreParser(posix=False)
+        parser = CustomPreParser(order=Order.PERMUTE)
         holder.test = self
         holder.option = "--file"
         parser.optdict = {"--file": 1, "--output": 1}
