@@ -3,6 +3,8 @@ import functools
 import types
 from typing import *
 
+import overloadable
+
 __all__ = ["Click"]
 
 
@@ -13,14 +15,17 @@ class Click:
     cmd: Any = True
     ctx: Any = True
 
-    @functools.singledispatchmethod
+    @overloadable.overloadable
     def __call__(self, target: Any) -> Any:
         "This magic method implements self(target)."
-        target.parse_args = self(target.parse_args)
-        return target
+        if isinstance(target, types.FunctionType):
+            return "function"
+        if isinstance(target, types.MethodType):
+            return "method"
+        return "other"
 
-    @__call__.register
-    def _(self, target: types.FunctionType) -> types.FunctionType:
+    @__call__.overload("function")
+    def __call__(self, target: types.FunctionType) -> types.FunctionType:
         @functools.wraps(target)
         def ans(cmd, ctx, args):
             p = self.parser.copy()
@@ -32,8 +37,13 @@ class Click:
 
         return ans
 
-    @__call__.register
-    def _(self, target: types.MethodType) -> types.MethodType:
+    @__call__.overload("method")
+    def __call__(self, target: types.MethodType) -> types.MethodType:
         func = self(target.__func__)
         ans = types.MethodType(func, target.__self__)
         return ans
+
+    @__call__.overload("other")
+    def __call__(self, target: Any) -> Any:
+        target.parse_args = self(target.parse_args)
+        return target
