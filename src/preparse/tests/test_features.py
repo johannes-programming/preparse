@@ -6,9 +6,9 @@ from preparse.core import *
 class TestPreparse(unittest.TestCase):
 
     def test_abbrev_enum(self):
-        self.assertEqual(LongOptionAbbreviations.REJECT, 0)
-        self.assertEqual(LongOptionAbbreviations.COMPLETE, 1)
-        self.assertEqual(LongOptionAbbreviations.KEEP, 2)
+        self.assertEqual(Abbr.REJECT, 0)
+        self.assertEqual(Abbr.KEEP, 1)
+        self.assertEqual(Abbr.COMPLETE, 2)
 
     def test_nargs_enum(self):
         self.assertEqual(Nargs.NO_ARGUMENT, 0)
@@ -18,9 +18,7 @@ class TestPreparse(unittest.TestCase):
     def test_preparser_copy(self):
         parser = PreParser()
         parser_copy = parser.copy()
-        self.assertEqual(
-            parser.longOptionAbbreviations, parser_copy.longOptionAbbreviations
-        )
+        self.assertEqual(parser.abbr, parser_copy.abbr)
         self.assertEqual(parser.permutate, parser_copy.permutate)
         self.assertEqual(parser.posix, parser_copy.posix)
         self.assertEqual(parser.optdict, parser_copy.optdict)
@@ -35,7 +33,7 @@ class TestPreparse(unittest.TestCase):
         parser = PreParser()
         result = parser.todict()
         expected_keys = [
-            "longOptionAbbreviations",
+            "abbr",
             "optdict",
             "permutate",
             "posix",

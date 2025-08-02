@@ -19,7 +19,7 @@ __all__ = ["PreParser"]
 @dataclasses.dataclass(kw_only=True)
 class PreParser:
     __slots__ = (
-        "_longOptionAbbreviations",
+        "_abbr",
         "_optdict",
         "_permutate",
         "_posix",
@@ -28,10 +28,10 @@ class PreParser:
     )
 
     def __init__(
-        self,
+        self: Self,
         optdict: Any = None,
         prog: Any = None,
-        longOptionAbbreviations: Any = LongOptionAbbreviations.COMPLETE,
+        abbr: Any = Abbr.COMPLETE,
         permutate: Any = True,
         posix: Any = "infer",
         warn: Callable = str,
@@ -40,30 +40,30 @@ class PreParser:
         self._optdict = dict()
         self.optdict = optdict
         self.prog = prog
-        self.longOptionAbbreviations = longOptionAbbreviations
+        self.abbr = abbr
         self.permutate = permutate
         self.posix = posix
         self.warn = warn
 
-    def __repr__(self) -> str:
+    def __repr__(self: Self) -> str:
         "This magic method implements repr(self)."
         return datarepr(type(self).__name__, **self.todict())
 
     @makeprop()
-    def longOptionAbbreviations(self, value: SupportsInt) -> LongOptionAbbreviations:
+    def abbr(self: Self, value: SupportsInt) -> Abbr:
         "This property decides how to handle abbreviations."
-        return LongOptionAbbreviations(value)
+        return Abbr(value)
 
-    def click(self, cmd: Any = True, ctx: Any = True) -> Click:
+    def click(self: Self, cmd: Any = True, ctx: Any = True) -> Click:
         "This method returns a decorator that infuses the current instance into parse_args."
         return Click(parser=self, cmd=cmd, ctx=ctx)
 
-    def copy(self) -> Self:
+    def copy(self: Self) -> Self:
         "This method returns a copy of the current instance."
         return type(self)(**self.todict())
 
     @makeprop()
-    def optdict(self, value: Any) -> dict:
+    def optdict(self: Self, value: Any) -> dict:
         "This property gives a dictionary of options."
         if value is None:
             self._optdict.clear()
@@ -74,7 +74,7 @@ class PreParser:
         return self._optdict
 
     def parse_args(
-        self,
+        self: Self,
         args: Optional[Iterable] = None,
     ) -> list[str]:
         "This method parses args."
@@ -86,12 +86,12 @@ class PreParser:
         ).ans
 
     @makeprop()
-    def permutate(self, value: Any) -> bool:
+    def permutate(self: Self, value: Any) -> bool:
         "This property decides if the arguments will be permutated."
         return bool(value)
 
     @makeprop()
-    def posix(self, value: Any) -> bool:
+    def posix(self: Self, value: Any) -> bool:
         "This property decides if posix parsing is used, i.e. a positional argument causes all the arguments after it to be also interpreted as positional."
         if value == "infer":
             value = os.environ.get("POSIXLY_CORRECT")
@@ -99,13 +99,13 @@ class PreParser:
         return value
 
     @makeprop()
-    def prog(self, value: Any) -> str:
+    def prog(self: Self, value: Any) -> str:
         "This property represents the name of the program."
         if value is None:
             value = os.path.basename(sys.argv[0])
         return str(value)
 
-    def reflectClickCommand(self, cmd: cl.Command) -> None:
+    def reflectClickCommand(self: Self, cmd: cl.Command) -> None:
         "This method causes the current instance to reflect a click.Command object."
         optdict = dict()
         for p in cmd.params:
@@ -122,7 +122,7 @@ class PreParser:
         self.optdict.clear()
         self.optdict.update(optdict)
 
-    def reflectClickContext(self, ctx: cl.Context) -> None:
+    def reflectClickContext(self: Self, ctx: cl.Context) -> None:
         "This method causes the current instance to reflect a click.Context object."
         self.prog = ctx.info_name
 
@@ -135,6 +135,6 @@ class PreParser:
         return ans
 
     @makeprop()
-    def warn(self, value: Callable) -> types.FunctionType:
+    def warn(self: Self, value: Callable) -> types.FunctionType:
         "This property gives a function that takes in the warnings."
         return tofunc(value)
