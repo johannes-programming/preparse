@@ -28,8 +28,8 @@ class Parsing:
     def dumpspec(self: Self) -> None:
         self.ans.extend(self.spec)
         self.spec.clear()
-    
-    def get_nargs_for_letter(self:Self, letter:str) -> Nargs:
+
+    def get_nargs_for_letter(self: Self, letter: str) -> Nargs:
         try:
             return self.optdict["-" + letter]
         except KeyError:
@@ -97,14 +97,15 @@ class Parsing:
             # if arg is the special argument
             self.ans.append("--")
             return "break"
+        hasgroup: bool = optn == "group"
         if arg.startswith("-") and arg != "-":
             # if arg is an option
-            return self.tick_opt(arg, hasgroup=optn=="group")
+            return self.tick_opt(arg, hasgroup=hasgroup)
         else:
             # if arg is positional
-            return self.tick_pos(arg)
+            return self.tick_pos(arg, hasgroup=hasgroup)
 
-    def tick_opt(self: Self, arg: str, /, *, hasgroup:bool) -> str:
+    def tick_opt(self: Self, arg: str, /, *, hasgroup: bool) -> str:
         if arg.startswith("--") or self.islongonly:
             return self.tick_opt_long(arg)
         else:
@@ -153,29 +154,39 @@ class Parsing:
             else:
                 return "closed"
 
-    def tick_opt_short(self: Self, arg: str, /, *, hasgroup:bool) -> str:
-        i:int
-        a:str
-        nargs:Nargs 
-        self.ans.append(arg)
+    def tick_opt_short(self: Self, arg: str, /, *, hasgroup: bool) -> str:
+        i: int
+        a: str
+        nargs: Nargs
+        if self.parser.group != Group.MINIMIZE:
+            self.ans.append("-")
+        if (self.parser.group == Group.MAXIMIZE) and hasgroup:
+            self.ans.pop()
         for i, a in enumerate(arg):
             if i == 0:
                 continue
+            if self.parser.group != Group.MINIMIZE:
+                self.ans[-1] += a
+            elif a == "-":
+                self.ans[-1] += a
+            else:
+                self.ans.append("-" + a)
             nargs = self.get_nargs_for_letter(a)
             if nargs == Nargs.NO_ARGUMENT:
                 continue
-            value:str = arg[i+1:]
+            value: str = arg[i + 1 :]
             return self.tick_opt_short_nongroup(nargs=nargs, value=value)
         return "group"
-    
-    def tick_opt_short_nongroup(self:Self, *, nargs:Nargs, value:str)-> str:
+
+    def tick_opt_short_nongroup(self: Self, *, nargs: Nargs, value: str) -> str:
         if value:
+            self.ans[-1] += value
             return "closed"
         if nargs == Nargs.OPTIONAL_ARGUMENT:
             return "closed"
         return "open"
 
-    def tick_pos(self: Self, arg: str) -> str:
+    def tick_pos(self: Self, arg: str, *, hasgroup: bool) -> str:
         self.spec.append(arg)
         if self.parser.order == Order.POSIX:
             return "break"
@@ -183,7 +194,7 @@ class Parsing:
             self.dumpspec()
             return "closed"
         else:
-            return "closed"
+            return "group" if hasgroup else "closed"
 
     def warn(self: Self, wrncls: type, /, **kwargs: Any) -> None:
         wrn: PreparseWarning = wrncls(**kwargs)
