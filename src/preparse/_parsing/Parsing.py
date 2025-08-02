@@ -31,6 +31,9 @@ class Parsing:
 
     @functools.cached_property
     def islongonly(self: Self) -> bool:
+        # if a long option with a single hyphon exists
+        # then all options are treated as long options
+        # example: -foo
         for k in self.optdict.keys():
             if len(k) < 3:
                 continue
@@ -38,7 +41,6 @@ class Parsing:
                 continue
             if not k.startswith("-"):
                 continue
-            # example: -foo
             return True
         return False
 
@@ -71,19 +73,24 @@ class Parsing:
 
     def tick(self: Self, optn: str) -> str:
         if optn == "break":
+            # if no more options are allowed
             self.spec.extend(self.args)
             self.args.clear()
             return "break"
         arg: str = self.args.pop(0)
         if optn == "open":
+            # if a value for an option is already expected
             self.ans.append(arg)
             return "closed"
         if arg == "--":
+            # if arg is the special argument
             self.ans.append("--")
             return "break"
         if arg.startswith("-") and arg != "-":
+            # if arg is an option
             return self.tick_opt(arg)
         else:
+            # if arg is positional
             return self.tick_pos(arg)
 
     def tick_opt(self: Self, arg: str) -> str:
