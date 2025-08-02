@@ -19,7 +19,7 @@ class Parsing:
     def __post_init__(self: Self) -> None:
         self.ans = list()
         self.spec = list()
-        optn: str = "closed"
+        optn: str = "seal"
         while self.args:
             optn = self.tick(optn)
         self.lasttick(optn)
@@ -28,6 +28,18 @@ class Parsing:
     def dumpspec(self: Self) -> None:
         self.ans.extend(self.spec)
         self.spec.clear()
+
+
+    def get_nargs_for_option_letter(self:Self, letter:str) -> Nargs:
+        try:
+            return self.optdict["-" + letter]
+        except KeyError:
+            self.warn(
+                PreparseInvalidOptionWarning,
+                prog=self.parser.prog,
+                option=letter,
+            )
+            return Nargs.NO_ARGUMENT
 
     @functools.cached_property
     def islongonly(self: Self) -> bool:
@@ -45,7 +57,7 @@ class Parsing:
         return False
 
     def lasttick(self: Self, optn: str) -> None:
-        if optn != "open":
+        if optn != "grab":
             return
         self.warn(
             PreparseRequiredArgumentWarning,
@@ -78,26 +90,26 @@ class Parsing:
             self.args.clear()
             return "break"
         arg: str = self.args.pop(0)
-        if optn == "open":
+        if optn == "grab":
             # if a value for an option is already expected
             self.ans.append(arg)
-            return "closed"
+            return "seal"
         if arg == "--":
             # if arg is the special argument
             self.ans.append("--")
             return "break"
         if arg.startswith("-") and arg != "-":
             # if arg is an option
-            return self.tick_opt(arg)
+            return self.tick_opt(arg, isgroup=optn=="group")
         else:
             # if arg is positional
             return self.tick_pos(arg)
 
-    def tick_opt(self: Self, arg: str) -> str:
+    def tick_opt(self: Self, arg: str, *,isgroup:bool) -> str:
         if arg.startswith("--") or self.islongonly:
             return self.tick_opt_long(arg)
         else:
-            return self.tick_opt_short(arg)
+            return self.tick_opt_short(arg, isgroup=isgroup)
 
     def tick_opt_long(self: Self, arg: str) -> str:
         try:
@@ -113,7 +125,7 @@ class Parsing:
                 option=arg,
             )
             self.ans.append(arg)
-            return "closed"
+            return "seal"
         if len(possibilities) > 1:
             self.warn(
                 PreparseAmbiguousOptionWarning,
@@ -122,7 +134,7 @@ class Parsing:
                 possibilities=possibilities,
             )
             self.ans.append(arg)
-            return "closed"
+            return "seal"
         opt = possibilities[0]
         if self.parser.abbr == Abbr.COMPLETE:
             self.ans.append(opt + arg[i:])
@@ -135,31 +147,78 @@ class Parsing:
                     option=opt,
                 )
                 self.parser.warn(warning)
-            return "closed"
+            return "seal"
         else:
             if self.optdict[opt] == 1:
-                return "open"
+                return "grab"
             else:
-                return "closed"
+                return "seal"
+        
+    def tick_opt_short(self: Self, arg: str, *, isgroup:bool) -> str:
+        if self.parser.group == Group.MINIMIZE:
+            return self.tick_opt_short_min(arg)
+        else:
+            return self.tick_opt_short_nonmin(arg, isgroup=isgroup)
 
-    def tick_opt_short(self: Self, arg: str) -> str:
+
+    def tick_opt_short_min(self: Self, arg: str) -> str:
+        i:int
+        a:str
+        nargs :Nargs
+        for i, a in enumerate(arg):
+            if i == 0:
+                continue
+            if a == "-":
+                self.ans[-1] += a
+            else:
+                self.ans.append("-" + a)
+            nargs = self.get_nargs_for_option_letter(a)
+            if nargs == Nargs.NO_ARGUMENT:
+                continue
+            value = arg[i+1:]
+            if value:
+                self.ans[-1] += value
+                return "seal"
+            if nargs != Nargs.REQUIRED_ARGUMENT:
+                return "seal"
+            return "grab"
+        return "seal"
+        
+    def tick_opt_short_nonmin(self: Self, arg: str, *,isgroup:bool) -> str:
+        if isgroup and self.parser.group == Group.MAXIMIZE:
+            self.ans[-1] += arg[1:]
+        else:
+            self.ans.append(arg)
+        i:int
+        a:str
+        nargs : Nargs 
+        for i, a in enumerate(arg):
+            if i == 0:
+                continue
+            nargs = self.get_nargs_for_option_letter(a)
+            if nargs != Nargs.NO_ARGUMENT:
+                break
+            value = arg[i + 1:]
+            if value:
+                return "seal"
+            if nargs != Nargs.REQUIRED_ARGUMENT:
+                return "seal"
+            return "grab"
+        return "group"
+        
+    def tick_opt_short_maintain(self: Self, arg: str) -> str:
         self.ans.append(arg)
         nargs = 0
-        for i in range(1 - len(arg), 0):
+        for i, a in enumerate(arg):
+            if i == 0:
+                continue
             if nargs != 0:
-                return "closed"
-            nargs = self.optdict.get("-" + arg[i])
-            if nargs is None:
-                warning = PreparseInvalidOptionWarning(
-                    prog=self.parser.prog,
-                    option=arg[i],
-                )
-                self.parser.warn(warning)
-                nargs = 0
+                return "seal"
+            nargs = self.get_nargs_for_option_letter(a)
         if nargs == 1:
-            return "open"
+            return "grab"
         else:
-            return "closed"
+            return "seal"
 
     def tick_pos(self: Self, arg: str) -> str:
         self.spec.append(arg)
@@ -167,9 +226,9 @@ class Parsing:
             return "break"
         elif self.parser.order == Order.GIVEN:
             self.dumpspec()
-            return "closed"
+            return "seal"
         else:
-            return "closed"
+            return "seal"
 
     def warn(self: Self, wrncls: type, /, **kwargs: Any) -> None:
         wrn: PreparseWarning = wrncls(**kwargs)
