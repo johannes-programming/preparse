@@ -19,7 +19,7 @@ class Parsing:
     def __post_init__(self: Self) -> None:
         self.ans = list()
         self.spec = list()
-        optn: str = "closed"
+        optn: str = "sealed"
         while self.args:
             optn = self.tick(optn)
         self.lasttick(optn)
@@ -45,7 +45,7 @@ class Parsing:
         return False
 
     def lasttick(self: Self, optn: str) -> None:
-        if optn != "open":
+        if optn != "grabbing":
             return
         self.warn(
             PreparseRequiredArgumentWarning,
@@ -72,20 +72,20 @@ class Parsing:
         return ans
 
     def tick(self: Self, optn: str) -> str:
-        if optn == "break":
+        if optn == "broken":
             # if no more options are allowed
             self.spec.extend(self.args)
             self.args.clear()
-            return "break"
+            return "broken"
         arg: str = self.args.pop(0)
-        if optn == "open":
+        if optn == "grabbing":
             # if a value for an option is already expected
             self.ans.append(arg)
-            return "closed"
+            return "sealed"
         if arg == "--":
             # if arg is the special argument
             self.ans.append("--")
-            return "break"
+            return "broken"
         if arg.startswith("-") and arg != "-":
             # if arg is an option
             return self.tick_opt(arg)
@@ -113,7 +113,7 @@ class Parsing:
                 option=arg,
             )
             self.ans.append(arg)
-            return "closed"
+            return "sealed"
         if len(possibilities) > 1:
             self.warn(
                 PreparseAmbiguousOptionWarning,
@@ -122,7 +122,7 @@ class Parsing:
                 possibilities=possibilities,
             )
             self.ans.append(arg)
-            return "closed"
+            return "sealed"
         opt = possibilities[0]
         if self.parser.abbr == Abbr.COMPLETE:
             self.ans.append(opt + arg[i:])
@@ -135,19 +135,19 @@ class Parsing:
                     option=opt,
                 )
                 self.parser.warn(warning)
-            return "closed"
+            return "sealed"
         else:
             if self.optdict[opt] == 1:
-                return "open"
+                return "grabbing"
             else:
-                return "closed"
+                return "sealed"
 
     def tick_opt_short(self: Self, arg: str) -> str:
         self.ans.append(arg)
         nargs = 0
         for i in range(1 - len(arg), 0):
             if nargs != 0:
-                return "closed"
+                return "sealed"
             nargs = self.optdict.get("-" + arg[i])
             if nargs is None:
                 warning = PreparseInvalidOptionWarning(
@@ -157,19 +157,19 @@ class Parsing:
                 self.parser.warn(warning)
                 nargs = 0
         if nargs == 1:
-            return "open"
+            return "grabbing"
         else:
-            return "closed"
+            return "sealed"
 
     def tick_pos(self: Self, arg: str) -> str:
         self.spec.append(arg)
         if self.parser.order == Order.POSIX:
-            return "break"
+            return "broken"
         elif self.parser.order == Order.GIVEN:
             self.dumpspec()
-            return "closed"
+            return "sealed"
         else:
-            return "closed"
+            return "sealed"
 
     def warn(self: Self, wrncls: type, /, **kwargs: Any) -> None:
         wrn: PreparseWarning = wrncls(**kwargs)
