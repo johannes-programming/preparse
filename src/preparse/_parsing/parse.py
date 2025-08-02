@@ -1,44 +1,64 @@
-import dataclasses
-import functools
+
 from typing import *
 
 from preparse.core.enums import *
 from preparse.core.warnings import *
+from preparse._parsing.Item import *
 
 if TYPE_CHECKING:
     from preparse.core.PreParser import PreParser
 
-__all__ = ["Parsing"]
+__all__ = ["preparse"]
 
-@dataclasses.dataclass
-class Item:
-    key:Optional[str]
-    equal:bool
-    value:Optional[str]
-    comment:Any
+def is_certainly_not_an_option(arg:str)->bool:
+    return arg=="-" or not arg.startswith("-")
 
-def preparse(parser: "PreParser", args: list[str]) -> list[str]:
-    olditems:list[Item] = parse(args, parser=parser)
-    newitems:list[Item] = digest(olditems, parser=parser)
-    ans:list[str] = deparse(newitems, parser=parser)
+def parse(args:list[str], /, *, parser:"PreParser"):
+    last:Optional[Item] = None
+    broken:bool = False
+    for a in args:
+        if broken:
+            yield Item(value=a)
+            continue
+        if last is not None:
+            last.value = a
+            yield last
+            last = None
+            continue
+        if a == "--":
+            yield Item()
+            broken = True
+            continue
+        if is_certainly_not_an_option(a):
+            yield Item(value=a)
+            broken = parser.order == Order.POSIX
+            continue
+        last = Item()
+        if reflect(item=last, arg=a, parser=parser):
+            yield last
+            last = None
 
-def parse(args:list[str], *, parser:"PreParser") -> list[Item]:
+def reflect(arg:str, *, item:Item, parser:Any):
+    if not arg.startswith("--"):
+        return reflect_short(arg, item=item, parser=parser)
+    else:
+        return reflect_long(*arg.split("=", 1), item=item, parser=parser)
+            
+
+def reflect_long(trunk:str, value:Optional[str]=None, *, item:Item, parser:Any):
+    item.key = get_long_key(trunk=trunk, parser=parser)
+    item.equal = True
+    item.value = value
+    item.comment = trunk
+    if 
+    
     
 
 
-@dataclasses.dataclass
-class Parsing:
-    parser: "PreParser"
-    args: list[str]
 
-    def __post_init__(self: Self) -> None:
-        self.ans = list()
-        self.spec = list()
-        optn: str = "closed"
-        while self.args:
-            optn = self.tick(optn)
-        self.lasttick(optn)
-        self.dumpspec()
+    optn = self.tick(optn)
+    self.lasttick(optn)
+    self.dumpspec()
 
     def dumpspec(self: Self) -> None:
         self.ans.extend(self.spec)

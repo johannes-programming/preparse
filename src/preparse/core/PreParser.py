@@ -74,6 +74,7 @@ class PreParser:
             self._optdict.clear()
             return self._optdict
         value = dict(value)
+        value = {str(k):Nargs(v) for k, v in value.items()}
         self._optdict.clear()
         self._optdict.update(value)
         return self._optdict
