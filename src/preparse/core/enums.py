@@ -9,6 +9,7 @@ from typing import *
 
 __all__ = [
     "Abbr",
+    "Group",
     "Order",
     "Nargs",
 ]
@@ -24,6 +25,12 @@ class Abbr(BaseEnum):
     REJECT = 0
     KEEP = 1
     COMPLETE = 2
+
+
+class Group(BaseEnum):
+    MINIMIZE = 0
+    MAXIMIZE = 1
+    MAINTAIN = 2
 
 
 class Order(BaseEnum):
