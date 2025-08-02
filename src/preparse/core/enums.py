@@ -4,6 +4,7 @@ the value of two represents always an intermediary answer \
 between the values zero, meaning no, and one, meaning yes."""
 
 import enum
+import os
 from typing import *
 
 __all__ = [
@@ -29,6 +30,18 @@ class Order(BaseEnum):
     GIVEN = 0
     POSIX = 1
     PERMUTE = 2
+
+    @classmethod
+    def _infer(cls: type) -> bool:
+        return bool(os.environ.get("POSIXLY_CORRECT"))
+
+    @classmethod
+    def infer_given(cls: type) -> Self:
+        return cls.POSIX if cls._infer() else cls.GIVEN
+
+    @classmethod
+    def infer_permute(cls: type) -> Self:
+        return cls.POSIX if cls._infer() else cls.PERMUTE
 
 
 class Nargs(BaseEnum):
