@@ -29,8 +29,22 @@ class Parsing:
         self.ans.extend(self.spec)
         self.spec.clear()
 
+    def get_nargs_for_letter(self: Self, letter: str) -> Nargs:
+        try:
+            return self.optdict["-" + letter]
+        except KeyError:
+            self.warn(
+                PreparseInvalidOptionWarning,
+                prog=self.parser.prog,
+                option=letter,
+            )
+            return Nargs.NO_ARGUMENT
+
     @functools.cached_property
     def islongonly(self: Self) -> bool:
+        # if a long option with a single hyphon exists
+        # then all options are treated as long options
+        # example: -foo
         for k in self.optdict.keys():
             if len(k) < 3:
                 continue
@@ -38,7 +52,6 @@ class Parsing:
                 continue
             if not k.startswith("-"):
                 continue
-            # example: -foo
             return True
         return False
 
@@ -71,26 +84,32 @@ class Parsing:
 
     def tick(self: Self, optn: str) -> str:
         if optn == "break":
+            # if no more options are allowed
             self.spec.extend(self.args)
             self.args.clear()
             return "break"
         arg: str = self.args.pop(0)
         if optn == "open":
+            # if a value for an option is already expected
             self.ans.append(arg)
             return "closed"
         if arg == "--":
+            # if arg is the special argument
             self.ans.append("--")
             return "break"
+        hasgroup: bool = optn == "group"
         if arg.startswith("-") and arg != "-":
-            return self.tick_opt(arg)
+            # if arg is an option
+            return self.tick_opt(arg, hasgroup=hasgroup)
         else:
-            return self.tick_pos(arg)
+            # if arg is positional
+            return self.tick_pos(arg, hasgroup=hasgroup)
 
-    def tick_opt(self: Self, arg: str) -> str:
+    def tick_opt(self: Self, arg: str, /, *, hasgroup: bool) -> str:
         if arg.startswith("--") or self.islongonly:
             return self.tick_opt_long(arg)
         else:
-            return self.tick_opt_short(arg)
+            return self.tick_opt_short(arg, hasgroup=hasgroup)
 
     def tick_opt_long(self: Self, arg: str) -> str:
         try:
@@ -135,26 +154,39 @@ class Parsing:
             else:
                 return "closed"
 
-    def tick_opt_short(self: Self, arg: str) -> str:
-        self.ans.append(arg)
-        nargs = 0
-        for i in range(1 - len(arg), 0):
-            if nargs != 0:
-                return "closed"
-            nargs = self.optdict.get("-" + arg[i])
-            if nargs is None:
-                warning = PreparseInvalidOptionWarning(
-                    prog=self.parser.prog,
-                    option=arg[i],
-                )
-                self.parser.warn(warning)
-                nargs = 0
-        if nargs == 1:
-            return "open"
-        else:
-            return "closed"
+    def tick_opt_short(self: Self, arg: str, /, *, hasgroup: bool) -> str:
+        i: int
+        a: str
+        nargs: Nargs
+        if self.parser.group != Group.MINIMIZE:
+            self.ans.append("-")
+        if (self.parser.group == Group.MAXIMIZE) and hasgroup:
+            self.ans.pop()
+        for i, a in enumerate(arg):
+            if i == 0:
+                continue
+            if self.parser.group != Group.MINIMIZE:
+                self.ans[-1] += a
+            elif a == "-":
+                self.ans[-1] += a
+            else:
+                self.ans.append("-" + a)
+            nargs = self.get_nargs_for_letter(a)
+            if nargs == Nargs.NO_ARGUMENT:
+                continue
+            value: str = arg[i + 1 :]
+            return self.tick_opt_short_nongroup(nargs=nargs, value=value)
+        return "group"
 
-    def tick_pos(self: Self, arg: str) -> str:
+    def tick_opt_short_nongroup(self: Self, *, nargs: Nargs, value: str) -> str:
+        if value:
+            self.ans[-1] += value
+            return "closed"
+        if nargs == Nargs.OPTIONAL_ARGUMENT:
+            return "closed"
+        return "open"
+
+    def tick_pos(self: Self, arg: str, *, hasgroup: bool) -> str:
         self.spec.append(arg)
         if self.parser.order == Order.POSIX:
             return "break"
@@ -162,7 +194,7 @@ class Parsing:
             self.dumpspec()
             return "closed"
         else:
-            return "closed"
+            return "group" if hasgroup else "closed"
 
     def warn(self: Self, wrncls: type, /, **kwargs: Any) -> None:
         wrn: PreparseWarning = wrncls(**kwargs)
