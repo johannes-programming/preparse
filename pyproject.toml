@@ -22,6 +22,7 @@ dependencies = [
     "click>=8.1.7",
     "datarepr>=0.0.4",
     "makeprop>=0.1",
+    "overloadable>=1.0.9",
     "tofunc>=1.0",
 ]
 description = "This project preparses args for further parsing later on."
@@ -29,7 +30,7 @@ keywords = []
 name = "preparse"
 readme = "README.rst"
 requires-python = ">=3.11"
-version = "0.1.0.dev0+docs.4"
+version = "0.1.0.dev1"
 
 [project.license]
 file = "LICENSE.txt"
