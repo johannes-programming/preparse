@@ -61,7 +61,7 @@ class Parsing:
     def possibilities(self: Self, opt: str) -> list[str]:
         if opt in self.optdict.keys():
             return [opt]
-        if self.parser.longOptionAbbreviations == LongOptionAbbreviations.REJECT:
+        if self.parser.abbr == Abbr.REJECT:
             return list()
         ans: list = list()
         for k in self.optdict.keys():
@@ -117,7 +117,7 @@ class Parsing:
             self.ans.append(arg)
             return "closed"
         opt = possibilities[0]
-        if self.parser.longOptionAbbreviations == LongOptionAbbreviations.COMPLETE:
+        if self.parser.abbr == Abbr.COMPLETE:
             self.ans.append(opt + arg[i:])
         else:
             self.ans.append(arg)
