@@ -71,13 +71,20 @@ def main(x: float) -&gt; None:
                                     <dt id="PreParser.__new__">
                                         class preparse.PreParser(optdict: Any = None,
                                             prog: Any = None,
-                                            longOptionAbbreviations: Any = preparse.LongOptionAbbreviations.COMPLETE,
-                                            permutate: Any = True,
-                                            posix: Any = "infer")
+                                            abbr: Any = preparse.Abbr.COMPLETE,
+                                            order: Any = preparse.Order.PERMUTE,
+                                            warn: Callable = str)
                                     </dt>
                                     <dd>
                                         <p>Calling the class creates und returns a new instance.</p>
                                         <dl class="heading4">
+                                            <dt id="PreParser.abbr">abbr</dt>
+                                            <dd>
+                                                <p>
+                                                    This property determines the approach of the instance 
+                                                    to abbreviations of long options.
+                                                </p>
+                                            </dd>
                                             <dt id="PreParser.click">
                                                 click(parser: Any,
                                                     cmd: Any = True,
@@ -97,19 +104,24 @@ def main(x: float) -&gt; None:
                                                     This method returns a copy of the current instance. 
                                                 </p>
                                             </dd>
-                                            <dt id="PreParser.longOptionAbbreviations">longOptionAbbreviations</dt>
-                                            <dd>
-                                                <p>
-                                                    This property determines the approach of the instance 
-                                                    to abbreviations of long options.
-                                                </p>
-                                            </dd>
                                             <dt id="PreParser.optdict">optdict</dt>
                                             <dd>
                                                 <p>
                                                     This property holds a dictionary. 
                                                     Its keys are the options. 
                                                     Its values specify nargs.
+                                                </p>
+                                            </dd>
+                                            <dt id="PreParser.order">order</dt>
+                                            <dd>
+                                                <p>
+                                                    This property decides how to order flags and positional arguments.
+                                                    Passing a value equal to <code>"infer_given"</code> to the property 
+                                                    saves <code>Order.POSIX</code> to the property 
+                                                    if <code>bool(os.environ.get("POSIXLY_CORRECT"))</code> and elsewise <code>Order.GIVEN</code>.
+                                                    Passing a value equal to <code>"infer_permute"</code> to the property 
+                                                    saves <code>Order.POSIX</code> to the property 
+                                                    if <code>bool(os.environ.get("POSIXLY_CORRECT"))</code> and elsewise <code>Order.PERMUTE</code>.
                                                 </p>
                                             </dd>
                                             <dt id="PreParser.parse_args">
@@ -123,22 +135,6 @@ def main(x: float) -&gt; None:
                                                     then <code>sys.argv[1:]</code> is used. 
                                                     If the method is applied repeatedly 
                                                     to a list there will be no changes after the first run.
-                                                </p>
-                                            </dd>
-                                            <dt id="PreParser.permutate">permutate</dt>
-                                            <dd>
-                                                <p>
-                                                    This property decides whether the arguments are permutated in parsing.
-                                                </p>
-                                            </dd>
-                                            <dt id="PreParser.posix">posix</dt>
-                                            <dd>
-                                                <p>
-                                                    This property decides if posix parsing is used, 
-                                                    i.e. a positional argument causes all the arguments after it 
-                                                    to be also interpreted as positional.
-                                                    If the value passed to the property equals <code>"infer"</code> 
-                                                    then <code>os.environ.get("POSIXLY_CORRECT")</code> is saved.
                                                 </p>
                                             </dd>
                                             <dt id="PreParser.prog">prog</dt>
@@ -247,8 +243,8 @@ def main(x: float) -&gt; None:
                                     is interpreted as <code>2</code> (meaning <i>intermediate</i>).
                                 </p>
                                 <dl class="heading4">
-                                    <dt id="LongOptionAbbreviations.__new__">
-                                        class preparse.LongOptionAbbreviations
+                                    <dt id="Abbr.__new__">
+                                        class preparse.Abbr
                                     </dt>
                                     <dd>
                                         <table>
@@ -263,14 +259,41 @@ def main(x: float) -&gt; None:
                                                 <td>The parser rejects abbreviations and interprets them as unknown options instead.</td>
                                             </tr>
                                             <tr>
-                                                <td><code>COMPLETE</code></td>
+                                                <td><code>KEEP</code></td>
                                                 <td><code>1</code></td>
-                                                <td>The parser replaces abbreviations with the full options.</td>
+                                                <td>The parser keeps abbreviations as abbreviations.</td>
                                             </tr>
                                             <tr>
-                                                <td><code>KEEP</code></td>
+                                                <td><code>COMPLETE</code></td>
                                                 <td><code>2</code></td>
-                                                <td>The parser keeps abbreviations as abbreviations.</td>
+                                                <td>The parser replaces abbreviations with the full options.</td>
+                                            </tr>
+                                        </table>
+                                    </dd>
+                                    <dt id="Order.__new__">
+                                        class preparse.Order
+                                    </dt>
+                                    <dd>
+                                        <table>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Value</th>
+                                                <th width="100%">Explanation</th>
+                                            </tr>
+                                            <tr>
+                                                <td><code>GIVEN</code></td>
+                                                <td><code>0</code></td>
+                                                <td>The parser does not seperate flags from positional arguments.</td>
+                                            </tr>
+                                            <tr>
+                                                <td><code>POSIX</code></td>
+                                                <td><code>1</code></td>
+                                                <td>The parser assumes the posix standard.</td>
+                                            </tr>
+                                            <tr>
+                                                <td><code>PERMUTE</code></td>
+                                                <td><code>2</code></td>
+                                                <td>The parser corrects to posix standard.</td>
                                             </tr>
                                         </table>
                                     </dd>
