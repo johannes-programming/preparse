@@ -64,12 +64,9 @@ class Parsing:
             option=self.ans[-1],
         )
 
-    @functools.cached_property
+    @property
     def optdict(self: Self) -> Dict[str, Nargs]:
-        ans: dict = dict()
-        for k, v in self.parser.optdict.items():
-            ans[str(k)] = Nargs(v)
-        return ans
+        return self.parser.optdict
 
     def possibilities(self: Self, opt: str) -> list[str]:
         if opt in self.optdict.keys():
