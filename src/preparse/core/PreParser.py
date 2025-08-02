@@ -32,7 +32,7 @@ class PreParser:
         optdict: Any = None,
         prog: Any = None,
         abbr: Any = Abbr.COMPLETE,
-        group:Any= Group.MAINTAIN,
+        group: Any = Group.MAINTAIN,
         order: Any = Order.PERMUTE,
         warn: Callable = str,
     ) -> None:
@@ -66,7 +66,7 @@ class PreParser:
     def group(self: Self, value: Any) -> dict:
         "This property decides how to approach the grouping of short options."
         return Group(value)
-    
+
     @makeprop()
     def optdict(self: Self, value: Any) -> dict:
         "This property gives a dictionary of options."
