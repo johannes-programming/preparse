@@ -28,6 +28,17 @@ class Parsing:
     def dumpspec(self: Self) -> None:
         self.ans.extend(self.spec)
         self.spec.clear()
+    
+    def get_nargs_for_letter(self:Self, letter:str) -> Nargs:
+        try:
+            return self.optdict["-" + letter]
+        except KeyError:
+            self.warn(
+                PreparseInvalidOptionWarning,
+                prog=self.parser.prog,
+                option=letter,
+            )
+            return Nargs.NO_ARGUMENT
 
     @functools.cached_property
     def islongonly(self: Self) -> bool:
@@ -143,23 +154,26 @@ class Parsing:
                 return "closed"
 
     def tick_opt_short(self: Self, arg: str, /, *, hasgroup:bool) -> str:
+        i:int
+        a:str
+        nargs:Nargs 
         self.ans.append(arg)
-        nargs = 0
-        for i in range(1 - len(arg), 0):
-            if nargs != 0:
-                return "closed"
-            nargs = self.optdict.get("-" + arg[i])
-            if nargs is None:
-                warning = PreparseInvalidOptionWarning(
-                    prog=self.parser.prog,
-                    option=arg[i],
-                )
-                self.parser.warn(warning)
-                nargs = 0
-        if nargs == 1:
-            return "open"
-        else:
+        for i, a in enumerate(arg):
+            if i == 0:
+                continue
+            nargs = self.get_nargs_for_letter(a)
+            if nargs == Nargs.NO_ARGUMENT:
+                continue
+            value:str = arg[i+1:]
+            return self.tick_opt_short_nongroup(nargs=nargs, value=value)
+        return "group"
+    
+    def tick_opt_short_nongroup(self:Self, *, nargs:Nargs, value:str)-> str:
+        if value:
             return "closed"
+        if nargs == Nargs.OPTIONAL_ARGUMENT:
+            return "closed"
+        return "open"
 
     def tick_pos(self: Self, arg: str) -> str:
         self.spec.append(arg)
