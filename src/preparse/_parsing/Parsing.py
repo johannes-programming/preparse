@@ -100,11 +100,15 @@ class Parsing:
             return self.tick_opt_short(arg)
 
     def tick_opt_long(self: Self, arg: str) -> str:
-        try:
-            i: int = arg.index("=")
-        except ValueError:
-            i: int = len(arg)
-        opt: str = arg[:i]
+        if "=" in arg:
+            return self.tick_opt_long_eq(arg)
+        else:
+            return self.tick_opt_long_ne(arg)
+            
+    def tick_opt_long_eq(self: Self, arg: str) -> str:
+        opt:str = ""
+        value:str = ""
+        opt, value = arg.split("=", 1)
         possibilities: list = self.possibilities(opt)
         if len(possibilities) == 0:
             self.warn(
@@ -125,22 +129,44 @@ class Parsing:
             return "closed"
         opt = possibilities[0]
         if self.parser.abbr == Abbr.COMPLETE:
-            self.ans.append(opt + arg[i:])
+            self.ans.append(opt + "=" + value)
         else:
             self.ans.append(arg)
-        if "=" in arg:
-            if self.optdict[opt] == 0:
-                warning = PreparseUnallowedArgumentWarning(
-                    prog=self.parser.prog,
-                    option=opt,
-                )
-                self.parser.warn(warning)
+        if self.optdict[opt] == 0:
+            warning = PreparseUnallowedArgumentWarning(
+                prog=self.parser.prog,
+                option=opt,
+            )
+            self.parser.warn(warning)
+        return "closed"
+            
+    def tick_opt_long_ne(self: Self, arg: str) -> str:
+        pos: list = self.possibilities(arg)
+        if len(pos) == 0:
+            self.warn(
+                PreparseUnrecognizedOptionWarning,
+                prog=self.parser.prog,
+                option=arg,
+            )
+            self.ans.append(arg)
             return "closed"
+        if len(pos) > 1:
+            self.warn(
+                PreparseAmbiguousOptionWarning,
+                prog=self.parser.prog,
+                option=arg,
+                possibilities=pos,
+            )
+            self.ans.append(arg)
+            return "closed"
+        if self.parser.abbr == Abbr.COMPLETE:
+            self.ans.append(pos[0])
         else:
-            if self.optdict[opt] == 1:
-                return "open"
-            else:
-                return "closed"
+            self.ans.append(arg)
+        if self.optdict[pos[0]] == 1:
+            return "open"
+        else:
+            return "closed"
 
     def tick_opt_short(self: Self, arg: str) -> str:
         self.ans.append(arg)
