@@ -119,7 +119,7 @@ class PreParser:
         "This method causes the current instance to reflect a click.Context object."
         self.prog = ctx.info_name
 
-    def todict(self) -> dict:
+    def todict(self: Self) -> dict:
         "This method returns a dict representing the current instance."
         ans = dict()
         for slot in type(self).__slots__:
