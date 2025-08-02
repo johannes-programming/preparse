@@ -12,7 +12,7 @@ __all__ = [
 
 
 class PreparseWarning(Warning, metaclass=abc.ABCMeta):
-    def __init__(self, **kwargs: Any) -> None:
+    def __init__(self: Self, **kwargs: Any) -> None:
         "This magic method initializes the current instance."
         for n in type(self).__slots__:
             setattr(self, n, kwargs.pop(n))
