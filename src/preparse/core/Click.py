@@ -16,7 +16,7 @@ class Click:
     ctx: Any = True
 
     @overloadable.overloadable
-    def __call__(self, target: Any) -> Any:
+    def __call__(self: Self, target: Any) -> Any:
         "This magic method implements self(target)."
         if isinstance(target, types.FunctionType):
             return "function"
@@ -25,9 +25,9 @@ class Click:
         return "other"
 
     @__call__.overload("function")
-    def __call__(self, target: types.FunctionType) -> types.FunctionType:
+    def __call__(self: Self, target: types.FunctionType) -> types.FunctionType:
         @functools.wraps(target)
-        def ans(cmd, ctx, args):
+        def ans(cmd: Any, ctx: Any, args: Any) -> Any:
             p = self.parser.copy()
             if self.cmd:
                 p.reflectClickCommand(cmd)
@@ -38,12 +38,12 @@ class Click:
         return ans
 
     @__call__.overload("method")
-    def __call__(self, target: types.MethodType) -> types.MethodType:
+    def __call__(self: Self, target: types.MethodType) -> types.MethodType:
         func = self(target.__func__)
         ans = types.MethodType(func, target.__self__)
         return ans
 
     @__call__.overload("other")
-    def __call__(self, target: Any) -> Any:
+    def __call__(self: Self, target: Any) -> Any:
         target.parse_args = self(target.parse_args)
         return target
