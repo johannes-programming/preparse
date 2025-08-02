@@ -20,6 +20,7 @@ __all__ = ["PreParser"]
 class PreParser:
     __slots__ = (
         "_abbr",
+        "_group",
         "_optdict",
         "_order",
         "_prog",
@@ -31,6 +32,7 @@ class PreParser:
         optdict: Any = None,
         prog: Any = None,
         abbr: Any = Abbr.COMPLETE,
+        group: Any = Group.MAINTAIN,
         order: Any = Order.PERMUTE,
         warn: Callable = str,
     ) -> None:
@@ -39,6 +41,7 @@ class PreParser:
         self.optdict = optdict
         self.prog = prog
         self.abbr = abbr
+        self.group = group
         self.order = order
         self.warn = warn
 
@@ -58,6 +61,11 @@ class PreParser:
     def copy(self: Self) -> Self:
         "This method returns a copy of the current instance."
         return type(self)(**self.todict())
+
+    @makeprop()
+    def group(self: Self, value: Any) -> dict:
+        "This property decides how to approach the grouping of short options."
+        return Group(value)
 
     @makeprop()
     def optdict(self: Self, value: Any) -> dict:
