@@ -88,16 +88,16 @@ class Parsing:
             return "break"
         if arg.startswith("-") and arg != "-":
             # if arg is an option
-            return self.tick_opt(arg)
+            return self.tick_opt(arg, hasgroup=optn=="group")
         else:
             # if arg is positional
             return self.tick_pos(arg)
 
-    def tick_opt(self: Self, arg: str) -> str:
+    def tick_opt(self: Self, arg: str, /, *, hasgroup:bool) -> str:
         if arg.startswith("--") or self.islongonly:
             return self.tick_opt_long(arg)
         else:
-            return self.tick_opt_short(arg)
+            return self.tick_opt_short(arg, hasgroup=hasgroup)
 
     def tick_opt_long(self: Self, arg: str) -> str:
         try:
@@ -142,7 +142,7 @@ class Parsing:
             else:
                 return "closed"
 
-    def tick_opt_short(self: Self, arg: str) -> str:
+    def tick_opt_short(self: Self, arg: str, /, *, hasgroup:bool) -> str:
         self.ans.append(arg)
         nargs = 0
         for i in range(1 - len(arg), 0):
