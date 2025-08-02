@@ -16,7 +16,7 @@ __all__ = [
 
 class BaseEnum(enum.IntEnum):
     @classmethod
-    def _missing_(cls: type, value: Any):
+    def _missing_(cls: type, value: Any) -> Self:
         return cls(2)
 
 
