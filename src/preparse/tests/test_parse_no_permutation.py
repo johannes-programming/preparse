@@ -6,7 +6,7 @@ from preparse.core import *
 class TestScoreFunction(unittest.TestCase):
 
     def parse(self, *, optdict, query):
-        p = PreParser(posix=False, permutate=False, optdict=optdict)
+        p = PreParser(order=Order.GIVEN, optdict=optdict)
         ans = p.parse_args(query)
         self.assertEqual(list(ans), list(p.parse_args(ans)))
         return ans
