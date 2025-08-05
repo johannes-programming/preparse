@@ -9,7 +9,7 @@ from datarepr import datarepr
 from makeprop import makeprop
 from tofunc import tofunc
 
-from preparse._parsing.Parsing import *
+from preparse._parsing import *
 from preparse.core.Click import *
 from preparse.core.enums import *
 
@@ -84,12 +84,7 @@ class PreParser:
         args: Optional[Iterable] = None,
     ) -> list[str]:
         "This method parses args."
-        if args is None:
-            args = sys.argv[1:]
-        return Parsing(
-            parser=self.copy(),
-            args=[str(a) for a in args],
-        ).ans
+        return process(args=args, parser=self)
 
     @makeprop()
     def order(self: Self, value: Any) -> Order:
