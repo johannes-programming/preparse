@@ -74,7 +74,7 @@ class TestPreParserWarnings(unittest.TestCase):
         warnings_caught = self.parse_with_warning(optdict, query)
         self.assertTrue(
             any(
-                "option requires an argument -- '--foo'" in str(warning.message)
+                "option '--foo' requires an argument" in str(warning.message)
                 for warning in warnings_caught
             )
         )
