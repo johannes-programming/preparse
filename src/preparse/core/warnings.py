@@ -4,7 +4,8 @@ from typing import *
 __all__ = [
     "PreparseAmbiguousOptionWarning",
     "PreparseInvalidOptionWarning",
-    "PreparseRequiredArgumentWarning",
+    "PreparseLongOptionRequiresArgumentWarning",
+    "PreparseShortOptionRequiresArgumentWarning",
     "PreparseUnallowedArgumentWarning",
     "PreparseUnrecognizedOptionWarning",
     "PreparseWarning",
@@ -51,7 +52,15 @@ class PreparseInvalidOptionWarning(PreparseWarning):
         return "invalid option -- %r" % self.option
 
 
-class PreparseRequiredArgumentWarning(PreparseWarning):
+class PreparseLongOptionRequiresArgumentWarning(PreparseWarning):
+    __slots__ = ("prog", "option")
+
+    def getmsg(self: Self) -> str:
+        "This method returns the core message."
+        return "option %r requires an argument" % self.option
+    
+    
+class PreparseShortOptionRequiresArgumentWarning(PreparseWarning):
     __slots__ = ("prog", "option")
 
     def getmsg(self: Self) -> str:

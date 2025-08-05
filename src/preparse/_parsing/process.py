@@ -1,8 +1,7 @@
-#from preparse._parsing.parse import *
-#from preparse._parsing.digest import *
-#from preparse._parsing.deparse import *
-#from preparse._parsing.Item import *
-from preparse._parsing.Parsing import *
+from preparse._parsing.parse import *
+from preparse._parsing.digest import *
+from preparse._parsing.deparse import *
+from preparse._parsing.Item import *
 from typing import *
 import sys
 
@@ -21,7 +20,7 @@ def process(
         args = sys.argv[1:]
     args=[str(a) for a in args]
     parser = parser.copy()
-    #items:list[Item] = parse(args=args, parser=parser)
-    #items:list[Item] = digest(items=items, parser=parser)
-    #ans:list[str] = deparse(items=items, parser=parser)
-    return Parsing(parser=parser,args=args).ans
+    items:list[Item] = list(parse(args=args, parser=parser))
+    items:list[Item] = list(digest(items=items, parser=parser))
+    ans:list[str] = list(deparse(items=items))
+    return ans
