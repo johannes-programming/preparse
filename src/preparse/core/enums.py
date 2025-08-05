@@ -10,6 +10,7 @@ from typing import *
 __all__ = [
     "Abbr",
     "Group",
+    "Longonly",
     "Order",
     "Nargs",
 ]
@@ -31,6 +32,12 @@ class Group(BaseEnum):
     MINIMIZE = 0
     MAXIMIZE = 1
     MAINTAIN = 2
+
+
+class Longonly(BaseEnum):
+    NO = 0
+    YES = 1
+    INFER = 2
 
 
 class Nargs(BaseEnum):

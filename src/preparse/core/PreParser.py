@@ -21,6 +21,7 @@ class PreParser:
     __slots__ = (
         "_abbr",
         "_group",
+        "_longonly",
         "_optdict",
         "_order",
         "_prog",
@@ -33,6 +34,7 @@ class PreParser:
         prog: Any = None,
         abbr: Any = Abbr.COMPLETE,
         group: Any = Group.MAINTAIN,
+        longonly: Any = Longonly.INFER,
         order: Any = Order.PERMUTE,
         warn: Callable = str,
     ) -> None:
@@ -42,6 +44,7 @@ class PreParser:
         self.prog = prog
         self.abbr = abbr
         self.group = group
+        self.longonly = longonly
         self.order = order
         self.warn = warn
 
@@ -66,6 +69,11 @@ class PreParser:
     def group(self: Self, value: Any) -> dict:
         "This property decides how to approach the grouping of short options."
         return Group(value)
+    
+    @makeprop()
+    def longonly(self: Self, value: Any) -> Longonly:
+        "This property decides whether the parser treats all options as long."
+        return Longonly(value)
 
     @makeprop()
     def optdict(self: Self, value: Any) -> dict:
