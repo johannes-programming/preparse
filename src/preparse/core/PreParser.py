@@ -9,7 +9,7 @@ from datarepr import datarepr
 from makeprop import makeprop
 from tofunc import tofunc
 
-from preparse._parsing.Parsing import *
+from preparse._parsing import *
 from preparse.core.Click import *
 from preparse.core.enums import *
 
@@ -21,6 +21,7 @@ class PreParser:
     __slots__ = (
         "_abbr",
         "_group",
+        "_longonly",
         "_optdict",
         "_order",
         "_prog",
@@ -33,6 +34,7 @@ class PreParser:
         prog: Any = None,
         abbr: Any = Abbr.COMPLETE,
         group: Any = Group.MAINTAIN,
+        longonly: Any = Longonly.INFER,
         order: Any = Order.PERMUTE,
         warn: Callable = str,
     ) -> None:
@@ -42,6 +44,7 @@ class PreParser:
         self.prog = prog
         self.abbr = abbr
         self.group = group
+        self.longonly = longonly
         self.order = order
         self.warn = warn
 
@@ -67,6 +70,28 @@ class PreParser:
         "This property decides how to approach the grouping of short options."
         return Group(value)
 
+    @property
+    def islongonly(self) -> bool:
+        if self.longonly != Longonly.INFER:
+            return bool(self.longonly)
+        # if a long option with a single hyphon exists
+        # then all options are treated as long options
+        # example: -foo
+        for k in self.optdict.keys():
+            if len(k) < 3:
+                continue
+            if k.startswith("--"):
+                continue
+            if not k.startswith("-"):
+                continue
+            return True
+        return False
+
+    @makeprop()
+    def longonly(self: Self, value: Any) -> Longonly:
+        "This property decides whether the parser treats all options as long."
+        return Longonly(value)
+
     @makeprop()
     def optdict(self: Self, value: Any) -> dict:
         "This property gives a dictionary of options."
@@ -84,12 +109,7 @@ class PreParser:
         args: Optional[Iterable] = None,
     ) -> list[str]:
         "This method parses args."
-        if args is None:
-            args = sys.argv[1:]
-        return Parsing(
-            parser=self.copy(),
-            args=[str(a) for a in args],
-        ).ans
+        return process(args=args, parser=self)
 
     @makeprop()
     def order(self: Self, value: Any) -> Order:
