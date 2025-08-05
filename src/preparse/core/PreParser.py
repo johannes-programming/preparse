@@ -69,9 +69,9 @@ class PreParser:
     def group(self: Self, value: Any) -> dict:
         "This property decides how to approach the grouping of short options."
         return Group(value)
-    
+
     @property
-    def islongonly(self)-> bool:
+    def islongonly(self) -> bool:
         if self.longonly != Longonly.INFER:
             return bool(self.longonly)
         # if a long option with a single hyphon exists
@@ -86,7 +86,7 @@ class PreParser:
                 continue
             return True
         return False
-    
+
     @makeprop()
     def longonly(self: Self, value: Any) -> Longonly:
         "This property decides whether the parser treats all options as long."
