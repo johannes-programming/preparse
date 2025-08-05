@@ -62,4 +62,3 @@ class Order(BaseEnum):
     @classmethod
     def infer_permute(cls: type) -> Self:
         return cls.POSIX if cls._infer() else cls.PERMUTE
-
