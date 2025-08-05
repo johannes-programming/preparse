@@ -45,6 +45,8 @@ class Parsing:
         # if a long option with a single hyphon exists
         # then all options are treated as long options
         # example: -foo
+        if self.parser.longonly != Longonly.INFER:
+            return bool(self.parser.longonly)
         for k in self.optdict.keys():
             if len(k) < 3:
                 continue
