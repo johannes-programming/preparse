@@ -10,6 +10,7 @@ from typing import *
 __all__ = [
     "Abbr",
     "Group",
+    "Longonly",
     "Order",
     "Nargs",
 ]
@@ -33,6 +34,18 @@ class Group(BaseEnum):
     MAINTAIN = 2
 
 
+class Longonly(BaseEnum):
+    NO = 0
+    YES = 1
+    INFER = 2
+
+
+class Nargs(BaseEnum):
+    NO_ARGUMENT = 0
+    REQUIRED_ARGUMENT = 1
+    OPTIONAL_ARGUMENT = 2
+
+
 class Order(BaseEnum):
     GIVEN = 0
     POSIX = 1
@@ -49,9 +62,3 @@ class Order(BaseEnum):
     @classmethod
     def infer_permute(cls: type) -> Self:
         return cls.POSIX if cls._infer() else cls.PERMUTE
-
-
-class Nargs(BaseEnum):
-    NO_ARGUMENT = 0
-    REQUIRED_ARGUMENT = 1
-    OPTIONAL_ARGUMENT = 2
