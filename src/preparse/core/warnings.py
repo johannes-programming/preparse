@@ -3,11 +3,17 @@ from typing import *
 
 __all__ = [
     "PreparseAmbiguousOptionWarning",
+    "PAOW",
     "PreparseInvalidOptionWarning",
+    "PIOW",
     "PreparseRequiredArgumentWarning",
+    "PRAW",
     "PreparseUnallowedArgumentWarning",
+    "PUAW",
     "PreparseUnrecognizedOptionWarning",
+    "PUOW",
     "PreparseWarning",
+    "PW",
 ]
 
 
@@ -42,7 +48,6 @@ class PreparseAmbiguousOptionWarning(PreparseWarning):
             ans += " %r" % x
         return ans
 
-
 class PreparseInvalidOptionWarning(PreparseWarning):
     __slots__ = ("prog", "option")
 
@@ -73,3 +78,11 @@ class PreparseUnrecognizedOptionWarning(PreparseWarning):
     def getmsg(self: Self) -> str:
         "This method returns the core message."
         return "unrecognized option %r" % self.option
+
+PW = PreparseWarning
+PAOW = PreparseAmbiguousOptionWarning
+PIOW = PreparseInvalidOptionWarning
+PRAW = PreparseRequiredArgumentWarning
+
+PUAW = PreparseUnallowedArgumentWarning
+PUOW = PreparseUnrecognizedOptionWarning

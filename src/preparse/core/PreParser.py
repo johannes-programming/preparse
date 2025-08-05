@@ -21,9 +21,11 @@ class PreParser:
     __slots__ = (
         "_abbr",
         "_group",
+        "_longonly",
         "_optdict",
         "_order",
         "_prog",
+        "_special",
         "_warn",
     )
 
@@ -33,6 +35,7 @@ class PreParser:
         prog: Any = None,
         abbr: Any = Abbr.COMPLETE,
         group: Any = Group.MAINTAIN,
+        longonly:Any = False,
         order: Any = Order.PERMUTE,
         warn: Callable = str,
     ) -> None:
@@ -42,6 +45,7 @@ class PreParser:
         self.prog = prog
         self.abbr = abbr
         self.group = group
+        self.longonly = longonly
         self.order = order
         self.warn = warn
 
@@ -66,6 +70,10 @@ class PreParser:
     def group(self: Self, value: Any) -> dict:
         "This property decides how to approach the grouping of short options."
         return Group(value)
+    
+    @makeprop()
+    def longonly(self:Self, value:Any)->bool:
+        return bool(value)
 
     @makeprop()
     def optdict(self: Self, value: Any) -> dict:
@@ -128,6 +136,16 @@ class PreParser:
         "This method causes the current instance to reflect a click.Context object."
         self.prog = ctx.info_name
 
+    @makeprop()
+    def remainder(self:Self, value: Any) -> Remainder:
+        "This property decides how to approach the special arguemnt."
+        return Remainder(value)
+    
+    @makeprop()
+    def special(self:Self, value: Any) -> Special:
+        "This property decides how to approach the special arguemnt."
+        return Special(value)
+    
     def todict(self: Self) -> dict:
         "This method returns a dict representing the current instance."
         ans = dict()

@@ -10,6 +10,21 @@ if TYPE_CHECKING:
 
 __all__ = ["Parsing"]
 
+@dataclasses.dataclass
+class Item:
+    key:Optional[str]
+    equal:bool
+    value:Optional[str]
+    comment:Any
+
+def preparse(parser: "PreParser", args: list[str]) -> list[str]:
+    olditems:list[Item] = parse(args, parser=parser)
+    newitems:list[Item] = digest(olditems, parser=parser)
+    ans:list[str] = deparse(newitems, parser=parser)
+
+def parse(args:list[str], *, parser:"PreParser") -> list[Item]:
+    
+
 
 @dataclasses.dataclass
 class Parsing:
