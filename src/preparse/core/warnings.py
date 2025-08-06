@@ -58,8 +58,8 @@ class PreparseLongOptionRequiresArgumentWarning(PreparseWarning):
     def getmsg(self: Self) -> str:
         "This method returns the core message."
         return "option %r requires an argument" % self.option
-    
-    
+
+
 class PreparseShortOptionRequiresArgumentWarning(PreparseWarning):
     __slots__ = ("prog", "option")
 
