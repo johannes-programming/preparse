@@ -57,6 +57,10 @@ class PreParser:
     def abbr(self: Self, value: SupportsInt) -> Abbr:
         "This property decides how to handle abbreviations."
         return Abbr(value)
+    
+    def cause_warning(self: Self, wrncls:type, /, **kwargs:Any) -> None:
+        warning:PreparseWarning=wrncls(prog=self.prog, **kwargs)
+        self.warn(warning)
 
     def click(self: Self, cmd: Any = True, ctx: Any = True) -> Click:
         "This method returns a decorator that infuses the current instance into parse_args."
@@ -92,22 +96,6 @@ class PreParser:
     def longonly(self: Self, value: Any) -> Longonly:
         "This property decides whether the parser treats all options as long."
         return Longonly(value)
-    
-    def cause_warning(self: Self, wrncls:type, /, **kwargs:Any) -> None:
-        warning:PreparseWarning=wrncls(prog=self.prog, **kwargs)
-        self.warn(warning)
-
-    @makeprop()
-    def optdict(self: Self, value: Any) -> dict:
-        "This property gives a dictionary of options."
-        if value is None:
-            self._optdict.clear()
-            return self._optdict
-        value = dict(value)
-        value = {str(k): Nargs(v) for k, v in value.items()}
-        self._optdict.clear()
-        self._optdict.update(value)
-        return self._optdict
 
     def parse_args(
         self: Self,
@@ -115,6 +103,19 @@ class PreParser:
     ) -> list[str]:
         "This method parses args."
         return process(args=args, parser=self)
+    
+    @makeprop()
+    def optdict(self: Self, value: Any) -> dict:
+        "This property gives a dictionary of options."
+        if value is None:
+            self._optdict.clear()
+            return self._optdict
+        data:dict = dict(value)
+        data = {str(k): Nargs(v) for k, v in data.items()}
+        data = dict(sorted(data.items()))
+        self._optdict.clear()
+        self._optdict.update(data)
+        return self._optdict
 
     @makeprop()
     def order(self: Self, value: Any) -> Order:
