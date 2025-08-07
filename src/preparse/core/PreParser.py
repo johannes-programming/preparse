@@ -12,6 +12,7 @@ from tofunc import tofunc
 from preparse._parsing import *
 from preparse.core.Click import *
 from preparse.core.enums import *
+from preparse.core.warnings import *
 
 __all__ = ["PreParser"]
 
@@ -91,6 +92,10 @@ class PreParser:
     def longonly(self: Self, value: Any) -> Longonly:
         "This property decides whether the parser treats all options as long."
         return Longonly(value)
+    
+    def cause_warning(self: Self, wrncls:type, /, **kwargs:Any) -> None:
+        warning:PreparseWarning=wrncls(prog=self.prog, **kwargs)
+        self.warn(warning)
 
     @makeprop()
     def optdict(self: Self, value: Any) -> dict:
