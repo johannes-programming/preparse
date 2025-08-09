@@ -3,6 +3,7 @@ from typing import *
 from preparse._parsing.Item import *
 from preparse.core.enums import *
 from preparse.core.warnings import *
+import sys
 
 if TYPE_CHECKING:
     from preparse.core.PreParser import PreParser
@@ -16,7 +17,14 @@ PLORAW = PreparseLongOptionRequiresArgumentWarning
 PSORAW = PreparseShortOptionRequiresArgumentWarning
 
 
-def parse(*, args: list[str], parser: "PreParser") -> Generator[Any, Any, Any]:
+def parse(args: Optional[Iterable], *, parser: "PreParser") -> Generator[Item, None, None]:
+    if args is None:
+        args = sys.argv[1:]
+    args = [str(a) for a in args]
+    return parse_list(args=args, parser=parser)
+
+
+def parse_list(*, args: list[str], parser: "PreParser") -> Generator[Item, None, None]:
     broken: bool = False
     last: Optional[Item] = None
     for arg in args:

@@ -17,45 +17,73 @@ from preparse.core.warnings import *
 __all__ = ["PreParser"]
 
 
-@dataclasses.dataclass(kw_only=True)
 class PreParser:
     __slots__ = (
-        "_abbr",
-        "_group",
-        "_longonly",
+
+        # options
+        "_allowslong",
+        "_allowsshort",
         "_optdict",
-        "_order",
+
+        # warnings
         "_prog",
         "_warn",
+
+        # order
+        "_assumesposix",
+        "_reconcilesorders",
+
+        # abbr
+        "_allowsabbrbefore",
+        "_allowsabbrafterwards",
     )
 
     def __init__(
-        self: Self,
+        self: Self, *,
+
+        # options
+        allowslong:Any=True,
+        allowsshort:Any=True,
         optdict: Any = None,
-        prog: Any = None,
-        abbr: Any = Abbr.COMPLETE,
-        group: Any = Group.MAINTAIN,
-        longonly: Any = Longonly.INFER,
-        order: Any = Order.PERMUTE,
+
+        # warnings
         warn: Callable = str,
+        prog: Any = None,
+
+        # order
+        assumesposix: Any = "infer",
+        reconcilesorders: Any = True,
+
+        # abbr
+        allowsabbrbefore:Any = True,
+        allowsabbrafterwards:Any = False,
     ) -> None:
         "This magic method initializes self."
-        self._optdict = dict()
+
+        # options
+        self.allowslong = allowslong
+        self.allowsshort = allowsshort
         self.optdict = optdict
+
+        # warnings
         self.prog = prog
-        self.abbr = abbr
-        self.group = group
-        self.longonly = longonly
-        self.order = order
         self.warn = warn
+
+        # order
+        self.assumesposix = assumesposix
+        self.reconcilesorders = reconcilesorders
+
+        # abbr
+        self.allowsabbrafterwards = allowsabbrafterwards
+        self.allowsabbrbefore = allowsabbrbefore
 
     def __repr__(self: Self) -> str:
         "This magic method implements repr(self)."
         return datarepr(type(self).__name__, **self.todict())
 
     @makeprop()
-    def abbr(self: Self, value: SupportsInt) -> Abbr:
-        "This property decides how to handle abbreviations."
+    def allowslong(self: Self, value: Any) -> bool:
+        "This property decides whether abbreviations are allowed ."
         return Abbr(value)
     
     def cause_warning(self: Self, wrncls:type, /, **kwargs:Any) -> None:
@@ -71,9 +99,9 @@ class PreParser:
         return type(self)(**self.todict())
 
     @makeprop()
-    def group(self: Self, value: Any) -> dict:
-        "This property decides how to approach the grouping of short options."
-        return Group(value)
+    def bundle(self: Self, value: Any) -> dict:
+        "This property decides how to approach the bundleing of short options."
+        return Bundle(value)
 
     @property
     def islongonly(self) -> bool:
@@ -107,13 +135,13 @@ class PreParser:
     @makeprop()
     def optdict(self: Self, value: Any) -> dict:
         "This property gives a dictionary of options."
+        self._optdict = getattr(self, "_optdict", dict())
+        self._optdict.clear()
         if value is None:
-            self._optdict.clear()
             return self._optdict
         data:dict = dict(value)
         data = {str(k): Nargs(v) for k, v in data.items()}
         data = dict(sorted(data.items()))
-        self._optdict.clear()
         self._optdict.update(data)
         return self._optdict
 
