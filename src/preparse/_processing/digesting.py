@@ -11,6 +11,8 @@ __all__ = ["digest"]
 
 
 def digest(items: list[Item], *, parser: "PreParser") -> list[Item]:
+    if parser.special != Tuning.MAINTAIN:
+        raise NotImplementedError
     items = list(digest_order(items, expectsposix=parser.expectsposix, reconcilesorders=parser.reconcilesorders))
     items = list(digest_bundling(items=items, bundling=parser.bundling))
     return items
