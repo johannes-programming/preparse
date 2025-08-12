@@ -38,7 +38,7 @@ def parse(*, args: list[str], parser: "PreParser") -> Generator[Any, Any, Any]:
         if arg == "-" or not arg.startswith("-"):
             # if the arg is positional
             yield Item(value=arg)
-            broken = parser.order == Order.POSIX
+            broken = parser.expectsposix
             continue
         if arg.startswith("--") or parser.allowslong:
             last = parse_long(arg=arg, parser=parser)

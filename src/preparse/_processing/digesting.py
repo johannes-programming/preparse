@@ -11,7 +11,7 @@ __all__ = ["digest"]
 
 
 def digest(*, items: list[Item], parser: "PreParser") -> list[Item]:
-    items = list(digest_order(items=items, order=parser.order))
+    items = list(digest_order(items, expectsposix=parser.expectsposix, reconcilesorders=parser.reconcilesorders))
     items = list(digest_bundling(items=items, bundling=parser.bundling))
     return items
 
@@ -59,10 +59,14 @@ def digest_bundling_maximize(items: list[Item]) -> list[Item]:
     return ans
 
 
-def digest_order(*, items: list[Item], order: Order) -> list[Item]:
-    if order == Order.PERMUTE:
-        items.sort(key=digest_order_key)
-    return items
+def digest_order(items: list[Item], *, expectsposix:bool, reconcilesorders:bool) -> list[Item]:
+    ans:list[Item] = list(items)
+    if not reconcilesorders:
+        return ans
+    if not expectsposix:
+        ans.sort(key=digest_order_key)
+        return ans
+    raise NotImplementedError
 
 
 def digest_order_key(item: Item):

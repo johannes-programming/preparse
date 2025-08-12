@@ -19,7 +19,6 @@ class TestPreparse(unittest.TestCase):
         parser = PreParser()
         parser_copy = parser.copy()
         self.assertEqual(parser.abbr, parser_copy.abbr)
-        self.assertEqual(parser.order, parser_copy.order)
         self.assertEqual(parser.optdict, parser_copy.optdict)
 
     def test_preparser_parse_args(self):
@@ -34,7 +33,6 @@ class TestPreparse(unittest.TestCase):
         expected_keys = [
             "abbr",
             "optdict",
-            "order",
             "prog",
         ]
         self.assertTrue(all(key in result for key in expected_keys))

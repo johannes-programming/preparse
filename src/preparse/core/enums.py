@@ -10,7 +10,6 @@ from typing import *
 __all__ = [
     "Abbr",
     "Tuning",
-    "Order",
     "Nargs",
 ]
 
@@ -37,21 +36,3 @@ class Nargs(BaseEnum):
     NO_ARGUMENT = 0
     REQUIRED_ARGUMENT = 1
     OPTIONAL_ARGUMENT = 2
-
-
-class Order(BaseEnum):
-    GIVEN = 0
-    POSIX = 1
-    PERMUTE = 2
-
-    @classmethod
-    def _infer(cls: type) -> bool:
-        return bool(os.environ.get("POSIXLY_CORRECT"))
-
-    @classmethod
-    def infer_given(cls: type) -> Self:
-        return cls.POSIX if cls._infer() else cls.GIVEN
-
-    @classmethod
-    def infer_permute(cls: type) -> Self:
-        return cls.POSIX if cls._infer() else cls.PERMUTE
