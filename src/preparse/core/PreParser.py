@@ -1,4 +1,3 @@
-import dataclasses
 import os
 import sys
 import types
@@ -9,54 +8,151 @@ from datarepr import datarepr
 from makeprop import makeprop
 from tofunc import tofunc
 
-from preparse._parsing import *
+from preparse._processing import *
 from preparse.core.Click import *
 from preparse.core.enums import *
 from preparse.core.warnings import *
 
 __all__ = ["PreParser"]
 
+class BasePreParser:
 
-@dataclasses.dataclass(kw_only=True)
-class PreParser:
     __slots__ = (
-        "_abbr",
-        "_group",
-        "_longonly",
+        # options
+        "_allowslong",
+        "_allowsshort",
         "_optdict",
-        "_order",
+
+        # warnings
         "_prog",
         "_warn",
+
+        # orders
+        "_expectsposix",
+        "_reconcileorders",
+
+        # tuning
+        "_abbr",
+        "_bundling",
+        "_special",
     )
 
     def __init__(
-        self: Self,
-        optdict: Any = None,
-        prog: Any = None,
-        abbr: Any = Abbr.COMPLETE,
-        group: Any = Group.MAINTAIN,
-        longonly: Any = Longonly.INFER,
-        order: Any = Order.PERMUTE,
-        warn: Callable = str,
+        self: Self, *,
+
+        # options
+        allowslong:Any = True,
+        allowsshort:Any = True,
+        optdict:Any= None,
+
+        # warnings
+        prog:Any = None,
+        warn:Callable=str,
+
+        # orders
+        expectsposix:Any = False,
+        reconcileorders:Any = True,
+
+        # abbr
+        expectsabbr:Any = True,
+        expandsabbr:Any = True,
+
+        # tuning
+        bundling:Tuning = Tuning.MAINTAIN,
+        special:Tuning = Tuning.MAXIMIZE,
     ) -> None:
         "This magic method initializes self."
-        self._optdict = dict()
+        # options
+        self.allowslong = allowslong
+        self.allowsshort = allowsshort
         self.optdict = optdict
-        self.prog = prog
-        self.abbr = abbr
-        self.group = group
-        self.longonly = longonly
-        self.order = order
+
+        # warnings
+        self.prog = prog 
         self.warn = warn
+
+        # orders
+        self.expectsposix = expectsposix
+        self.reconcileorders = reconcileorders
+
+        # abbr
+        self.expectsabbr = expectsabbr
+        self.expandsabbr = expandsabbr
+
+        # tuning
+        self.bundling = bundling
+        self.special = special
+
+    # options
+    @makeprop()
+    def allowslong(self:Self, value:Any)->bool:
+        return bool(value)
+
+    @makeprop()
+    def allowsshort(self:Self, value:Any)->bool:
+        return bool(value)
+
+    @makeprop()
+    def optdict(self: Self, value: Any) -> dict:
+        "This property gives a dictionary of options."
+        self._optdict = getattr(self, "_optdict", dict())
+        self._optdict.clear()
+        if value is None:
+            return
+        data:dict = dict(value)
+        data = {str(k):Nargs(v) for k, v in data.items()}
+        self._optdict.update(data)
+    
+    # warnings
+    @makeprop()
+    def prog(self: Self, value: Any) -> str:
+        "This property represents the name of the program."
+        if value is None:
+            value = os.path.basename(sys.argv[0])
+        return str(value)
+
+    @makeprop()
+    def warn(self: Self, value: Callable) -> types.FunctionType:
+        "This property gives a function that takes in the warnings."
+        return tofunc(value)
+    
+    # orders
+    @makeprop()
+    def expectsposix(self:Self, value: Any) -> bool:
+        if value == "infer":
+            value = os.environ.get("POSIXLY_CORRECT")
+        return bool(value)
+    
+    @makeprop()
+    def reconcileorders(self:Self, value: Any) -> bool:
+        return bool(value)
+    
+    # abbr
+    @makeprop()
+    def expectsabbr(self:Self, value:Any)->bool:
+        return bool(value)
+    @makeprop()
+    def expandsabbr(self:Self, value:Any)->bool:
+        return bool(value)
+    
+    # tuning
+    @makeprop()
+    def bundling(self:Self, value:Any)->Tuning:
+        return Tuning(value)
+    @makeprop()
+    def special(self:Self, value:Any)->Tuning:
+        return Tuning(value)
+
+
+
+
+
+
+class PreParser(BasePreParser):
 
     def __repr__(self: Self) -> str:
         "This magic method implements repr(self)."
         return datarepr(type(self).__name__, **self.todict())
-
-    @makeprop()
-    def abbr(self: Self, value: SupportsInt) -> Abbr:
-        "This property decides how to handle abbreviations."
-        return Abbr(value)
     
     def cause_warning(self: Self, wrncls:type, /, **kwargs:Any) -> None:
         warning:PreparseWarning=wrncls(prog=self.prog, **kwargs)
@@ -70,69 +166,14 @@ class PreParser:
         "This method returns a copy of the current instance."
         return type(self)(**self.todict())
 
-    @makeprop()
-    def group(self: Self, value: Any) -> dict:
-        "This property decides how to approach the grouping of short options."
-        return Group(value)
-
-    @property
-    def islongonly(self) -> bool:
-        if self.longonly != Longonly.INFER:
-            return bool(self.longonly)
-        # if a long option with a single hyphon exists
-        # then all options are treated as long options
-        # example: -foo
-        for k in self.optdict.keys():
-            if len(k) < 3:
-                continue
-            if k.startswith("--"):
-                continue
-            if not k.startswith("-"):
-                continue
-            return True
-        return False
-
-    @makeprop()
-    def longonly(self: Self, value: Any) -> Longonly:
-        "This property decides whether the parser treats all options as long."
-        return Longonly(value)
-
     def parse_args(
         self: Self,
         args: Optional[Iterable] = None,
     ) -> list[str]:
         "This method parses args."
-        return process(args=args, parser=self)
+        return process(args, **self.todict())
+
     
-    @makeprop()
-    def optdict(self: Self, value: Any) -> dict:
-        "This property gives a dictionary of options."
-        if value is None:
-            self._optdict.clear()
-            return self._optdict
-        data:dict = dict(value)
-        data = {str(k): Nargs(v) for k, v in data.items()}
-        data = dict(sorted(data.items()))
-        self._optdict.clear()
-        self._optdict.update(data)
-        return self._optdict
-
-    @makeprop()
-    def order(self: Self, value: Any) -> Order:
-        "This property decides how to order flags and positional arguments."
-        if value == "infer_given":
-            return Order.infer_given()
-        if value == "infer_permute":
-            return Order.infer_permute()
-        return Order(value)
-
-    @makeprop()
-    def prog(self: Self, value: Any) -> str:
-        "This property represents the name of the program."
-        if value is None:
-            value = os.path.basename(sys.argv[0])
-        return str(value)
-
     def reflectClickCommand(self: Self, cmd: cl.Command) -> None:
         "This method causes the current instance to reflect a click.Command object."
         optdict = dict()
@@ -161,8 +202,4 @@ class PreParser:
             name = slot.lstrip("_")
             ans[name] = getattr(self, slot)
         return ans
-
-    @makeprop()
-    def warn(self: Self, value: Callable) -> types.FunctionType:
-        "This property gives a function that takes in the warnings."
-        return tofunc(value)
+    
