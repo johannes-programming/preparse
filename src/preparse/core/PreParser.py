@@ -27,6 +27,7 @@ class BasePreParser:
         "_optdict",
         "_prog",
         "_reconcilesorders",
+        "_special",
         "_warn",
     )
 
@@ -37,6 +38,7 @@ class BasePreParser:
         expectsabbr:Any = True,
         expandsabbr:Any = True,
         bundling: Any = Tuning.MAINTAIN,
+        special: Any = Tuning.MAINTAIN,
         allowslong: Any = True,
         allowsshort: Any = True,
         expectsposix:Any=False,
@@ -49,6 +51,7 @@ class BasePreParser:
         self.expectsabbr = expectsabbr
         self.expandsabbr = expandsabbr
         self.bundling = bundling
+        self.special = special
         self.allowslong = allowslong
         self.allowsshort = allowsshort
         self.expectsposix = expectsposix
@@ -77,8 +80,11 @@ class BasePreParser:
     def expandsabbr(self: Self, value: Any) -> bool:
         return bool(value)
     @makeprop()
-    def bundling(self: Self, value: Any) -> dict:
+    def bundling(self: Self, value: Any) -> Tuning:
         "This property decides how to approach the bundling of short options."
+        return Tuning(value)
+    @makeprop()
+    def special(self: Self, value: Any) -> Tuning:
         return Tuning(value)
     @makeprop()
     def allowslong(self: Self, value: Any) -> bool:
