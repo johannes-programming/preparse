@@ -6,7 +6,7 @@ __all__ = ["deparse"]
 
 
 def deparse(items: list[Item]) -> list[str]:
-    ans: str = list()
+    ans: list[str] = list()
     item: Item
     for item in items:
         ans += deparse_item(item)
