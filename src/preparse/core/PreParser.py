@@ -51,6 +51,9 @@ class BasePreParser:
         self.expectsposix = expectsposix
         self.reconcilesorders = reconcilesorders
         self.warn = warn
+    def __repr__(self: Self) -> str:
+        "This magic method implements repr(self)."
+        return datarepr(type(self).__name__, **self.todict())
 
     def copy(self: Self) -> Self:
         "This method returns a copy of the current instance."
@@ -115,10 +118,6 @@ class BasePreParser:
 
 
 class PreParser(BasePreParser):
-
-    def __repr__(self: Self) -> str:
-        "This magic method implements repr(self)."
-        return datarepr(type(self).__name__, **self.todict())
 
     
     def cause_warning(self: Self, wrncls:type, /, **kwargs:Any) -> None:
