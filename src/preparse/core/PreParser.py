@@ -33,7 +33,7 @@ class BasePreParser:
         prog: Any = None,
         abbr: Any = Abbr.COMPLETE,
         bundling: Any = Tuning.MAINTAIN,
-        longonly: Any = Longonly.INFER,
+        longonly: Any = False,
         order: Any = Order.PERMUTE,
         warn: Callable = str,
     ) -> None:
@@ -67,9 +67,9 @@ class BasePreParser:
         "This property decides how to approach the bundling of short options."
         return Tuning(value)
     @makeprop()
-    def longonly(self: Self, value: Any) -> Longonly:
+    def longonly(self: Self, value: Any) -> bool:
         "This property decides whether the parser treats all options as long."
-        return Longonly(value)
+        return bool(value)
     @makeprop()
     def optdict(self: Self, value: Any) -> dict:
         "This property gives a dictionary of options."
@@ -122,24 +122,6 @@ class PreParser(BasePreParser):
     def click(self: Self, cmd: Any = True, ctx: Any = True) -> Click:
         "This method returns a decorator that infuses the current instance into parse_args."
         return Click(parser=self, cmd=cmd, ctx=ctx)
-
-
-    @property
-    def islongonly(self) -> bool:
-        if self.longonly != Longonly.INFER:
-            return bool(self.longonly)
-        # if a long option with a single hyphon exists
-        # then all options are treated as long options
-        # example: -foo
-        for k in self.optdict.keys():
-            if len(k) < 3:
-                continue
-            if k.startswith("--"):
-                continue
-            if not k.startswith("-"):
-                continue
-            return True
-        return False
 
 
     def parse_args(
