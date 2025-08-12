@@ -3,7 +3,7 @@ from typing import *
 
 from preparse._parsing.deparse import *
 from preparse._parsing.digest import *
-from preparse._parsing.Item import *
+from preparse._parsing.items import *
 from preparse._parsing.parse import *
 
 if TYPE_CHECKING:
