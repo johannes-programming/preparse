@@ -16,7 +16,7 @@ PLORAW = PreparseLongOptionRequiresArgumentWarning
 PSORAW = PreparseShortOptionRequiresArgumentWarning
 
 
-def parse(*, args: list[str], parser: "PreParser") -> Generator[Any, Any, Any]:
+def parse(args: list[str], *, parser: "PreParser") -> Generator[Any, Any, Any]:
     broken: bool = False
     last: Optional[Item] = None
     for arg in args:
