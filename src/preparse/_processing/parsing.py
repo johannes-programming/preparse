@@ -1,4 +1,5 @@
 from typing import *
+from types import FunctionType
 
 from preparse._processing.items import *
 from preparse.core.enums import *
@@ -22,6 +23,7 @@ def parse(args: list[str], **kwargs) -> list[Item]:
 def parse_generator(args: list[str], *, parser: "PreParser") -> Generator[Any, Any, Any]:
     if not parser.allowslong:
         raise NotImplementedError
+    cause:FunctionType=parse_cause(prog=parser.prog, warn=parser.warn)
     broken: bool = False
     last: Optional[Item] = None
     for arg in args:
@@ -56,19 +58,17 @@ def parse_generator(args: list[str], *, parser: "PreParser") -> Generator[Any, A
         # if the last item is not starved
         return
     if isinstance(last.remainder, str):
-        warning: PLORAW = PLORAW(
-            prog=parser.prog,
-            option=last.remainder,
-        )
-        parser.warn(warning)
+        cause(PLORAW, option=last.remainder)
         last.remainder = True
     else:
-        warning: PSORAW = PSORAW(
-            prog=parser.prog,
-            option=last.key[-1],
-        )
-        parser.warn(warning)
+        cause(PSORAW, option=last.key[-1])
     yield last
+
+
+def parse_cause(*, prog:str, warn:FunctionType)->FunctionType:
+    def ans(cls:type, **kwargs:Any)->None:
+        warn(cls(prog=prog,**kwargs))
+    return ans
 
 
 def parse_long(*, arg: str, parser: "PreParser") -> Item:
