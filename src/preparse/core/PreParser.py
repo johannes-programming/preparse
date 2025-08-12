@@ -9,7 +9,7 @@ from datarepr import datarepr
 from makeprop import makeprop
 from tofunc import tofunc
 
-from preparse._parsing import *
+from preparse._processing import *
 from preparse.core.Click import *
 from preparse.core.enums import *
 from preparse.core.warnings import *

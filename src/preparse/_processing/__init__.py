@@ -1,10 +1,10 @@
-import sys
 from typing import *
 
-from preparse._parsing.deparse import *
-from preparse._parsing.digest import *
-from preparse._parsing.items import *
-from preparse._parsing.parse import *
+from preparse._processing.deparsing import *
+from preparse._processing.digesting import *
+from preparse._processing.items import *
+from preparse._processing.parsing import *
+from preparse._processing.pulling import *
 
 if TYPE_CHECKING:
     from preparse.core.PreParser import PreParser
@@ -18,10 +18,8 @@ def process(
     parser: "PreParser",
 ) -> list[str]:
     "This method parses args."
-    if args is None:
-        args = sys.argv[1:]
-    args = [str(a) for a in args]
     parser = parser.copy()
+    items:list[str] = list(pull(args))
     items: list[Item] = list(parse(args=args, parser=parser))
     items: list[Item] = list(digest(items=items, parser=parser))
     ans: list[str] = list(deparse(items=items))
