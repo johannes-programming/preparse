@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 __all__ = ["digest"]
 
 
-def digest(*, items: list[Item], parser: "PreParser") -> list[Item]:
+def digest(items: list[Item], *, parser: "PreParser") -> list[Item]:
     items = list(digest_order(items, expectsposix=parser.expectsposix, reconcilesorders=parser.reconcilesorders))
     items = list(digest_bundling(items=items, bundling=parser.bundling))
     return items
