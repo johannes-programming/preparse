@@ -2,8 +2,6 @@ from typing import *
 
 from preparse._processing.items import *
 
-if TYPE_CHECKING:
-    from preparse.core.PreParser import PreParser
 __all__ = ["deparse"]
 
 
