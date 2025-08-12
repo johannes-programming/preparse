@@ -20,7 +20,7 @@ def deparse_item(item: Item) -> list[str]:
         return ["--"]
     if item.ispositional():
         return [item.value]
-    if item.isgroup():
+    if item.isbundle():
         if item.value is None:
             return ["-" + item.key]
         if item.remainder:
