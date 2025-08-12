@@ -21,7 +21,7 @@ __all__ = ["PreParser"]
 class PreParser:
     __slots__ = (
         "_abbr",
-        "_group",
+        "_bundling",
         "_longonly",
         "_optdict",
         "_order",
@@ -34,7 +34,7 @@ class PreParser:
         optdict: Any = None,
         prog: Any = None,
         abbr: Any = Abbr.COMPLETE,
-        group: Any = Tuning.MAINTAIN,
+        bundling: Any = Tuning.MAINTAIN,
         longonly: Any = Longonly.INFER,
         order: Any = Order.PERMUTE,
         warn: Callable = str,
@@ -44,7 +44,7 @@ class PreParser:
         self.optdict = optdict
         self.prog = prog
         self.abbr = abbr
-        self.group = group
+        self.bundling = bundling
         self.longonly = longonly
         self.order = order
         self.warn = warn
@@ -71,8 +71,8 @@ class PreParser:
         return type(self)(**self.todict())
 
     @makeprop()
-    def group(self: Self, value: Any) -> dict:
-        "This property decides how to approach the grouping of short options."
+    def bundling(self: Self, value: Any) -> dict:
+        "This property decides how to approach the bundling of short options."
         return Tuning(value)
 
     @property

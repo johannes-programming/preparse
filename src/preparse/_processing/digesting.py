@@ -12,28 +12,28 @@ __all__ = ["digest"]
 
 def digest(*, items: list[Item], parser: "PreParser") -> list[Item]:
     items = list(digest_order(items=items, order=parser.order))
-    items = list(digest_group(items=items, group=parser.group))
+    items = list(digest_bundling(items=items, bundling=parser.bundling))
     return items
 
 
-def digest_group(*, items: list[Item], group: Tuning) -> list[Item]:
-    if group == Tuning.MINIMIZE:
-        return digest_group_minimize(items)
-    if group == Tuning.MAXIMIZE:
-        return digest_group_maximize(items)
+def digest_bundling(*, items: list[Item], bundling: Tuning) -> list[Item]:
+    if bundling == Tuning.MINIMIZE:
+        return digest_bundling_minimize(items)
+    if bundling == Tuning.MAXIMIZE:
+        return digest_bundling_maximize(items)
     return items
 
 
-def digest_group_minimize(items: list[Item]) -> list[Item]:
+def digest_bundling_minimize(items: list[Item]) -> list[Item]:
     ans: list[Item] = list()
     item: Item
     for item in items:
-        ans += digest_group_minimize_split(item)
+        ans += digest_bundling_minimize_split(item)
     return ans
 
 
-def digest_group_minimize_split(item: Item) -> list[Item]:
-    if not item.isgroup():
+def digest_bundling_minimize_split(item: Item) -> list[Item]:
+    if not item.isbundle():
         return [item]
     ans: list[Item] = list()
     x: str
@@ -47,11 +47,11 @@ def digest_group_minimize_split(item: Item) -> list[Item]:
     return ans
 
 
-def digest_group_maximize(items: list[Item]) -> list[Item]:
+def digest_bundling_maximize(items: list[Item]) -> list[Item]:
     ans: list[Item] = [items.pop(0)]
     item: Item
     for item in items:
-        if item.isgroup() and ans[-1].isgroup() and ans[-1].value is None:
+        if item.isbundle() and ans[-1].isbundle() and ans[-1].value is None:
             item.key = ans[-1].key + item.key
             ans[-1] = item
         else:
