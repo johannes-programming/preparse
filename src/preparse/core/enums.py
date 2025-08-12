@@ -4,11 +4,9 @@ the value of two represents always an intermediary answer \
 between the values zero, meaning no, and one, meaning yes."""
 
 import enum
-import os
 from typing import *
 
 __all__ = [
-    "Abbr",
     "Tuning",
     "Nargs",
 ]
@@ -18,12 +16,6 @@ class BaseEnum(enum.IntEnum):
     @classmethod
     def _missing_(cls: type, value: Any) -> Self:
         return cls(2)
-
-
-class Abbr(BaseEnum):
-    REJECT = 0
-    KEEP = 1
-    COMPLETE = 2
 
 
 class Tuning(BaseEnum):

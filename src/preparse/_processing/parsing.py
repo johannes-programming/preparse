@@ -77,7 +77,7 @@ def parse_long(*, arg: str, parser: "PreParser") -> Item:
         ans.remainder = True
     if ans.remainder:
         ans.remainder = full
-    if parser.abbr == Abbr.COMPLETE:
+    if parser.expandsabbr:
         ans.key = full
     return ans
 
@@ -93,7 +93,7 @@ def parse_long_init(arg: str) -> Item:
 def parse_long_full(*, item: Item, parser: "PreParser") -> str:
     if item.key in parser.optdict.keys():
         return item.key
-    if parser.abbr == Abbr.REJECT:
+    if not parser.expectsabbr:
         warning: PUOW = PUOW(prog=parser.prog, option=arg)
         parser.warn(warning)
     x: str
