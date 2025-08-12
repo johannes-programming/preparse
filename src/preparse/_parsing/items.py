@@ -1,5 +1,4 @@
 import dataclasses
-import functools
 from typing import *
 
 from preparse.core.enums import *
