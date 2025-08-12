@@ -21,9 +21,10 @@ class BasePreParser:
         "_abbr",
         "_allowslong",
         "_bundling",
+        "_expectsposix",
         "_optdict",
-        "_order",
         "_prog",
+        "_reconcilesorders",
         "_warn",
     )
 
@@ -34,7 +35,8 @@ class BasePreParser:
         abbr: Any = Abbr.COMPLETE,
         bundling: Any = Tuning.MAINTAIN,
         allowslong: Any = False,
-        order: Any = Order.PERMUTE,
+        expectsposix:Any=False,
+        reconcilesorders:Any=True,
         warn: Callable = str,
     ) -> None:
         "This magic method initializes self."
@@ -43,7 +45,8 @@ class BasePreParser:
         self.abbr = abbr
         self.bundling = bundling
         self.allowslong = allowslong
-        self.order = order
+        self.expectsposix = expectsposix
+        self.reconcilesorders = reconcilesorders
         self.warn = warn
 
     def copy(self: Self) -> Self:
@@ -87,13 +90,11 @@ class BasePreParser:
         return dataB
 
     @makeprop()
-    def order(self: Self, value: Any) -> Order:
-        "This property decides how to order flags and positional arguments."
-        if value == "infer_given":
-            return Order.infer_given()
-        if value == "infer_permute":
-            return Order.infer_permute()
-        return Order(value)
+    def expectsposix(self: Self, value: Any) -> bool:
+        return bool(value)
+    @makeprop()
+    def reconcilesorders(self: Self, value: Any) -> bool:
+        return bool(value)
 
     @makeprop()
     def prog(self: Self, value: Any) -> str:
