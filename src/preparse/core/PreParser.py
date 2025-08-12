@@ -15,121 +15,152 @@ from preparse.core.warnings import *
 
 __all__ = ["PreParser"]
 
-
 class BasePreParser:
+
     __slots__ = (
+        # options
         "_allowslong",
         "_allowsshort",
-        "_bundling",
-        "_expandsabbr",
-        "_expectsabbr",
-        "_expectsposix",
         "_optdict",
+
+        # warnings
         "_prog",
-        "_reconcilesorders",
-        "_special",
         "_warn",
+
+        # orders
+        "_expectsposix",
+        "_reconcilesorders",
+
+        # abbr
+        "_expectsabbr",
+        "_expandsabbr",
+
+        # tuning
+        "_bundling",
+        "_special",
     )
 
     def __init__(
         self: Self, *,
-        optdict: Any = None,
-        prog: Any = None,
+
+        # options
+        allowslong:Any = True,
+        allowsshort:Any = True,
+        optdict:Any= None,
+
+        # warnings
+        prog:Any = None,
+        warn:Callable=str,
+
+        # orders
+        expectsposix:Any = False,
+        reconcilesorders:Any = True,
+
+        # abbr
         expectsabbr:Any = True,
         expandsabbr:Any = True,
-        bundling: Any = Tuning.MAINTAIN,
-        special: Any = Tuning.MAINTAIN,
-        allowslong: Any = True,
-        allowsshort: Any = True,
-        expectsposix:Any=False,
-        reconcilesorders:Any=True,
-        warn: Callable = str,
+
+        # tuning
+        bundling:Tuning = Tuning.MAINTAIN,
+        special:Tuning = Tuning.MAXIMIZE,
     ) -> None:
         "This magic method initializes self."
-        self.optdict = optdict
-        self.prog = prog
-        self.expectsabbr = expectsabbr
-        self.expandsabbr = expandsabbr
-        self.bundling = bundling
-        self.special = special
+        # options
         self.allowslong = allowslong
         self.allowsshort = allowsshort
+        self.optdict = optdict
+
+        # warnings
+        self.prog = prog 
+        self.warn = warn
+
+        # orders
         self.expectsposix = expectsposix
         self.reconcilesorders = reconcilesorders
-        self.warn = warn
-    def __repr__(self: Self) -> str:
-        "This magic method implements repr(self)."
-        return datarepr(type(self).__name__, **self.todict())
 
-    def copy(self: Self) -> Self:
-        "This method returns a copy of the current instance."
-        return type(self)(**self.todict())
-    
-    def todict(self: Self) -> dict:
-        "This method returns a dict representing the current instance."
-        ans = dict()
-        for slot in type(self).__slots__:
-            name = slot.lstrip("_")
-            ans[name] = getattr(self, slot)
-        return ans
+        # abbr
+        self.expectsabbr = expectsabbr
+        self.expandsabbr = expandsabbr
+
+        # tuning
+        self.bundling = bundling
+        self.special = special
+
+    # options
+    @makeprop()
+    def allowslong(self:Self, value:Any)->bool:
+        return bool(value)
 
     @makeprop()
-    def expectsabbr(self: Self, value: Any) -> bool:
+    def allowsshort(self:Self, value:Any)->bool:
         return bool(value)
-    @makeprop()
-    def expandsabbr(self: Self, value: Any) -> bool:
-        return bool(value)
-    @makeprop()
-    def bundling(self: Self, value: Any) -> Tuning:
-        "This property decides how to approach the bundling of short options."
-        return Tuning(value)
-    @makeprop()
-    def special(self: Self, value: Any) -> Tuning:
-        return Tuning(value)
-    @makeprop()
-    def allowslong(self: Self, value: Any) -> bool:
-        return bool(value)
-    @makeprop()
-    def allowsshort(self: Self, value: Any) -> bool:
-        return bool(value)
-    @makeprop()
-    def optdict(self: Self, value: Any) -> dict:
-        "This property gives a dictionary of options."
-        dataA:dict 
+
+    @property
+    def optdict(self:Self)->dict:
+        return dict(self._optdict)
+    @optdict.setter
+    def optdict(self:Self, value:Any)->None:
         if value is None:
-            dataA = dict()
-        else:
-            dataA = dict(value)
-        dataB:dict=dict()
-        k:str
-        v:Nargs
+            self._optdict = dict()
+            return
+        dataA:dict = dict(value)
+        dataB:dict = dict()
+        k:Any
+        v:Any
         for k, v in dataA.items():
             dataB[str(k)] = Nargs(v)
-        self._optdict = dict(dataB)
-        return dataB
-
-    @makeprop()
-    def expectsposix(self: Self, value: Any) -> bool:
-        return bool(value)
-    @makeprop()
-    def reconcilesorders(self: Self, value: Any) -> bool:
-        return bool(value)
-
+        self._optdict = dataB
+    
+    # warnings
     @makeprop()
     def prog(self: Self, value: Any) -> str:
         "This property represents the name of the program."
         if value is None:
             value = os.path.basename(sys.argv[0])
         return str(value)
-    
+
     @makeprop()
     def warn(self: Self, value: Callable) -> types.FunctionType:
         "This property gives a function that takes in the warnings."
         return tofunc(value)
+    
+    # orders
+    @makeprop()
+    def expectsposix(self:Self, value: Any) -> bool:
+        if value == "infer":
+            value = os.environ.get("POSIXLY_CORRECT")
+        return bool(value)
+    
+    @makeprop()
+    def reconcilesorders(self:Self, value: Any) -> bool:
+        return bool(value)
+    
+    # abbr
+    @makeprop()
+    def expectsabbr(self:Self, value:Any)->bool:
+        return bool(value)
+    @makeprop()
+    def expandsabbr(self:Self, value:Any)->bool:
+        return bool(value)
+    
+    # tuning
+    @makeprop()
+    def bundling(self:Self, value:Any)->Tuning:
+        return Tuning(value)
+    @makeprop()
+    def special(self:Self, value:Any)->Tuning:
+        return Tuning(value)
+
+
+
+
 
 
 class PreParser(BasePreParser):
 
+    def __repr__(self: Self) -> str:
+        "This magic method implements repr(self)."
+        return datarepr(type(self).__name__, **self.todict())
     
     def cause_warning(self: Self, wrncls:type, /, **kwargs:Any) -> None:
         warning:PreparseWarning=wrncls(prog=self.prog, **kwargs)
@@ -139,16 +170,18 @@ class PreParser(BasePreParser):
         "This method returns a decorator that infuses the current instance into parse_args."
         return Click(parser=self, cmd=cmd, ctx=ctx)
 
+    def copy(self: Self) -> Self:
+        "This method returns a copy of the current instance."
+        return type(self)(**self.todict())
 
     def parse_args(
         self: Self,
         args: Optional[Iterable] = None,
     ) -> list[str]:
         "This method parses args."
-        return process(args, parser=self)
+        return process(args, **self.todict())
+
     
-
-
     def reflectClickCommand(self: Self, cmd: cl.Command) -> None:
         "This method causes the current instance to reflect a click.Command object."
         optdict = dict()
@@ -170,4 +203,11 @@ class PreParser(BasePreParser):
         "This method causes the current instance to reflect a click.Context object."
         self.prog = ctx.info_name
 
-
+    def todict(self: Self) -> dict:
+        "This method returns a dict representing the current instance."
+        ans = dict()
+        for slot in type(self).__slots__:
+            name = slot.lstrip("_")
+            ans[name] = getattr(self, slot)
+        return ans
+    

@@ -7,8 +7,8 @@ import enum
 from typing import *
 
 __all__ = [
-    "Tuning",
     "Nargs",
+    "Tuning",
 ]
 
 
@@ -18,13 +18,12 @@ class BaseEnum(enum.IntEnum):
         return cls(2)
 
 
-class Tuning(BaseEnum):
-    MINIMIZE = 0
-    MAXIMIZE = 1
-    MAINTAIN = 2
-
-
 class Nargs(BaseEnum):
     NO_ARGUMENT = 0
     REQUIRED_ARGUMENT = 1
     OPTIONAL_ARGUMENT = 2
+
+class Tuning(BaseEnum):
+    MINIMIZE = 0
+    MAXIMIZE = 1
+    MAINTAIN = 2

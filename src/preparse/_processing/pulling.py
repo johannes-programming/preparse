@@ -1,19 +1,13 @@
-import sys
 from typing import *
+import sys
 from preparse._processing.items import *
 
 __all__ = ["pull"]
 
-
-def pull(args: Optional[Iterable] = None) -> list[str]:
-    "This method parses args."
-    argiter:Iterable
-    if args is None:
-        argiter = sys.argv[1:]
-    else:
-        argiter = args
-    ans:list = list()
+def pull(args:Optional[Iterable]) -> list[Item]:
+    argiter:Iterable = sys.argv[1:] if args is None else args
     x:Any
+    ans:list[Item] = list()
     for x in argiter:
-        ans.append(str(x))
+        ans.append(Positional(x))
     return ans
