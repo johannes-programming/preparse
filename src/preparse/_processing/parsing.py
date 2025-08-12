@@ -43,7 +43,7 @@ def parse(*, args: list[str], parser: "PreParser") -> Generator[Any, Any, Any]:
         if arg.startswith("--") or parser.islongonly:
             last = parse_long(arg=arg, parser=parser)
         else:
-            last = parse_group(arg=arg, parser=parser)
+            last = parse_bundling(arg=arg, parser=parser)
         if not last.ishungry():
             yield last
             last = None
@@ -115,7 +115,7 @@ def parse_long_full(*, item: Item, parser: "PreParser") -> str:
     return item.key
 
 
-def parse_group_letter(letter: str, *, parser: "PreParser") -> Nargs:
+def parse_bundling_letter(letter: str, *, parser: "PreParser") -> Nargs:
     try:
         return parser.optdict["-" + letter]
     except KeyError:
@@ -124,14 +124,14 @@ def parse_group_letter(letter: str, *, parser: "PreParser") -> Nargs:
         return Nargs.NO_ARGUMENT
 
 
-def parse_group(*, arg: str, parser: "PreParser") -> Item:
+def parse_bundling(*, arg: str, parser: "PreParser") -> Item:
     ans: Item = Item(key="")
     nargs: Nargs
     for i, a in enumerate(arg):
         if i == 0:
             continue
         ans.key += a
-        nargs = parse_group_letter(a, parser=parser)
+        nargs = parse_bundling_letter(a, parser=parser)
         if nargs == Nargs.NO_ARGUMENT:
             continue
         if nargs == Nargs.OPTIONAL_ARGUMENT or i < len(arg) - 1:

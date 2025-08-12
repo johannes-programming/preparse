@@ -22,7 +22,7 @@ class Item:
     def islong(self: Self) -> bool:
         return self.isoption() and self.key.startswith("-")
 
-    def isgroup(self: Self) -> bool:
+    def isbundle(self: Self) -> bool:
         return self.isoption() and not self.key.startswith("-")
 
     def isspecial(self: Self) -> bool:
