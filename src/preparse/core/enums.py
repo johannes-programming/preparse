@@ -9,7 +9,7 @@ from typing import *
 
 __all__ = [
     "Abbr",
-    "Group",
+    "Tuning",
     "Longonly",
     "Order",
     "Nargs",
@@ -28,7 +28,7 @@ class Abbr(BaseEnum):
     COMPLETE = 2
 
 
-class Group(BaseEnum):
+class Tuning(BaseEnum):
     MINIMIZE = 0
     MAXIMIZE = 1
     MAINTAIN = 2

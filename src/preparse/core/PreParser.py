@@ -34,7 +34,7 @@ class PreParser:
         optdict: Any = None,
         prog: Any = None,
         abbr: Any = Abbr.COMPLETE,
-        group: Any = Group.MAINTAIN,
+        group: Any = Tuning.MAINTAIN,
         longonly: Any = Longonly.INFER,
         order: Any = Order.PERMUTE,
         warn: Callable = str,
@@ -73,7 +73,7 @@ class PreParser:
     @makeprop()
     def group(self: Self, value: Any) -> dict:
         "This property decides how to approach the grouping of short options."
-        return Group(value)
+        return Tuning(value)
 
     @property
     def islongonly(self) -> bool:

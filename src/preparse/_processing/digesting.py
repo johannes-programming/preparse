@@ -16,10 +16,10 @@ def digest(*, items: list[Item], parser: "PreParser") -> list[Item]:
     return items
 
 
-def digest_group(*, items: list[Item], group: Group) -> list[Item]:
-    if group == Group.MINIMIZE:
+def digest_group(*, items: list[Item], group: Tuning) -> list[Item]:
+    if group == Tuning.MINIMIZE:
         return digest_group_minimize(items)
-    if group == Group.MAXIMIZE:
+    if group == Tuning.MAXIMIZE:
         return digest_group_maximize(items)
     return items
 
