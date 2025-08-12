@@ -38,7 +38,6 @@ class BasePreParser:
         warn: Callable = str,
     ) -> None:
         "This magic method initializes self."
-        self._optdict = dict()
         self.optdict = optdict
         self.prog = prog
         self.abbr = abbr
@@ -74,15 +73,19 @@ class BasePreParser:
     @makeprop()
     def optdict(self: Self, value: Any) -> dict:
         "This property gives a dictionary of options."
+        dataA:dict 
         if value is None:
-            self._optdict.clear()
-            return self._optdict
-        data:dict = dict(value)
-        data = {str(k): Nargs(v) for k, v in data.items()}
-        data = dict(sorted(data.items()))
-        self._optdict.clear()
-        self._optdict.update(data)
-        return self._optdict
+            dataA = dict()
+        else:
+            dataA = dict(value)
+        dataB:dict=dict()
+        k:str
+        v:Nargs
+        for k, v in dataA.items():
+            dataB[str(k)] = Nargs(v)
+        self._optdict = dict(dataB)
+        return dataB
+
     @makeprop()
     def order(self: Self, value: Any) -> Order:
         "This property decides how to order flags and positional arguments."
