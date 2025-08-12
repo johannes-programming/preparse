@@ -18,6 +18,7 @@ __all__ = ["PreParser"]
 
 class BasePreParser:
     __slots__ = (
+        "_allowslong",
         "_allowsshort",
         "_bundling",
         "_expandsabbr",
@@ -36,6 +37,7 @@ class BasePreParser:
         expectsabbr:Any = True,
         expandsabbr:Any = True,
         bundling: Any = Tuning.MAINTAIN,
+        allowslong: Any = True,
         allowsshort: Any = True,
         expectsposix:Any=False,
         reconcilesorders:Any=True,
@@ -47,6 +49,7 @@ class BasePreParser:
         self.expectsabbr = expectsabbr
         self.expandsabbr = expandsabbr
         self.bundling = bundling
+        self.allowslong = allowslong
         self.allowsshort = allowsshort
         self.expectsposix = expectsposix
         self.reconcilesorders = reconcilesorders
@@ -77,6 +80,9 @@ class BasePreParser:
     def bundling(self: Self, value: Any) -> dict:
         "This property decides how to approach the bundling of short options."
         return Tuning(value)
+    @makeprop()
+    def allowslong(self: Self, value: Any) -> bool:
+        return bool(value)
     @makeprop()
     def allowsshort(self: Self, value: Any) -> bool:
         return bool(value)
