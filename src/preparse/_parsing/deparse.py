@@ -1,6 +1,6 @@
 from typing import *
 
-from preparse._parsing.Item import *
+from preparse._parsing.items import *
 
 if TYPE_CHECKING:
     from preparse.core.PreParser import PreParser
