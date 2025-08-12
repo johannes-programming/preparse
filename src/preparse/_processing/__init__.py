@@ -1,25 +1,59 @@
-from typing import *
-
 from preparse._processing.deparsing import *
 from preparse._processing.digesting import *
-from preparse._processing.items import *
 from preparse._processing.parsing import *
 from preparse._processing.pulling import *
-
-if TYPE_CHECKING:
-    from preparse.core.PreParser import PreParser
+from preparse.core.enums import *
+from types import FunctionType
 
 __all__ = ["process"]
 
 
 def process(
-    args: Optional[Iterable] = None, *,
-    parser: "PreParser",
+    # pull
+    args: Optional[Iterable] = None, *, 
+
+    # options
+    allowslong:bool,
+    allowsshort:bool,
+    optdict:dict,
+
+    # warnings
+    prog:str,
+    warn:FunctionType,
+
+    # orders
+    expectsposix:bool,
+    reconcilesorders:bool,
+
+    # abbr
+    expectsabbr:bool,
+    expandsabbr:bool,
+
+    # tuning
+    bundling:Tuning,
+    special:Tuning,
+    
 ) -> list[str]:
     "This method parses args."
-    parser = parser.copy()
-    items:list[str] = pull(args)
-    items: list[Item] = parse(items, parser=parser)
-    items: list[Item] = digest(items, parser=parser)
-    ans: list[str] = deparse(items)
+    items: list[Item] = pull(args)
+    items = parse(
+        items, 
+        allowslong=allowslong,
+        allowsshort=allowsshort,
+        expectsabbr=expectsabbr,
+        expectsposix=expectsposix,
+        optdict=optdict,
+        prog=prog,
+        warn=warn,
+    )
+    items = digest(
+        items, 
+        allowslong=allowslong, 
+        bundling=bundling,
+        expandsabbr=expandsabbr,
+        expectsposix=expectsposix,
+        reconcilesorders=reconcilesorders,
+        special=special,
+    )
+    ans:list[str] = deparse(items)
     return ans

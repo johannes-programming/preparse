@@ -1,12 +1,9 @@
 from typing import *
 from types import FunctionType
-
 from preparse._processing.items import *
 from preparse.core.enums import *
 from preparse.core.warnings import *
 
-if TYPE_CHECKING:
-    from preparse.core.PreParser import PreParser
 __all__ = ["parse"]
 
 PUOW = PreparseUnrecognizedOptionWarning
@@ -16,133 +13,124 @@ PIOW = PreparseInvalidOptionWarning
 PLORAW = PreparseLongOptionRequiresArgumentWarning
 PSORAW = PreparseShortOptionRequiresArgumentWarning
 
-
-def parse(args: list[str], **kwargs) -> list[Item]:
-    return list(parse_generator(args, **kwargs))
-
-def parse_generator(args: list[str], *, parser: "PreParser") -> Generator[Any, Any, Any]:
-    if not parser.allowslong:
-        raise NotImplementedError
-    cause:FunctionType=parse_cause(prog=parser.prog, warn=parser.warn)
-    broken: bool = False
-    last: Optional[Item] = None
-    for arg in args:
+def parse(items:list[Positional], *,
+        allowslong:bool, 
+        allowsshort:bool,
+        expectsabbr:bool,
+        expectsposix:bool,
+        prog:str,
+        warn:FunctionType,
+        **kwargs:Any,
+) -> list[Item]:
+    if not (allowslong and allowsshort):
+        return list(items)
+    ans:list[Item] = list()
+    broken:bool = False
+    cause_warning:FunctionType = parse_cause(prog=prog, warn=warn)
+    hungry:bool = False
+    item:Positional
+    opt:Optional[Option] = None
+    for item in items:
         if broken:
-            # if we are in the positional-only part
-            yield Item(value=arg)
+            ans.append(item)
             continue
-        if last is not None:
-            # if the last item hungers for a value
-            last.value = arg
-            last.remainder = False
-            yield last
-            last = None
+        if hungry:
+            ans[-1].right = item.value
+            hungry = False
             continue
-        if arg == "--":
-            yield Item()
+        if item.iscomp():
+            ans.append(item)
+            broken = expectsposix
+            continue
+        if item.value == "--":
+            ans.append(Special())
             broken = True
             continue
-        if arg == "-" or not arg.startswith("-"):
-            # if the arg is positional
-            yield Item(value=arg)
-            broken = parser.expectsposix
-            continue
-        if arg.startswith("--") or not parser.allowsshort:
-            last = parse_long(arg=arg, parser=parser)
+        if item.value.startswith("--") and allowslong:
+            opt = parse_long(
+                item.value, 
+                cause_warning=cause_warning,
+                expectsabbr=expectsabbr,
+                **kwargs, 
+            )
         else:
-            last = parse_bundling(arg=arg, parser=parser)
-        if not last.ishungry():
-            yield last
-            last = None
-    if last is None:
-        # if the last item is not starved
-        return
-    if isinstance(last.remainder, str):
-        cause(PLORAW, option=last.remainder)
-        last.remainder = True
+            opt = parse_bundle(
+                item.value, 
+                cause_warning=cause_warning,
+                **kwargs,
+            )
+        hungry = opt.nargs == Nargs.REQUIRED_ARGUMENT and opt.right is None
+        ans.append(opt)
+    if not hungry:
+        pass
+    elif isinstance(ans[-1], Long):
+        cause_warning(PLORAW, option=ans[-1].left)
     else:
-        cause(PSORAW, option=last.key[-1])
-    yield last
+        cause_warning(PSORAW, option="-" + ans[-1].left[-1])
+    return ans
+
+
+def parse_bundle(
+        arg:str, *,
+        optdict:dict,
+        cause_warning:FunctionType,
+) -> Bundle:
+    ans:Bundle = Bundle(left="")
+    i:int
+    a:str
+    opt:str
+    for i, a in enumerate(arg):
+        ans.left += a
+        if i == 0:
+            continue
+        opt = "-" + a
+        if opt not in optdict.keys():
+            cause_warning(PIOW, option=opt)
+            continue
+        ans.nargs = optdict[opt]
+        if ans.nargs == Nargs.NO_ARGUMENT:
+            continue
+        if i + 1 < len(arg):
+            ans.right = arg[i+1:]
+            ans.joined = True
+        break
+    return ans
 
 
 def parse_cause(*, prog:str, warn:FunctionType)->FunctionType:
     def ans(cls:type, **kwargs:Any)->None:
-        warn(cls(prog=prog,**kwargs))
+        warn(cls(prog=prog, **kwargs))
     return ans
 
 
-def parse_long(*, arg: str, parser: "PreParser") -> Item:
-    ans: Item = parse_long_init(arg)
-    full: str = parse_long_full(item=ans, parser=parser)
-    nargs: Nargs = parser.optdict.get(full, Nargs.NO_ARGUMENT)
-    if nargs == Nargs.NO_ARGUMENT and ans.remainder:
-        warning = PUAW(prog=parser.prog, option=full)
-        parser.warn(warning)
-    if nargs == Nargs.REQUIRED_ARGUMENT:
-        ans.remainder = True
-    if ans.remainder:
-        ans.remainder = full
-    if parser.expandsabbr:
-        ans.key = full
-    return ans
-
-
-def parse_long_init(arg: str) -> Item:
-    if "=" not in arg:
-        return Item(key=arg)
-    ans: Item = Item(remainder=True)
-    ans.key, ans.value = arg.split("=", 1)
-    return ans
-
-
-def parse_long_full(*, item: Item, parser: "PreParser") -> str:
-    if item.key in parser.optdict.keys():
-        return item.key
-    if not parser.expectsabbr:
-        warning: PUOW = PUOW(prog=parser.prog, option=arg)
-        parser.warn(warning)
-    x: str
-    pos: list[str] = list()
-    for x in parser.optdict.keys():
-        if x.startswith(item.key):
-            pos.append(x)
-    if len(pos) == 1:
-        return pos[0]
-    arg: str = item.key
-    if item.remainder:
-        arg += "=" + item.value
-    if len(pos) == 0:
-        warning: PUOW = PUOW(prog=parser.prog, option=arg)
-        parser.warn(warning)
-    else:
-        warning: PAOW = PAOW(prog=parser.prog, option=arg, possibilities=pos)
-        parser.warn(warning)
-    return item.key
-
-
-def parse_bundling_letter(letter: str, *, parser: "PreParser") -> Nargs:
-    try:
-        return parser.optdict["-" + letter]
-    except KeyError:
-        warning: PIOW = PIOW(prog=parser.prog, option=letter)
-        parser.warn(warning)
-        return Nargs.NO_ARGUMENT
-
-
-def parse_bundling(*, arg: str, parser: "PreParser") -> Item:
-    ans: Item = Item(key="")
-    nargs: Nargs
-    for i, a in enumerate(arg):
-        if i == 0:
-            continue
-        ans.key += a
-        nargs = parse_bundling_letter(a, parser=parser)
-        if nargs == Nargs.NO_ARGUMENT:
-            continue
-        if nargs == Nargs.OPTIONAL_ARGUMENT or i < len(arg) - 1:
-            ans.remainder = True
-            ans.value = arg[i + 1 :]
-        else:
-            ans.remainder = nargs == Nargs.REQUIRED_ARGUMENT
+def parse_long(
+        arg:str, *, 
+        expectsabbr:bool,
+        optdict:dict,
+        cause_warning:FunctionType,
+)->Long:
+    ans:Item = Long(left=arg)
+    if "=" in arg:
+        ans.left, ans.right = arg.split("=", 1)
+        ans.joined = True
+    if ans.left in optdict.keys():
+        ans.nargs = optdict[ans.left]
         return ans
+    if not expectsabbr:
+        cause_warning(PUOW, option=arg)
+        return ans
+    matches = list()
+    k:str
+    for k in optdict.keys():
+        if k.startswith(arg):
+            matches.append(k)
+    if len(matches) == 0:
+        cause_warning(PUOW, option=arg)
+        return ans
+    if len(matches) > 1:
+        cause_warning(PAOW, option=arg, possibilities=matches)
+        return ans
+    ans.abbrlen = len(ans.left)
+    ans.left, = matches
+    ans.nargs = optdict[ans.left]
     return ans
