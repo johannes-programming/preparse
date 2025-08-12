@@ -10,7 +10,6 @@ from typing import *
 __all__ = [
     "Abbr",
     "Tuning",
-    "Longonly",
     "Order",
     "Nargs",
 ]
@@ -32,12 +31,6 @@ class Tuning(BaseEnum):
     MINIMIZE = 0
     MAXIMIZE = 1
     MAINTAIN = 2
-
-
-class Longonly(BaseEnum):
-    NO = 0
-    YES = 1
-    INFER = 2
 
 
 class Nargs(BaseEnum):

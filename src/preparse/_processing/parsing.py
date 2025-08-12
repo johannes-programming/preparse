@@ -40,7 +40,7 @@ def parse(*, args: list[str], parser: "PreParser") -> Generator[Any, Any, Any]:
             yield Item(value=arg)
             broken = parser.order == Order.POSIX
             continue
-        if arg.startswith("--") or parser.islongonly:
+        if arg.startswith("--") or parser.longonly:
             last = parse_long(arg=arg, parser=parser)
         else:
             last = parse_bundling(arg=arg, parser=parser)
