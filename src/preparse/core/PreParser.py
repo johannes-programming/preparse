@@ -18,9 +18,10 @@ __all__ = ["PreParser"]
 
 class BasePreParser:
     __slots__ = (
-        "_abbr",
         "_allowslong",
         "_bundling",
+        "_expandsabbr",
+        "_expectsabbr",
         "_expectsposix",
         "_optdict",
         "_prog",
@@ -32,7 +33,8 @@ class BasePreParser:
         self: Self, *,
         optdict: Any = None,
         prog: Any = None,
-        abbr: Any = Abbr.COMPLETE,
+        expectsabbr:Any = True,
+        expandsabbr:Any = True,
         bundling: Any = Tuning.MAINTAIN,
         allowslong: Any = False,
         expectsposix:Any=False,
@@ -42,7 +44,8 @@ class BasePreParser:
         "This magic method initializes self."
         self.optdict = optdict
         self.prog = prog
-        self.abbr = abbr
+        self.expectsabbr = expectsabbr
+        self.expandsabbr = expandsabbr
         self.bundling = bundling
         self.allowslong = allowslong
         self.expectsposix = expectsposix
@@ -62,9 +65,11 @@ class BasePreParser:
         return ans
 
     @makeprop()
-    def abbr(self: Self, value: SupportsInt) -> Abbr:
-        "This property decides how to handle abbreviations."
-        return Abbr(value)
+    def expectsabbr(self: Self, value: Any) -> bool:
+        return bool(value)
+    @makeprop()
+    def expandsabbr(self: Self, value: Any) -> bool:
+        return bool(value)
     @makeprop()
     def bundling(self: Self, value: Any) -> dict:
         "This property decides how to approach the bundling of short options."
