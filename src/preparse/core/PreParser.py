@@ -134,7 +134,7 @@ class PreParser(BasePreParser):
         args: Optional[Iterable] = None,
     ) -> list[str]:
         "This method parses args."
-        return process(args=args, parser=self)
+        return process(args, parser=self)
     
 
 
