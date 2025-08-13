@@ -78,7 +78,7 @@ def parse_generator(
         cause(PLORAW, option=last.joined)
         last.joined = True
     else:
-        cause(PSORAW, option=last.key[-1])
+        cause(PSORAW, option=last.left[-1])
     yield last
 
 
@@ -112,13 +112,13 @@ def parse_long(
     if ans.joined:
         ans.joined = full
     if expandsabbr:
-        ans.key = full
+        ans.left = full
     return ans
 
 
 def parse_long_init(arg: str) -> Option:
     parts: list[str] = arg.split("=", 1)
-    ans: Option = Option(key=parts.pop(0))
+    ans: Option = Option(left=parts.pop(0))
     if len(parts):
         ans.joined = True
         ans.value = parts.pop()
@@ -128,34 +128,34 @@ def parse_long_init(arg: str) -> Option:
 def parse_long_full(
     item: Item, *, cause: FunctionType, keys: list[str], expectsabbr: bool
 ) -> str:
-    if item.key in keys:
-        return item.key
+    if item.left in keys:
+        return item.left
     if not expectsabbr:
         cause(PUOW, option=arg)
     x: str
     pos: list[str] = list()
     for x in keys:
-        if x.startswith(item.key):
+        if x.startswith(item.left):
             pos.append(x)
     if len(pos) == 1:
         return pos[0]
-    arg: str = item.key
+    arg: str = item.left
     if item.joined:
         arg += "=" + item.value
     if len(pos) == 0:
         cause(PUOW, option=arg)
     else:
         cause(PAOW, option=arg, possibilities=pos)
-    return item.key
+    return item.left
 
 
 def parse_bundling(arg: str, **kwargs: Any) -> Option:
-    ans: Option = Option(key="")
+    ans: Option = Option(left="")
     nargs: Nargs
     for i, a in enumerate(arg):
         if i == 0:
             continue
-        ans.key += a
+        ans.left += a
         nargs = parse_bundling_letter(a, **kwargs)
         if nargs == Nargs.NO_ARGUMENT:
             continue
