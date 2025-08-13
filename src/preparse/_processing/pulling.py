@@ -6,7 +6,7 @@ from preparse._processing.items import *
 __all__ = ["pull"]
 
 
-def pull(args: Optional[Iterable] = None) -> list[str]:
+def pull(args: Optional[Iterable] = None) -> list[Positional]:
     "This method parses args."
     argiter: Iterable
     if args is None:
