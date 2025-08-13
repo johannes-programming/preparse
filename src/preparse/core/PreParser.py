@@ -15,6 +15,7 @@ from preparse.core.warnings import *
 
 __all__ = ["PreParser"]
 
+
 class BasePreParser:
 
     __slots__ = (
@@ -22,44 +23,39 @@ class BasePreParser:
         "_allowslong",
         "_allowsshort",
         "_optdict",
-
         # warnings
         "_prog",
         "_warn",
-
         # orders
         "_expectsposix",
-        "_reconcileorders",
-
+        "_reconcilesorders",
+        # abbr
+        "_expectsabbr",
+        "_expandsabbr",
         # tuning
-        "_abbr",
         "_bundling",
         "_special",
     )
 
     def __init__(
-        self: Self, *,
-
+        self: Self,
+        *,
         # options
-        allowslong:Any = True,
-        allowsshort:Any = True,
-        optdict:Any= None,
-
+        allowslong: Any = True,
+        allowsshort: Any = True,
+        optdict: Any = None,
         # warnings
-        prog:Any = None,
-        warn:Callable=str,
-
+        prog: Any = None,
+        warn: Callable = str,
         # orders
-        expectsposix:Any = False,
-        reconcileorders:Any = True,
-
+        expectsposix: Any = False,
+        reconcilesorders: Any = True,
         # abbr
-        expectsabbr:Any = True,
-        expandsabbr:Any = True,
-
+        expectsabbr: Any = True,
+        expandsabbr: Any = True,
         # tuning
-        bundling:Tuning = Tuning.MAINTAIN,
-        special:Tuning = Tuning.MAXIMIZE,
+        bundling: Tuning = Tuning.MAINTAIN,
+        special: Tuning = Tuning.MAXIMIZE,
     ) -> None:
         "This magic method initializes self."
         # options
@@ -68,12 +64,12 @@ class BasePreParser:
         self.optdict = optdict
 
         # warnings
-        self.prog = prog 
+        self.prog = prog
         self.warn = warn
 
         # orders
         self.expectsposix = expectsposix
-        self.reconcileorders = reconcileorders
+        self.reconcilesorders = reconcilesorders
 
         # abbr
         self.expectsabbr = expectsabbr
@@ -85,24 +81,30 @@ class BasePreParser:
 
     # options
     @makeprop()
-    def allowslong(self:Self, value:Any)->bool:
+    def allowslong(self: Self, value: Any) -> bool:
         return bool(value)
 
     @makeprop()
-    def allowsshort(self:Self, value:Any)->bool:
+    def allowsshort(self: Self, value: Any) -> bool:
         return bool(value)
 
-    @makeprop()
-    def optdict(self: Self, value: Any) -> dict:
-        "This property gives a dictionary of options."
-        self._optdict = getattr(self, "_optdict", dict())
-        self._optdict.clear()
+    @property
+    def optdict(self: Self) -> dict:
+        return dict(self._optdict)
+
+    @optdict.setter
+    def optdict(self: Self, value: Any) -> None:
         if value is None:
+            self._optdict = dict()
             return
-        data:dict = dict(value)
-        data = {str(k):Nargs(v) for k, v in data.items()}
-        self._optdict.update(data)
-    
+        dataA: dict = dict(value)
+        dataB: dict = dict()
+        k: Any
+        v: Any
+        for k, v in dataA.items():
+            dataB[str(k)] = Nargs(v)
+        self._optdict = dataB
+
     # warnings
     @makeprop()
     def prog(self: Self, value: Any) -> str:
@@ -115,37 +117,35 @@ class BasePreParser:
     def warn(self: Self, value: Callable) -> types.FunctionType:
         "This property gives a function that takes in the warnings."
         return tofunc(value)
-    
+
     # orders
     @makeprop()
-    def expectsposix(self:Self, value: Any) -> bool:
+    def expectsposix(self: Self, value: Any) -> bool:
         if value == "infer":
             value = os.environ.get("POSIXLY_CORRECT")
         return bool(value)
-    
+
     @makeprop()
-    def reconcileorders(self:Self, value: Any) -> bool:
+    def reconcilesorders(self: Self, value: Any) -> bool:
         return bool(value)
-    
+
     # abbr
     @makeprop()
-    def expectsabbr(self:Self, value:Any)->bool:
+    def expectsabbr(self: Self, value: Any) -> bool:
         return bool(value)
+
     @makeprop()
-    def expandsabbr(self:Self, value:Any)->bool:
+    def expandsabbr(self: Self, value: Any) -> bool:
         return bool(value)
-    
+
     # tuning
     @makeprop()
-    def bundling(self:Self, value:Any)->Tuning:
+    def bundling(self: Self, value: Any) -> Tuning:
         return Tuning(value)
+
     @makeprop()
-    def special(self:Self, value:Any)->Tuning:
+    def special(self: Self, value: Any) -> Tuning:
         return Tuning(value)
-
-
-
-
 
 
 class PreParser(BasePreParser):
@@ -153,9 +153,9 @@ class PreParser(BasePreParser):
     def __repr__(self: Self) -> str:
         "This magic method implements repr(self)."
         return datarepr(type(self).__name__, **self.todict())
-    
-    def cause_warning(self: Self, wrncls:type, /, **kwargs:Any) -> None:
-        warning:PreparseWarning=wrncls(prog=self.prog, **kwargs)
+
+    def cause_warning(self: Self, wrncls: type, /, **kwargs: Any) -> None:
+        warning: PreparseWarning = wrncls(prog=self.prog, **kwargs)
         self.warn(warning)
 
     def click(self: Self, cmd: Any = True, ctx: Any = True) -> Click:
@@ -173,7 +173,6 @@ class PreParser(BasePreParser):
         "This method parses args."
         return process(args, **self.todict())
 
-    
     def reflectClickCommand(self: Self, cmd: cl.Command) -> None:
         "This method causes the current instance to reflect a click.Command object."
         optdict = dict()
@@ -202,4 +201,3 @@ class PreParser(BasePreParser):
             name = slot.lstrip("_")
             ans[name] = getattr(self, slot)
         return ans
-    

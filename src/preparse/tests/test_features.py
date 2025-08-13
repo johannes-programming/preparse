@@ -5,11 +5,6 @@ from preparse.core import *
 
 class TestPreparse(unittest.TestCase):
 
-    def test_abbrev_enum(self):
-        self.assertEqual(Abbr.REJECT, 0)
-        self.assertEqual(Abbr.KEEP, 1)
-        self.assertEqual(Abbr.COMPLETE, 2)
-
     def test_nargs_enum(self):
         self.assertEqual(Nargs.NO_ARGUMENT, 0)
         self.assertEqual(Nargs.REQUIRED_ARGUMENT, 1)
@@ -18,8 +13,6 @@ class TestPreparse(unittest.TestCase):
     def test_preparser_copy(self):
         parser = PreParser()
         parser_copy = parser.copy()
-        self.assertEqual(parser.abbr, parser_copy.abbr)
-        self.assertEqual(parser.order, parser_copy.order)
         self.assertEqual(parser.optdict, parser_copy.optdict)
 
     def test_preparser_parse_args(self):
@@ -32,9 +25,7 @@ class TestPreparse(unittest.TestCase):
         parser = PreParser()
         result = parser.todict()
         expected_keys = [
-            "abbr",
             "optdict",
-            "order",
             "prog",
         ]
         self.assertTrue(all(key in result for key in expected_keys))
