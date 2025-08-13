@@ -22,7 +22,14 @@ def process(
     items: list[str] = pull(args)
     items: list[Item] = parse(
         items,
-        parser=parser,
+        optdict=parser.optdict,
+        expectsabbr=parser.expectsabbr,
+        expandsabbr=parser.expandsabbr,
+        expectsposix=parser.expectsposix,
+        prog=parser.prog,
+        warn=parser.warn,
+        allowslong=parser.allowslong,
+        allowsshort=parser.allowsshort,
     )
     items: list[Item] = digest(
         items,
