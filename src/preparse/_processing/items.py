@@ -20,17 +20,17 @@ class Item(abc.ABC):
 
 
 class Option(Item):
-    __slots__ = ("_key", "_remainder", "_value")
+    __slots__ = ("_key", "_joined", "_value")
 
     def __init__(
         self: Self,
         *,
         key: str,
-        remainder: bool | str = False,
+        joined: bool | str = False,
         value: Optional[str] = None,
     ) -> None:
         self.key = key
-        self.remainder = remainder
+        self.joined = joined
         self.value = value
 
     @makeprop.makeprop()
@@ -38,7 +38,7 @@ class Option(Item):
         return str(x)
 
     @makeprop.makeprop()
-    def remainder(self: Self, x: Any) -> bool | str:
+    def joined(self: Self, x: Any) -> bool | str:
         try:
             return bool(operator.index(x))
         except:
@@ -50,7 +50,7 @@ class Option(Item):
             return str(x)
 
     def ishungry(self: Self) -> bool:
-        return self.remainder and (self.value is None)
+        return self.joined and (self.value is None)
 
     def islong(self: Self) -> bool:
         return self.key.startswith("-")
@@ -62,14 +62,14 @@ class Option(Item):
         if self.isbundle():
             if self.value is None:
                 return ["-" + self.key]
-            if self.remainder:
+            if self.joined:
                 return ["-" + self.key + self.value]
             else:
                 return ["-" + self.key, self.value]
         else:
             if self.value is None:
                 return [self.key]
-            if self.remainder:
+            if self.joined:
                 return [self.key + "=" + self.value]
             else:
                 return [self.key, self.value]
