@@ -96,8 +96,8 @@ def parse_long(
     optdict: dict,
     expectsabbr: bool,
     expandsabbr: bool,
-) -> Option:
-    ans: Option = parse_long_init(arg)
+) -> Long:
+    ans: Long = parse_long_init(arg)
     full: str = parse_long_full(
         ans,
         cause=cause,
@@ -116,9 +116,9 @@ def parse_long(
     return ans
 
 
-def parse_long_init(arg: str) -> Option:
+def parse_long_init(arg: str) -> Long:
     parts: list[str] = arg.split("=", 1)
-    ans: Option = Option(left=parts.pop(0))
+    ans: Long = Long(left=parts.pop(0))
     if len(parts):
         ans.joined = True
         ans.right = parts.pop()
@@ -126,7 +126,7 @@ def parse_long_init(arg: str) -> Option:
 
 
 def parse_long_full(
-    item: Option, *, cause: FunctionType, keys: list[str], expectsabbr: bool
+    item: Long, *, cause: FunctionType, keys: list[str], expectsabbr: bool
 ) -> str:
     if item.left in keys:
         return item.left
@@ -149,8 +149,8 @@ def parse_long_full(
     return item.left
 
 
-def parse_bundling(arg: str, **kwargs: Any) -> Option:
-    ans: Option = Option(left="")
+def parse_bundling(arg: str, **kwargs: Any) -> Bundle:
+    ans: Bundle = Bundle(left="")
     nargs: Nargs
     for i, a in enumerate(arg):
         if i == 0:
