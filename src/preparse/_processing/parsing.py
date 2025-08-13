@@ -62,9 +62,9 @@ def parse_generator(
             last = parse_long(
                 item.value,
                 cause=cause,
-                optdict=optdict,
-                expectsabbr=expectsabbr,
                 expandsabbr=expandsabbr,
+                expectsabbr=expectsabbr,
+                optdict=optdict,
             )
         else:
             last = parse_bundling(item.value, optdict=optdict, cause=cause)
