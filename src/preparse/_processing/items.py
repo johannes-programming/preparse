@@ -7,7 +7,7 @@ import makeprop
 from preparse.core.enums import *
 from preparse.core.warnings import *
 
-__all__ = ["Item", "Option", "Special", "Positional"]
+__all__ = ["Item", "Option", "Bundle", "Long", "Special", "Positional"]
 
 
 class Item(abc.ABC):
@@ -18,8 +18,15 @@ class Item(abc.ABC):
     @abc.abstractmethod
     def sortkey(cls: type) -> int: ...
 
-
 class Option(Item):
+
+    def ishungry(self: Self) -> bool:
+        return self.joined and (self.right is None)
+    @classmethod
+    def sortkey(cls: type) -> int:
+        return 0
+
+class Bundle(Option):
     __slots__ = ("_left", "_joined", "_right")
 
     def __init__(
@@ -49,34 +56,52 @@ class Option(Item):
         if x is not None:
             return str(x)
 
-    def ishungry(self: Self) -> bool:
-        return self.joined and (self.right is None)
+    def deparse(self: Self) -> list[str]:
+        if self.right is None:
+            return ["-" + self.left]
+        if self.joined:
+            return ["-" + self.left + self.right]
+        else:
+            return ["-" + self.left, self.right]
 
-    def islong(self: Self) -> bool:
-        return self.left.startswith("-")
+    
+class Long(Option):
+    __slots__ = ("_left", "_joined", "_right")
 
-    def isbundle(self: Self) -> bool:
-        return not self.left.startswith("-")
+    def __init__(
+        self: Self,
+        *,
+        left: str,
+        joined: bool | str = False,
+        right: Optional[str] = None,
+    ) -> None:
+        self.left = left
+        self.joined = joined
+        self.right = right
+
+    @makeprop.makeprop()
+    def left(self: Self, x: Any) -> str:
+        return str(x)
+
+    @makeprop.makeprop()
+    def joined(self: Self, x: Any) -> bool | str:
+        try:
+            return bool(operator.index(x))
+        except:
+            return str(x)
+
+    @makeprop.makeprop()
+    def right(self: Self, x: Any) -> Optional[str]:
+        if x is not None:
+            return str(x)
 
     def deparse(self: Self) -> list[str]:
-        if self.isbundle():
-            if self.right is None:
-                return ["-" + self.left]
-            if self.joined:
-                return ["-" + self.left + self.right]
-            else:
-                return ["-" + self.left, self.right]
+        if self.right is None:
+            return [self.left]
+        if self.joined:
+            return [self.left + "=" + self.right]
         else:
-            if self.right is None:
-                return [self.left]
-            if self.joined:
-                return [self.left + "=" + self.right]
-            else:
-                return [self.left, self.right]
-
-    @classmethod
-    def sortkey(cls: type) -> int:
-        return 0
+            return [self.left, self.right]
 
 
 class Special(Item):
