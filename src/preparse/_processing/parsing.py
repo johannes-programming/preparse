@@ -44,7 +44,7 @@ def parse_generator(
             continue
         if last is not None:
             # if the last item hungers for a value
-            last.value = item.value
+            last.right = item.value
             last.joined = False
             yield last
             last = None
@@ -121,12 +121,12 @@ def parse_long_init(arg: str) -> Option:
     ans: Option = Option(left=parts.pop(0))
     if len(parts):
         ans.joined = True
-        ans.value = parts.pop()
+        ans.right = parts.pop()
     return ans
 
 
 def parse_long_full(
-    item: Item, *, cause: FunctionType, keys: list[str], expectsabbr: bool
+    item: Option, *, cause: FunctionType, keys: list[str], expectsabbr: bool
 ) -> str:
     if item.left in keys:
         return item.left
@@ -141,7 +141,7 @@ def parse_long_full(
         return pos[0]
     arg: str = item.left
     if item.joined:
-        arg += "=" + item.value
+        arg += "=" + item.right
     if len(pos) == 0:
         cause(PUOW, option=arg)
     else:
@@ -161,7 +161,7 @@ def parse_bundling(arg: str, **kwargs: Any) -> Option:
             continue
         if nargs == Nargs.OPTIONAL_ARGUMENT or i < len(arg) - 1:
             ans.joined = True
-            ans.value = arg[i + 1 :]
+            ans.right = arg[i + 1 :]
         else:
             ans.joined = nargs == Nargs.REQUIRED_ARGUMENT
         return ans
