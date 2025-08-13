@@ -30,21 +30,21 @@ def process(
     items: list[str] = pull(args)
     items: list[Item] = parse(
         items,
-        optdict=optdict,
-        expectsabbr=expectsabbr,
-        expandsabbr=expandsabbr,
-        expectsposix=expectsposix,
-        prog=prog,
-        warn=warn,
         allowslong=allowslong,
         allowsshort=allowsshort,
+        expandsabbr=expandsabbr,
+        expectsabbr=expectsabbr,
+        expectsposix=expectsposix,
+        optdict=optdict,
+        prog=prog,
+        warn=warn,
     )
     items: list[Item] = digest(
         items,
-        special=special,
-        reconcilesorders=reconcilesorders,
-        expectsposix=expectsposix,
         bundling=bundling,
+        expectsposix=expectsposix,
+        reconcilesorders=reconcilesorders,
+        special=special,
     )
     ans: list[str] = deparse(items)
     return ans
