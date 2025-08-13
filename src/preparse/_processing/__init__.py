@@ -20,7 +20,10 @@ def process(
     "This method parses args."
     parser = parser.copy()
     items: list[str] = pull(args)
-    items: list[Item] = parse(items, parser=parser)
+    items: list[Item] = parse(
+        items,
+        parser=parser,
+    )
     items: list[Item] = digest(
         items,
         special=parser.special,
