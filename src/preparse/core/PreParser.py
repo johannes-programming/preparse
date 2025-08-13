@@ -152,7 +152,7 @@ class PreParser(BasePreParser):
         args: Optional[Iterable] = None,
     ) -> list[str]:
         "This method parses args."
-        return process(args, parser=self)
+        return process(args, **self.todict())
 
     def reflectClickCommand(self: Self, cmd: cl.Command) -> None:
         "This method causes the current instance to reflect a click.Command object."
