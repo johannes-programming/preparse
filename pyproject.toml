@@ -30,7 +30,7 @@ keywords = []
 name = "preparse"
 readme = "README.rst"
 requires-python = ">=3.11"
-version = "0.2.0+master.parse.long.cause"
+version = "0.2.0+master.parse.long.full"
 
 [project.license]
 file = "LICENSE.txt"
