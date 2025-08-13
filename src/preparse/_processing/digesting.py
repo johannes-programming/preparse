@@ -10,25 +10,25 @@ __all__ = ["digest"]
 def digest(
     items: list[Item],
     *,
-    special: Tuning,
-    reconcilesorders: bool,
-    expectsposix: bool,
     bundling: Tuning,
+    expectsposix: bool,
+    reconcilesorders: bool,
+    special: Tuning,
 ) -> list[Item]:
     if special != Tuning.MAINTAIN:
         raise NotImplementedError
-    items = list(
-        digest_order(
-            items,
-            expectsposix=expectsposix,
-            reconcilesorders=reconcilesorders,
-        )
+    ans: list[Item] = list(items)
+    ans = digest_special(ans, special=special)
+    ans = digest_order(
+        items,
+        expectsposix=expectsposix,
+        reconcilesorders=reconcilesorders,
     )
-    items = list(digest_bundling(items=items, bundling=bundling))
-    return items
+    ans = digest_bundling(ans, bundling=bundling)
+    return ans
 
 
-def digest_bundling(*, items: list[Item], bundling: Tuning) -> list[Item]:
+def digest_bundling(items: list[Item], *, bundling: Tuning) -> list[Item]:
     if bundling == Tuning.MINIMIZE:
         return digest_bundling_min(items)
     if bundling == Tuning.MAXIMIZE:
@@ -82,3 +82,11 @@ def digest_order(
 
 def digest_order_key(item: Item) -> int:
     return item.sortkey()
+
+
+def digest_special(items: list[Item], *, special: Tuning) -> list[Item]:
+    if special == Tuning.MINIMIZE:
+        raise NotImplementedError
+    if special == Tuning.MAXIMIZE:
+        raise NotImplementedError
+    return list(items)
