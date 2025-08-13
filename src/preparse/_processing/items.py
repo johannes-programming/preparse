@@ -20,21 +20,21 @@ class Item(abc.ABC):
 
 
 class Option(Item):
-    __slots__ = ("_key", "_joined", "_value")
+    __slots__ = ("_left", "_joined", "_value")
 
     def __init__(
         self: Self,
         *,
-        key: str,
+        left: str,
         joined: bool | str = False,
         value: Optional[str] = None,
     ) -> None:
-        self.key = key
+        self.left = left
         self.joined = joined
         self.value = value
 
     @makeprop.makeprop()
-    def key(self: Self, x: Any) -> str:
+    def left(self: Self, x: Any) -> str:
         return str(x)
 
     @makeprop.makeprop()
@@ -53,26 +53,26 @@ class Option(Item):
         return self.joined and (self.value is None)
 
     def islong(self: Self) -> bool:
-        return self.key.startswith("-")
+        return self.left.startswith("-")
 
     def isbundle(self: Self) -> bool:
-        return not self.key.startswith("-")
+        return not self.left.startswith("-")
 
     def deparse(self: Self) -> list[str]:
         if self.isbundle():
             if self.value is None:
-                return ["-" + self.key]
+                return ["-" + self.left]
             if self.joined:
-                return ["-" + self.key + self.value]
+                return ["-" + self.left + self.value]
             else:
-                return ["-" + self.key, self.value]
+                return ["-" + self.left, self.value]
         else:
             if self.value is None:
-                return [self.key]
+                return [self.left]
             if self.joined:
-                return [self.key + "=" + self.value]
+                return [self.left + "=" + self.value]
             else:
-                return [self.key, self.value]
+                return [self.left, self.value]
 
     @classmethod
     def sortkey(cls: type) -> int:
