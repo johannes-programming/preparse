@@ -31,10 +31,8 @@ def parse_generator(
     allowslong: bool,
     allowsshort: bool,
 ) -> Generator[Any, Any, Any]:
-    if not allowslong:
-        raise NotImplementedError
     cause: FunctionType = parse_cause(prog=prog, warn=warn)
-    broken: bool = False
+    broken: bool = not (allowslong or allowsshort)
     last: Optional[Option] = None
     item: Positional
     for item in items:
@@ -58,7 +56,7 @@ def parse_generator(
             yield item
             broken = expectsposix
             continue
-        if item.value.startswith("--") or not allowsshort:
+        if item.value.startswith("--") and allowslong:
             last = parse_long(
                 item.value,
                 cause=cause,
