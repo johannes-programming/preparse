@@ -114,6 +114,10 @@ class Long(Option):
     def fullkey(self: Self, x: Any) -> str:
         return str(x)
 
+    @property
+    def abbr(self: Self) -> str:
+        return self.fullkey[: self.abbrlen]
+
     @makeprop.makeprop()
     def abbrlen(self: Self, x: Optional[SupportsIndex]) -> Optional[int]:
         if x is not None:
@@ -133,11 +137,11 @@ class Long(Option):
 
     def deparse(self: Self) -> list[str]:
         if self.right is None:
-            return [self.fullkey]
+            return [self.abbr]
         if self.joined:
-            return [self.fullkey + "=" + self.right]
+            return [self.abbr + "=" + self.right]
         else:
-            return [self.fullkey, self.right]
+            return [self.abbr, self.right]
 
 
 class Special(Item):
