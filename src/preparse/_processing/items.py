@@ -31,14 +31,40 @@ class Bundle(Option):
 
     def __init__(
         self: Self,
-        *,
         chars: str,
+        *,
         joined: bool | str = False,
         right: Optional[str] = None,
     ) -> None:
         self.chars = chars
         self.joined = joined
         self.right = right
+    
+    @classmethod
+    def _dissociate_allowslong(cls:type, chars:str) -> list[str]:
+        ans:list[str] = list()
+        x:str
+        for x in chars:
+            if x == "-":
+                ans[-1] += "-"
+            else:
+                ans.append(x)
+        return ans
+    @classmethod
+    def _dissociate_shortonly(cls:type, chars:str) -> list[str]:
+        ans:list[str] = list()
+        x:str = chars
+        while x:
+            if x == "-":
+                ans[0] = "-" + ans[0]
+                continue
+            elif x.endswith(0, "-"):
+                ans.insert(0, x[-2:])
+                x = x[:-2]
+            else:
+                ans.insert(0, x[-1])
+                x=x[:-1]
+        return ans
 
     @makeprop.makeprop()
     def chars(self: Self, x: Any) -> str:
@@ -50,6 +76,20 @@ class Bundle(Option):
             return bool(operator.index(x))
         except:
             return str(x)
+    
+    def dissociate(self:Self, allowslong:bool)->list[Self]:
+        parts:list[str]
+        if allowslong:
+            parts = self._dissociate_allowslong(self.chars)
+        else:
+            parts = self._dissociate_shortonly(self.chars)
+        self.chars = parts.pop()
+        ans:list[Self] = list()
+        x:str
+        for x in parts:
+            ans.append(type(self)(x))
+        return ans
+
 
     @makeprop.makeprop()
     def right(self: Self, x: Any) -> Optional[str]:

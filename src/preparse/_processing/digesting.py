@@ -10,56 +10,40 @@ __all__ = ["digest"]
 def digest(
     items: list[Item],
     *,
-    special: Tuning,
-    reconcilesorders: bool,
-    expectsposix: bool,
+    allowslong:bool,
     bundling: Tuning,
+    expectsposix: bool,
+    reconcilesorders: bool,
+    special: Tuning,
 ) -> list[Item]:
     if special != Tuning.MAINTAIN:
         raise NotImplementedError
-    items = list(
-        digest_order(
-            items,
-            expectsposix=expectsposix,
-            reconcilesorders=reconcilesorders,
-        )
-    )
-    items = list(digest_bundling(items=items, bundling=bundling))
+    ans:list[Item] = items
+    ans = digest_order(ans, expectsposix=expectsposix, reconcilesorders=reconcilesorders)
+    ans = digest_bundling(ans, allowslong=allowslong, bundling=bundling)
+    ans = digest_special(ans, special=special)
     return items
 
 
-def digest_bundling(*, items: list[Item], bundling: Tuning) -> list[Item]:
+def digest_bundling(items: list[Item], *, allowslong:bool, bundling: Tuning) -> list[Item]:
     if bundling == Tuning.MINIMIZE:
-        return digest_bundling_minimize(items)
+        return digest_bundling_min(items, allowslong=allowslong)
     if bundling == Tuning.MAXIMIZE:
-        return digest_bundling_maximize(items)
-    return items
+        return digest_bundling_max(items)
+    return list(items)
 
 
-def digest_bundling_minimize(items: list[Item]) -> list[Item]:
+def digest_bundling_min(items: list[Item], *, allowslong:bool) -> list[Item]:
     ans: list[Item] = list()
     item: Item
     for item in items:
-        ans += digest_bundling_minimize_split(item)
+        ans.append(item)
+        if isinstance(item, Bundle):
+            ans[-1:-1] = item.dissociate(allowslong=allowslong)
     return ans
 
 
-def digest_bundling_minimize_split(item: Item) -> list[Item]:
-    if not isinstance(item, Bundle):
-        return [item]
-    ans: list[Bundle] = list()
-    x: str
-    for x in item.chars:
-        if x == "-":
-            ans[-1].chars += "-"
-        else:
-            ans.append(Bundle(chars=x))
-    item.chars = ans[-1].chars
-    ans[-1] = item
-    return ans
-
-
-def digest_bundling_maximize(items: list[Item]) -> list[Item]:
+def digest_bundling_max(items: list[Item]) -> list[Item]:
     ans: list[Item] = list()
     item: Item
     for item in items:
@@ -89,8 +73,36 @@ def digest_order(
     if not expectsposix:
         ans.sort(key=digest_order_key)
         return ans
-    raise NotImplementedError
+    i:int = len(ans)
+    comp:bool = True
+    while True:
+        i -= 1
+        if i == -1:
+            break
+        if isinstance(ans[i], Option):
+            break
+        if isinstance(ans[i], Special):
+            comp = True
+            break
+        if not ans[i].isobvious():
+            comp = False
+    if not comp:
+        ans.insert(i+1, Special())
+    return ans
 
 
 def digest_order_key(item: Item) -> int:
     return item.sortkey()
+
+def digest_special(items:list[Item], *, special:Tuning)->list[Item]:
+    if special == Tuning.MAXIMIZE:
+        return digest_special_max(items)
+    if special == Tuning.MINIMIZE:
+        return digest_special_min(items)
+    return list(items)
+
+def digest_special_max(items:list[Item])->list[Item]:
+    raise NotImplementedError
+def digest_special_min(items:list[Item])->list[Item]:
+    raise NotImplementedError
+
