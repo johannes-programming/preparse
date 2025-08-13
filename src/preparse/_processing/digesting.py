@@ -40,22 +40,10 @@ def digest_bundling_minimize(items: list[Item]) -> list[Item]:
     ans: list[Item] = list()
     item: Item
     for item in items:
-        ans += digest_bundling_minimize_split(item)
-    return ans
-
-
-def digest_bundling_minimize_split(item: Item) -> list[Item]:
-    if not isinstance(item, Bundle):
-        return [item]
-    ans: list[Bundle] = list()
-    x: str
-    for x in item.chars:
-        if x == "-":
-            ans[-1].chars += "-"
+        if isinstance(item, Bundle):
+            ans += item.split()
         else:
-            ans.append(Bundle(chars=x))
-    item.chars = ans[-1].chars
-    ans[-1] = item
+            ans.append(item)
     return ans
 
 
