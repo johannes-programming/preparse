@@ -32,17 +32,18 @@ class BasePreParser:
     )
 
     def __init__(
-        self: Self, *,
+        self: Self,
+        *,
         optdict: Any = None,
         prog: Any = None,
-        expectsabbr:Any = True,
-        expandsabbr:Any = True,
+        expectsabbr: Any = True,
+        expandsabbr: Any = True,
         bundling: Any = Tuning.MAINTAIN,
         special: Any = Tuning.MAINTAIN,
         allowslong: Any = True,
         allowsshort: Any = True,
-        expectsposix:Any=False,
-        reconcilesorders:Any=True,
+        expectsposix: Any = False,
+        reconcilesorders: Any = True,
         warn: Callable = str,
     ) -> None:
         "This magic method initializes self."
@@ -57,6 +58,7 @@ class BasePreParser:
         self.expectsposix = expectsposix
         self.reconcilesorders = reconcilesorders
         self.warn = warn
+
     def __repr__(self: Self) -> str:
         "This magic method implements repr(self)."
         return datarepr(type(self).__name__, **self.todict())
@@ -64,7 +66,7 @@ class BasePreParser:
     def copy(self: Self) -> Self:
         "This method returns a copy of the current instance."
         return type(self)(**self.todict())
-    
+
     def todict(self: Self) -> dict:
         "This method returns a dict representing the current instance."
         ans = dict()
@@ -76,33 +78,39 @@ class BasePreParser:
     @makeprop()
     def expectsabbr(self: Self, value: Any) -> bool:
         return bool(value)
+
     @makeprop()
     def expandsabbr(self: Self, value: Any) -> bool:
         return bool(value)
+
     @makeprop()
     def bundling(self: Self, value: Any) -> Tuning:
         "This property decides how to approach the bundling of short options."
         return Tuning(value)
+
     @makeprop()
     def special(self: Self, value: Any) -> Tuning:
         return Tuning(value)
+
     @makeprop()
     def allowslong(self: Self, value: Any) -> bool:
         return bool(value)
+
     @makeprop()
     def allowsshort(self: Self, value: Any) -> bool:
         return bool(value)
+
     @makeprop()
     def optdict(self: Self, value: Any) -> dict:
         "This property gives a dictionary of options."
-        dataA:dict 
+        dataA: dict
         if value is None:
             dataA = dict()
         else:
             dataA = dict(value)
-        dataB:dict=dict()
-        k:str
-        v:Nargs
+        dataB: dict = dict()
+        k: str
+        v: Nargs
         for k, v in dataA.items():
             dataB[str(k)] = Nargs(v)
         self._optdict = dict(dataB)
@@ -111,6 +119,7 @@ class BasePreParser:
     @makeprop()
     def expectsposix(self: Self, value: Any) -> bool:
         return bool(value)
+
     @makeprop()
     def reconcilesorders(self: Self, value: Any) -> bool:
         return bool(value)
@@ -121,7 +130,7 @@ class BasePreParser:
         if value is None:
             value = os.path.basename(sys.argv[0])
         return str(value)
-    
+
     @makeprop()
     def warn(self: Self, value: Callable) -> types.FunctionType:
         "This property gives a function that takes in the warnings."
@@ -130,15 +139,13 @@ class BasePreParser:
 
 class PreParser(BasePreParser):
 
-    
-    def cause_warning(self: Self, wrncls:type, /, **kwargs:Any) -> None:
-        warning:PreparseWarning=wrncls(prog=self.prog, **kwargs)
+    def cause_warning(self: Self, wrncls: type, /, **kwargs: Any) -> None:
+        warning: PreparseWarning = wrncls(prog=self.prog, **kwargs)
         self.warn(warning)
 
     def click(self: Self, cmd: Any = True, ctx: Any = True) -> Click:
         "This method returns a decorator that infuses the current instance into parse_args."
         return Click(parser=self, cmd=cmd, ctx=ctx)
-
 
     def parse_args(
         self: Self,
@@ -146,8 +153,6 @@ class PreParser(BasePreParser):
     ) -> list[str]:
         "This method parses args."
         return process(args, parser=self)
-    
-
 
     def reflectClickCommand(self: Self, cmd: cl.Command) -> None:
         "This method causes the current instance to reflect a click.Command object."
@@ -169,5 +174,3 @@ class PreParser(BasePreParser):
     def reflectClickContext(self: Self, ctx: cl.Context) -> None:
         "This method causes the current instance to reflect a click.Context object."
         self.prog = ctx.info_name
-
-

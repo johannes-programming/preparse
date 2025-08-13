@@ -13,12 +13,13 @@ __all__ = ["process"]
 
 
 def process(
-    args: Optional[Iterable] = None, *,
+    args: Optional[Iterable] = None,
+    *,
     parser: "PreParser",
 ) -> list[str]:
     "This method parses args."
     parser = parser.copy()
-    items:list[str] = pull(args)
+    items: list[str] = pull(args)
     items: list[Item] = parse(items, parser=parser)
     items: list[Item] = digest(items, parser=parser)
     ans: list[str] = deparse(items)
