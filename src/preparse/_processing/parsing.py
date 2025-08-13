@@ -20,7 +20,7 @@ def parse(args: list[str], **kwargs) -> list[Item]:
 
 
 def parse_generator(
-    args: list[str],
+    items: list[Positional],
     *,
     optdict: dict,
     expectsabbr: bool,
@@ -35,38 +35,39 @@ def parse_generator(
         raise NotImplementedError
     cause: FunctionType = parse_cause(prog=prog, warn=warn)
     broken: bool = False
-    last: Optional[Item] = None
-    for arg in args:
+    last: Optional[Option] = None
+    item: Positional
+    for item in items:
         if broken:
             # if we are in the positional-only part
-            yield Positional(value=arg)
+            yield item
             continue
         if last is not None:
             # if the last item hungers for a value
-            last.value = arg
+            last.value = item.value
             last.remainder = False
             yield last
             last = None
             continue
-        if arg == "--":
+        if item.value == "--":
             yield Special()
             broken = True
             continue
-        if arg == "-" or not arg.startswith("-"):
-            # if the arg is positional
-            yield Positional(value=arg)
+        if item.isobvious():
+            # if the item is positional
+            yield item
             broken = expectsposix
             continue
-        if arg.startswith("--") or not allowsshort:
+        if item.value.startswith("--") or not allowsshort:
             last = parse_long(
-                arg,
+                item.value,
                 cause=cause,
                 optdict=optdict,
                 expectsabbr=expectsabbr,
                 expandsabbr=expandsabbr,
             )
         else:
-            last = parse_bundling(arg, optdict=optdict, cause=cause)
+            last = parse_bundling(item.value, optdict=optdict, cause=cause)
         if not last.ishungry():
             yield last
             last = None
