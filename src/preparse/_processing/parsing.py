@@ -112,13 +112,13 @@ def parse_long(
     if ans.joined:
         ans.joined = full
     if expandsabbr:
-        ans.left = full
+        ans.fullkey = full
     return ans
 
 
 def parse_long_init(arg: str) -> Long:
     parts: list[str] = arg.split("=", 1)
-    ans: Long = Long(left=parts.pop(0))
+    ans: Long = Long(fullkey=parts.pop(0))
     if len(parts):
         ans.joined = True
         ans.right = parts.pop()
@@ -128,25 +128,25 @@ def parse_long_init(arg: str) -> Long:
 def parse_long_full(
     item: Long, *, cause: FunctionType, keys: list[str], expectsabbr: bool
 ) -> str:
-    if item.left in keys:
-        return item.left
+    if item.fullkey in keys:
+        return item.fullkey
     if not expectsabbr:
         cause(PUOW, option=arg)
     x: str
     pos: list[str] = list()
     for x in keys:
-        if x.startswith(item.left):
+        if x.startswith(item.fullkey):
             pos.append(x)
     if len(pos) == 1:
         return pos[0]
-    arg: str = item.left
+    arg: str = item.fullkey
     if item.joined:
         arg += "=" + item.right
     if len(pos) == 0:
         cause(PUOW, option=arg)
     else:
         cause(PAOW, option=arg, possibilities=pos)
-    return item.left
+    return item.fullkey
 
 
 def parse_bundling(arg: str, **kwargs: Any) -> Bundle:
