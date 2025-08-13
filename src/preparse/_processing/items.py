@@ -44,7 +44,7 @@ class Bundle(Option):
         self.right = right
 
     @classmethod
-    def _split(cls: type, chars: str) -> list[Item]:
+    def _split_allowslong(cls: type, chars: str) -> list[str]:
         ans: list[str] = list()
         x: str
         for x in chars:
@@ -53,6 +53,10 @@ class Bundle(Option):
             else:
                 ans.append(x)
         return ans
+
+    @classmethod
+    def _split_shortonly(cls: type, chars: str) -> list[str]:
+        raise NotImplementedError
 
     @makeprop.makeprop()
     def chars(self: Self, x: Any) -> str:
@@ -78,8 +82,12 @@ class Bundle(Option):
         else:
             return ["-" + self.chars, self.right]
 
-    def split(self: Self) -> list[Item]:
-        parts: list[str] = self._split(self.chars)
+    def split(self: Self, *, allowslong: bool) -> list[Item]:
+        parts: list[str]
+        if allowslong:
+            parts = self._split_allowslong(self.chars)
+        else:
+            parts = self._split_shortonly(self.chars)
         ans: list[Self] = list()
         x: str
         for x in parts:
