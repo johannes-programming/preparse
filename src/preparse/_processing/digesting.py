@@ -12,6 +12,7 @@ def digest(
     *,
     allowslong: bool,
     bundling: Tuning,
+    expandsabbr: bool,
     expectsposix: bool,
     reconcilesorders: bool,
     special: Tuning,
@@ -19,6 +20,7 @@ def digest(
     if special != Tuning.MAINTAIN:
         raise NotImplementedError
     ans: list[Item] = list(items)
+    ans = digest_abbr(ans, expandsabbr=expandsabbr)
     ans = digest_special(ans, special=special)
     ans = digest_order(
         items,
@@ -26,6 +28,21 @@ def digest(
         reconcilesorders=reconcilesorders,
     )
     ans = digest_bundling(ans, bundling=bundling, allowslong=allowslong)
+    return ans
+
+
+def digest_abbr(
+    items: list[Item],
+    *,
+    expandsabbr: bool,
+) -> list[Item]:
+    ans: list[Item] = list(items)
+    if not expandsabbr:
+        return ans
+    item: Item
+    for item in ans:
+        if isinstance(item, Long):
+            item.abbrlen = None
     return ans
 
 
