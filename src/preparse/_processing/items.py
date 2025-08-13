@@ -18,13 +18,16 @@ class Item(abc.ABC):
     @abc.abstractmethod
     def sortkey(cls: type) -> int: ...
 
+
 class Option(Item):
 
     def ishungry(self: Self) -> bool:
         return self.joined and (self.right is None)
+
     @classmethod
     def sortkey(cls: type) -> int:
         return 0
+
 
 class Bundle(Option):
     __slots__ = ("_chars", "_joined", "_right")
@@ -64,7 +67,19 @@ class Bundle(Option):
         else:
             return ["-" + self.chars, self.right]
 
-    
+    def split(self: Self) -> list[Item]:
+        ans: list[Self] = list()
+        x: str
+        for x in self.chars:
+            if x == "-":
+                ans[-1].chars += "-"
+            else:
+                ans.append(Bundle(chars=x))
+        self.chars = ans[-1].chars
+        ans[-1] = self
+        return ans
+
+
 class Long(Option):
     __slots__ = ("_left", "_joined", "_right")
 
