@@ -23,6 +23,7 @@ class Nargs(BaseEnum):
     REQUIRED_ARGUMENT = 1
     OPTIONAL_ARGUMENT = 2
 
+
 class Tuning(BaseEnum):
     MINIMIZE = 0
     MAXIMIZE = 1
