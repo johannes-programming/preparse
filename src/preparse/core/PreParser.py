@@ -118,7 +118,10 @@ class BasePreParser:
 
     @makeprop()
     def expectsposix(self: Self, value: Any) -> bool:
-        return bool(value)
+        if value == "infer":
+            return bool(os.environ.get("POSIXLY_CORRECT"))
+        else:
+            return bool(value)
 
     @makeprop()
     def reconcilesorders(self: Self, value: Any) -> bool:
