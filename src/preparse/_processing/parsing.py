@@ -45,7 +45,7 @@ def parse_generator(
         if last is not None:
             # if the last item hungers for a value
             last.value = item.value
-            last.remainder = False
+            last.joined = False
             yield last
             last = None
             continue
@@ -74,9 +74,9 @@ def parse_generator(
     if last is None:
         # if the last item is not starved
         return
-    if isinstance(last.remainder, str):
-        cause(PLORAW, option=last.remainder)
-        last.remainder = True
+    if isinstance(last.joined, str):
+        cause(PLORAW, option=last.joined)
+        last.joined = True
     else:
         cause(PSORAW, option=last.key[-1])
     yield last
@@ -105,12 +105,12 @@ def parse_long(
         expectsabbr=expectsabbr,
     )
     nargs: Nargs = optdict.get(full, Nargs.NO_ARGUMENT)
-    if nargs == Nargs.NO_ARGUMENT and ans.remainder:
+    if nargs == Nargs.NO_ARGUMENT and ans.joined:
         cause(PUAW, option=full)
     if nargs == Nargs.REQUIRED_ARGUMENT:
-        ans.remainder = True
-    if ans.remainder:
-        ans.remainder = full
+        ans.joined = True
+    if ans.joined:
+        ans.joined = full
     if expandsabbr:
         ans.key = full
     return ans
@@ -120,7 +120,7 @@ def parse_long_init(arg: str) -> Option:
     parts: list[str] = arg.split("=", 1)
     ans: Option = Option(key=parts.pop(0))
     if len(parts):
-        ans.remainder = True
+        ans.joined = True
         ans.value = parts.pop()
     return ans
 
@@ -140,7 +140,7 @@ def parse_long_full(
     if len(pos) == 1:
         return pos[0]
     arg: str = item.key
-    if item.remainder:
+    if item.joined:
         arg += "=" + item.value
     if len(pos) == 0:
         cause(PUOW, option=arg)
@@ -160,10 +160,10 @@ def parse_bundling(arg: str, **kwargs: Any) -> Option:
         if nargs == Nargs.NO_ARGUMENT:
             continue
         if nargs == Nargs.OPTIONAL_ARGUMENT or i < len(arg) - 1:
-            ans.remainder = True
+            ans.joined = True
             ans.value = arg[i + 1 :]
         else:
-            ans.remainder = nargs == Nargs.REQUIRED_ARGUMENT
+            ans.joined = nargs == Nargs.REQUIRED_ARGUMENT
         return ans
     return ans
 
