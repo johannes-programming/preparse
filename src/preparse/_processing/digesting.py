@@ -51,12 +51,12 @@ def digest_bundling_minimize_split(item: Item) -> list[Item]:
         return [item]
     ans: list[Item] = list()
     x: str
-    for x in item.key:
+    for x in item.left:
         if x == "-":
-            ans[-1].key += "-"
+            ans[-1].left += "-"
         else:
-            ans.append(Option(key=x))
-    item.key = ans[-1].key
+            ans.append(Option(left=x))
+    item.left = ans[-1].left
     ans[-1] = item
     return ans
 
@@ -83,7 +83,7 @@ def digest_bundling_maximize(items: list[Item]) -> list[Item]:
         if ans[-1].value is not None:
             ans.append(item)
             continue
-        item.key = ans[-1].key + item.key
+        item.left = ans[-1].left + item.left
         ans[-1] = item
     return ans
 
