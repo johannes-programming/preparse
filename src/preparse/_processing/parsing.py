@@ -24,7 +24,6 @@ def parse_generator(
     *,
     optdict: dict,
     expectsabbr: bool,
-    expandsabbr: bool,
     expectsposix: bool,
     prog: str,
     warn: FunctionType,
@@ -62,7 +61,6 @@ def parse_generator(
             last = parse_long(
                 item.value,
                 cause=cause,
-                expandsabbr=expandsabbr,
                 expectsabbr=expectsabbr,
                 optdict=optdict,
             )
@@ -94,7 +92,6 @@ def parse_long(
     cause: FunctionType,
     optdict: dict,
     expectsabbr: bool,
-    expandsabbr: bool,
 ) -> Long:
     parts: list[str] = arg.split("=", 1)
     ans: Long = Long(fullkey=parts.pop(0))
@@ -113,8 +110,6 @@ def parse_long(
         cause(PUAW, option=ans.fullkey)
     if nargs == Nargs.REQUIRED_ARGUMENT:
         ans.joined = True
-    if expandsabbr:
-        ans.abbrlen = None
     return ans
 
 
