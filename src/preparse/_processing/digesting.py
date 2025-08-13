@@ -80,7 +80,7 @@ def digest_bundling_maximize(items: list[Item]) -> list[Item]:
         if not ans[-1].isbundle():
             ans.append(item)
             continue
-        if ans[-1].value is not None:
+        if ans[-1].right is not None:
             ans.append(item)
             continue
         item.left = ans[-1].left + item.left
