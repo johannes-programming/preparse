@@ -30,13 +30,13 @@ def digest(
 
 def digest_bundling(*, items: list[Item], bundling: Tuning) -> list[Item]:
     if bundling == Tuning.MINIMIZE:
-        return digest_bundling_minimize(items)
+        return digest_bundling_min(items)
     if bundling == Tuning.MAXIMIZE:
-        return digest_bundling_maximize(items)
+        return digest_bundling_max(items)
     return items
 
 
-def digest_bundling_minimize(items: list[Item]) -> list[Item]:
+def digest_bundling_min(items: list[Item]) -> list[Item]:
     ans: list[Item] = list()
     item: Item
     for item in items:
@@ -47,7 +47,7 @@ def digest_bundling_minimize(items: list[Item]) -> list[Item]:
     return ans
 
 
-def digest_bundling_maximize(items: list[Item]) -> list[Item]:
+def digest_bundling_max(items: list[Item]) -> list[Item]:
     ans: list[Item] = list()
     item: Item
     for item in items:
