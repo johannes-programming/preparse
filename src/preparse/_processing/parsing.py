@@ -74,9 +74,8 @@ def parse_generator(
     if last is None:
         # if the last item is not starved
         return
-    if isinstance(last.joined, str):
-        cause(PLORAW, option=last.joined)
-        last.joined = True
+    if isinstance(last, Long):
+        cause(PLORAW, option=last.fullkey)
     else:
         cause(PSORAW, option=last.chars[-1])
     yield last
@@ -97,31 +96,25 @@ def parse_long(
     expectsabbr: bool,
     expandsabbr: bool,
 ) -> Long:
-    ans: Long = parse_long_init(arg)
-    full: str = parse_long_full(
+    parts: list[str] = arg.split("=", 1)
+    ans: Long = Long(fullkey=parts.pop(0))
+    ans.abbrlen = len(ans.fullkey)
+    if len(parts):
+        ans.joined = True
+        ans.right = parts.pop()
+    ans.fullkey = parse_long_full(
         ans,
         cause=cause,
         keys=list(optdict.keys()),
         expectsabbr=expectsabbr,
     )
-    nargs: Nargs = optdict.get(full, Nargs.NO_ARGUMENT)
+    nargs: Nargs = optdict.get(ans.fullkey, Nargs.NO_ARGUMENT)
     if nargs == Nargs.NO_ARGUMENT and ans.joined:
-        cause(PUAW, option=full)
+        cause(PUAW, option=ans.fullkey)
     if nargs == Nargs.REQUIRED_ARGUMENT:
         ans.joined = True
-    if ans.joined:
-        ans.joined = full
     if expandsabbr:
-        ans.fullkey = full
-    return ans
-
-
-def parse_long_init(arg: str) -> Long:
-    parts: list[str] = arg.split("=", 1)
-    ans: Long = Long(fullkey=parts.pop(0))
-    if len(parts):
-        ans.joined = True
-        ans.right = parts.pop()
+        ans.abbrlen = None
     return ans
 
 
