@@ -45,9 +45,7 @@ def digest_bundling_minimize(items: list[Item]) -> list[Item]:
 
 
 def digest_bundling_minimize_split(item: Item) -> list[Item]:
-    if not isinstance(item, Option):
-        return [item]
-    if not item.isbundle():
+    if not isinstance(item, Bundle):
         return [item]
     ans: list[Item] = list()
     x: str
@@ -55,7 +53,7 @@ def digest_bundling_minimize_split(item: Item) -> list[Item]:
         if x == "-":
             ans[-1].left += "-"
         else:
-            ans.append(Option(left=x))
+            ans.append(Bundle(left=x))
     item.left = ans[-1].left
     ans[-1] = item
     return ans
@@ -65,19 +63,13 @@ def digest_bundling_maximize(items: list[Item]) -> list[Item]:
     ans: list[Item] = list()
     item: Item
     for item in items:
-        if not isinstance(item, Option):
-            ans.append(item)
-            continue
-        if not item.isbundle():
+        if not isinstance(item, Bundle):
             ans.append(item)
             continue
         if len(ans) == 0:
             ans.append(item)
             continue
-        if not isinstance(ans[-1], Option):
-            ans.append(item)
-            continue
-        if not ans[-1].isbundle():
+        if not isinstance(ans[-1], Bundle):
             ans.append(item)
             continue
         if ans[-1].right is not None:
