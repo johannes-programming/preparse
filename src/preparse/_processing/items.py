@@ -43,6 +43,17 @@ class Bundle(Option):
         self.joined = joined
         self.right = right
 
+    @classmethod
+    def _split(cls: type, chars: str) -> list[Item]:
+        ans: list[str] = list()
+        x: str
+        for x in chars:
+            if x == "-":
+                ans[-1].chars += "-"
+            else:
+                ans.append(x)
+        return ans
+
     @makeprop.makeprop()
     def chars(self: Self, x: Any) -> str:
         return str(x)
@@ -68,13 +79,11 @@ class Bundle(Option):
             return ["-" + self.chars, self.right]
 
     def split(self: Self) -> list[Item]:
+        parts: list[str] = self._split(self.chars)
         ans: list[Self] = list()
         x: str
-        for x in self.chars:
-            if x == "-":
-                ans[-1].chars += "-"
-            else:
-                ans.append(Bundle(chars=x))
+        for x in parts:
+            ans.append(Bundle(chars=x))
         self.chars = ans[-1].chars
         ans[-1] = self
         return ans
