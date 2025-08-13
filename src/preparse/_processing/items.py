@@ -1,3 +1,4 @@
+import abc
 import dataclasses
 from typing import *
 
@@ -7,8 +8,13 @@ from preparse.core.warnings import *
 __all__ = ["Item"]
 
 
+class BaseItem(abc.ABC):
+    @abc.abstractmethod
+    def deparse(self: Self) -> list[str]: ...
+
+
 @dataclasses.dataclass
-class Item:
+class Item(BaseItem):
     key: Optional[str] = None
     remainder: bool | str = False
     value: Optional[str] = None
