@@ -53,10 +53,21 @@ class Bundle(Option):
             else:
                 ans.append(x)
         return ans
-
     @classmethod
     def _split_shortonly(cls: type, chars: str) -> list[str]:
-        raise NotImplementedError
+        ans: list[str] = list()
+        x: str = chars
+        while x:
+            if x == "-":
+                ans[0] = "-" + ans[0]
+                x = ""
+            elif x.endswith("-"):
+                ans.insert(0, x[-2:])
+                x = x[:-2]
+            else:
+                ans.insert(0, x[-1])
+                x = x[:-1]
+        return ans
 
     @makeprop.makeprop()
     def chars(self: Self, x: Any) -> str:
