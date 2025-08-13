@@ -77,7 +77,12 @@ def parse_cause(*, prog: str, warn: FunctionType) -> FunctionType:
 
 def parse_long(arg: str, *, parser: "PreParser", cause: FunctionType) -> Item:
     ans: Item = parse_long_init(arg)
-    full: str = parse_long_full(ans, parser=parser, cause=cause)
+    full: str = parse_long_full(
+        ans,
+        cause=cause,
+        keys=list(parser.optdict.keys()),
+        expectsabbr=parser.expectsabbr,
+    )
     nargs: Nargs = parser.optdict.get(full, Nargs.NO_ARGUMENT)
     if nargs == Nargs.NO_ARGUMENT and ans.remainder:
         cause(PUAW, option=full)
@@ -98,14 +103,16 @@ def parse_long_init(arg: str) -> Item:
     return ans
 
 
-def parse_long_full(item: Item, *, parser: "PreParser", cause: FunctionType) -> str:
-    if item.key in parser.optdict.keys():
+def parse_long_full(
+    item: Item, *, cause: FunctionType, keys: list[str], expectsabbr: bool
+) -> str:
+    if item.key in keys:
         return item.key
-    if not parser.expectsabbr:
+    if not expectsabbr:
         cause(PUOW, option=arg)
     x: str
     pos: list[str] = list()
-    for x in parser.optdict.keys():
+    for x in keys:
         if x.startswith(item.key):
             pos.append(x)
     if len(pos) == 1:
