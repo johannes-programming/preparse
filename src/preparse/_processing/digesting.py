@@ -10,6 +10,7 @@ __all__ = ["digest"]
 def digest(
     items: list[Item],
     *,
+    allowslong: bool,
     bundling: Tuning,
     expectsposix: bool,
     reconcilesorders: bool,
@@ -24,24 +25,26 @@ def digest(
         expectsposix=expectsposix,
         reconcilesorders=reconcilesorders,
     )
-    ans = digest_bundling(ans, bundling=bundling)
+    ans = digest_bundling(ans, bundling=bundling, allowslong=allowslong)
     return ans
 
 
-def digest_bundling(items: list[Item], *, bundling: Tuning) -> list[Item]:
+def digest_bundling(
+    items: list[Item], *, allowslong: bool, bundling: Tuning
+) -> list[Item]:
     if bundling == Tuning.MINIMIZE:
-        return digest_bundling_min(items)
+        return digest_bundling_min(items, allowslong=allowslong)
     if bundling == Tuning.MAXIMIZE:
         return digest_bundling_max(items)
     return items
 
 
-def digest_bundling_min(items: list[Item]) -> list[Item]:
+def digest_bundling_min(items: list[Item], *, allowslong: bool) -> list[Item]:
     ans: list[Item] = list()
     item: Item
     for item in items:
         if isinstance(item, Bundle):
-            ans += item.split()
+            ans += item.split(allowslong=allowslong)
         else:
             ans.append(item)
     return ans
