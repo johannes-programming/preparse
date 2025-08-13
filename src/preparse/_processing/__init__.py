@@ -27,8 +27,8 @@ def process(
     warn: FunctionType,
 ) -> list[str]:
     "This method parses args."
-    items: list[str] = pull(args)
-    items: list[Item] = parse(
+    items: list[Item] = pull(args)
+    items = parse(
         items,
         allowslong=allowslong,
         allowsshort=allowsshort,
@@ -39,7 +39,7 @@ def process(
         prog=prog,
         warn=warn,
     )
-    items: list[Item] = digest(
+    items = digest(
         items,
         bundling=bundling,
         expectsposix=expectsposix,
