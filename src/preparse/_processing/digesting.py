@@ -80,7 +80,22 @@ def digest_order(
     if not expectsposix:
         ans.sort(key=digest_order_key)
         return ans
-    raise NotImplementedError
+    i: int = len(ans)
+    comp: bool = True
+    while True:
+        i -= 1
+        if i == -1:
+            break
+        if isinstance(ans[i], Option):
+            break
+        if isinstance(ans[i], Special):
+            comp = True
+            break
+        if not ans[i].isobvious():
+            comp = False
+    if not comp:
+        ans.insert(i + 1, Special())
+    return ans
 
 
 def digest_order_key(item: Item) -> int:
