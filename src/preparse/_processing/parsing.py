@@ -22,11 +22,20 @@ def parse(args: list[str], **kwargs) -> list[Item]:
 
 
 def parse_generator(
-    args: list[str], *, parser: "PreParser"
+    args: list[str],
+    *,
+    optdict: dict,
+    expectsabbr: bool,
+    expandsabbr: bool,
+    expectsposix: bool,
+    prog: str,
+    warn: FunctionType,
+    allowslong: bool,
+    allowsshort: bool,
 ) -> Generator[Any, Any, Any]:
-    if not parser.allowslong:
+    if not allowslong:
         raise NotImplementedError
-    cause: FunctionType = parse_cause(prog=parser.prog, warn=parser.warn)
+    cause: FunctionType = parse_cause(prog=prog, warn=warn)
     broken: bool = False
     last: Optional[Item] = None
     for arg in args:
@@ -48,18 +57,18 @@ def parse_generator(
         if arg == "-" or not arg.startswith("-"):
             # if the arg is positional
             yield Item(value=arg)
-            broken = parser.expectsposix
+            broken = expectsposix
             continue
-        if arg.startswith("--") or not parser.allowsshort:
+        if arg.startswith("--") or not allowsshort:
             last = parse_long(
                 arg,
                 cause=cause,
-                optdict=parser.optdict,
-                expectsabbr=parser.expectsabbr,
-                expandsabbr=parser.expandsabbr,
+                optdict=optdict,
+                expectsabbr=expectsabbr,
+                expandsabbr=expandsabbr,
             )
         else:
-            last = parse_bundling(arg, optdict=parser.optdict, cause=cause)
+            last = parse_bundling(arg, optdict=optdict, cause=cause)
         if not last.ishungry():
             yield last
             last = None
