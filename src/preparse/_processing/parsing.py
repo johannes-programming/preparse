@@ -53,7 +53,7 @@ def parse_generator(
         if arg.startswith("--") or not parser.allowsshort:
             last = parse_long(arg=arg, parser=parser)
         else:
-            last = parse_bundling(arg=arg, parser=parser)
+            last = parse_bundling(arg, optdict=parser.optdict, cause=cause)
         if not last.ishungry():
             yield last
             last = None
@@ -124,23 +124,14 @@ def parse_long_full(*, item: Item, parser: "PreParser") -> str:
     return item.key
 
 
-def parse_bundling_letter(letter: str, *, parser: "PreParser") -> Nargs:
-    try:
-        return parser.optdict["-" + letter]
-    except KeyError:
-        warning: PIOW = PIOW(prog=parser.prog, option=letter)
-        parser.warn(warning)
-        return Nargs.NO_ARGUMENT
-
-
-def parse_bundling(*, arg: str, parser: "PreParser") -> Item:
+def parse_bundling(arg: str, **kwargs: Any) -> Item:
     ans: Item = Item(key="")
     nargs: Nargs
     for i, a in enumerate(arg):
         if i == 0:
             continue
         ans.key += a
-        nargs = parse_bundling_letter(a, parser=parser)
+        nargs = parse_bundling_letter(a, **kwargs)
         if nargs == Nargs.NO_ARGUMENT:
             continue
         if nargs == Nargs.OPTIONAL_ARGUMENT or i < len(arg) - 1:
@@ -150,3 +141,11 @@ def parse_bundling(*, arg: str, parser: "PreParser") -> Item:
             ans.remainder = nargs == Nargs.REQUIRED_ARGUMENT
         return ans
     return ans
+
+
+def parse_bundling_letter(letter: str, *, optdict: dict, cause: FunctionType) -> Nargs:
+    try:
+        return optdict["-" + letter]
+    except KeyError:
+        cause(PIOW, option=letter)
+        return Nargs.NO_ARGUMENT
