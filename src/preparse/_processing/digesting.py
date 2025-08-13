@@ -86,7 +86,15 @@ def digest_order_key(item: Item) -> int:
 
 def digest_special(items: list[Item], *, special: Tuning) -> list[Item]:
     if special == Tuning.MINIMIZE:
-        raise NotImplementedError
+        return digest_bundling_min(items)
     if special == Tuning.MAXIMIZE:
-        raise NotImplementedError
+        return digest_bundling_max(items)
     return list(items)
+
+
+def digest_special_min(items: list[Item]) -> list[Item]:
+    raise NotImplementedError
+
+
+def digest_special_max(items: list[Item]) -> list[Item]:
+    raise NotImplementedError
