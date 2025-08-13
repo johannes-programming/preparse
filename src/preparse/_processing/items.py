@@ -63,11 +63,8 @@ class Bundle(Option):
         return str(x)
 
     @makeprop.makeprop()
-    def joined(self: Self, x: Any) -> bool | str:
-        try:
-            return bool(operator.index(x))
-        except:
-            return str(x)
+    def joined(self: Self, x: SupportsIndex) -> bool:
+        return bool(operator.index(x))
 
     @makeprop.makeprop()
     def right(self: Self, x: Any) -> Optional[str]:
