@@ -45,6 +45,8 @@ def digest_bundling_minimize(items: list[Item]) -> list[Item]:
 
 
 def digest_bundling_minimize_split(item: Item) -> list[Item]:
+    if not isinstance(item, Option):
+        return [item]
     if not item.isbundle():
         return [item]
     ans: list[Item] = list()
@@ -53,21 +55,36 @@ def digest_bundling_minimize_split(item: Item) -> list[Item]:
         if x == "-":
             ans[-1].key += "-"
         else:
-            ans.append(Item(key=x))
+            ans.append(Option(key=x))
     item.key = ans[-1].key
     ans[-1] = item
     return ans
 
 
 def digest_bundling_maximize(items: list[Item]) -> list[Item]:
-    ans: list[Item] = [items.pop(0)]
+    ans: list[Item] = list()
     item: Item
     for item in items:
-        if item.isbundle() and ans[-1].isbundle() and ans[-1].value is None:
-            item.key = ans[-1].key + item.key
-            ans[-1] = item
-        else:
+        if not isinstance(item, Option):
             ans.append(item)
+            continue
+        if not item.isbundle():
+            ans.append(item)
+            continue
+        if len(ans) == 0:
+            ans.append(item)
+            continue
+        if not isinstance(ans[-1], Option):
+            ans.append(item)
+            continue
+        if not ans[-1].isbundle():
+            ans.append(item)
+            continue
+        if ans[-1].value is not None:
+            ans.append(item)
+            continue
+        item.key = ans[-1].key + item.key
+        ans[-1] = item
     return ans
 
 
@@ -83,9 +100,5 @@ def digest_order(
     raise NotImplementedError
 
 
-def digest_order_key(item: Item):
-    if item.isoption():
-        return 0
-    if item.isspecial():
-        return 1
-    return 2
+def digest_order_key(item: Item) -> int:
+    return item.sortkey()
