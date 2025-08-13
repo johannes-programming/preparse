@@ -10,17 +10,24 @@ if TYPE_CHECKING:
 __all__ = ["digest"]
 
 
-def digest(items: list[Item], *, parser: "PreParser") -> list[Item]:
-    if parser.special != Tuning.MAINTAIN:
+def digest(
+    items: list[Item],
+    *,
+    special: Tuning,
+    reconcilesorders: bool,
+    expectsposix: bool,
+    bundling: Tuning,
+) -> list[Item]:
+    if special != Tuning.MAINTAIN:
         raise NotImplementedError
     items = list(
         digest_order(
             items,
-            expectsposix=parser.expectsposix,
-            reconcilesorders=parser.reconcilesorders,
+            expectsposix=expectsposix,
+            reconcilesorders=reconcilesorders,
         )
     )
-    items = list(digest_bundling(items=items, bundling=parser.bundling))
+    items = list(digest_bundling(items=items, bundling=bundling))
     return items
 
 
