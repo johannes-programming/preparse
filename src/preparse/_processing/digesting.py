@@ -4,9 +4,6 @@ from preparse._processing.items import *
 from preparse.core.enums import *
 from preparse.core.warnings import *
 
-if TYPE_CHECKING:
-    from preparse.core.PreParser import PreParser
-
 __all__ = ["digest"]
 
 
