@@ -21,6 +21,12 @@ def process(
     parser = parser.copy()
     items: list[str] = pull(args)
     items: list[Item] = parse(items, parser=parser)
-    items: list[Item] = digest(items, parser=parser)
+    items: list[Item] = digest(
+        items,
+        special=parser.special,
+        reconcilesorders=parser.reconcilesorders,
+        expectsposix=parser.expectsposix,
+        bundling=parser.bundling,
+    )
     ans: list[str] = deparse(items)
     return ans
