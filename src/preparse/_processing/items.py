@@ -95,22 +95,29 @@ class Bundle(Option):
 
 
 class Long(Option):
-    __slots__ = ("_left", "_joined", "_right")
+    __slots__ = ("_fullkey", "_abbrlen", "_joined", "_right")
 
     def __init__(
         self: Self,
         *,
-        left: str,
+        fullkey: str,
+        abbrlen: Optional[int] = None,
         joined: bool | str = False,
         right: Optional[str] = None,
     ) -> None:
-        self.left = left
+        self.fullkey = fullkey
+        self.abbrlen = abbrlen
         self.joined = joined
         self.right = right
 
     @makeprop.makeprop()
-    def left(self: Self, x: Any) -> str:
+    def fullkey(self: Self, x: Any) -> str:
         return str(x)
+
+    @makeprop.makeprop()
+    def abbrlen(self: Self, x: Optional[SupportsIndex]) -> Optional[int]:
+        if x is not None:
+            return operator.index(x)
 
     @makeprop.makeprop()
     def joined(self: Self, x: Any) -> bool | str:
@@ -126,11 +133,11 @@ class Long(Option):
 
     def deparse(self: Self) -> list[str]:
         if self.right is None:
-            return [self.left]
+            return [self.fullkey]
         if self.joined:
-            return [self.left + "=" + self.right]
+            return [self.fullkey + "=" + self.right]
         else:
-            return [self.left, self.right]
+            return [self.fullkey, self.right]
 
 
 class Special(Item):
