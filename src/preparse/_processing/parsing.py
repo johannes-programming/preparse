@@ -1,5 +1,5 @@
-from typing import *
 from types import FunctionType
+from typing import *
 
 from preparse._processing.items import *
 from preparse.core.enums import *
@@ -20,10 +20,13 @@ PSORAW = PreparseShortOptionRequiresArgumentWarning
 def parse(args: list[str], **kwargs) -> list[Item]:
     return list(parse_generator(args, **kwargs))
 
-def parse_generator(args: list[str], *, parser: "PreParser") -> Generator[Any, Any, Any]:
+
+def parse_generator(
+    args: list[str], *, parser: "PreParser"
+) -> Generator[Any, Any, Any]:
     if not parser.allowslong:
         raise NotImplementedError
-    cause:FunctionType=parse_cause(prog=parser.prog, warn=parser.warn)
+    cause: FunctionType = parse_cause(prog=parser.prog, warn=parser.warn)
     broken: bool = False
     last: Optional[Item] = None
     for arg in args:
@@ -65,9 +68,10 @@ def parse_generator(args: list[str], *, parser: "PreParser") -> Generator[Any, A
     yield last
 
 
-def parse_cause(*, prog:str, warn:FunctionType)->FunctionType:
-    def ans(cls:type, **kwargs:Any)->None:
-        warn(cls(prog=prog,**kwargs))
+def parse_cause(*, prog: str, warn: FunctionType) -> FunctionType:
+    def ans(cls: type, **kwargs: Any) -> None:
+        warn(cls(prog=prog, **kwargs))
+
     return ans
 
 
