@@ -115,4 +115,4 @@ def digest_special_min(items: list[Item]) -> list[Item]:
 
 
 def digest_special_max(items: list[Item]) -> list[Item]:
-    raise NotImplementedError
+    raise NotImplementedError#remember hungry option
