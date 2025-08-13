@@ -14,17 +14,17 @@ __all__ = ["process"]
 def process(
     args: Optional[Iterable] = None,
     *,
-    optdict: dict,
-    expectsabbr: bool,
-    expandsabbr: bool,
-    expectsposix: bool,
-    prog: str,
-    warn: FunctionType,
     allowslong: bool,
     allowsshort: bool,
-    special: Tuning,
-    reconcilesorders: bool,
     bundling: Tuning,
+    expandsabbr: bool,
+    expectsabbr: bool,
+    expectsposix: bool,
+    optdict: dict,
+    prog: str,
+    reconcilesorders: bool,
+    special: Tuning,
+    warn: FunctionType,
 ) -> list[str]:
     "This method parses args."
     items: list[str] = pull(args)
