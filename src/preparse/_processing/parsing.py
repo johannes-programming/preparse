@@ -39,7 +39,7 @@ def parse_generator(
     for arg in args:
         if broken:
             # if we are in the positional-only part
-            yield Item(value=arg)
+            yield Positional(value=arg)
             continue
         if last is not None:
             # if the last item hungers for a value
@@ -49,12 +49,12 @@ def parse_generator(
             last = None
             continue
         if arg == "--":
-            yield Item()
+            yield Special()
             broken = True
             continue
         if arg == "-" or not arg.startswith("-"):
             # if the arg is positional
-            yield Item(value=arg)
+            yield Positional(value=arg)
             broken = expectsposix
             continue
         if arg.startswith("--") or not allowsshort:
@@ -95,8 +95,8 @@ def parse_long(
     optdict: dict,
     expectsabbr: bool,
     expandsabbr: bool,
-) -> Item:
-    ans: Item = parse_long_init(arg)
+) -> Option:
+    ans: Option = parse_long_init(arg)
     full: str = parse_long_full(
         ans,
         cause=cause,
@@ -115,11 +115,12 @@ def parse_long(
     return ans
 
 
-def parse_long_init(arg: str) -> Item:
-    if "=" not in arg:
-        return Item(key=arg)
-    ans: Item = Item(remainder=True)
-    ans.key, ans.value = arg.split("=", 1)
+def parse_long_init(arg: str) -> Option:
+    parts: list[str] = arg.split("=", 1)
+    ans: Option = Option(key=parts.pop(0))
+    if len(parts):
+        ans.remainder = True
+        ans.value = parts.pop()
     return ans
 
 
@@ -147,8 +148,8 @@ def parse_long_full(
     return item.key
 
 
-def parse_bundling(arg: str, **kwargs: Any) -> Item:
-    ans: Item = Item(key="")
+def parse_bundling(arg: str, **kwargs: Any) -> Option:
+    ans: Option = Option(key="")
     nargs: Nargs
     for i, a in enumerate(arg):
         if i == 0:
