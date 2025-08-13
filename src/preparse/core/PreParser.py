@@ -142,10 +142,6 @@ class BasePreParser:
 
 class PreParser(BasePreParser):
 
-    def cause_warning(self: Self, wrncls: type, /, **kwargs: Any) -> None:
-        warning: PreparseWarning = wrncls(prog=self.prog, **kwargs)
-        self.warn(warning)
-
     def click(self: Self, cmd: Any = True, ctx: Any = True) -> Click:
         "This method returns a decorator that infuses the current instance into parse_args."
         return Click(parser=self, cmd=cmd, ctx=ctx)
