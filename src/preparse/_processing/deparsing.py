@@ -9,26 +9,5 @@ def deparse(items: list[Item]) -> list[str]:
     ans: list[str] = list()
     item: Item
     for item in items:
-        ans += deparse_item(item)
+        ans += item.deparse()
     return ans
-
-
-def deparse_item(item: Item) -> list[str]:
-    if item.isspecial():
-        return ["--"]
-    if item.ispositional():
-        return [item.value]
-    if item.isbundle():
-        if item.value is None:
-            return ["-" + item.key]
-        if item.remainder:
-            return ["-" + item.key + item.value]
-        else:
-            return ["-" + item.key, item.value]
-    else:
-        if item.value is None:
-            return [item.key]
-        if item.remainder:
-            return [item.key + "=" + item.value]
-        else:
-            return [item.key, item.value]

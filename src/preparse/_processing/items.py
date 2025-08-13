@@ -30,3 +30,23 @@ class Item:
 
     def ispositional(self: Self) -> bool:
         return self.key is None and self.value is not None
+
+    def deparse(self: Self) -> list[str]:
+        if self.isspecial():
+            return ["--"]
+        if self.ispositional():
+            return [self.value]
+        if self.isbundle():
+            if self.value is None:
+                return ["-" + self.key]
+            if self.remainder:
+                return ["-" + self.key + self.value]
+            else:
+                return ["-" + self.key, self.value]
+        else:
+            if self.value is None:
+                return [self.key]
+            if self.remainder:
+                return [self.key + "=" + self.value]
+            else:
+                return [self.key, self.value]
