@@ -16,5 +16,5 @@ def pull(args: Optional[Iterable] = None) -> list[str]:
     ans: list = list()
     x: Any
     for x in argiter:
-        ans.append(str(x))
+        ans.append(Positional(x))
     return ans

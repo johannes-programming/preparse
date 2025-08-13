@@ -104,6 +104,9 @@ class Positional(Item):
     def deparse(self: Self) -> list[str]:
         return [self.value]
 
+    def isobvious(self: Self) -> bool:
+        return self.value == "-" or not self.value.startswith("-")
+
     @classmethod
     def sortkey(cls: type) -> int:
         return 2
