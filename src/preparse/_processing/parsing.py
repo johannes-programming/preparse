@@ -51,7 +51,13 @@ def parse_generator(
             broken = parser.expectsposix
             continue
         if arg.startswith("--") or not parser.allowsshort:
-            last = parse_long(arg, parser=parser, cause=cause)
+            last = parse_long(
+                arg,
+                cause=cause,
+                optdict=parser.optdict,
+                expectsabbr=parser.expectsabbr,
+                expandsabbr=parser.expandsabbr,
+            )
         else:
             last = parse_bundling(arg, optdict=parser.optdict, cause=cause)
         if not last.ishungry():
@@ -75,22 +81,29 @@ def parse_cause(*, prog: str, warn: FunctionType) -> FunctionType:
     return ans
 
 
-def parse_long(arg: str, *, parser: "PreParser", cause: FunctionType) -> Item:
+def parse_long(
+    arg: str,
+    *,
+    cause: FunctionType,
+    optdict: dict,
+    expectsabbr: bool,
+    expandsabbr: bool,
+) -> Item:
     ans: Item = parse_long_init(arg)
     full: str = parse_long_full(
         ans,
         cause=cause,
-        keys=list(parser.optdict.keys()),
-        expectsabbr=parser.expectsabbr,
+        keys=list(optdict.keys()),
+        expectsabbr=expectsabbr,
     )
-    nargs: Nargs = parser.optdict.get(full, Nargs.NO_ARGUMENT)
+    nargs: Nargs = optdict.get(full, Nargs.NO_ARGUMENT)
     if nargs == Nargs.NO_ARGUMENT and ans.remainder:
         cause(PUAW, option=full)
     if nargs == Nargs.REQUIRED_ARGUMENT:
         ans.remainder = True
     if ans.remainder:
         ans.remainder = full
-    if parser.expandsabbr:
+    if expandsabbr:
         ans.key = full
     return ans
 
