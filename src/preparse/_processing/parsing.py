@@ -78,7 +78,7 @@ def parse_generator(
         cause(PLORAW, option=last.joined)
         last.joined = True
     else:
-        cause(PSORAW, option=last.left[-1])
+        cause(PSORAW, option=last.chars[-1])
     yield last
 
 
@@ -150,12 +150,12 @@ def parse_long_full(
 
 
 def parse_bundling(arg: str, **kwargs: Any) -> Bundle:
-    ans: Bundle = Bundle(left="")
+    ans: Bundle = Bundle(chars="")
     nargs: Nargs
     for i, a in enumerate(arg):
         if i == 0:
             continue
-        ans.left += a
+        ans.chars += a
         nargs = parse_bundling_letter(a, **kwargs)
         if nargs == Nargs.NO_ARGUMENT:
             continue

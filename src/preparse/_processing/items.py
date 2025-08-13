@@ -27,21 +27,21 @@ class Option(Item):
         return 0
 
 class Bundle(Option):
-    __slots__ = ("_left", "_joined", "_right")
+    __slots__ = ("_chars", "_joined", "_right")
 
     def __init__(
         self: Self,
         *,
-        left: str,
+        chars: str,
         joined: bool | str = False,
         right: Optional[str] = None,
     ) -> None:
-        self.left = left
+        self.chars = chars
         self.joined = joined
         self.right = right
 
     @makeprop.makeprop()
-    def left(self: Self, x: Any) -> str:
+    def chars(self: Self, x: Any) -> str:
         return str(x)
 
     @makeprop.makeprop()
@@ -58,11 +58,11 @@ class Bundle(Option):
 
     def deparse(self: Self) -> list[str]:
         if self.right is None:
-            return ["-" + self.left]
+            return ["-" + self.chars]
         if self.joined:
-            return ["-" + self.left + self.right]
+            return ["-" + self.chars + self.right]
         else:
-            return ["-" + self.left, self.right]
+            return ["-" + self.chars, self.right]
 
     
 class Long(Option):
