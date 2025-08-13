@@ -51,7 +51,7 @@ def parse_generator(
             broken = parser.expectsposix
             continue
         if arg.startswith("--") or not parser.allowsshort:
-            last = parse_long(arg=arg, parser=parser)
+            last = parse_long(arg, parser=parser, cause=cause)
         else:
             last = parse_bundling(arg, optdict=parser.optdict, cause=cause)
         if not last.ishungry():
@@ -75,13 +75,12 @@ def parse_cause(*, prog: str, warn: FunctionType) -> FunctionType:
     return ans
 
 
-def parse_long(*, arg: str, parser: "PreParser") -> Item:
+def parse_long(arg: str, *, parser: "PreParser", cause: FunctionType) -> Item:
     ans: Item = parse_long_init(arg)
-    full: str = parse_long_full(item=ans, parser=parser)
+    full: str = parse_long_full(ans, parser=parser, cause=cause)
     nargs: Nargs = parser.optdict.get(full, Nargs.NO_ARGUMENT)
     if nargs == Nargs.NO_ARGUMENT and ans.remainder:
-        warning = PUAW(prog=parser.prog, option=full)
-        parser.warn(warning)
+        cause(PUAW, option=full)
     if nargs == Nargs.REQUIRED_ARGUMENT:
         ans.remainder = True
     if ans.remainder:
@@ -99,12 +98,11 @@ def parse_long_init(arg: str) -> Item:
     return ans
 
 
-def parse_long_full(*, item: Item, parser: "PreParser") -> str:
+def parse_long_full(item: Item, *, parser: "PreParser", cause: FunctionType) -> str:
     if item.key in parser.optdict.keys():
         return item.key
     if not parser.expectsabbr:
-        warning: PUOW = PUOW(prog=parser.prog, option=arg)
-        parser.warn(warning)
+        cause(PUOW, option=arg)
     x: str
     pos: list[str] = list()
     for x in parser.optdict.keys():
@@ -116,11 +114,9 @@ def parse_long_full(*, item: Item, parser: "PreParser") -> str:
     if item.remainder:
         arg += "=" + item.value
     if len(pos) == 0:
-        warning: PUOW = PUOW(prog=parser.prog, option=arg)
-        parser.warn(warning)
+        cause(PUOW, option=arg)
     else:
-        warning: PAOW = PAOW(prog=parser.prog, option=arg, possibilities=pos)
-        parser.warn(warning)
+        cause(PAOW, option=arg, possibilities=pos)
     return item.key
 
 
