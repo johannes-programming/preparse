@@ -17,11 +17,14 @@ def digest(
     reconcilesorders: bool,
     special: Tuning,
 ) -> list[Item]:
-    if special != Tuning.MAINTAIN:
-        raise NotImplementedError
     ans: list[Item] = list(items)
     ans = digest_abbr(ans, expandsabbr=expandsabbr)
-    ans = digest_special(ans, special=special)
+    ans = digest_special(
+        ans,
+        expectsposix=expectsposix,
+        reconcilesorders=reconcilesorders,
+        special=special,
+    )
     ans = digest_order(
         items,
         expectsposix=expectsposix,
@@ -47,7 +50,10 @@ def digest_abbr(
 
 
 def digest_bundling(
-    items: list[Item], *, allowslong: bool, bundling: Tuning
+    items: list[Item],
+    *,
+    allowslong: bool,
+    bundling: Tuning,
 ) -> list[Item]:
     if bundling == Tuning.MINIMIZE:
         return digest_bundling_min(items, allowslong=allowslong)
@@ -89,7 +95,10 @@ def digest_bundling_max(items: list[Item]) -> list[Item]:
 
 
 def digest_order(
-    items: list[Item], *, expectsposix: bool, reconcilesorders: bool
+    items: list[Item],
+    *,
+    expectsposix: bool,
+    reconcilesorders: bool,
 ) -> list[Item]:
     ans: list[Item] = list(items)
     if not reconcilesorders:
@@ -119,15 +128,19 @@ def digest_order_key(item: Item) -> int:
     return item.sortkey()
 
 
-def digest_special(items: list[Item], *, special: Tuning) -> list[Item]:
+def digest_special(items: list[Item], *, special: Tuning, **kwargs: Any) -> list[Item]:
     if special == Tuning.MINIMIZE:
-        return digest_bundling_min(items)
+        return digest_bundling_min(items, **kwargs)
     if special == Tuning.MAXIMIZE:
         return digest_bundling_max(items)
     return list(items)
 
 
-def digest_special_min(items: list[Item]) -> list[Item]:
+def digest_special_min(
+    items: list[Item],
+    expectsposix: bool,
+    reconcilesorders: bool,
+) -> list[Item]:
     raise NotImplementedError
 
 
