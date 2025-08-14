@@ -143,12 +143,11 @@ def parse_long(
     )
     try:
         ans.nargs = optdict[ans.fullkey]
+        if (ans.nargs == Nargs.NO_ARGUMENT) and (ans.right is not None):
+            cause(PUAW, option=ans.fullkey)
     except KeyError:
         ans.nargs = Nargs.OPTIONAL_ARGUMENT
         cause(PUOW, option=arg)
-        return ans
-    if (ans.nargs == Nargs.NO_ARGUMENT) and (ans.right is not None):
-        cause(PUAW, option=ans.fullkey)
     return ans
 
 
