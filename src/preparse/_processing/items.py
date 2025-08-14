@@ -2,15 +2,16 @@ import abc
 import operator
 from typing import *
 
-import makeprop
-
 from preparse.core.enums import *
 from preparse.core.warnings import *
+from preparse._processing.utils import *
 
 __all__ = ["Item", "Option", "Bundle", "Long", "Special", "Positional"]
 
 
 class Item(abc.ABC):
+    __slots__ = ("_data")
+
     @abc.abstractmethod
     def deparse(self: Self) -> list[str]: ...
 
@@ -23,25 +24,37 @@ class Option(Item):
 
     def ishungry(self: Self) -> bool:
         return self.joined and (self.right is None)
-
+    
     @classmethod
     def sortkey(cls: type) -> int:
         return 0
 
 
 class Bundle(Option):
-    __slots__ = ("_chars", "_joined", "_right")
 
     def __init__(
         self: Self,
         *,
         chars: str,
-        joined: bool | str = False,
+        joined: bool = False,
         right: Optional[str] = None,
     ) -> None:
         self.chars = chars
         self.joined = joined
         self.right = right
+
+    @dataprop
+    def chars(self: Self, x: Any) -> str:
+        return str(x)
+
+    @dataprop
+    def joined(self: Self, x: Any) -> bool:
+        return bool(x)
+
+    @dataprop
+    def right(self: Self, x: Any) -> Optional[str]:
+        if x is not None:
+            return str(x)
 
     @classmethod
     def _split_allowslong(cls: type, chars: str) -> list[str]:
@@ -57,19 +70,6 @@ class Bundle(Option):
     @classmethod
     def _split_shortonly(cls: type, chars: str) -> list[str]:
         raise NotImplementedError
-
-    @makeprop.makeprop()
-    def chars(self: Self, x: Any) -> str:
-        return str(x)
-
-    @makeprop.makeprop()
-    def joined(self: Self, x: SupportsIndex) -> bool:
-        return bool(operator.index(x))
-
-    @makeprop.makeprop()
-    def right(self: Self, x: Any) -> Optional[str]:
-        if x is not None:
-            return str(x)
 
     def deparse(self: Self) -> list[str]:
         if self.right is None:
@@ -95,7 +95,6 @@ class Bundle(Option):
 
 
 class Long(Option):
-    __slots__ = ("_fullkey", "_abbrlen", "_joined", "_right")
 
     def __init__(
         self: Self,
@@ -110,30 +109,30 @@ class Long(Option):
         self.joined = joined
         self.right = right
 
-    @makeprop.makeprop()
+    @dataprop
     def fullkey(self: Self, x: Any) -> str:
         return str(x)
 
-    @property
-    def abbr(self: Self) -> str:
-        return self.fullkey[: self.abbrlen]
-
-    @makeprop.makeprop()
+    @dataprop
     def abbrlen(self: Self, x: Optional[SupportsIndex]) -> Optional[int]:
         if x is not None:
             return operator.index(x)
 
-    @makeprop.makeprop()
+    @dataprop
     def joined(self: Self, x: Any) -> bool | str:
         try:
             return bool(operator.index(x))
         except:
             return str(x)
 
-    @makeprop.makeprop()
+    @dataprop
     def right(self: Self, x: Any) -> Optional[str]:
         if x is not None:
             return str(x)
+        
+    @property
+    def abbr(self: Self) -> str:
+        return self.fullkey[: self.abbrlen]
 
     def deparse(self: Self) -> list[str]:
         if self.right is None:
