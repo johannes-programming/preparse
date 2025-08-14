@@ -7,10 +7,10 @@ from preparse.core.warnings import *
 
 __all__ = ["parse"]
 
-PUOW = PreparseUnrecognizedOptionWarning
 PAOW = PreparseAmbiguousOptionWarning
-PUAW = PreparseUnallowedArgumentWarning
 PIOW = PreparseInvalidOptionWarning
+PUAW = PreparseUnallowedArgumentWarning
+PUOW = PreparseUnrecognizedOptionWarning
 PLORAW = PreparseLongOptionRequiresArgumentWarning
 PSORAW = PreparseShortOptionRequiresArgumentWarning
 
@@ -30,8 +30,6 @@ def parse_generator(
     prog: str,
     warn: FunctionType,
 ) -> Generator[Any, Any, Any]:
-    if not allowslong:
-        raise NotImplementedError
     broken: bool = not (allowslong or allowsshort)
     cause: FunctionType = parse_cause(prog=prog, warn=warn)
     last: Optional[Option] = None
@@ -143,8 +141,13 @@ def parse_long(
         expectsabbr=expectsabbr,
         keys=list(optdict.keys()),
     )
-    ans.nargs = optdict.get(ans.fullkey, Nargs.NO_ARGUMENT)
-    if ans.nargs == Nargs.NO_ARGUMENT and ans.joined:
+    try:
+        ans.nargs = optdict[ans.fullkey]
+    except KeyError:
+        ans.nargs = Nargs.OPTIONAL_ARGUMENT
+        cause(PUOW, option=arg)
+        return ans
+    if (ans.nargs == Nargs.NO_ARGUMENT) and (ans.right is not None):
         cause(PUAW, option=ans.fullkey)
     return ans
 
