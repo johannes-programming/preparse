@@ -57,19 +57,14 @@ def parse_generator(
             yield item
             broken = expectsposix
             continue
-        if item.value.startswith("--") or not allowsshort:
-            last = parse_long(
-                item.value,
-                cause=cause,
-                expectsabbr=expectsabbr,
-                optdict=optdict,
-            )
-        else:
-            last = parse_bundling(
-                item.value,
-                optdict=optdict,
-                cause=cause,
-            )
+        last = parse_option(
+            item.value,
+            allowslong=allowslong,
+            allowsshort=allowsshort,
+            cause=cause,
+            expectsabbr=expectsabbr,
+            optdict=optdict,
+        )
         if not last.ishungry():
             yield last
             last = None
@@ -94,6 +89,41 @@ def parse_cause(
     return ans
 
 
+def parse_option(
+    arg: str,
+    *,
+    cause: FunctionType,
+    expectsabbr: bool,
+    optdict: dict,
+    **kwargs: Any,
+) -> Option:
+    if parse_islong(arg, **kwargs):
+        return parse_long(
+            arg,
+            cause=cause,
+            expectsabbr=expectsabbr,
+            optdict=optdict,
+        )
+    else:
+        return parse_bundling(
+            arg,
+            cause=cause,
+            optdict=optdict,
+        )
+
+
+def parse_islong(
+    arg: str,
+    *,
+    allowslong: bool,
+    allowsshort: bool,
+) -> bool:
+    if allowslong and allowsshort:
+        return arg.startswith("--")
+    else:
+        return not allowsshort
+
+
 def parse_long(
     arg: str,
     *,
@@ -110,8 +140,8 @@ def parse_long(
     ans.fullkey = parse_long_full(
         ans,
         cause=cause,
-        keys=list(optdict.keys()),
         expectsabbr=expectsabbr,
+        keys=list(optdict.keys()),
     )
     ans.nargs = optdict.get(ans.fullkey, Nargs.NO_ARGUMENT)
     if ans.nargs == Nargs.NO_ARGUMENT and ans.joined:
