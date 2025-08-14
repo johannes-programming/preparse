@@ -15,7 +15,7 @@ PLORAW = PreparseLongOptionRequiresArgumentWarning
 PSORAW = PreparseShortOptionRequiresArgumentWarning
 
 
-def parse(args: list[str], **kwargs) -> list[Item]:
+def parse(args: list[str], **kwargs: Any) -> list[Item]:
     return list(parse_generator(args, **kwargs))
 
 
