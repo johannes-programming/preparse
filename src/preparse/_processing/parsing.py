@@ -22,13 +22,13 @@ def parse(args: list[str], **kwargs) -> list[Item]:
 def parse_generator(
     items: list[Positional],
     *,
-    optdict: dict,
-    expectsabbr: bool,
-    expectsposix: bool,
-    prog: str,
-    warn: FunctionType,
     allowslong: bool,
     allowsshort: bool,
+    expectsabbr: bool,
+    expectsposix: bool,
+    optdict: dict,
+    prog: str,
+    warn: FunctionType,
 ) -> Generator[Any, Any, Any]:
     if not allowslong:
         raise NotImplementedError
