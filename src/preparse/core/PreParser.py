@@ -33,16 +33,16 @@ class BasePreParser(BaseData):
         warn: Callable = str,
     ) -> None:
         "This magic method initializes self."
-        self.optdict = optdict
-        self.prog = prog
-        self.expectsabbr = expectsabbr
-        self.expandsabbr = expandsabbr
-        self.bundling = bundling
-        self.special = special
         self.allowslong = allowslong
         self.allowsshort = allowsshort
+        self.bundling = bundling
+        self.expandsabbr = expandsabbr
+        self.expectsabbr = expectsabbr
         self.expectsposix = expectsposix
+        self.optdict = optdict
+        self.prog = prog
         self.reconcilesorders = reconcilesorders
+        self.special = special
         self.warn = warn
 
     @dataprop
