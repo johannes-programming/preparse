@@ -32,8 +32,8 @@ def parse_generator(
 ) -> Generator[Any, Any, Any]:
     if not allowslong:
         raise NotImplementedError
-    cause: FunctionType = parse_cause(prog=prog, warn=warn)
     broken: bool = not (allowslong or allowsshort)
+    cause: FunctionType = parse_cause(prog=prog, warn=warn)
     last: Optional[Option] = None
     item: Positional
     for item in items:
