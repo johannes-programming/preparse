@@ -45,6 +45,10 @@ class Bundle(Option):
         if x is not None:
             return str(x)
 
+    @dataprop
+    def nargs(self: Self, x: Any) -> Nargs:
+        return Nargs(x)
+
     #
 
     def __init__(
