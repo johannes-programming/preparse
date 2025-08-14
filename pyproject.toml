@@ -6,6 +6,7 @@ requires = [
 
 [project]
 authors = [
+    { email = "johannes.programming@gmail.com", name = "Johannes" },
     { email = "johannes-programming@mailfence.com", name = "Johannes" },
 ]
 classifiers = [

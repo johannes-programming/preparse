@@ -4,11 +4,10 @@ import types
 from typing import *
 
 import click as cl
-from datarepr import datarepr
-from makeprop import makeprop
 from tofunc import tofunc
 
 from preparse._processing import *
+from preparse._processing.utils import *
 from preparse.core.Click import *
 from preparse.core.enums import *
 from preparse.core.warnings import *
@@ -16,20 +15,7 @@ from preparse.core.warnings import *
 __all__ = ["PreParser"]
 
 
-class BasePreParser:
-    __slots__ = (
-        "_allowslong",
-        "_allowsshort",
-        "_bundling",
-        "_expandsabbr",
-        "_expectsabbr",
-        "_expectsposix",
-        "_optdict",
-        "_prog",
-        "_reconcilesorders",
-        "_special",
-        "_warn",
-    )
+class BasePreParser(BaseData):
 
     def __init__(
         self: Self,
@@ -59,48 +45,32 @@ class BasePreParser:
         self.reconcilesorders = reconcilesorders
         self.warn = warn
 
-    def __repr__(self: Self) -> str:
-        "This magic method implements repr(self)."
-        return datarepr(type(self).__name__, **self.todict())
-
-    def copy(self: Self) -> Self:
-        "This method returns a copy of the current instance."
-        return type(self)(**self.todict())
-
-    def todict(self: Self) -> dict:
-        "This method returns a dict representing the current instance."
-        ans = dict()
-        for slot in type(self).__slots__:
-            name = slot.lstrip("_")
-            ans[name] = getattr(self, slot)
-        return ans
-
-    @makeprop()
+    @dataprop
     def expectsabbr(self: Self, value: Any) -> bool:
         return bool(value)
 
-    @makeprop()
+    @dataprop
     def expandsabbr(self: Self, value: Any) -> bool:
         return bool(value)
 
-    @makeprop()
+    @dataprop
     def bundling(self: Self, value: Any) -> Tuning:
         "This property decides how to approach the bundling of short options."
         return Tuning(value)
 
-    @makeprop()
+    @dataprop
     def special(self: Self, value: Any) -> Tuning:
         return Tuning(value)
 
-    @makeprop()
+    @dataprop
     def allowslong(self: Self, value: Any) -> bool:
         return bool(value)
 
-    @makeprop()
+    @dataprop
     def allowsshort(self: Self, value: Any) -> bool:
         return bool(value)
 
-    @makeprop()
+    @dataprop
     def optdict(self: Self, value: Any) -> dict:
         "This property gives a dictionary of options."
         dataA: dict
@@ -116,25 +86,25 @@ class BasePreParser:
         self._optdict = dict(dataB)
         return dataB
 
-    @makeprop()
+    @dataprop
     def expectsposix(self: Self, value: Any) -> bool:
         if value == "infer":
             return bool(os.environ.get("POSIXLY_CORRECT"))
         else:
             return bool(value)
 
-    @makeprop()
+    @dataprop
     def reconcilesorders(self: Self, value: Any) -> bool:
         return bool(value)
 
-    @makeprop()
+    @dataprop
     def prog(self: Self, value: Any) -> str:
         "This property represents the name of the program."
         if value is None:
             value = os.path.basename(sys.argv[0])
         return str(value)
 
-    @makeprop()
+    @dataprop
     def warn(self: Self, value: Callable) -> types.FunctionType:
         "This property gives a function that takes in the warnings."
         return tofunc(value)
