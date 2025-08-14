@@ -23,7 +23,7 @@ class Item(abc.ABC, BaseData):
 class Option(Item):
 
     def ishungry(self: Self) -> bool:
-        return self.joined and (self.right is None)
+        return (self.right is None) and (self.nargs == Nargs.REQUIRED_ARGUMENT)
 
     @classmethod
     def sortkey(cls: type) -> int:
