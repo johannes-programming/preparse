@@ -90,8 +90,8 @@ def parse_long(
     arg: str,
     *,
     cause: FunctionType,
-    optdict: dict,
     expectsabbr: bool,
+    optdict: dict,
 ) -> Long:
     parts: list[str] = arg.split("=", 1)
     ans: Long = Long(fullkey=parts.pop(0))
@@ -114,7 +114,11 @@ def parse_long(
 
 
 def parse_long_full(
-    item: Long, *, cause: FunctionType, keys: list[str], expectsabbr: bool
+    item: Long,
+    *,
+    cause: FunctionType,
+    expectsabbr: bool,
+    keys: list[str],
 ) -> str:
     if item.fullkey in keys:
         return item.fullkey
@@ -156,7 +160,12 @@ def parse_bundling(arg: str, **kwargs: Any) -> Bundle:
     return ans
 
 
-def parse_bundling_letter(letter: str, *, optdict: dict, cause: FunctionType) -> Nargs:
+def parse_bundling_letter(
+    letter: str,
+    *,
+    cause: FunctionType,
+    optdict: dict,
+) -> Nargs:
     try:
         return optdict["-" + letter]
     except KeyError:
