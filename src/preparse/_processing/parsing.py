@@ -65,7 +65,11 @@ def parse_generator(
                 optdict=optdict,
             )
         else:
-            last = parse_bundling(item.value, optdict=optdict, cause=cause)
+            last = parse_bundling(
+                item.value,
+                optdict=optdict,
+                cause=cause,
+            )
         if not last.ishungry():
             yield last
             last = None
@@ -109,10 +113,10 @@ def parse_long(
         keys=list(optdict.keys()),
         expectsabbr=expectsabbr,
     )
-    nargs: Nargs = optdict.get(ans.fullkey, Nargs.NO_ARGUMENT)
-    if nargs == Nargs.NO_ARGUMENT and ans.joined:
+    ans.nargs = optdict.get(ans.fullkey, Nargs.NO_ARGUMENT)
+    if ans.nargs == Nargs.NO_ARGUMENT and ans.joined:
         cause(PUAW, option=ans.fullkey)
-    if nargs == Nargs.REQUIRED_ARGUMENT:
+    if ans.nargs == Nargs.REQUIRED_ARGUMENT:
         ans.joined = True
     return ans
 
@@ -147,19 +151,18 @@ def parse_long_full(
 
 def parse_bundling(arg: str, **kwargs: Any) -> Bundle:
     ans: Bundle = Bundle(chars="")
-    nargs: Nargs
     for i, a in enumerate(arg):
         if i == 0:
             continue
         ans.chars += a
-        nargs = parse_bundling_letter(a, **kwargs)
-        if nargs == Nargs.NO_ARGUMENT:
+        ans.nargs = parse_bundling_letter(a, **kwargs)
+        if ans.nargs == Nargs.NO_ARGUMENT:
             continue
-        if nargs == Nargs.OPTIONAL_ARGUMENT or i < len(arg) - 1:
+        if ans.nargs == Nargs.OPTIONAL_ARGUMENT or i < len(arg) - 1:
             ans.joined = True
             ans.right = arg[i + 1 :]
         else:
-            ans.joined = nargs == Nargs.REQUIRED_ARGUMENT
+            ans.joined = ans.nargs == Nargs.REQUIRED_ARGUMENT
         return ans
     return ans
 
