@@ -116,8 +116,6 @@ def parse_long(
     ans.nargs = optdict.get(ans.fullkey, Nargs.NO_ARGUMENT)
     if ans.nargs == Nargs.NO_ARGUMENT and ans.joined:
         cause(PUAW, option=ans.fullkey)
-    if ans.nargs == Nargs.REQUIRED_ARGUMENT:
-        ans.joined = True
     return ans
 
 
@@ -149,32 +147,26 @@ def parse_long_full(
     return item.fullkey
 
 
-def parse_bundling(arg: str, **kwargs: Any) -> Bundle:
+def parse_bundling(
+    arg: str,
+    *,
+    cause: FunctionType,
+    optdict: dict,
+) -> Bundle:
     ans: Bundle = Bundle(chars="")
     for i, a in enumerate(arg):
         if i == 0:
             continue
         ans.chars += a
-        ans.nargs = parse_bundling_letter(a, **kwargs)
+        try:
+            ans.nargs = optdict["-" + a]
+        except KeyError:
+            cause(PIOW, option=a)
+            ans.nargs = Nargs.NO_ARGUMENT
         if ans.nargs == Nargs.NO_ARGUMENT:
             continue
         if ans.nargs == Nargs.OPTIONAL_ARGUMENT or i < len(arg) - 1:
             ans.joined = True
             ans.right = arg[i + 1 :]
-        else:
-            ans.joined = ans.nargs == Nargs.REQUIRED_ARGUMENT
         return ans
     return ans
-
-
-def parse_bundling_letter(
-    letter: str,
-    *,
-    cause: FunctionType,
-    optdict: dict,
-) -> Nargs:
-    try:
-        return optdict["-" + letter]
-    except KeyError:
-        cause(PIOW, option=letter)
-        return Nargs.NO_ARGUMENT
