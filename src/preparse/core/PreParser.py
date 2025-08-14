@@ -46,11 +46,11 @@ class BasePreParser(BaseData):
         self.warn = warn
 
     @dataprop
-    def expectsabbr(self: Self, value: Any) -> bool:
+    def allowslong(self: Self, value: Any) -> bool:
         return bool(value)
 
     @dataprop
-    def expandsabbr(self: Self, value: Any) -> bool:
+    def allowsshort(self: Self, value: Any) -> bool:
         return bool(value)
 
     @dataprop
@@ -59,16 +59,19 @@ class BasePreParser(BaseData):
         return Tuning(value)
 
     @dataprop
-    def special(self: Self, value: Any) -> Tuning:
-        return Tuning(value)
-
-    @dataprop
-    def allowslong(self: Self, value: Any) -> bool:
+    def expandsabbr(self: Self, value: Any) -> bool:
         return bool(value)
 
     @dataprop
-    def allowsshort(self: Self, value: Any) -> bool:
+    def expectsabbr(self: Self, value: Any) -> bool:
         return bool(value)
+
+    @dataprop
+    def expectsposix(self: Self, value: Any) -> bool:
+        if value == "infer":
+            return bool(os.environ.get("POSIXLY_CORRECT"))
+        else:
+            return bool(value)
 
     @dataprop
     def optdict(self: Self, value: Any) -> dict:
@@ -87,22 +90,19 @@ class BasePreParser(BaseData):
         return dataB
 
     @dataprop
-    def expectsposix(self: Self, value: Any) -> bool:
-        if value == "infer":
-            return bool(os.environ.get("POSIXLY_CORRECT"))
-        else:
-            return bool(value)
+    def prog(self: Self, value: Any) -> str:
+        "This property represents the name of the program."
+        if value is None:
+            value = os.path.basename(sys.argv[0])
+        return str(value)
 
     @dataprop
     def reconcilesorders(self: Self, value: Any) -> bool:
         return bool(value)
 
     @dataprop
-    def prog(self: Self, value: Any) -> str:
-        "This property represents the name of the program."
-        if value is None:
-            value = os.path.basename(sys.argv[0])
-        return str(value)
+    def special(self: Self, value: Any) -> Tuning:
+        return Tuning(value)
 
     @dataprop
     def warn(self: Self, value: Callable) -> types.FunctionType:
