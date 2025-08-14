@@ -79,7 +79,11 @@ def parse_generator(
     yield last
 
 
-def parse_cause(*, prog: str, warn: FunctionType) -> FunctionType:
+def parse_cause(
+    *,
+    prog: str,
+    warn: FunctionType,
+) -> FunctionType:
     def ans(cls: type, **kwargs: Any) -> None:
         warn(cls(prog=prog, **kwargs))
 
