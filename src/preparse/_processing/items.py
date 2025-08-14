@@ -2,15 +2,16 @@ import abc
 import operator
 from typing import *
 
-import makeprop
-
+from preparse._processing.utils import *
 from preparse.core.enums import *
 from preparse.core.warnings import *
 
 __all__ = ["Item", "Option", "Bundle", "Long", "Special", "Positional"]
 
 
-class Item(abc.ABC):
+class Item(abc.ABC, BaseData):
+    __slots__ = ("_data",)
+
     @abc.abstractmethod
     def deparse(self: Self) -> list[str]: ...
 
@@ -30,7 +31,21 @@ class Option(Item):
 
 
 class Bundle(Option):
-    __slots__ = ("_chars", "_joined", "_right")
+    # slots
+    @dataprop
+    def chars(self: Self, x: Any) -> str:
+        return str(x)
+
+    @dataprop
+    def joined(self: Self, x: SupportsIndex) -> bool:
+        return bool(operator.index(x))
+
+    @dataprop
+    def right(self: Self, x: Any) -> Optional[str]:
+        if x is not None:
+            return str(x)
+
+    #
 
     def __init__(
         self: Self,
@@ -58,19 +73,6 @@ class Bundle(Option):
     def _split_shortonly(cls: type, chars: str) -> list[str]:
         raise NotImplementedError
 
-    @makeprop.makeprop()
-    def chars(self: Self, x: Any) -> str:
-        return str(x)
-
-    @makeprop.makeprop()
-    def joined(self: Self, x: SupportsIndex) -> bool:
-        return bool(operator.index(x))
-
-    @makeprop.makeprop()
-    def right(self: Self, x: Any) -> Optional[str]:
-        if x is not None:
-            return str(x)
-
     def deparse(self: Self) -> list[str]:
         if self.right is None:
             return ["-" + self.chars]
@@ -95,8 +97,29 @@ class Bundle(Option):
 
 
 class Long(Option):
-    __slots__ = ("_fullkey", "_abbrlen", "_joined", "_right")
+    # slots
+    @dataprop
+    def fullkey(self: Self, x: Any) -> str:
+        return str(x)
 
+    @dataprop
+    def abbrlen(self: Self, x: Optional[SupportsIndex]) -> Optional[int]:
+        if x is not None:
+            return operator.index(x)
+
+    @dataprop
+    def joined(self: Self, x: Any) -> bool | str:
+        try:
+            return bool(operator.index(x))
+        except:
+            return str(x)
+
+    @dataprop
+    def right(self: Self, x: Any) -> Optional[str]:
+        if x is not None:
+            return str(x)
+
+    #
     def __init__(
         self: Self,
         *,
@@ -110,30 +133,9 @@ class Long(Option):
         self.joined = joined
         self.right = right
 
-    @makeprop.makeprop()
-    def fullkey(self: Self, x: Any) -> str:
-        return str(x)
-
     @property
     def abbr(self: Self) -> str:
         return self.fullkey[: self.abbrlen]
-
-    @makeprop.makeprop()
-    def abbrlen(self: Self, x: Optional[SupportsIndex]) -> Optional[int]:
-        if x is not None:
-            return operator.index(x)
-
-    @makeprop.makeprop()
-    def joined(self: Self, x: Any) -> bool | str:
-        try:
-            return bool(operator.index(x))
-        except:
-            return str(x)
-
-    @makeprop.makeprop()
-    def right(self: Self, x: Any) -> Optional[str]:
-        if x is not None:
-            return str(x)
 
     def deparse(self: Self) -> list[str]:
         if self.right is None:
@@ -145,7 +147,6 @@ class Long(Option):
 
 
 class Special(Item):
-    __slots__ = ()
 
     def deparse(self: Self) -> list[str]:
         return ["--"]
@@ -156,14 +157,14 @@ class Special(Item):
 
 
 class Positional(Item):
-    __slots__ = ("_value",)
-
-    def __init__(self: Self, value: Any) -> None:
-        self.value = value
-
-    @makeprop.makeprop()
+    # slots
+    @dataprop
     def value(self: Self, x: Any) -> str:
         return str(x)
+
+    #
+    def __init__(self: Self, value: Any) -> None:
+        self.value = value
 
     def deparse(self: Self) -> list[str]:
         return [self.value]
