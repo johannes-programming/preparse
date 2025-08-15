@@ -36,7 +36,13 @@ class TestDataToml(unittest.TestCase):
             capture.append(str(value))
 
         parser = PreParser(warn=warn, **kwargs)
-        msg: str = "parser=%r, query=%r" % (parser, query)
+        data: dict = dict(
+            query=query,
+            solution=solution,
+            warnings=warnings,
+            **kwargs,
+        )
+        msg: str = str(data)
         answer = parser.parse_args(query)
         erranswer: list = list(capture)
         capture.clear()
