@@ -55,3 +55,4 @@ class TestDataToml(unittest.TestCase):
         if isinstance(warnings, float) and math.isnan(warnings):
             return
         self.assertEqual(erranswer, warnings, msg=msg)
+        self.assertEqual(erranswer, supererranswer, msg=msg)
