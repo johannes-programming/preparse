@@ -25,14 +25,24 @@ class TestDataToml(unittest.TestCase):
     def parse(
         self:Self,
         *,
-        query,
-        solution,
-        warnings,
-        **kwargs,
-    ):
-        parser = PreParser(**kwargs)
-        msg: str = "parser=%r, query=%r" % (parser, query)
+        query:Any,
+        solution:Any,
+        warnings:Any,
+        **kwargs:Any,
+    )->None:
+        capture:list[str] = list()
+        def warn(warning:Any)->None:
+            capture.append(str(warning))
+        parser = PreParser(warn=warn, **kwargs)
         answer = parser.parse_args(query)
+        errlines:list=list(capture)
+        capture.clear()
         superanswer = parser.parse_args(answer)
-        self.assertEqual(answer, superanswer, msg=msg)
+        supererrlines:list=list(capture)
+        capture.clear()
+        msg: str = "parser=%r, query=%r" % (parser, query)
         self.assertEqual(answer, solution, msg=msg)
+        if not math.isnan(warnings):
+            self.assertEqual(errlines, warnings, msg=msg)
+        self.assertEqual(answer, superanswer, msg=msg)
+        self.assertEqual(errlines, supererrlines, msg=msg)
