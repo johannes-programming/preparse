@@ -50,7 +50,6 @@ class TestDataToml(unittest.TestCase):
         supererranswer: list = list(capture)
         capture.clear()
         self.assertEqual(answer, superanswer, msg=msg)
-        # self.assertEqual(erranswer, supererranswer, msg=msg)
         self.assertEqual(answer, solution, msg=msg)
         if isinstance(warnings, float) and math.isnan(warnings):
             return
