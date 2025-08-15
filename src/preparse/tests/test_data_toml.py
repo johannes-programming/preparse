@@ -3,25 +3,27 @@ import unittest
 from importlib import resources
 
 from preparse.core import *
+from typing import *
+import math
 
 # Read URL of the Real Python feed from config file
 
 
 class TestDataToml(unittest.TestCase):
 
-    def get_data(self):
+    def get_data(self:Self)->dict:
         text: str = resources.read_text("preparse.tests", "data.toml")
         data: dict = tomllib.loads(text)
         return data
 
-    def test_0(self):
+    def test_0(self:Self)->None:
         data: dict = self.get_data()
         data = data["data"]
         for kwargs in data:
             self.parse(**kwargs)
 
     def parse(
-        self,
+        self:Self,
         *,
         query,
         solution,
