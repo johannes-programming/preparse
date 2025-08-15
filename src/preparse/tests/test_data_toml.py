@@ -43,7 +43,7 @@ class TestDataToml(unittest.TestCase):
             **kwargs,
         )
         msg: str = str(data)
-        answer = parser.parse_args(query)
+        answer: list = parser.parse_args(query)
         erranswer: list = list(capture)
         capture.clear()
         superanswer: list = parser.parse_args(answer)
