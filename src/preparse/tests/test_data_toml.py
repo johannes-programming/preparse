@@ -46,7 +46,7 @@ class TestDataToml(unittest.TestCase):
         answer = parser.parse_args(query)
         erranswer: list = list(capture)
         capture.clear()
-        superanswer = parser.parse_args(answer)
+        superanswer: list = parser.parse_args(answer)
         supererranswer: list = list(capture)
         capture.clear()
         self.assertEqual(answer, superanswer, msg=msg)
