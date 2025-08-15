@@ -25,6 +25,7 @@ class TestDataToml(unittest.TestCase):
         *,
         query,
         solution,
+        warnings,
         **kwargs,
     ):
         parser = PreParser(**kwargs)
