@@ -1,0 +1,73 @@
+import math
+import tomllib
+import unittest
+from importlib import resources
+from typing import *
+
+import click
+from click.testing import CliRunner
+
+from preparse.core import *
+
+
+class expit:
+
+    def function(x: float):
+        try:
+            p = math.exp(-x)
+        except OverflowError:
+            p = float("+inf")
+        return 1 / (1 + p)
+
+    @PreParser(reconcilesorders=True, expectsposix=False).click()
+    @click.command(add_help_option=False)
+    @click.help_option("-h", "--help")
+    @click.version_option("1.2.3", "-V", "--version")
+    @click.argument("x", type=float)
+    def main(x: float):
+        """applies the expit function to x"""
+        click.echo(expit.function(x))
+
+
+class TestMainFunction(unittest.TestCase):
+    def get_data(self: Self) -> dict:
+        text: str = resources.read_text("preparse.tests", "expit.toml")
+        data: dict = tomllib.loads(text)
+        return data
+
+    def istestable(self: Self, x: Any):
+        if not isinstance(x, float):
+            return True
+        if not math.isnan(x):
+            return True
+        return False
+
+    def parse(
+        self: Self,
+        *,
+        query,
+        exit_code,
+        output,
+        stdout,
+        stderr,
+    ) -> None:
+        runner = CliRunner()
+        result = runner.invoke(expit.main, query)
+        if self.istestable(exit_code):
+            self.assertEqual(exit_code, result.exit_code)
+        if self.istestable(output):
+            self.assertEqual(output, result.output)
+        if self.istestable(stdout):
+            self.assertEqual(stdout, result.stdout)
+        if self.istestable(stderr):
+            self.assertEqual(stderr, result.stderr)
+
+    def test_0(self: Self) -> None:
+        data: dict = self.get_data()
+        data = data["data"]
+        for kwargs in data:
+            self.parse(**kwargs)
+
+
+if __name__ == "__main__":
+    unittest.main()
