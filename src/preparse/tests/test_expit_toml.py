@@ -73,10 +73,11 @@ class TestMainFunction(unittest.TestCase):
 
     def test_0(self: Self) -> None:
         data: dict = utils.get_data()
-        data = data["data"]
+        name: str
         kwargs: dict
-        for kwargs in data:
-            self.parse(**kwargs)
+        for name, kwargs in data.items():
+            with self.subTest(msg=name, **kwargs):
+                self.parse(**kwargs)
 
 
 if __name__ == "__main__":
