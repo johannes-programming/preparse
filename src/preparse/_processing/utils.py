@@ -18,7 +18,15 @@ class BaseData:
 
     def todict(self: Self) -> dict:
         "This method returns a dict representing the current instance."
-        return dict(self._data)
+        ans: dict
+        try:
+            ans = self._data
+        except AttributeError:
+            self._data = dict()
+            ans = dict()
+        else:
+            ans = dict(ans)
+        return ans
 
 
 def dataprop(func: Callable) -> property:
