@@ -13,7 +13,17 @@ class TestPreParserWarnings(unittest.TestCase):
     def parse_with_warning(self, optdict, query):
         """Helper method to parse args and catch warnings."""
         parser = PreParser(
-            reconcilesorders=True, expectsposix=False, optdict=optdict, warn=warn
+            allowslong=True,
+            allowsshort=True,
+            bundling=2,
+            expandsabbr=True,
+            expectsabbr=True,
+            expectsposix=False,
+            optdict=optdict,
+            prog="warn_9001",
+            reconcilesorders=True,
+            special=2,
+            warn=warn,
         )
         with wrn.catch_warnings(record=True) as w:
             wrn.simplefilter("always")
