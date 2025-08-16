@@ -6,8 +6,6 @@ from typing import *
 
 from preparse.core import *
 
-# Read URL of the Real Python feed from config file
-
 
 class utils:
     def get_data() -> dict:
