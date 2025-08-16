@@ -75,7 +75,19 @@ class Bundle(Option):
 
     @classmethod
     def _split_shortonly(cls: type, chars: str) -> list[str]:
-        raise NotImplementedError
+        ans: list[str] = list()
+        x: str = chars
+        while x:
+            if x == "-":
+                ans[0] = "-" + ans[0]
+                x = ""
+            elif x.endswith("-"):
+                ans.insert(0, x[-2:])
+                x = x[:-2]
+            else:
+                ans.insert(0, x[-1])
+                x = x[:-1]
+        return ans
 
     def deparse(self: Self) -> list[str]:
         if self.right is None:
