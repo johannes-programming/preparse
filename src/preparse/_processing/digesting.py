@@ -141,36 +141,24 @@ def digest_special_min(
     expectsposix: bool,
     reconcilesorders: bool,
 ) -> list[Item]:
-    if expectsposix and not reconcilesorders:
-        return digest_special_min_posix(items)
-    else:
-        return digest_special_min_nonposix(items)
-
-
-def digest_special_min_nonposix(
-    items: list[Item],
-) -> list[Item]:
-    raise NotImplementedError
-
-
-def digest_special_min_posix(
-    items: list[Item],
-) -> list[Item]:
     ans: list[Item] = list(items)
-    deletable: bool = True
+    isdel: bool = True
+    isposix: bool = expectsposix and not reconcilesorders
     i: int = len(items)
     while True:
         i -= 1
         if i == -1:
-            deletable = False
+            isdel = False
             break
         if isinstance(ans[i], Option):
-            deletable = False
+            isdel = False
             break
         if isinstance(ans[i], Special):
             break
-        deletable = ans[i].isobvious()
-    if deletable:
+        isdel = ans[i].isobvious()
+        if not (isdel or isposix):
+            break
+    if isdel:
         ans.pop(i)
     return ans
 
