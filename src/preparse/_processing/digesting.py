@@ -69,7 +69,11 @@ def digest_bundling(
     return items
 
 
-def digest_bundling_min(items: list[Item], *, allowslong: bool) -> list[Item]:
+def digest_bundling_min(
+    items: list[Item],
+    *,
+    allowslong: bool,
+) -> list[Item]:
     ans: list[Item] = list()
     item: Item
     for item in items:
