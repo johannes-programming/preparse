@@ -31,7 +31,7 @@ keywords = []
 name = "preparse"
 readme = "README.rst"
 requires-python = ">=3.11"
-version = "0.2.0+master.expit.toml"
+version = "0.2.0+master.split.shortonly"
 
 [project.license]
 file = "LICENSE.txt"
