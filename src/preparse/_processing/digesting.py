@@ -19,16 +19,16 @@ def digest(
 ) -> list[Item]:
     ans: list[Item] = list(items)
     ans = digest_abbr(ans, expandsabbr=expandsabbr)
+    ans = digest_order(
+        items,
+        expectsposix=expectsposix,
+        reconcilesorders=reconcilesorders,
+    )
     ans = digest_special(
         ans,
         expectsposix=expectsposix,
         reconcilesorders=reconcilesorders,
         special=special,
-    )
-    ans = digest_order(
-        items,
-        expectsposix=expectsposix,
-        reconcilesorders=reconcilesorders,
     )
     ans = digest_bundling(ans, bundling=bundling, allowslong=allowslong)
     return ans
@@ -141,7 +141,38 @@ def digest_special_min(
     expectsposix: bool,
     reconcilesorders: bool,
 ) -> list[Item]:
+    if expectsposix and not reconcilesorders:
+        return digest_special_min_posix(items)
+    else:
+        return digest_special_min_nonposix(items)
+
+
+def digest_special_min_nonposix(
+    items: list[Item],
+) -> list[Item]:
     raise NotImplementedError
+
+
+def digest_special_min_posix(
+    items: list[Item],
+) -> list[Item]:
+    ans: list[Item] = list(items)
+    deletable: bool = True
+    i: int = len(items)
+    while True:
+        i -= 1
+        if i == -1:
+            deletable = False
+            break
+        if isinstance(ans[i], Option):
+            deletable = False
+            break
+        if isinstance(ans[i], Special):
+            break
+        deletable = ans[i].isobvious()
+    if deletable:
+        ans.pop(i)
+    return ans
 
 
 def digest_special_max(items: list[Item]) -> list[Item]:
