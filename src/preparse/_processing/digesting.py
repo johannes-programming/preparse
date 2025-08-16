@@ -152,8 +152,28 @@ def digest_special(
     return list(items)
 
 
+def digest_special_max(items: list[Item]) -> list[Item]:
+    ans: list[Item] = list(items)
+    i: int = len(items)
+    while True:
+        i -= 1
+        if i == -1:
+            break
+        if isinstance(ans[i], Special):
+            break
+        if isinstance(ans[i], Positional):
+            continue
+        if ans[i].ishungry():
+            ans[i].joined = False
+            ans[i].value = "--"
+        ans.insert(i + 1, Special())
+        break
+    return ans
+
+
 def digest_special_min(
     items: list[Item],
+    *,
     expectsposix: bool,
     reconcilesorders: bool,
 ) -> list[Item]:
@@ -177,7 +197,3 @@ def digest_special_min(
     if isdel:
         ans.pop(i)
     return ans
-
-
-def digest_special_max(items: list[Item]) -> list[Item]:
-    raise NotImplementedError  # remember hungry option
