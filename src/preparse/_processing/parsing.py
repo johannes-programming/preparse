@@ -131,52 +131,43 @@ def parse_long(
 ) -> Long:
     parts: list[str] = arg.split("=", 1)
     ans: Long = Long(fullkey=parts.pop(0))
-    ans.abbrlen = len(ans.fullkey)
     if len(parts):
         ans.joined = True
         ans.right = parts.pop()
-    ans.fullkey = parse_long_full(
-        ans,
-        cause=cause,
-        expectsabbr=expectsabbr,
-        keys=list(optdict.keys()),
-    )
-    try:
+    ans.abbrlen = len(ans.fullkey)
+    if ans.fullkey in optdict.keys():
         ans.nargs = optdict[ans.fullkey]
         if (ans.nargs == Nargs.NO_ARGUMENT) and (ans.right is not None):
             cause(PUAW, option=ans.fullkey)
-    except KeyError:
+        return ans
+    if expectsabbr:
+        parts = parse_long_startswith(ans.abbr, keys=optdict.keys())
+    else:
+        parts = list()  # can be assumed
+    if len(parts) == 0:
         ans.nargs = Nargs.OPTIONAL_ARGUMENT
         cause(PUOW, option=arg)
+        return ans
+    if len(parts) >= 2:
+        ans.nargs = Nargs.OPTIONAL_ARGUMENT
+        cause(PAOW, option=arg, possibilities=parts)
+        return ans
+    (ans.fullkey,) = parts
+    ans.nargs = optdict[ans.fullkey]
     return ans
 
 
-def parse_long_full(
-    item: Long,
+def parse_long_startswith(
+    abbr: str,
     *,
-    cause: FunctionType,
-    expectsabbr: bool,
-    keys: list[str],
-) -> str:
-    if item.fullkey in keys:
-        return item.fullkey
-    if not expectsabbr:
-        cause(PUOW, option=arg)
+    keys: Iterable[str],
+):
     x: str
-    pos: list[str] = list()
+    ans: list[str] = list()
     for x in keys:
-        if x.startswith(item.fullkey):
-            pos.append(x)
-    if len(pos) == 1:
-        return pos[0]
-    arg: str = item.fullkey
-    if item.joined:
-        arg += "=" + item.right
-    if len(pos) == 0:
-        cause(PUOW, option=arg)
-    else:
-        cause(PAOW, option=arg, possibilities=pos)
-    return item.fullkey
+        if x.startswith(abbr):
+            ans.append(x)
+    return ans
 
 
 def parse_bundling(

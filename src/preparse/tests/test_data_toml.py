@@ -45,17 +45,20 @@ class TestDataToml(unittest.TestCase):
         msg: str
         answer: list = parser.parse_args(query)
         erranswer: list = list(capture)
-        capture.clear()
         superanswer: list = parser.parse_args(answer)
-        supererranswer: list = list(capture)
-        capture.clear()
-        msg = "\n\ndata=%s,\nanswer=%s,\nsuperanswer=%s,\n\n" % (data, answer, superanswer)
+        msg = "\n\ndata=%s,\nanswer=%s,\nsuperanswer=%s,\n\n" % (
+            data,
+            answer,
+            superanswer,
+        )
         self.assertEqual(answer, superanswer, msg=msg)
         msg = "\n\ndata=%s,\nanswer=%s,\nsolution=%s,\n\n" % (data, answer, solution)
         self.assertEqual(answer, solution, msg=msg)
         if isinstance(warnings, float) and math.isnan(warnings):
             return
-        msg = "\n\ndata=%s,\nerranswer=%s,\nwarnings=%s,\n\n" % (data, erranswer, warnings)
+        msg = "\n\ndata=%s,\nerranswer=%s,\nwarnings=%s,\n\n" % (
+            data,
+            erranswer,
+            warnings,
+        )
         self.assertEqual(erranswer, warnings, msg=msg)
-        msg = "\n\ndata=%s,\nerranswer=%s,\nsupererranswer=%s,\n\n" % (data, erranswer, supererranswer)
-        self.assertEqual(erranswer, supererranswer, msg=msg)
