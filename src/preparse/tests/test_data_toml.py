@@ -9,15 +9,24 @@ from preparse.core import *
 # Read URL of the Real Python feed from config file
 
 
-class TestDataToml(unittest.TestCase):
-
-    def get_data(self: Self) -> dict:
+class utils:
+    def get_data() -> dict:
         text: str = resources.read_text("preparse.tests", "data.toml")
         data: dict = tomllib.loads(text)
         return data
 
+    def istestable(x: Any) -> bool:
+        if not isinstance(x, float):
+            return True
+        if not math.isnan(x):
+            return True
+        return False
+
+
+class TestDataToml(unittest.TestCase):
+
     def test_0(self: Self) -> None:
-        data: dict = self.get_data()
+        data: dict = utils.get_data()
         data = data["data"]
         for kwargs in data:
             self.parse(**kwargs)
@@ -54,7 +63,7 @@ class TestDataToml(unittest.TestCase):
         self.assertEqual(answer, superanswer, msg=msg)
         msg = "\n\ndata=%s,\nanswer=%s,\nsolution=%s,\n\n" % (data, answer, solution)
         self.assertEqual(answer, solution, msg=msg)
-        if isinstance(warnings, float) and math.isnan(warnings):
+        if not utils.istestable(warnings):
             return
         msg = "\n\ndata=%s,\nerranswer=%s,\nwarnings=%s,\n\n" % (
             data,
