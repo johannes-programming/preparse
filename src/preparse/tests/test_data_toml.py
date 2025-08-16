@@ -25,9 +25,8 @@ class TestDataToml(unittest.TestCase):
 
     def test_0(self: Self) -> None:
         data: dict = utils.get_data()
-        data = data["data"]
-        for kwargs in data:
-            with self.subTest(**kwargs):
+        for name, kwargs in data.items():
+            with self.subTest(msg=name, **kwargs):
                 self.parse(**kwargs)
 
     def parse(
