@@ -24,7 +24,7 @@ class expit:
     @click.help_option("-h", "--help")
     @click.version_option("1.2.3", "-V", "--version")
     @click.argument("x", type=float)
-    def main(x: float):
+    def main(x: float) -> None:
         """applies the expit function to x"""
         click.echo(expit.function(x))
 
@@ -35,7 +35,7 @@ class utils:
         data: dict = tomllib.loads(text)
         return data
 
-    def istestable(x: Any):
+    def istestable(x: Any) -> bool:
         if not isinstance(x, float):
             return True
         if not math.isnan(x):
