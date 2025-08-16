@@ -20,16 +20,16 @@ class BasePreParser(BaseData):
     def __init__(
         self: Self,
         *,
-        optdict: Any = None,
-        prog: Any = None,
-        expectsabbr: Any = True,
-        expandsabbr: Any = True,
-        bundling: Any = Tuning.MAINTAIN,
-        special: Any = Tuning.MAINTAIN,
         allowslong: Any = True,
         allowsshort: Any = True,
+        bundling: Any = Tuning.MAINTAIN,
+        expandsabbr: Any = True,
+        expectsabbr: Any = True,
         expectsposix: Any = False,
+        optdict: Any = None,
+        prog: Any = None,
         reconcilesorders: Any = True,
+        special: Any = Tuning.MAINTAIN,
         warn: Callable = str,
     ) -> None:
         "This magic method initializes self."
