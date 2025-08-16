@@ -124,11 +124,8 @@ class Long(Option):
             return operator.index(x)
 
     @dataprop
-    def joined(self: Self, x: Any) -> bool | str:
-        try:
-            return bool(operator.index(x))
-        except:
-            return str(x)
+    def joined(self: Self, x: Any) -> bool:
+        return operator.index(x)
 
     @dataprop
     def right(self: Self, x: Any) -> Optional[str]:
