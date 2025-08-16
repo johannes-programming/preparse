@@ -29,18 +29,21 @@ class expit:
         click.echo(expit.function(x))
 
 
-class TestMainFunction(unittest.TestCase):
-    def get_data(self: Self) -> dict:
+class utils:
+    def get_data() -> dict:
         text: str = resources.read_text("preparse.tests", "expit.toml")
         data: dict = tomllib.loads(text)
         return data
 
-    def istestable(self: Self, x: Any):
+    def istestable(x: Any):
         if not isinstance(x, float):
             return True
         if not math.isnan(x):
             return True
         return False
+
+
+class TestMainFunction(unittest.TestCase):
 
     def parse(
         self: Self,
@@ -53,17 +56,17 @@ class TestMainFunction(unittest.TestCase):
     ) -> None:
         runner = CliRunner()
         result = runner.invoke(expit.main, query)
-        if self.istestable(exit_code):
+        if utils.istestable(exit_code):
             self.assertEqual(exit_code, result.exit_code)
-        if self.istestable(output):
+        if utils.istestable(output):
             self.assertEqual(output, result.output)
-        if self.istestable(stdout):
+        if utils.istestable(stdout):
             self.assertEqual(stdout, result.stdout)
-        if self.istestable(stderr):
+        if utils.istestable(stderr):
             self.assertEqual(stderr, result.stderr)
 
     def test_0(self: Self) -> None:
-        data: dict = self.get_data()
+        data: dict = utils.get_data()
         data = data["data"]
         for kwargs in data:
             self.parse(**kwargs)
