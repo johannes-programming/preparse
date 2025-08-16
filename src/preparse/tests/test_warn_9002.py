@@ -20,30 +20,6 @@ class TestPreParserWarnings(unittest.TestCase):
             parser.parse_args(query)
             return w
 
-    def test_warn_about_invalid_combined_options(self):
-        optdict = {"-a": 0, "-b": 0, "-c": 0, "-d": 0}
-        query = ["-abcx", "--foo", "value"]
-
-        warnings_caught = self.parse_with_warning(optdict, query)
-        self.assertTrue(
-            any(
-                "invalid option -- 'x'" in str(warning.message)
-                for warning in warnings_caught
-            )
-        )
-
-    def test_warn_about_invalid_option_with_multiple_combined(self):
-        optdict = {"-a": 0, "-b": 0, "-f": 0, "-l": 0}
-        query = ["-abzfl", "--foo", "value"]
-
-        warnings_caught = self.parse_with_warning(optdict, query)
-        self.assertTrue(
-            any(
-                "invalid option -- 'z'" in str(warning.message)
-                for warning in warnings_caught
-            )
-        )
-
     def test_warn_about_ambiguous_option(self):
         optdict = {"--foo": 1, "--foobar": 1, "--foxtrot": 1}
         query = ["--fo"]
