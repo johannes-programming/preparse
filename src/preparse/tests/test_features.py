@@ -1,21 +1,22 @@
 import unittest
+from typing import *
 
 from preparse.core import *
 
 
 class TestPreparse(unittest.TestCase):
 
-    def test_nargs_enum(self):
+    def test_nargs_enum(self: Self):
         self.assertEqual(Nargs.NO_ARGUMENT, 0)
         self.assertEqual(Nargs.REQUIRED_ARGUMENT, 1)
         self.assertEqual(Nargs.OPTIONAL_ARGUMENT, 2)
 
-    def test_preparser_copy(self):
+    def test_preparser_copy(self: Self):
         parser = PreParser()
         parser_copy = parser.copy()
         self.assertEqual(parser.optdict, parser_copy.optdict)
 
-    def test_preparser_todict(self):
+    def test_preparser_todict(self: Self):
         parser = PreParser()
         result = parser.todict()
         expected_keys = [
@@ -24,7 +25,7 @@ class TestPreparse(unittest.TestCase):
         ]
         self.assertTrue(all(key in result for key in expected_keys))
 
-    def test_preparser_click_decorator(self):
+    def test_preparser_click_decorator(self: Self):
         parser = PreParser()
         click_decorator = parser.click()
         self.assertIsInstance(click_decorator, Click)
