@@ -135,7 +135,12 @@ def digest_order_key(item: Item) -> int:
     return item.sortkey()
 
 
-def digest_special(items: list[Item], *, special: Tuning, **kwargs: Any) -> list[Item]:
+def digest_special(
+    items: list[Item],
+    *,
+    special: Tuning,
+    **kwargs: Any,
+) -> list[Item]:
     if special == Tuning.MINIMIZE:
         return digest_special_min(items, **kwargs)
     if special == Tuning.MAXIMIZE:
