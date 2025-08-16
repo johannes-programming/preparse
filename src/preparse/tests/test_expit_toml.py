@@ -48,12 +48,12 @@ class TestMainFunction(unittest.TestCase):
     def parse(
         self: Self,
         *,
-        query,
-        exit_code,
-        output,
-        prog,
-        stdout,
-        stderr,
+        query: Any,
+        exit_code: Any,
+        output: Any,
+        prog: Any,
+        stdout: Any,
+        stderr: Any,
     ) -> None:
         runner: CliRunner = CliRunner()
         extra: dict = dict()
