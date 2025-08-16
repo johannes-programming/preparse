@@ -1,0 +1,6 @@
+[[data]]
+query = ["0.5"]
+exit_code = 0
+output = "0.6224593312018546\n"
+stdout = "0.6224593312018546\n"
+stderr = ""
