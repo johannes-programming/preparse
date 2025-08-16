@@ -51,11 +51,17 @@ class TestMainFunction(unittest.TestCase):
         query,
         exit_code,
         output,
+        prog,
         stdout,
         stderr,
     ) -> None:
-        runner = CliRunner()
-        result = runner.invoke(expit.main, query)
+        runner: CliRunner = CliRunner()
+        extra: dict = dict()
+        extra["cli"] = expit.main
+        extra["args"] = query
+        if utils.istestable(prog):
+            extra["prog_name"] = prog
+        result: Any = runner.invoke(**extra)
         if utils.istestable(exit_code):
             self.assertEqual(exit_code, result.exit_code)
         if utils.istestable(output):
@@ -68,6 +74,7 @@ class TestMainFunction(unittest.TestCase):
     def test_0(self: Self) -> None:
         data: dict = utils.get_data()
         data = data["data"]
+        kwargs: dict
         for kwargs in data:
             self.parse(**kwargs)
 
