@@ -26,7 +26,7 @@ def digest(
         special=special,
     )
     ans = digest_order(
-        items,
+        ans,
         expectsposix=expectsposix,
         reconcilesorders=reconcilesorders,
     )
