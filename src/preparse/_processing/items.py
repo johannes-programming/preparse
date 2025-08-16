@@ -55,7 +55,7 @@ class Bundle(Option):
         self: Self,
         *,
         chars: str,
-        joined: bool | str = False,
+        joined: bool = False,
         right: Optional[str] = None,
     ) -> None:
         self.chars = chars
