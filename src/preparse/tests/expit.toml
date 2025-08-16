@@ -1,4 +1,4 @@
-[[data]]
+[run0]
 query = [
     "0.5",
 ]
@@ -8,7 +8,7 @@ prog = nan
 stdout = "0.6224593312018546\n"
 stderr = ""
 
-[[data]]
+[run1]
 query = [
     "0",
 ]
@@ -18,7 +18,7 @@ prog = nan
 stdout = "0.5\n"
 stderr = ""
 
-[[data]]
+[run2]
 query = [
     "1",
 ]
@@ -28,7 +28,7 @@ prog = nan
 stdout = "0.7310585786300049\n"
 stderr = ""
 
-[[data]]
+[run3]
 query = [
     "--",
     "-1",
@@ -39,7 +39,7 @@ prog = nan
 stdout = "0.2689414213699951\n"
 stderr = ""
 
-[[data]]
+[run4]
 query = [
     "-h",
 ]
@@ -49,7 +49,7 @@ prog = nan
 stdout = nan
 stderr = nan
 
-[[data]]
+[run5]
 query = [
     "-V",
 ]
@@ -59,7 +59,7 @@ prog = nan
 stdout = nan
 stderr = nan
 
-[[data]]
+[run6]
 query = [
     "invalid",
 ]
