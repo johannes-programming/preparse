@@ -130,9 +130,9 @@ def digest_order_key(item: Item) -> int:
 
 def digest_special(items: list[Item], *, special: Tuning, **kwargs: Any) -> list[Item]:
     if special == Tuning.MINIMIZE:
-        return digest_bundling_min(items, **kwargs)
+        return digest_special_min(items, **kwargs)
     if special == Tuning.MAXIMIZE:
-        return digest_bundling_max(items)
+        return digest_special_max(items)
     return list(items)
 
 
