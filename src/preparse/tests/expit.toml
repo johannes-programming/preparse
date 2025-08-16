@@ -2,5 +2,70 @@
 query = ["0.5"]
 exit_code = 0
 output = "0.6224593312018546\n"
+prog = nan
 stdout = "0.6224593312018546\n"
 stderr = ""
+
+[[data]]
+query = ["0"]
+exit_code = 0
+output = "0.5\n"
+prog = nan
+stdout = "0.5\n"
+stderr = ""
+
+[[data]]
+query = ["1"]
+exit_code = 0
+output = "0.7310585786300049\n"
+prog = nan
+stdout = "0.7310585786300049\n"
+stderr = ""
+
+[[data]]
+query = ["--", "-1"]
+exit_code = 0
+output = "0.2689414213699951\n"
+prog = nan
+stdout = "0.2689414213699951\n"
+stderr = ""
+
+[[data]]
+query = ["-h"]
+exit_code = 0
+output = """Usage: main [OPTIONS] X
+
+  applies the expit function to x
+
+Options:
+  -h, --help     Show this message and exit.
+  -V, --version  Show the version and exit.
+"""
+
+prog = nan
+stdout = nan
+stderr = nan
+
+
+
+
+[[data]]
+query = ["-V"]
+exit_code = 0
+output = "main, version 1.2.3\n"
+prog = nan
+stdout = nan
+stderr = nan
+
+
+
+[[data]]
+query = ["invalid"]
+exit_code = 2
+output = nan
+prog = nan
+stdout = nan
+stderr = """Usage: main [OPTIONS] X
+
+Error: Invalid value for 'X': 'invalid' is not a valid float.
+"""
