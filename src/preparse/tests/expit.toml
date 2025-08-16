@@ -4,7 +4,7 @@ query = [
 ]
 exit_code = 0
 output = "0.6224593312018546\n"
-prog = nan
+prog = "HelloWorld"
 stdout = "0.6224593312018546\n"
 stderr = ""
 
@@ -14,7 +14,7 @@ query = [
 ]
 exit_code = 0
 output = "0.5\n"
-prog = nan
+prog = "HelloWorld"
 stdout = "0.5\n"
 stderr = ""
 
@@ -24,7 +24,7 @@ query = [
 ]
 exit_code = 0
 output = "0.7310585786300049\n"
-prog = nan
+prog = "HelloWorld"
 stdout = "0.7310585786300049\n"
 stderr = ""
 
@@ -35,7 +35,7 @@ query = [
 ]
 exit_code = 0
 output = "0.2689414213699951\n"
-prog = nan
+prog = "HelloWorld"
 stdout = "0.2689414213699951\n"
 stderr = ""
 
@@ -44,8 +44,8 @@ query = [
     "-h",
 ]
 exit_code = 0
-output = "Usage: main [OPTIONS] X\n\n  applies the expit function to x\n\nOptions:\n  -h, --help     Show this message and exit.\n  -V, --version  Show the version and exit.\n"
-prog = nan
+output = "Usage: HelloWorld [OPTIONS] X\n\n  applies the expit function to x\n\nOptions:\n  -h, --help     Show this message and exit.\n  -V, --version  Show the version and exit.\n"
+prog = "HelloWorld"
 stdout = nan
 stderr = nan
 
@@ -54,8 +54,8 @@ query = [
     "-V",
 ]
 exit_code = 0
-output = "main, version 1.2.3\n"
-prog = nan
+output = "HelloWorld, version 1.2.3\n"
+prog = "HelloWorld"
 stdout = nan
 stderr = nan
 
