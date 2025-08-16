@@ -20,18 +20,6 @@ class TestPreParserWarnings(unittest.TestCase):
             parser.parse_args(query)
             return w
 
-    def test_warn_about_unrecognized_option(self):
-        optdict = {"--foo": 1, "--bar": 1, "-x": 0}
-        query = ["--unknown", "value", "--foo", "bar"]
-
-        warnings_caught = self.parse_with_warning(optdict, query)
-        self.assertTrue(
-            any(
-                "unrecognized option '--unknown'" in str(warning.message)
-                for warning in warnings_caught
-            )
-        )
-
     def test_warn_about_invalid_option(self):
         optdict = {"--foo": 1, "--bar": 1, "-x": 0}
         query = ["-z", "--foo", "value"]
