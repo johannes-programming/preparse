@@ -33,7 +33,11 @@ def digest(
         expectsposix=expectsposix,
         reconcilesorders=reconcilesorders,
     )
-    ans = digest_bundling(ans, bundling=bundling, allowslong=allowslong)
+    ans = digest_bundling(
+        ans,
+        bundling=bundling,
+        allowslong=allowslong,
+    )
     return ans
 
 
