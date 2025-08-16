@@ -1,4 +1,4 @@
-[run0]
+[run00000go]
 query = [
     "0.5",
 ]
@@ -8,7 +8,7 @@ prog = "HelloWorld"
 stdout = "0.6224593312018546\n"
 stderr = ""
 
-[run1]
+[run00001go]
 query = [
     "0",
 ]
@@ -18,7 +18,7 @@ prog = "HelloWorld"
 stdout = "0.5\n"
 stderr = ""
 
-[run2]
+[run00002go]
 query = [
     "1",
 ]
@@ -28,7 +28,7 @@ prog = "HelloWorld"
 stdout = "0.7310585786300049\n"
 stderr = ""
 
-[run3]
+[run00003go]
 query = [
     "--",
     "-1",
@@ -39,7 +39,7 @@ prog = "HelloWorld"
 stdout = "0.2689414213699951\n"
 stderr = ""
 
-[run4]
+[run00004go]
 query = [
     "-h",
 ]
@@ -49,7 +49,7 @@ prog = "HelloWorld"
 stdout = nan
 stderr = nan
 
-[run5]
+[run00005go]
 query = [
     "-V",
 ]
@@ -59,7 +59,7 @@ prog = "HelloWorld"
 stdout = nan
 stderr = nan
 
-[run6]
+[run00006go]
 query = [
     "invalid",
 ]
