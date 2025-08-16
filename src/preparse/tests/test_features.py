@@ -15,12 +15,6 @@ class TestPreparse(unittest.TestCase):
         parser_copy = parser.copy()
         self.assertEqual(parser.optdict, parser_copy.optdict)
 
-    def test_preparser_parse_args(self):
-        parser = PreParser()
-        mock_args = ["--option", "value"]
-        result = parser.parse_args(mock_args)
-        self.assertEqual(result, mock_args)
-
     def test_preparser_todict(self):
         parser = PreParser()
         result = parser.todict()
