@@ -92,7 +92,7 @@ class Bundle(Option):
     def deparse(self: Self) -> list[str]:
         if self.right is None:
             return ["-" + self.chars]
-        if self.joined:
+        elif self.joined:
             return ["-" + self.chars + self.right]
         else:
             return ["-" + self.chars, self.right]
@@ -153,7 +153,7 @@ class Long(Option):
     def deparse(self: Self) -> list[str]:
         if self.right is None:
             return [self.abbr]
-        if self.joined:
+        elif self.joined:
             return [self.abbr + "=" + self.right]
         else:
             return [self.abbr, self.right]
