@@ -12,7 +12,7 @@ from preparse.core import *
 
 class expit:
 
-    def function(x: float):
+    def function(x: float) -> float:
         try:
             p = math.exp(-x)
         except OverflowError:
