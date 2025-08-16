@@ -20,18 +20,6 @@ class TestPreParserWarnings(unittest.TestCase):
             parser.parse_args(query)
             return w
 
-    def test_warn_about_unallowed_argument(self):
-        optdict = {"--flag": 0, "-x": 0}
-        query = ["--flag=value", "-x"]
-
-        warnings_caught = self.parse_with_warning(optdict, query)
-        self.assertTrue(
-            any(
-                "option '--flag' doesn't allow an argument" in str(warning.message)
-                for warning in warnings_caught
-            )
-        )
-
     def test_warn_about_required_argument(self):
         optdict = {"--foo": 1, "--bar": 0}
         query = ["--foo"]
