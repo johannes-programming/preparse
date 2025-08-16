@@ -18,7 +18,10 @@ def digest(
     special: Tuning,
 ) -> list[Item]:
     ans: list[Item] = list(items)
-    ans = digest_abbr(ans, expandsabbr=expandsabbr)
+    ans = digest_abbr(
+        ans,
+        expandsabbr=expandsabbr,
+    )
     ans = digest_special(
         ans,
         expectsposix=expectsposix,
