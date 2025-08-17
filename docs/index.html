@@ -78,11 +78,22 @@ def main(x: float) -&gt; None:
                                     <dd>
                                         <p>Calling the class creates und returns a new instance.</p>
                                         <dl class="heading4">
-                                            <dt id="PreParser.abbr">abbr</dt>
+                                            <dt id="PreParser.allowslong">allowslong</dt>
                                             <dd>
                                                 <p>
-                                                    This property determines the approach of the instance 
-                                                    to abbreviations of long options.
+                                                    This boolean property determines whether long options are allowed.
+                                                </p>
+                                            </dd>
+                                            <dt id="PreParser.allowsshort">allowsshort</dt>
+                                            <dd>
+                                                <p>
+                                                    This boolean property determines whether short options are allowed.
+                                                </p>
+                                            </dd>
+                                            <dt id="PreParser.bundling">bundling</dt>
+                                            <dd>
+                                                <p>
+                                                    This <code><a href="#Tuning.__new__">Tuning</a></code> property determines the approach to bundling of short option.
                                                 </p>
                                             </dd>
                                             <dt id="PreParser.click">
@@ -104,24 +115,30 @@ def main(x: float) -&gt; None:
                                                     This method returns a copy of the current instance. 
                                                 </p>
                                             </dd>
+                                            <dt id="PreParser.expandsabbr">expandsabbr</dt>
+                                            <dd>
+                                                <p>
+                                                    This boolean property determines whether recognized abbreviations of long options are to be expanded to their full length.
+                                                </p>
+                                            </dd>
+                                            <dt id="PreParser.expectsabbr">expectsabbr</dt>
+                                            <dd>
+                                                <p>
+                                                    This boolean property determines whether abbreviations of long options are expected.
+                                                </p>
+                                            </dd>
+                                            <dt id="PreParser.expectsposix">expectsposix</dt>
+                                            <dd>
+                                                <p>
+                                                    This boolean property determines whether the order of arguments to conform to the POSIX standard, i.e. all arguments after the first positional argument also being positonal.
+                                                </p>
+                                            </dd>
                                             <dt id="PreParser.optdict">optdict</dt>
                                             <dd>
                                                 <p>
                                                     This property holds a dictionary. 
                                                     Its keys are the options. 
                                                     Its values specify nargs.
-                                                </p>
-                                            </dd>
-                                            <dt id="PreParser.order">order</dt>
-                                            <dd>
-                                                <p>
-                                                    This property decides how to order flags and positional arguments.
-                                                    Passing a value equal to <code>"infer_given"</code> to the property 
-                                                    saves <code>Order.POSIX</code> to the property 
-                                                    if <code>bool(os.environ.get("POSIXLY_CORRECT"))</code> and elsewise <code>Order.GIVEN</code>.
-                                                    Passing a value equal to <code>"infer_permute"</code> to the property 
-                                                    saves <code>Order.POSIX</code> to the property 
-                                                    if <code>bool(os.environ.get("POSIXLY_CORRECT"))</code> and elsewise <code>Order.PERMUTE</code>.
                                                 </p>
                                             </dd>
                                             <dt id="PreParser.parse_args">
@@ -145,6 +162,12 @@ def main(x: float) -&gt; None:
                                                     then <code>str(sys.argv[0])</code> is saved.
                                                 </p>
                                             </dd>
+                                            <dt id="PreParser.reconcilesorders">reconcilesorders</dt>
+                                            <dd>
+                                                <p>
+                                                    This boolean property determines whether compatibility with both orders, POSIX and the interleaving of options with positonal arguments, should be enforced.
+                                                </p>
+                                            </dd>
                                             <dt id="PreParser.reflectClickCommand">
                                                 reflectClickCommand(cmd: click.Command) -&gt; None
                                             </dt>
@@ -163,6 +186,12 @@ def main(x: float) -&gt; None:
                                                     This method alters the current instance 
                                                     to reflect a <code><a href="https://click.palletsprojects.com/en/stable/api/#click.Context">click.Context</a></code> object. 
                                                     Concretely the <code><a href="#PreParser.prog">prog</a></code> property is changed.
+                                                </p>
+                                            </dd>
+                                            <dt id="PreParser.special">special</dt>
+                                            <dd>
+                                                <p>
+                                                    This <code><a href="#Tuning.__new__">Tuning</a></code> property determines the approach to the special argument <code>'--'</code>.
                                                 </p>
                                             </dd>
                                             <dt id="PreParser.todict">todict() -&gt; dict</dt>
@@ -243,8 +272,8 @@ def main(x: float) -&gt; None:
                                     is interpreted as <code>2</code> (meaning <i>intermediate</i>).
                                 </p>
                                 <dl class="heading4">
-                                    <dt id="Abbr.__new__">
-                                        class preparse.Abbr
+                                    <dt id="Tuning.__new__">
+                                        class preparse.Tuning
                                     </dt>
                                     <dd>
                                         <table>
@@ -254,46 +283,19 @@ def main(x: float) -&gt; None:
                                                 <th width="100%">Explanation</th>
                                             </tr>
                                             <tr>
-                                                <td><code>REJECT</code></td>
+                                                <td><code>MINIMIZE</code></td>
                                                 <td><code>0</code></td>
-                                                <td>The parser rejects abbreviations and interprets them as unknown options instead.</td>
+                                                <td>The <a href="#PreParser"><code>PreParser</code></a> minimizes the aspect in question.</td>
                                             </tr>
                                             <tr>
-                                                <td><code>KEEP</code></td>
+                                                <td><code>MAXIMIZE</code></td>
                                                 <td><code>1</code></td>
-                                                <td>The parser keeps abbreviations as abbreviations.</td>
+                                                <td>The <a href="#PreParser"><code>PreParser</code></a> maximizes the aspect in question.</td>
                                             </tr>
                                             <tr>
-                                                <td><code>COMPLETE</code></td>
+                                                <td><code>MAINTAIN</code></td>
                                                 <td><code>2</code></td>
-                                                <td>The parser replaces abbreviations with the full options.</td>
-                                            </tr>
-                                        </table>
-                                    </dd>
-                                    <dt id="Order.__new__">
-                                        class preparse.Order
-                                    </dt>
-                                    <dd>
-                                        <table>
-                                            <tr>
-                                                <th>Name</th>
-                                                <th>Value</th>
-                                                <th width="100%">Explanation</th>
-                                            </tr>
-                                            <tr>
-                                                <td><code>GIVEN</code></td>
-                                                <td><code>0</code></td>
-                                                <td>The parser does not seperate flags from positional arguments.</td>
-                                            </tr>
-                                            <tr>
-                                                <td><code>POSIX</code></td>
-                                                <td><code>1</code></td>
-                                                <td>The parser assumes the posix standard.</td>
-                                            </tr>
-                                            <tr>
-                                                <td><code>PERMUTE</code></td>
-                                                <td><code>2</code></td>
-                                                <td>The parser corrects to posix standard.</td>
+                                                <td>The <a href="#PreParser"><code>PreParser</code></a> does not make any unforced changes to the aspect in question.</td>
                                             </tr>
                                         </table>
                                     </dd>
