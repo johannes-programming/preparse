@@ -344,18 +344,18 @@ def main(x: float) -> None:
                                             possibilities: Any)
                                     </dt>
                                     <dd>
-                                        <p>This class warns about ambiguous options.</p>
+                                        <p>This class warns about ambiguous options. This can only happen for long options.</p>
                                     </dd>
                                     <dt id="PreparseInvalidOptionWarning.__new__">
                                         class preparse.PreparseInvalidOptionWarning(prog: Any,
-                                            option: Any)
+                                            option: Any, islong: Any)
                                     </dt>
                                     <dd>
                                         <p>This class warns about invalid options.</p>
                                     </dd>
                                     <dt id="PreparseRequiredArgumentWarning.__new__">
                                         class preparse.PreparseRequiredArgumentWarning(prog: Any,
-                                            option: Any)
+                                            option: Any, islong: Any)
                                     </dt>
                                     <dd>
                                         <p>This class warns about missing required arguments.</p>
@@ -365,14 +365,7 @@ def main(x: float) -> None:
                                             option: Any)
                                     </dt>
                                     <dd>
-                                        <p>This class warns about unallowed arguments.</p>
-                                    </dd>
-                                    <dt id="PreparseUnrecognizedOptionWarning.__new__">
-                                        class preparse.PreparseUnrecognizedOptionWarning(prog: Any, 
-                                            option: Any)
-                                    </dt>
-                                    <dd>
-                                        <p>This class warns about unrecognized options.</p>
+                                        <p>This class warns about unallowed arguments. This can only happen for long options.</p>
                                     </dd>
                                 </dl>
                             </dd>
