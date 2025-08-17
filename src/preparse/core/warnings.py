@@ -13,12 +13,15 @@ __all__ = [
 
 
 class PreparseWarning(Warning, metaclass=abc.ABCMeta):
-    def __init__(self: Self, **kwargs: Any) -> None:
-        "This magic method initializes the current instance."
-        for n in type(self).__slots__:
-            setattr(self, n, kwargs.pop(n))
-        for k, v in kwargs.items():
-            setattr(self, k, v)
+    @dataprop
+    def prog(self: Self, value: Any) -> str:
+        return str(value)
+
+    @dataprop
+    def option(self: Self, value: Any) -> str:
+        return str(value)
+
+    __slots__ = "_data"
 
     def __str__(self: Self) -> str:
         "This magic method implements str(self)."
@@ -37,14 +40,6 @@ class PreparseAmbiguousOptionWarning(PreparseWarning):
     # only possible with long options
 
     @dataprop
-    def prog(self: Self, value: Any) -> str:
-        return str(value)
-
-    @dataprop
-    def option(self: Self, value: Any) -> str:
-        return str(value)
-
-    @dataprop
     def possibilities(self: Self, value: Iterable) -> tuple[str]:
         l: list = list(value)
         i: int
@@ -52,8 +47,6 @@ class PreparseAmbiguousOptionWarning(PreparseWarning):
             l[i] = str(l[i])
         ans: tuple[str] = tuple(l)
         return ans
-
-    __slots__ = "_data"
 
     def __init__(
         self: Self, *, prog: Any, option: Any, possibilities: Iterable
@@ -72,19 +65,10 @@ class PreparseAmbiguousOptionWarning(PreparseWarning):
 
 
 class PreparseInvalidOptionWarning(PreparseWarning):
-    @dataprop
-    def prog(self: Self, value: Any) -> str:
-        return str(value)
-
-    @dataprop
-    def option(self: Self, value: Any) -> str:
-        return str(value)
 
     @dataprop
     def islong(self: Self, value: Any) -> bool:
         return bool(value)
-
-    __slots__ = "_data"
 
     def __init__(self: Self, *, prog: Any, option: Any, islong: Any) -> None:
         "This magic method initializes the current instance."
@@ -101,19 +85,10 @@ class PreparseInvalidOptionWarning(PreparseWarning):
 
 
 class PreparseRequiredArgumentWarning(PreparseWarning):
-    @dataprop
-    def prog(self: Self, value: Any) -> str:
-        return str(value)
-
-    @dataprop
-    def option(self: Self, value: Any) -> str:
-        return str(value)
 
     @dataprop
     def islong(self: Self, value: Any) -> bool:
         return bool(value)
-
-    __slots__ = "_data"
 
     def __init__(self: Self, *, prog: Any, option: Any, islong: Any) -> None:
         "This magic method initializes the current instance."
@@ -132,15 +107,6 @@ class PreparseRequiredArgumentWarning(PreparseWarning):
 class PreparseUnallowedArgumentWarning(PreparseWarning):
     # only possible for long options
     # option is always full key without value
-    @dataprop
-    def prog(self: Self, value: Any) -> str:
-        return str(value)
-
-    @dataprop
-    def option(self: Self, value: Any) -> str:
-        return str(value)
-
-    __slots__ = "_data"
 
     def __init__(self: Self, *, prog: Any, option: Any) -> None:
         "This magic method initializes the current instance."
