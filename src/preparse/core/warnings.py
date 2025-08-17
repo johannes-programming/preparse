@@ -35,7 +35,33 @@ class PreparseWarning(Warning, metaclass=abc.ABCMeta):
 
 class PreparseAmbiguousOptionWarning(PreparseWarning):
     # only possible with long options
-    __slots__ = ("prog", "option", "possibilities")
+
+    @dataprop
+    def prog(self: Self, value: Any) -> str:
+        return str(value)
+
+    @dataprop
+    def option(self: Self, value: Any) -> str:
+        return str(value)
+
+    @dataprop
+    def possibilities(self: Self, value: Iterable) -> tuple[str]:
+        l: list = list(value)
+        i: int
+        for i in range(len(l)):
+            l[i] = str(l[i])
+        ans: tuple[str] = tuple(l)
+        return ans
+
+    __slots__ = "_data"
+
+    def __init__(
+        self: Self, *, prog: Any, option: Any, possibilities: Iterable
+    ) -> None:
+        "This magic method initializes the current instance."
+        self.prog = prog
+        self.option = option
+        self.possibilities = possibilities
 
     def getmsg(self: Self) -> str:
         "This method returns the core message."
@@ -46,7 +72,25 @@ class PreparseAmbiguousOptionWarning(PreparseWarning):
 
 
 class PreparseInvalidOptionWarning(PreparseWarning):
-    __slots__ = ("prog", "option", "islong")
+    @dataprop
+    def prog(self: Self, value: Any) -> str:
+        return str(value)
+
+    @dataprop
+    def option(self: Self, value: Any) -> str:
+        return str(value)
+
+    @dataprop
+    def islong(self: Self, value: Any) -> bool:
+        return bool(value)
+
+    __slots__ = "_data"
+
+    def __init__(self: Self, *, prog: Any, option: Any, islong: Any) -> None:
+        "This magic method initializes the current instance."
+        self.prog = prog
+        self.option = option
+        self.islong = islong
 
     def getmsg(self: Self) -> str:
         "This method returns the core message."
@@ -57,7 +101,25 @@ class PreparseInvalidOptionWarning(PreparseWarning):
 
 
 class PreparseRequiredArgumentWarning(PreparseWarning):
-    __slots__ = ("prog", "option", "islong")
+    @dataprop
+    def prog(self: Self, value: Any) -> str:
+        return str(value)
+
+    @dataprop
+    def option(self: Self, value: Any) -> str:
+        return str(value)
+
+    @dataprop
+    def islong(self: Self, value: Any) -> bool:
+        return bool(value)
+
+    __slots__ = "_data"
+
+    def __init__(self: Self, *, prog: Any, option: Any, islong: Any) -> None:
+        "This magic method initializes the current instance."
+        self.prog = prog
+        self.option = option
+        self.islong = islong
 
     def getmsg(self: Self) -> str:
         "This method returns the core message."
