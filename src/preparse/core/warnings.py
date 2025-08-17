@@ -1,6 +1,8 @@
 import abc
 from typing import *
 
+from preparse._processing.utils import *
+
 __all__ = [
     "PreparseAmbiguousOptionWarning",
     "PreparseInvalidOptionWarning",
@@ -32,6 +34,7 @@ class PreparseWarning(Warning, metaclass=abc.ABCMeta):
 
 
 class PreparseAmbiguousOptionWarning(PreparseWarning):
+    # only possible with long options
     __slots__ = ("prog", "option", "possibilities")
 
     def getmsg(self: Self) -> str:
@@ -65,6 +68,8 @@ class PreparseRequiredArgumentWarning(PreparseWarning):
 
 
 class PreparseUnallowedArgumentWarning(PreparseWarning):
+    # only possible for long options
+    # option is always full key without value
     __slots__ = ("prog", "option")
 
     def getmsg(self: Self) -> str:
