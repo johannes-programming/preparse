@@ -165,7 +165,7 @@ def digest_special_max(items: list[Item]) -> list[Item]:
             continue
         if ans[i].ishungry():
             ans[i].joined = False
-            ans[i].value = "--"
+            ans[i].right = "--"
         ans.insert(i + 1, Special())
         break
     return ans
