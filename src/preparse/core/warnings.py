@@ -132,7 +132,20 @@ class PreparseRequiredArgumentWarning(PreparseWarning):
 class PreparseUnallowedArgumentWarning(PreparseWarning):
     # only possible for long options
     # option is always full key without value
-    __slots__ = ("prog", "option")
+    @dataprop
+    def prog(self: Self, value: Any) -> str:
+        return str(value)
+
+    @dataprop
+    def option(self: Self, value: Any) -> str:
+        return str(value)
+
+    __slots__ = "_data"
+
+    def __init__(self: Self, *, prog: Any, option: Any) -> None:
+        "This magic method initializes the current instance."
+        self.prog = prog
+        self.option = option
 
     def getmsg(self: Self) -> str:
         "This method returns the core message."
