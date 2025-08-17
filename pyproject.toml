@@ -20,6 +20,7 @@ classifiers = [
 ]
 dependencies = [
     "click>=8.1.7",
+    "datahold>=1.1.10",
     "datarepr>=0.0.4",
     "makeprop>=0.1",
     "overloadable>=1.0.9",
@@ -30,7 +31,7 @@ keywords = []
 name = "preparse"
 readme = "README.rst"
 requires-python = ">=3.11"
-version = "0.1.1"
+version = "0.1.1+docs"
 
 [project.license]
 file = "LICENSE.txt"

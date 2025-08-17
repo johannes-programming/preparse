@@ -9,6 +9,7 @@ from tofunc import tofunc
 from preparse._processing import *
 from preparse.core.Click import *
 from preparse.core.enums import *
+from preparse.core.Optdict import *
 from preparse.core.warnings import *
 
 __all__ = ["PreParser"]
@@ -27,7 +28,7 @@ class BasePreParser(BaseData):
         expandsabbr: Any = True,
         expectsabbr: Any = True,
         expectsposix: Any = False,
-        optdict: Any = None,
+        optdict: Any = (),
         prog: Any = None,
         reconcilesorders: Any = True,
         special: Any = Tuning.MAINTAIN,
@@ -77,18 +78,12 @@ class BasePreParser(BaseData):
     @dataprop
     def optdict(self: Self, value: Any) -> dict:
         "This property gives a dictionary of options."
-        dataA: dict
-        if value is None:
-            dataA = dict()
-        else:
-            dataA = dict(value)
-        dataB: dict = dict()
-        k: str
-        v: Nargs
-        for k, v in dataA.items():
-            dataB[str(k)] = Nargs(v)
-        self._optdict = dict(dataB)
-        return dataB
+        if "optdict" not in self._data.keys():
+            self._data["optdict"] = Optdict()
+        dataA: Optdict = Optdict(value)
+        self._data["optdict"].clear()
+        self._data["optdict"].update(dataA)
+        return self._data["optdict"]
 
     @dataprop
     def prog(self: Self, value: Any) -> str:
@@ -103,6 +98,7 @@ class BasePreParser(BaseData):
 
     @dataprop
     def special(self: Self, value: Any) -> Tuning:
+        "This Tuning property determines the approach towards the special argument."
         return Tuning(value)
 
     @dataprop
