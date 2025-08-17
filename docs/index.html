@@ -26,6 +26,9 @@
                             with the <a href="https://click.palletsprojects.com/en/stable/">click</a> project.
                         </p>
                         <p>
+                            The project <a>preparse</a> is strongly inspired by the <code>getopt</code> and <code>getopt_long</code> libraries within C.
+                        </p>
+                        <p>
                             Here is the implementation of the <a>expit</a> project (Version 1.0.13)
                             to illustrate how <a>preparse</a> can be used 
                             to modify <a href="https://click.palletsprojects.com/en/stable/">click</a>.
@@ -134,7 +137,8 @@ def main(x: float) -> None:
                                                 <p>
                                                     This property holds a dictionary. 
                                                     Its keys are the options. 
-                                                    Its values specify nargs.
+                                                    Its values specify <code><a href="#Nargs.__new__">Nargs</a></code>.
+                                                    Options not found within the dictionary cause a <code><a href="#PreparseInvalidOptionWarning.__new__">PreparseInvalidOptionWarning</a></code> and are then assumed to have no arguments.
                                                 </p>
                                             </dd>
                                             <dt id="PreParser.parse_args">
