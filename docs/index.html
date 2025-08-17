@@ -26,7 +26,7 @@
                             with the <a href="https://click.palletsprojects.com/en/stable/">click</a> project.
                         </p>
                         <p>
-                            Here is the implementation of the <a>expit</a> project (Version 1.0.10)
+                            Here is the implementation of the <a>expit</a> project (Version 1.0.13)
                             to illustrate how <a>preparse</a> can be used 
                             to modify <a href="https://click.palletsprojects.com/en/stable/">click</a>.
                         </p>
@@ -38,8 +38,8 @@ import preparse
 __all__ = ["function", "main"]
 
 
-def function(x: float) -&gt; float:
-    "The expit function."
+def function(x: float) -> float:
+    "This function is the logistical sigmoid, i.e. the expit function."
     try:
         p = math.exp(-x)
     except OverflowError:
@@ -52,8 +52,8 @@ def function(x: float) -&gt; float:
 @click.help_option("-h", "--help")
 @click.version_option(None, "-V", "--version")
 @click.argument("x", type=float)
-def main(x: float) -&gt; None:
-    "Apply the expit function to x."
+def main(x: float) -> None:
+    "This command applies the expit function to x."
     click.echo(function(x))</code></pre>
                     </dd>
                     <dt id="features">Features</dt>
