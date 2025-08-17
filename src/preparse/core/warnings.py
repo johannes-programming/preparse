@@ -36,8 +36,40 @@ class PreparseWarning(Warning, metaclass=abc.ABCMeta):
     def getmsg(self: Self) -> str: ...
 
 
-class PreparseAmbiguousOptionWarning(PreparseWarning):
-    # only possible with long options
+class PreparseDualWarning(PreparseWarning):
+
+    @dataprop
+    def islong(self: Self, value: Any) -> bool:
+        return bool(value)
+
+    def __init__(self: Self, *, prog: Any, option: Any, islong: Any) -> None:
+        "This magic method initializes the current instance."
+        self.prog = prog
+        self.option = option
+        self.islong = islong
+
+    def getmsg(self: Self) -> str:
+        "This method returns the core message."
+        if self.islong:
+            return type(self)._longmsg % self.option
+        else:
+            return type(self)._shortmsg % self.option
+
+
+class PreparseInvalidOptionWarning(PreparseDualWarning):
+    _longmsg = "unrecognized option '%s'"
+    _shortmsg = "invalid option -- '%s'"
+
+
+class PreparseRequiredArgumentWarning(PreparseDualWarning):
+    _longmsg = "option '%s' requires an argument"
+    _shortmsg = "option requires an argument -- '%s'"
+
+
+class PreparseLongonlyWarning(PreparseWarning): ...  # only possible for long options
+
+
+class PreparseAmbiguousOptionWarning(PreparseLongonlyWarning):
 
     @dataprop
     def possibilities(self: Self, value: Iterable) -> tuple[str]:
@@ -58,54 +90,13 @@ class PreparseAmbiguousOptionWarning(PreparseWarning):
 
     def getmsg(self: Self) -> str:
         "This method returns the core message."
-        ans = "option %r is ambiguous; possibilities:" % self.option
+        ans = "option '%s' is ambiguous; possibilities:" % self.option
         for x in self.possibilities:
-            ans += " %r" % x
+            ans += " '%s'" % x
         return ans
 
 
-class PreparseInvalidOptionWarning(PreparseWarning):
-
-    @dataprop
-    def islong(self: Self, value: Any) -> bool:
-        return bool(value)
-
-    def __init__(self: Self, *, prog: Any, option: Any, islong: Any) -> None:
-        "This magic method initializes the current instance."
-        self.prog = prog
-        self.option = option
-        self.islong = islong
-
-    def getmsg(self: Self) -> str:
-        "This method returns the core message."
-        if self.islong:
-            return "unrecognized option %r" % self.option
-        else:
-            return "invalid option -- %r" % self.option
-
-
-class PreparseRequiredArgumentWarning(PreparseWarning):
-
-    @dataprop
-    def islong(self: Self, value: Any) -> bool:
-        return bool(value)
-
-    def __init__(self: Self, *, prog: Any, option: Any, islong: Any) -> None:
-        "This magic method initializes the current instance."
-        self.prog = prog
-        self.option = option
-        self.islong = islong
-
-    def getmsg(self: Self) -> str:
-        "This method returns the core message."
-        if self.islong:
-            return "option %r requires an argument" % self.option
-        else:
-            return "option requires an argument -- %r" % self.option
-
-
-class PreparseUnallowedArgumentWarning(PreparseWarning):
-    # only possible for long options
+class PreparseUnallowedArgumentWarning(PreparseLongonlyWarning):
     # option is always full key without value
 
     def __init__(self: Self, *, prog: Any, option: Any) -> None:
@@ -115,4 +106,4 @@ class PreparseUnallowedArgumentWarning(PreparseWarning):
 
     def getmsg(self: Self) -> str:
         "This method returns the core message."
-        return "option %r doesn't allow an argument" % self.option
+        return "option '%s' doesn't allow an argument" % self.option
