@@ -4,10 +4,8 @@ from typing import *
 __all__ = [
     "PreparseAmbiguousOptionWarning",
     "PreparseInvalidOptionWarning",
-    "PreparseLongOptionRequiresArgumentWarning",
-    "PreparseShortOptionRequiresArgumentWarning",
+    "PreparseRequiredArgumentWarning",
     "PreparseUnallowedArgumentWarning",
-    "PreparseUnrecognizedOptionWarning",
     "PreparseWarning",
 ]
 
@@ -45,27 +43,25 @@ class PreparseAmbiguousOptionWarning(PreparseWarning):
 
 
 class PreparseInvalidOptionWarning(PreparseWarning):
-    __slots__ = ("prog", "option")
+    __slots__ = ("prog", "option", "islong")
 
     def getmsg(self: Self) -> str:
         "This method returns the core message."
-        return "invalid option -- %r" % self.option
+        if self.islong:
+            return "unrecognized option %r" % self.option
+        else:
+            return "invalid option -- %r" % self.option
 
 
-class PreparseLongOptionRequiresArgumentWarning(PreparseWarning):
-    __slots__ = ("prog", "option")
-
-    def getmsg(self: Self) -> str:
-        "This method returns the core message."
-        return "option %r requires an argument" % self.option
-
-
-class PreparseShortOptionRequiresArgumentWarning(PreparseWarning):
-    __slots__ = ("prog", "option")
+class PreparseRequiredArgumentWarning(PreparseWarning):
+    __slots__ = ("prog", "option", "islong")
 
     def getmsg(self: Self) -> str:
         "This method returns the core message."
-        return "option requires an argument -- %r" % self.option
+        if self.islong:
+            return "option %r requires an argument" % self.option
+        else:
+            return "option requires an argument -- %r" % self.option
 
 
 class PreparseUnallowedArgumentWarning(PreparseWarning):
@@ -74,11 +70,3 @@ class PreparseUnallowedArgumentWarning(PreparseWarning):
     def getmsg(self: Self) -> str:
         "This method returns the core message."
         return "option %r doesn't allow an argument" % self.option
-
-
-class PreparseUnrecognizedOptionWarning(PreparseWarning):
-    __slots__ = ("prog", "option")
-
-    def getmsg(self: Self) -> str:
-        "This method returns the core message."
-        return "unrecognized option %r" % self.option
