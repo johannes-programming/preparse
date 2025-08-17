@@ -6,7 +6,6 @@ __all__ = ["BaseData", "dataprop"]
 
 
 class BaseData:
-    __slots__ = ("_data",)
 
     def __repr__(self: Self) -> str:
         "This magic method implements repr(self)."
