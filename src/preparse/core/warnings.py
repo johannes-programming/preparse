@@ -12,7 +12,7 @@ __all__ = [
 ]
 
 
-class PreparseWarning(Warning, metaclass=abc.ABCMeta):
+class PreparseWarning(Warning, BaseData, metaclass=abc.ABCMeta):
     @dataprop
     def prog(self: Self, value: Any) -> str:
         return str(value)

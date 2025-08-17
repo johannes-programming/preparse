@@ -16,6 +16,8 @@ __all__ = ["PreParser"]
 
 class BasePreParser(BaseData):
 
+    __slots__ = ("_data",)
+
     def __init__(
         self: Self,
         *,
