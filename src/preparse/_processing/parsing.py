@@ -10,9 +10,7 @@ __all__ = ["parse"]
 PAOW = PreparseAmbiguousOptionWarning
 PIOW = PreparseInvalidOptionWarning
 PUAW = PreparseUnallowedArgumentWarning
-PUOW = PreparseUnrecognizedOptionWarning
-PLORAW = PreparseLongOptionRequiresArgumentWarning
-PSORAW = PreparseShortOptionRequiresArgumentWarning
+PRAW = PreparseRequiredArgumentWarning
 
 
 def parse(args: list[str], **kwargs: Any) -> list[Item]:
@@ -70,9 +68,9 @@ def parse_generator(
         # if the last item is not starved
         return
     if isinstance(last, Long):
-        cause(PLORAW, option=last.fullkey)
+        cause(PRAW, option=last.fullkey, islong=True)
     else:
-        cause(PSORAW, option=last.chars[-1])
+        cause(PRAW, option=last.chars[-1], islong=False)
     yield last
 
 
@@ -146,7 +144,7 @@ def parse_long(
         parts = list()  # can be assumed
     if len(parts) == 0:
         ans.nargs = Nargs.OPTIONAL_ARGUMENT
-        cause(PUOW, option=arg)
+        cause(PIOW, option=arg, islong=True)
         return ans
     if len(parts) >= 2:
         ans.nargs = Nargs.OPTIONAL_ARGUMENT
@@ -184,7 +182,7 @@ def parse_bundling(
         try:
             ans.nargs = optdict["-" + a]
         except KeyError:
-            cause(PIOW, option=a)
+            cause(PIOW, option=a, islong=False)
             ans.nargs = Nargs.NO_ARGUMENT
         if ans.nargs == Nargs.NO_ARGUMENT:
             continue
