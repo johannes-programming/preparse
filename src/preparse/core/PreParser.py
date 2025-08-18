@@ -76,7 +76,7 @@ class BasePreParser(BaseData):
             return bool(value)
 
     @dataprop
-    def optdict(self: Self, value: Any) -> dict:
+    def optdict(self: Self, value: Any) -> Optdict:
         "This property gives a dictionary of options."
         if "optdict" not in self._data.keys():
             self._data["optdict"] = Optdict()
