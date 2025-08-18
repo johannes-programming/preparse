@@ -16,7 +16,7 @@ class Optdict(datahold.OkayDict):
         return dict(self._data)
 
     @data.setter
-    def data(self: Self, value: Any):
+    def data(self: Self, value: Any) -> None:
         if value is None:
             self._data = dict()
             return
