@@ -1,7 +1,7 @@
 import abc
 from typing import *
 
-from preparse._processing.utils import *
+from preparse._utils import *
 
 __all__ = [
     "PreparseAmbiguousOptionWarning",

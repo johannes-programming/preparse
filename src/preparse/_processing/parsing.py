@@ -2,15 +2,15 @@ from types import FunctionType
 from typing import *
 
 from preparse._processing.items import *
+from preparse.core import warnings
 from preparse.core.enums import *
-from preparse.core.warnings import *
 
 __all__ = ["parse"]
 
-PAOW = PreparseAmbiguousOptionWarning
-PIOW = PreparseInvalidOptionWarning
-PUAW = PreparseUnallowedArgumentWarning
-PRAW = PreparseRequiredArgumentWarning
+PAOW = warnings.PreparseAmbiguousOptionWarning
+PIOW = warnings.PreparseInvalidOptionWarning
+PUAW = warnings.PreparseUnallowedArgumentWarning
+PRAW = warnings.PreparseRequiredArgumentWarning
 
 
 def parse(args: list[str], **kwargs: Any) -> list[Item]:

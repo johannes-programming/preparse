@@ -2,9 +2,8 @@ import abc
 import operator
 from typing import *
 
-from preparse._processing.utils import *
+from preparse._utils import *
 from preparse.core.enums import *
-from preparse.core.warnings import *
 
 __all__ = ["Item", "Option", "Bundle", "Long", "Special", "Positional"]
 
