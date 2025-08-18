@@ -6,7 +6,7 @@ from preparse._processing.digesting import *
 from preparse._processing.items import *
 from preparse._processing.parsing import *
 from preparse._processing.pulling import *
-from preparse._processing.utils import *
+from preparse._utils import *
 from preparse.core.enums import *
 
 __all__ = ["BaseData", "dataprop", "process"]
