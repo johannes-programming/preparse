@@ -19,19 +19,19 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "click>=8.1.7",
-    "datahold>=1.1.10",
-    "datarepr>=0.0.4",
+    "click>=8.2,<9",
+    "datahold>=1.1.10,<2",
+    "datarepr>=1.0.2,<2",
     "makeprop>=0.1",
-    "overloadable>=1.0.9",
-    "tofunc>=1.0",
+    "overloadable>=1.0.9,<2",
+    "tofunc>=1.0,<2",
 ]
 description = "This project preparses args for further parsing later on."
 keywords = []
 name = "preparse"
 readme = "README.rst"
 requires-python = ">=3.11"
-version = "0.1.6"
+version = "0.1.6+local"
 
 [project.license]
 file = "LICENSE.txt"
