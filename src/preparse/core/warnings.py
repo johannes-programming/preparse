@@ -28,7 +28,7 @@ class PreparseWarning(Warning, BaseData, metaclass=abc.ABCMeta):
         return f"{self.prog}: {self.getmsg()}"
 
     @property
-    def args(self: Self):
+    def args(self: Self) -> tuple:
         "This property returns (str(self),)."
         return (str(self),)
 
