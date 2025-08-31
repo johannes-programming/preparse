@@ -15,7 +15,7 @@ class Click:
     cmd: Any = True
     ctx: Any = True
 
-    @overloadable.overloadable
+    @overloadable.Overloadable
     def __call__(self: Self, target: Any) -> Any:
         "This magic method implements self(target)."
         if isinstance(target, types.FunctionType):
