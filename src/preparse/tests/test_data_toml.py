@@ -69,3 +69,7 @@ class TestDataToml(unittest.TestCase):
             warnings,
         )
         self.assertEqual(erranswer, warnings, msg=msg)
+
+
+if __name__ == "__main__":
+    unittest.main()
