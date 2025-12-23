@@ -78,9 +78,10 @@ class BasePreParser(BaseData):
     @dataprop
     def optdict(self: Self, value: Any) -> Optdict:
         "This property gives a dictionary of options."
+        dataA: Optdict
         if "optdict" not in self._data.keys():
             self._data["optdict"] = Optdict()
-        dataA: Optdict = Optdict(value)
+        dataA = Optdict(value)
         self._data["optdict"].clear()
         self._data["optdict"].update(dataA)
         return self._data["optdict"]
@@ -122,6 +123,10 @@ class PreParser(BasePreParser):
 
     def reflectClickCommand(self: Self, cmd: cl.Command) -> None:
         "This method causes the current instance to reflect a click.Command object."
+        optdict: dict
+        optn: Nargs
+        o: Any
+        p: Any
         optdict = dict()
         for p in cmd.params:
             if not isinstance(p, cl.Option):

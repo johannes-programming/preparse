@@ -13,6 +13,7 @@ from preparse.core import *
 class expit:
 
     def function(x: float) -> float:
+        p: float
         try:
             p = math.exp(-x)
         except OverflowError:
@@ -31,8 +32,10 @@ class expit:
 
 class utils:
     def get_data() -> dict:
-        text: str = resources.read_text("preparse.tests", "expit.toml")
-        data: dict = tomllib.loads(text)
+        text: str
+        data: dict
+        text = resources.read_text("preparse.tests", "expit.toml")
+        data = tomllib.loads(text)
         return data
 
     def istestable(x: Any) -> bool:
@@ -55,13 +58,16 @@ class TestMainFunction(unittest.TestCase):
         stdout: Any,
         stderr: Any,
     ) -> None:
-        runner: CliRunner = CliRunner()
-        extra: dict = dict()
+        runner: CliRunner
+        extra: dict
+        result: Any
+        runner = CliRunner()
+        extra = dict()
         extra["cli"] = expit.main
         extra["args"] = query
         if utils.istestable(prog):
             extra["prog_name"] = prog
-        result: Any = runner.invoke(**extra)
+        result = runner.invoke(**extra)
         if utils.istestable(exit_code):
             self.assertEqual(exit_code, result.exit_code)
         if utils.istestable(output):
@@ -72,9 +78,10 @@ class TestMainFunction(unittest.TestCase):
             self.assertEqual(stderr, result.stderr)
 
     def test_0(self: Self) -> None:
-        data: dict = utils.get_data()
+        data: dict
         name: str
         kwargs: dict
+        data = utils.get_data()
         for name, kwargs in data.items():
             with self.subTest(msg=name, **kwargs):
                 self.parse(**kwargs)
