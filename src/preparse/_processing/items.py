@@ -21,6 +21,8 @@ class Item(abc.ABC, BaseData):
 
 class Option(Item):
 
+    __slots__ = ()
+
     def ishungry(self: Self) -> bool:
         return (self.right is None) and (self.nargs == Nargs.REQUIRED_ARGUMENT)
 
@@ -30,7 +32,9 @@ class Option(Item):
 
 
 class Bundle(Option):
-    # slots
+
+    __slots__ = ()
+
     @dataprop
     def chars(self: Self, x: Any) -> str:
         return str(x)
@@ -116,7 +120,9 @@ class Bundle(Option):
 
 
 class Long(Option):
-    # slots
+
+    __slots__ = ()
+
     @dataprop
     def fullkey(self: Self, x: Any) -> str:
         return str(x)
@@ -164,6 +170,8 @@ class Long(Option):
 
 class Special(Item):
 
+    __slots__ = ()
+
     def deparse(self: Self) -> list[str]:
         return ["--"]
 
@@ -173,7 +181,9 @@ class Special(Item):
 
 
 class Positional(Item):
-    # slots
+
+    __slots__ = ()
+
     @dataprop
     def value(self: Self, x: Any) -> str:
         return str(x)

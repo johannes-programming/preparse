@@ -113,6 +113,8 @@ class BasePreParser(BaseData):
 
 class PreParser(BasePreParser):
 
+    __slots__ = ()
+
     def click(self: Self, cmd: Any = True, ctx: Any = True) -> Click:
         "This method returns a decorator that infuses the current instance into parse_args."
         return Click(parser=self, cmd=cmd, ctx=ctx)
