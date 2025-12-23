@@ -89,9 +89,12 @@ class BasePreParser(BaseData):
     @dataprop
     def prog(self: Self, value: Any) -> str:
         "This property represents the name of the program."
+        v: Any
         if value is None:
-            value = os.path.basename(sys.argv[0])
-        return str(value)
+            v = os.path.basename(sys.argv[0])
+        else:
+            v = value
+        return str(v)
 
     @dataprop
     def reconcilesorders(self: Self, value: Any) -> bool:
@@ -123,22 +126,22 @@ class PreParser(BasePreParser):
 
     def reflectClickCommand(self: Self, cmd: cl.Command) -> None:
         "This method causes the current instance to reflect a click.Command object."
-        optdict: dict
-        optn: Nargs
-        o: Any
-        p: Any
+        optdict: dict[str, Nargs]
+        nargs: Nargs
+        opt: Any
+        param: Any
         optdict = dict()
-        for p in cmd.params:
-            if not isinstance(p, cl.Option):
+        for param in cmd.params:
+            if not isinstance(param, cl.Option):
                 continue
-            if p.is_flag or p.nargs == 0:
-                optn = Nargs.NO_ARGUMENT
-            elif p.nargs == 1:
-                optn = Nargs.REQUIRED_ARGUMENT
+            if param.is_flag or param.nargs == 0:
+                nargs = Nargs.NO_ARGUMENT
+            elif param.nargs == 1:
+                nargs = Nargs.REQUIRED_ARGUMENT
             else:
-                optn = Nargs.OPTIONAL_ARGUMENT
-            for o in p.opts:
-                optdict[str(o)] = optn
+                nargs = Nargs.OPTIONAL_ARGUMENT
+            for opt in param.opts:
+                optdict[str(opt)] = nargs
         self.optdict.clear()
         self.optdict.update(optdict)
 

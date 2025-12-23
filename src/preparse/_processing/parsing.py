@@ -180,23 +180,23 @@ def parse_bundling(
     cause: FunctionType,
     optdict: dict,
 ) -> Bundle:
-    a: str
-    i: int
     ans: Bundle
+    x: int
+    y: str
     ans = Bundle(chars="")
-    for i, a in enumerate(arg):
-        if i == 0:
+    for x, y in enumerate(arg):
+        if x == 0:
             continue
-        ans.chars += a
+        ans.chars += y
         try:
-            ans.nargs = optdict["-" + a]
+            ans.nargs = optdict["-" + y]
         except KeyError:
-            cause(PIOW, option=a, islong=False)
+            cause(PIOW, option=y, islong=False)
             ans.nargs = Nargs.NO_ARGUMENT
         if ans.nargs == Nargs.NO_ARGUMENT:
             continue
-        if ans.nargs == Nargs.OPTIONAL_ARGUMENT or i < len(arg) - 1:
+        if ans.nargs == Nargs.OPTIONAL_ARGUMENT or x < len(arg) - 1:
             ans.joined = True
-            ans.right = arg[i + 1 :]
+            ans.right = arg[x + 1 :]
         return ans
     return ans
