@@ -1,19 +1,27 @@
+import abc
 from typing import *
 
-from datarepr import datarepr
+import setdoc
+from copyable import Copyable
 
-__all__ = ["BaseData"]
+from preparse.core.enums import *
+
+__all__ = ["Item"]
 
 
-class BaseData:
+class Item(Copyable):
+    __slots__ = ("_data",)
 
-    def __repr__(self: Self) -> str:
-        "This magic method implements repr(self)."
-        return datarepr(type(self).__name__, **self.todict())
-
+    @setdoc.basic
     def copy(self: Self) -> Self:
-        "This method returns a copy of the current instance."
         return type(self)(**self.todict())
+
+    @abc.abstractmethod
+    def deparse(self: Self) -> list[str]: ...
+
+    @classmethod
+    @abc.abstractmethod
+    def sortkey(cls: type) -> int: ...
 
     def todict(self: Self) -> dict:
         "This method returns a dict representing the current instance."

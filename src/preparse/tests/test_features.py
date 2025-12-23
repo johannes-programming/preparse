@@ -3,6 +3,8 @@ from typing import *
 
 from preparse.core import *
 
+__all__ = ["TestPreparse"]
+
 
 class TestPreparse(unittest.TestCase):
 

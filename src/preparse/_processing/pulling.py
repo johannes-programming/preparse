@@ -1,13 +1,13 @@
 import sys
 from typing import *
 
-from preparse._processing.items import *
+from preparse._processing.items.Positional import Positional
 
 __all__ = ["pull"]
 
 
 def pull(args: Optional[Iterable] = None) -> list[Positional]:
-    "This method parses args."
+    "This method acquires args."
     argiter: Iterable
     if args is None:
         argiter = sys.argv[1:]
