@@ -9,8 +9,10 @@ from preparse.core import *
 
 class utils:
     def get_data() -> dict:
-        text: str = resources.read_text("preparse.tests", "data.toml")
-        data: dict = tomllib.loads(text)
+        text: str
+        data: dict
+        text = resources.read_text("preparse.tests", "data.toml")
+        data = tomllib.loads(text)
         return data
 
     def istestable(x: Any) -> bool:
@@ -24,7 +26,8 @@ class utils:
 class TestDataToml(unittest.TestCase):
 
     def test_0(self: Self) -> None:
-        data: dict = utils.get_data()
+        data: dict
+        data = utils.get_data()
         for name, kwargs in data.items():
             with self.subTest(msg=name, **kwargs):
                 self.parse(**kwargs)
@@ -37,22 +40,27 @@ class TestDataToml(unittest.TestCase):
         warnings: Any,
         **kwargs: Any,
     ) -> None:
-        capture: list = list()
+        capture: list
+        data: dict
+        msg: str
+        answer: list
+        erranswer: list
+        superanswer: list
+        capture = list()
 
         def warn(value: Any) -> None:
             capture.append(str(value))
 
         parser = PreParser(warn=warn, **kwargs)
-        data: dict = dict(
+        data = dict(
             query=query,
             solution=solution,
             warnings=warnings,
             **kwargs,
         )
-        msg: str
-        answer: list = parser.parse_args(query)
-        erranswer: list = list(capture)
-        superanswer: list = parser.parse_args(answer)
+        answer = parser.parse_args(query)
+        erranswer = list(capture)
+        superanswer = parser.parse_args(answer)
         msg = "\n\ndata=%s,\nanswer=%s,\nsuperanswer=%s,\n\n" % (
             data,
             answer,
