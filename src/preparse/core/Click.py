@@ -28,6 +28,7 @@ class Click:
     def __call__(self: Self, target: types.FunctionType) -> types.FunctionType:
         @functools.wraps(target)
         def ans(cmd: Any, ctx: Any, args: Any) -> Any:
+            p: Any
             p = self.parser.copy()
             if self.cmd:
                 p.reflectClickCommand(cmd)
@@ -39,9 +40,9 @@ class Click:
 
     @__call__.overload("method")
     def __call__(self: Self, target: types.MethodType) -> types.MethodType:
+        func: Callable
         func = self(target.__func__)
-        ans = types.MethodType(func, target.__self__)
-        return ans
+        return types.MethodType(func, target.__self__)
 
     @__call__.overload("other")
     def __call__(self: Self, target: Any) -> Any:
