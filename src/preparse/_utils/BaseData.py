@@ -2,7 +2,7 @@ from typing import *
 
 from datarepr import datarepr
 
-__all__ = ["BaseData", "dataprop"]
+__all__ = ["BaseData"]
 
 
 class BaseData:
@@ -26,21 +26,3 @@ class BaseData:
         else:
             ans = dict(ans)
         return ans
-
-
-def dataprop(func: Callable) -> property:
-    "This magic method implements calling the current instance."
-
-    def fget(self: Self) -> Any:
-        return self._data[func.__name__]
-
-    def fset(self: Self, value: Any) -> None:
-        self._data = getattr(self, "_data", dict())
-        self._data[func.__name__] = func(self, value)
-
-    kwargs: dict
-    kwargs = dict()
-    kwargs["doc"] = func.__doc__
-    kwargs["fget"] = fget
-    kwargs["fset"] = fset
-    return property(**kwargs)
