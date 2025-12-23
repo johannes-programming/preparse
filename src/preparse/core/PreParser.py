@@ -4,6 +4,9 @@ import types
 from typing import *
 
 import click as cl
+import setdoc
+from copyable import Copyable
+from datarepr import datarepr
 from tofunc import tofunc
 
 from preparse._processing import *
@@ -15,10 +18,23 @@ from preparse.core.warnings import *
 __all__ = ["PreParser"]
 
 
-class BasePreParser(BaseData):
+class PreParser(Copyable):
+
+    allowslong: bool
+    allowsshort: bool
+    bundling: Tuning
+    expandsabbr: bool
+    expectsabbr: bool
+    expectsposix: bool
+    optdict: Optdict
+    prog: str
+    reconcilesorders: bool
+    special: Tuning
+    warn: types.FunctionType
 
     __slots__ = ("_data",)
 
+    @setdoc.basic
     def __init__(
         self: Self,
         *,
@@ -34,7 +50,6 @@ class BasePreParser(BaseData):
         special: Any = Tuning.MAINTAIN,
         warn: Callable = str,
     ) -> None:
-        "This magic method initializes self."
         self.allowslong = allowslong
         self.allowsshort = allowsshort
         self.bundling = bundling
@@ -46,6 +61,10 @@ class BasePreParser(BaseData):
         self.reconcilesorders = reconcilesorders
         self.special = special
         self.warn = warn
+
+    @setdoc.basic
+    def __repr__(self: Self) -> str:
+        return datarepr(type(self).__name__, **self.todict())
 
     @dataprop
     def allowslong(self: Self, value: Any) -> bool:
@@ -59,6 +78,14 @@ class BasePreParser(BaseData):
     def bundling(self: Self, value: Any) -> Tuning:
         "This property decides how to approach the bundling of short options."
         return Tuning(value)
+
+    def click(self: Self, cmd: Any = True, ctx: Any = True) -> Click:
+        "This method returns a decorator that infuses the current instance into parse_args."
+        return Click(parser=self, cmd=cmd, ctx=ctx)
+
+    @setdoc.basic
+    def copy(self: Self) -> Self:
+        return type(self)(**self.todict())
 
     @dataprop
     def expandsabbr(self: Self, value: Any) -> bool:
@@ -86,34 +113,6 @@ class BasePreParser(BaseData):
         self._data["optdict"].update(dataA)
         return self._data["optdict"]
 
-    @dataprop
-    def prog(self: Self, value: Any) -> str:
-        "This property represents the name of the program."
-        if value is None:
-            value = os.path.basename(sys.argv[0])
-        return str(value)
-
-    @dataprop
-    def reconcilesorders(self: Self, value: Any) -> bool:
-        return bool(value)
-
-    @dataprop
-    def special(self: Self, value: Any) -> Tuning:
-        "This Tuning property determines the approach towards the special argument."
-        return Tuning(value)
-
-    @dataprop
-    def warn(self: Self, value: Callable) -> types.FunctionType:
-        "This property gives a function that takes in the warnings."
-        return tofunc(value)
-
-
-class PreParser(BasePreParser):
-
-    def click(self: Self, cmd: Any = True, ctx: Any = True) -> Click:
-        "This method returns a decorator that infuses the current instance into parse_args."
-        return Click(parser=self, cmd=cmd, ctx=ctx)
-
     def parse_args(
         self: Self,
         args: Optional[Iterable] = None,
@@ -121,27 +120,63 @@ class PreParser(BasePreParser):
         "This method parses args."
         return process(args, **self.todict())
 
+    @dataprop
+    def prog(self: Self, value: Any) -> str:
+        "This property represents the name of the program."
+        v: Any
+        if value is None:
+            v = os.path.basename(sys.argv[0])
+        else:
+            v = value
+        return str(v)
+
+    @dataprop
+    def reconcilesorders(self: Self, value: Any) -> bool:
+        return bool(value)
+
     def reflectClickCommand(self: Self, cmd: cl.Command) -> None:
         "This method causes the current instance to reflect a click.Command object."
-        optdict: dict
-        optn: Nargs
-        o: Any
-        p: Any
+        optdict: dict[str, Nargs]
+        nargs: Nargs
+        opt: Any
+        param: Any
         optdict = dict()
-        for p in cmd.params:
-            if not isinstance(p, cl.Option):
+        for param in cmd.params:
+            if not isinstance(param, cl.Option):
                 continue
-            if p.is_flag or p.nargs == 0:
-                optn = Nargs.NO_ARGUMENT
-            elif p.nargs == 1:
-                optn = Nargs.REQUIRED_ARGUMENT
+            if param.is_flag or param.nargs == 0:
+                nargs = Nargs.NO_ARGUMENT
+            elif param.nargs == 1:
+                nargs = Nargs.REQUIRED_ARGUMENT
             else:
-                optn = Nargs.OPTIONAL_ARGUMENT
-            for o in p.opts:
-                optdict[str(o)] = optn
+                nargs = Nargs.OPTIONAL_ARGUMENT
+            for opt in param.opts:
+                optdict[str(opt)] = nargs
         self.optdict.clear()
         self.optdict.update(optdict)
 
     def reflectClickContext(self: Self, ctx: cl.Context) -> None:
         "This method causes the current instance to reflect a click.Context object."
         self.prog = ctx.info_name
+
+    @dataprop
+    def special(self: Self, value: Any) -> Tuning:
+        "This Tuning property determines the approach towards the special argument."
+        return Tuning(value)
+
+    def todict(self: Self) -> dict:
+        "This method returns a dict representing the current instance."
+        ans: dict
+        try:
+            ans = self._data
+        except AttributeError:
+            self._data = dict()
+            ans = dict()
+        else:
+            ans = dict(ans)
+        return ans
+
+    @dataprop
+    def warn(self: Self, value: Callable) -> types.FunctionType:
+        "This property gives a function that takes in the warnings."
+        return tofunc(value)
