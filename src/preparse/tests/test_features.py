@@ -12,22 +12,29 @@ class TestPreparse(unittest.TestCase):
         self.assertEqual(Nargs.OPTIONAL_ARGUMENT, 2)
 
     def test_preparser_copy(self: Self) -> None:
-        parser: PreParser = PreParser()
-        parser_copy: PreParser = parser.copy()
+        parser: PreParser
+        parser_copy: PreParser
+        parser = PreParser()
+        parser_copy = parser.copy()
         self.assertEqual(parser.optdict, parser_copy.optdict)
 
     def test_preparser_todict(self: Self) -> None:
-        parser: PreParser = PreParser()
-        result: Any = parser.todict()
-        expected_keys: list = [
+        parser: PreParser
+        result: Any
+        expected_keys: list
+        parser = PreParser()
+        result = parser.todict()
+        expected_keys = [
             "optdict",
             "prog",
         ]
         self.assertTrue(all(key in result for key in expected_keys))
 
     def test_preparser_click_decorator(self: Self) -> None:
-        parser: PreParser = PreParser()
-        click_decorator: Click = parser.click()
+        parser: PreParser
+        click_decorator: Click
+        parser = PreParser()
+        click_decorator = parser.click()
         self.assertIsInstance(click_decorator, Click)
         self.assertTrue(click_decorator.cmd)
         self.assertTrue(click_decorator.ctx)

@@ -17,7 +17,8 @@ def digest(
     reconcilesorders: bool,
     special: Tuning,
 ) -> list[Item]:
-    ans: list[Item] = list(items)
+    ans: list[Item]
+    ans = list(items)
     ans = digest_abbr(
         ans,
         expandsabbr=expandsabbr,
@@ -46,10 +47,11 @@ def digest_abbr(
     *,
     expandsabbr: bool,
 ) -> list[Item]:
-    ans: list[Item] = list(items)
+    ans: list[Item]
+    item: Item
+    ans = list(items)
     if not expandsabbr:
         return ans
-    item: Item
     for item in ans:
         if isinstance(item, Long):
             item.abbrlen = None
@@ -74,8 +76,9 @@ def digest_bundling_min(
     *,
     allowslong: bool,
 ) -> list[Item]:
-    ans: list[Item] = list()
+    ans: list[Item]
     item: Item
+    ans = list()
     for item in items:
         if isinstance(item, Bundle):
             ans += item.split(allowslong=allowslong)
@@ -85,8 +88,9 @@ def digest_bundling_min(
 
 
 def digest_bundling_max(items: list[Item]) -> list[Item]:
-    ans: list[Item] = list()
+    ans: list[Item]
     item: Item
+    ans = list()
     for item in items:
         if not isinstance(item, Bundle):
             ans.append(item)
@@ -111,14 +115,17 @@ def digest_order(
     expectsposix: bool,
     reconcilesorders: bool,
 ) -> list[Item]:
-    ans: list[Item] = list(items)
+    ans: list[Item]
+    i: int
+    comp: bool
+    ans = list(items)
     if not reconcilesorders:
         return ans
     if not expectsposix:
         ans.sort(key=digest_order_key)
         return ans
-    i: int = len(ans)
-    comp: bool = True
+    i = len(ans)
+    comp = True
     while True:
         i -= 1
         if i == -1:
@@ -153,8 +160,10 @@ def digest_special(
 
 
 def digest_special_max(items: list[Item]) -> list[Item]:
-    ans: list[Item] = list(items)
-    i: int = len(items)
+    ans: list[Item]
+    i: int
+    ans = list(items)
+    i = len(items)
     while True:
         i -= 1
         if i == -1:
@@ -177,10 +186,14 @@ def digest_special_min(
     expectsposix: bool,
     reconcilesorders: bool,
 ) -> list[Item]:
-    ans: list[Item] = list(items)
-    isdel: bool = True
-    isposix: bool = expectsposix and not reconcilesorders
-    i: int = len(items)
+    ans: list[Item]
+    isdel: bool
+    isposix: bool
+    i: int
+    ans = list(items)
+    isdel = True
+    isposix = expectsposix and not reconcilesorders
+    i = len(items)
     while True:
         i -= 1
         if i == -1:
