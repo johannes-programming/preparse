@@ -13,8 +13,4 @@ def pull(args: Optional[Iterable] = None) -> list[Positional]:
         argiter = sys.argv[1:]
     else:
         argiter = args
-    ans: list = list()
-    x: Any
-    for x in argiter:
-        ans.append(Positional(x))
-    return ans
+    return list(map(Positional, argiter))

@@ -28,7 +28,8 @@ def process(
     warn: FunctionType,
 ) -> list[str]:
     "This method parses args."
-    items: list[Item] = pull(args)
+    items: list[Item]
+    items = pull(args)
     items = parse(
         items,
         allowslong=allowslong,
@@ -48,5 +49,4 @@ def process(
         reconcilesorders=reconcilesorders,
         special=special,
     )
-    ans: list[str] = deparse(items)
-    return ans
+    return deparse(items)

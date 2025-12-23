@@ -28,10 +28,13 @@ def parse_generator(
     prog: str,
     warn: FunctionType,
 ) -> Generator[Any, Any, Any]:
-    broken: bool = not (allowslong or allowsshort)
-    cause: FunctionType = parse_cause(prog=prog, warn=warn)
-    last: Optional[Option] = None
+    broken: bool
+    cause: FunctionType
+    last: Optional[Option]
     item: Positional
+    broken = not (allowslong or allowsshort)
+    cause = parse_cause(prog=prog, warn=warn)
+    last = None
     for item in items:
         if broken:
             # if we are in the positional-only part
@@ -127,8 +130,10 @@ def parse_long(
     expectsabbr: bool,
     optdict: dict,
 ) -> Long:
-    parts: list[str] = arg.split("=", 1)
-    ans: Long = Long(fullkey=parts.pop(0))
+    parts: list[str]
+    ans: Long
+    parts = arg.split("=", 1)
+    ans = Long(fullkey=parts.pop(0))
     if len(parts):
         ans.joined = True
         ans.right = parts.pop()
@@ -161,7 +166,8 @@ def parse_long_startswith(
     keys: Iterable[str],
 ):
     x: str
-    ans: list[str] = list()
+    ans: list[str]
+    ans = list()
     for x in keys:
         if x.startswith(abbr):
             ans.append(x)
@@ -174,7 +180,10 @@ def parse_bundling(
     cause: FunctionType,
     optdict: dict,
 ) -> Bundle:
-    ans: Bundle = Bundle(chars="")
+    a: str
+    i: int
+    ans: Bundle
+    ans = Bundle(chars="")
     for i, a in enumerate(arg):
         if i == 0:
             continue

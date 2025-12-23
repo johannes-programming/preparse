@@ -73,12 +73,12 @@ class PreparseAmbiguousOptionWarning(PreparseLongonlyWarning):
 
     @dataprop
     def possibilities(self: Self, value: Iterable) -> tuple[str]:
-        l: list = list(value)
+        l: list
         i: int
+        l = list(value)
         for i in range(len(l)):
             l[i] = str(l[i])
-        ans: tuple[str] = tuple(l)
-        return ans
+        return tuple(l)
 
     def __init__(
         self: Self, *, prog: Any, option: Any, possibilities: Iterable
@@ -90,6 +90,8 @@ class PreparseAmbiguousOptionWarning(PreparseLongonlyWarning):
 
     def getmsg(self: Self) -> str:
         "This method returns the core message."
+        ans: str
+        x: Any
         ans = "option '%s' is ambiguous; possibilities:" % self.option
         for x in self.possibilities:
             ans += " '%s'" % x

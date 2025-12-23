@@ -63,8 +63,9 @@ class Bundle(Option):
 
     @classmethod
     def _split_allowslong(cls: type, chars: str) -> list[str]:
-        ans: list[str] = list()
+        ans: list[str]
         x: str
+        ans = list()
         for x in chars:
             if x == "-":
                 ans[-1].chars += "-"
@@ -74,8 +75,10 @@ class Bundle(Option):
 
     @classmethod
     def _split_shortonly(cls: type, chars: str) -> list[str]:
-        ans: list[str] = list()
-        x: str = chars
+        ans: list[str]
+        x: str
+        ans = list()
+        x = chars
         while x:
             if x == "-":
                 ans[0] = "-" + ans[0]
@@ -98,12 +101,13 @@ class Bundle(Option):
 
     def split(self: Self, *, allowslong: bool) -> list[Item]:
         parts: list[str]
+        ans: list[Self]
+        x: str
         if allowslong:
             parts = self._split_allowslong(self.chars)
         else:
             parts = self._split_shortonly(self.chars)
-        ans: list[Self] = list()
-        x: str
+        ans = list()
         for x in parts:
             ans.append(Bundle(chars=x))
         self.chars = ans[-1].chars

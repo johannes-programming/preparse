@@ -15,12 +15,13 @@ class Optdict(datahold.OkayDict):
 
     @data.setter
     def data(self: Self, value: Any) -> None:
+        d: dict
+        k: Any
+        v: Any
         if value is None:
             self._data = dict()
             return
-        d: dict = dict()
-        k: Any
-        v: Any
+        d = dict()
         for k, v in value.items():
             d[str(k)] = Nargs(v)
         self._data = d
