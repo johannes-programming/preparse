@@ -38,9 +38,9 @@ def dataprop(func: Callable) -> property:
         self._data = getattr(self, "_data", dict())
         self._data[func.__name__] = func(self, value)
 
-    kwargs: dict = dict()
+    kwargs: dict
+    kwargs = dict()
     kwargs["doc"] = func.__doc__
     kwargs["fget"] = fget
     kwargs["fset"] = fset
-    ans = property(**kwargs)
-    return ans
+    return property(**kwargs)
