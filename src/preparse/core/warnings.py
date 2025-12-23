@@ -1,5 +1,9 @@
-import abc
+from abc import abstractmethod
 from typing import *
+
+import setdoc
+from copyable import Copyable
+from datarepr import datarepr
 
 from preparse._utils import *
 
@@ -12,19 +16,14 @@ __all__ = [
 ]
 
 
-class PreparseWarning(Warning, BaseData, metaclass=abc.ABCMeta):
-    @dataprop
-    def prog(self: Self, value: Any) -> str:
-        return str(value)
+class PreparseWarning(Warning, Copyable):
 
-    @dataprop
-    def option(self: Self, value: Any) -> str:
-        return str(value)
+    @setdoc.basic
+    def __repr__(self: Self) -> str:
+        return datarepr(type(self).__name__, **self.todict())
 
-    __slots__ = "_data"
-
+    @setdoc.basic
     def __str__(self: Self) -> str:
-        "This magic method implements str(self)."
         return f"{self.prog}: {self.getmsg()}"
 
     @property
@@ -32,8 +31,32 @@ class PreparseWarning(Warning, BaseData, metaclass=abc.ABCMeta):
         "This property returns (str(self),)."
         return (str(self),)
 
-    @abc.abstractmethod
+    @setdoc.basic
+    def copy(self: Self) -> Self:
+        return type(self)(**self.todict())
+
+    @abstractmethod
     def getmsg(self: Self) -> str: ...
+
+    @dataprop
+    def option(self: Self, value: Any) -> str:
+        return str(value)
+
+    @dataprop
+    def prog(self: Self, value: Any) -> str:
+        return str(value)
+
+    def todict(self: Self) -> dict:
+        "This method returns a dict representing the current instance."
+        ans: dict
+        try:
+            ans = self._data
+        except AttributeError:
+            self._data = dict()
+            ans = dict()
+        else:
+            ans = dict(ans)
+        return ans
 
 
 class PreparseDualWarning(PreparseWarning):
@@ -42,8 +65,8 @@ class PreparseDualWarning(PreparseWarning):
     def islong(self: Self, value: Any) -> bool:
         return bool(value)
 
+    @setdoc.basic
     def __init__(self: Self, *, prog: Any, option: Any, islong: Any) -> None:
-        "This magic method initializes the current instance."
         self.prog = prog
         self.option = option
         self.islong = islong
@@ -80,10 +103,10 @@ class PreparseAmbiguousOptionWarning(PreparseLongonlyWarning):
             l[i] = str(l[i])
         return tuple(l)
 
+    @setdoc.basic
     def __init__(
         self: Self, *, prog: Any, option: Any, possibilities: Iterable
     ) -> None:
-        "This magic method initializes the current instance."
         self.prog = prog
         self.option = option
         self.possibilities = possibilities
@@ -101,8 +124,8 @@ class PreparseAmbiguousOptionWarning(PreparseLongonlyWarning):
 class PreparseUnallowedArgumentWarning(PreparseLongonlyWarning):
     # option is always full key without value
 
+    @setdoc.basic
     def __init__(self: Self, *, prog: Any, option: Any) -> None:
-        "This magic method initializes the current instance."
         self.prog = prog
         self.option = option
 
