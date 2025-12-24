@@ -60,6 +60,10 @@ class PreParser(BaseData):
         "This property decides how to approach the bundling of short options."
         return Tuning(value)
 
+    def click(self: Self, cmd: Any = True, ctx: Any = True) -> Click:
+        "This method returns a decorator that infuses the current instance into parse_args."
+        return Click(parser=self, cmd=cmd, ctx=ctx)
+
     @dataprop
     def expandsabbr(self: Self, value: Any) -> bool:
         return bool(value)
@@ -86,6 +90,13 @@ class PreParser(BaseData):
         self._data["optdict"].update(dataA)
         return self._data["optdict"]
 
+    def parse_args(
+        self: Self,
+        args: Optional[Iterable] = None,
+    ) -> list[str]:
+        "This method parses args."
+        return process(args, **self.todict())
+
     @dataprop
     def prog(self: Self, value: Any) -> str:
         "This property represents the name of the program."
@@ -99,27 +110,6 @@ class PreParser(BaseData):
     @dataprop
     def reconcilesorders(self: Self, value: Any) -> bool:
         return bool(value)
-
-    @dataprop
-    def special(self: Self, value: Any) -> Tuning:
-        "This Tuning property determines the approach towards the special argument."
-        return Tuning(value)
-
-    @dataprop
-    def warn(self: Self, value: Callable) -> types.FunctionType:
-        "This property gives a function that takes in the warnings."
-        return tofunc(value)
-
-    def click(self: Self, cmd: Any = True, ctx: Any = True) -> Click:
-        "This method returns a decorator that infuses the current instance into parse_args."
-        return Click(parser=self, cmd=cmd, ctx=ctx)
-
-    def parse_args(
-        self: Self,
-        args: Optional[Iterable] = None,
-    ) -> list[str]:
-        "This method parses args."
-        return process(args, **self.todict())
 
     def reflectClickCommand(self: Self, cmd: cl.Command) -> None:
         "This method causes the current instance to reflect a click.Command object."
@@ -145,3 +135,13 @@ class PreParser(BaseData):
     def reflectClickContext(self: Self, ctx: cl.Context) -> None:
         "This method causes the current instance to reflect a click.Context object."
         self.prog = ctx.info_name
+
+    @dataprop
+    def special(self: Self, value: Any) -> Tuning:
+        "This Tuning property determines the approach towards the special argument."
+        return Tuning(value)
+
+    @dataprop
+    def warn(self: Self, value: Callable) -> types.FunctionType:
+        "This property gives a function that takes in the warnings."
+        return tofunc(value)
