@@ -15,7 +15,7 @@ from preparse.core.warnings import *
 __all__ = ["PreParser"]
 
 
-class BasePreParser(BaseData):
+class PreParser(BaseData):
 
     __slots__ = ("_data",)
 
@@ -109,11 +109,6 @@ class BasePreParser(BaseData):
     def warn(self: Self, value: Callable) -> types.FunctionType:
         "This property gives a function that takes in the warnings."
         return tofunc(value)
-
-
-class PreParser(BasePreParser):
-
-    __slots__ = ()
 
     def click(self: Self, cmd: Any = True, ctx: Any = True) -> Click:
         "This method returns a decorator that infuses the current instance into parse_args."
