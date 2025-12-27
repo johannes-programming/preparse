@@ -1,6 +1,8 @@
 import abc
 from typing import *
 
+from datarepr import datarepr
+
 from preparse._utils import *
 
 __all__ = [
@@ -12,16 +14,11 @@ __all__ = [
 ]
 
 
-class PreparseWarning(Warning, BaseData, metaclass=abc.ABCMeta):
-    @dataprop
-    def prog(self: Self, value: Any) -> str:
-        return str(value)
+class PreparseWarning(Warning, metaclass=abc.ABCMeta):
 
-    @dataprop
-    def option(self: Self, value: Any) -> str:
-        return str(value)
-
-    __slots__ = "_data"
+    def __repr__(self: Self) -> str:
+        "This magic method implements repr(self)."
+        return datarepr(type(self).__name__, **self.todict())
 
     def __str__(self: Self) -> str:
         "This magic method implements str(self)."
@@ -32,8 +29,32 @@ class PreparseWarning(Warning, BaseData, metaclass=abc.ABCMeta):
         "This property returns (str(self),)."
         return (str(self),)
 
+    def copy(self: Self) -> Self:
+        "This method returns a copy of the current instance."
+        return type(self)(**self.todict())
+
     @abc.abstractmethod
     def getmsg(self: Self) -> str: ...
+
+    @dataprop
+    def option(self: Self, value: Any) -> str:
+        return str(value)
+
+    @dataprop
+    def prog(self: Self, value: Any) -> str:
+        return str(value)
+
+    def todict(self: Self) -> dict:
+        "This method returns a dict representing the current instance."
+        ans: dict
+        try:
+            ans = self._data
+        except AttributeError:
+            self._data = dict()
+            ans = dict()
+        else:
+            ans = dict(ans)
+        return ans
 
 
 class PreparseDualWarning(PreparseWarning):
