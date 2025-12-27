@@ -11,7 +11,7 @@ __all__ = ["Item", "Option", "Bundle", "Long", "Special", "Positional"]
 
 
 class Item(abc.ABC):
-    # __slots__ = ("_data",)
+    __slots__ = ("_data",)
 
     def __repr__(self: Self) -> str:
         "This magic method implements repr(self)."
@@ -48,6 +48,19 @@ class Option(Item):
     def ishungry(self: Self) -> bool:
         return (self.right is None) and (self.nargs == Nargs.REQUIRED_ARGUMENT)
 
+    @dataprop
+    def joined(self: Self, x: SupportsIndex) -> bool:
+        return bool(operator.index(x))
+
+    @dataprop
+    def nargs(self: Self, x: Any) -> Nargs:
+        return Nargs(x)
+
+    @dataprop
+    def right(self: Self, x: Any) -> Optional[str]:
+        if x is not None:
+            return str(x)
+
     @classmethod
     def sortkey(cls: type) -> int:
         return 0
@@ -60,19 +73,6 @@ class Bundle(Option):
     @dataprop
     def chars(self: Self, x: Any) -> str:
         return str(x)
-
-    @dataprop
-    def joined(self: Self, x: SupportsIndex) -> bool:
-        return bool(operator.index(x))
-
-    @dataprop
-    def right(self: Self, x: Any) -> Optional[str]:
-        if x is not None:
-            return str(x)
-
-    @dataprop
-    def nargs(self: Self, x: Any) -> Nargs:
-        return Nargs(x)
 
     #
 
@@ -153,15 +153,6 @@ class Long(Option):
     def abbrlen(self: Self, x: Optional[SupportsIndex]) -> Optional[int]:
         if x is not None:
             return operator.index(x)
-
-    @dataprop
-    def joined(self: Self, x: Any) -> bool:
-        return operator.index(x)
-
-    @dataprop
-    def right(self: Self, x: Any) -> Optional[str]:
-        if x is not None:
-            return str(x)
 
     #
     def __init__(
