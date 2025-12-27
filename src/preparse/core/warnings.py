@@ -1,6 +1,7 @@
 import abc
 from typing import *
 
+import setdoc
 from datarepr import datarepr
 
 from preparse._utils import *
@@ -16,12 +17,12 @@ __all__ = [
 
 class PreparseWarning(Warning, metaclass=abc.ABCMeta):
 
+    @setdoc.basic
     def __repr__(self: Self) -> str:
-        "This magic method implements repr(self)."
         return datarepr(type(self).__name__, **self.todict())
 
+    @setdoc.basic
     def __str__(self: Self) -> str:
-        "This magic method implements str(self)."
         return f"{self.prog}: {self.getmsg()}"
 
     @property
@@ -29,8 +30,8 @@ class PreparseWarning(Warning, metaclass=abc.ABCMeta):
         "This property returns (str(self),)."
         return (str(self),)
 
+    @setdoc.basic
     def copy(self: Self) -> Self:
-        "This method returns a copy of the current instance."
         return type(self)(**self.todict())
 
     @abc.abstractmethod
@@ -63,8 +64,8 @@ class PreparseDualWarning(PreparseWarning):
     def islong(self: Self, value: Any) -> bool:
         return bool(value)
 
+    @setdoc.basic
     def __init__(self: Self, *, prog: Any, option: Any, islong: Any) -> None:
-        "This magic method initializes the current instance."
         self.prog = prog
         self.option = option
         self.islong = islong
@@ -101,10 +102,10 @@ class PreparseAmbiguousOptionWarning(PreparseLongonlyWarning):
             l[i] = str(l[i])
         return tuple(l)
 
+    @setdoc.basic
     def __init__(
         self: Self, *, prog: Any, option: Any, possibilities: Iterable
     ) -> None:
-        "This magic method initializes the current instance."
         self.prog = prog
         self.option = option
         self.possibilities = possibilities
@@ -122,8 +123,8 @@ class PreparseAmbiguousOptionWarning(PreparseLongonlyWarning):
 class PreparseUnallowedArgumentWarning(PreparseLongonlyWarning):
     # option is always full key without value
 
+    @setdoc.basic
     def __init__(self: Self, *, prog: Any, option: Any) -> None:
-        "This magic method initializes the current instance."
         self.prog = prog
         self.option = option
 
