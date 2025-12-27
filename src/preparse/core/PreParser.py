@@ -4,6 +4,7 @@ import types
 from typing import *
 
 import click as cl
+import setdoc
 from datarepr import datarepr
 from tofunc import tofunc
 
@@ -20,6 +21,7 @@ class PreParser:
 
     __slots__ = ("_data",)
 
+    @setdoc.basic
     def __init__(
         self: Self,
         *,
@@ -35,7 +37,6 @@ class PreParser:
         special: Any = Tuning.MAINTAIN,
         warn: Callable = str,
     ) -> None:
-        "This magic method initializes self."
         self.allowslong = allowslong
         self.allowsshort = allowsshort
         self.bundling = bundling
@@ -48,8 +49,8 @@ class PreParser:
         self.special = special
         self.warn = warn
 
+    @setdoc.basic
     def __repr__(self: Self) -> str:
-        "This magic method implements repr(self)."
         return datarepr(type(self).__name__, **self.todict())
 
     @dataprop
@@ -69,8 +70,8 @@ class PreParser:
         "This method returns a decorator that infuses the current instance into parse_args."
         return Click(parser=self, cmd=cmd, ctx=ctx)
 
+    @setdoc.basic
     def copy(self: Self) -> Self:
-        "This method returns a copy of the current instance."
         return type(self)(**self.todict())
 
     @dataprop

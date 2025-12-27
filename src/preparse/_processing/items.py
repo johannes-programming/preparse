@@ -2,6 +2,7 @@ import abc
 import operator
 from typing import *
 
+import setdoc
 from datarepr import datarepr
 
 from preparse._utils.dataprop import dataprop
@@ -13,12 +14,8 @@ __all__ = ["Item", "Option", "Bundle", "Long", "Special", "Positional"]
 class Item(abc.ABC):
     __slots__ = ("_data",)
 
-    def __repr__(self: Self) -> str:
-        "This magic method implements repr(self)."
-        return datarepr(type(self).__name__, **self.todict())
-
+    @setdoc.basic
     def copy(self: Self) -> Self:
-        "This method returns a copy of the current instance."
         return type(self)(**self.todict())
 
     @abc.abstractmethod
