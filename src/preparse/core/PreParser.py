@@ -21,6 +21,18 @@ class PreParser:
 
     __slots__ = ("_data",)
 
+    allowslong: bool
+    allowsshort: bool
+    bundling: Tuning
+    expandsabbr: bool
+    expectsabbr: bool
+    expectsposix: bool
+    optdict: Optdict
+    prog: str
+    reconcilesorders: bool
+    special: Tuning
+    warn: types.FunctionType
+
     @setdoc.basic
     def __init__(
         self: Self,
