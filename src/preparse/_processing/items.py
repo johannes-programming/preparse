@@ -2,14 +2,24 @@ import abc
 import operator
 from typing import *
 
-from preparse._utils import *
+from datarepr import datarepr
+
+from preparse._utils.dataprop import dataprop
 from preparse.core.enums import *
 
 __all__ = ["Item", "Option", "Bundle", "Long", "Special", "Positional"]
 
 
-class Item(abc.ABC, BaseData):
-    __slots__ = ("_data",)
+class Item(abc.ABC):
+    # __slots__ = ("_data",)
+
+    def __repr__(self: Self) -> str:
+        "This magic method implements repr(self)."
+        return datarepr(type(self).__name__, **self.todict())
+
+    def copy(self: Self) -> Self:
+        "This method returns a copy of the current instance."
+        return type(self)(**self.todict())
 
     @abc.abstractmethod
     def deparse(self: Self) -> list[str]: ...
@@ -17,6 +27,18 @@ class Item(abc.ABC, BaseData):
     @classmethod
     @abc.abstractmethod
     def sortkey(cls: type) -> int: ...
+
+    def todict(self: Self) -> dict:
+        "This method returns a dict representing the current instance."
+        ans: dict
+        try:
+            ans = self._data
+        except AttributeError:
+            self._data = dict()
+            ans = dict()
+        else:
+            ans = dict(ans)
+        return ans
 
 
 class Option(Item):
