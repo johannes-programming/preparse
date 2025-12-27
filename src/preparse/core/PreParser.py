@@ -4,10 +4,10 @@ import types
 from typing import *
 
 import click as cl
+from datarepr import datarepr
 from tofunc import tofunc
 
 from preparse._processing import *
-from preparse._utils.BaseData import BaseData
 from preparse.core.Click import *
 from preparse.core.enums import *
 from preparse.core.Optdict import *
@@ -16,7 +16,7 @@ from preparse.core.warnings import *
 __all__ = ["PreParser"]
 
 
-class PreParser(BaseData):
+class PreParser:
 
     __slots__ = ("_data",)
 
@@ -48,6 +48,10 @@ class PreParser(BaseData):
         self.special = special
         self.warn = warn
 
+    def __repr__(self: Self) -> str:
+        "This magic method implements repr(self)."
+        return datarepr(type(self).__name__, **self.todict())
+
     @dataprop
     def allowslong(self: Self, value: Any) -> bool:
         return bool(value)
@@ -64,6 +68,10 @@ class PreParser(BaseData):
     def click(self: Self, cmd: Any = True, ctx: Any = True) -> Click:
         "This method returns a decorator that infuses the current instance into parse_args."
         return Click(parser=self, cmd=cmd, ctx=ctx)
+
+    def copy(self: Self) -> Self:
+        "This method returns a copy of the current instance."
+        return type(self)(**self.todict())
 
     @dataprop
     def expandsabbr(self: Self, value: Any) -> bool:
@@ -141,6 +149,18 @@ class PreParser(BaseData):
     def special(self: Self, value: Any) -> Tuning:
         "This Tuning property determines the approach towards the special argument."
         return Tuning(value)
+
+    def todict(self: Self) -> dict:
+        "This method returns a dict representing the current instance."
+        ans: dict
+        try:
+            ans = self._data
+        except AttributeError:
+            self._data = dict()
+            ans = dict()
+        else:
+            ans = dict(ans)
+        return ans
 
     @dataprop
     def warn(self: Self, value: Callable) -> types.FunctionType:
