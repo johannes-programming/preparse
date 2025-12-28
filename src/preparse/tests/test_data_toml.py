@@ -8,9 +8,9 @@ from preparse.core import *
 
 
 class utils:
-    def get_data() -> dict:
+    def get_data() -> dict[str, Any]:
         text: str
-        data: dict
+        data: dict[str, Any]
         text = resources.read_text("preparse.tests", "data.toml")
         data = tomllib.loads(text)
         return data
@@ -26,7 +26,9 @@ class utils:
 class TestDataToml(unittest.TestCase):
 
     def test_0(self: Self) -> None:
-        data: dict
+        data: dict[str, Any]
+        name: str
+        kwargs: dict
         data = utils.get_data()
         for name, kwargs in data.items():
             with self.subTest(msg=name, **kwargs):
@@ -46,6 +48,7 @@ class TestDataToml(unittest.TestCase):
         answer: list
         erranswer: list
         superanswer: list
+        parser: PreParser
         capture = list()
 
         def warn(value: Any) -> None:
