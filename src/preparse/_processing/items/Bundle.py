@@ -12,12 +12,6 @@ class Bundle(Option):
 
     __slots__ = ()
 
-    @dataprop
-    def chars(self: Self, x: Any) -> str:
-        return str(x)
-
-    #
-
     def __init__(
         self: Self,
         *,
@@ -58,6 +52,10 @@ class Bundle(Option):
                 ans.insert(0, x[-1])
                 x = x[:-1]
         return ans
+
+    @dataprop
+    def chars(self: Self, x: Any) -> str:
+        return str(x)
 
     def deparse(self: Self) -> list[str]:
         if self.right is None:
