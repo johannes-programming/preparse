@@ -1,9 +1,4 @@
-import abc
-import operator
 from typing import *
-
-import setdoc
-from datarepr import datarepr
 
 from preparse._processing.items.Item import Item
 from preparse._utils.dataprop import dataprop
