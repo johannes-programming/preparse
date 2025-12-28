@@ -22,6 +22,45 @@ def parse(args: list[str], **kwargs: Any) -> list[Item]:
     return list(parse_generator(args, **kwargs))
 
 
+def parse_bundling(
+    arg: str,
+    *,
+    cause: FunctionType,
+    optdict: dict,
+) -> Bundle:
+    ans: Bundle
+    x: int
+    y: str
+    ans = Bundle(chars="")
+    for x, y in enumerate(arg):
+        if x == 0:
+            continue
+        ans.chars += y
+        try:
+            ans.nargs = optdict["-" + y]
+        except KeyError:
+            cause(PIOW, option=y, islong=False)
+            ans.nargs = Nargs.NO_ARGUMENT
+        if ans.nargs == Nargs.NO_ARGUMENT:
+            continue
+        if ans.nargs == Nargs.OPTIONAL_ARGUMENT or x < len(arg) - 1:
+            ans.joined = True
+            ans.right = arg[x + 1 :]
+        return ans
+    return ans
+
+
+def parse_cause(
+    *,
+    prog: str,
+    warn: FunctionType,
+) -> FunctionType:
+    def ans(cls: type, **kwargs: Any) -> None:
+        warn(cls(prog=prog, **kwargs))
+
+    return ans
+
+
 def parse_generator(
     items: list[Positional],
     *,
@@ -80,40 +119,6 @@ def parse_generator(
     else:
         cause(PRAW, option=last.chars[-1], islong=False)
     yield last
-
-
-def parse_cause(
-    *,
-    prog: str,
-    warn: FunctionType,
-) -> FunctionType:
-    def ans(cls: type, **kwargs: Any) -> None:
-        warn(cls(prog=prog, **kwargs))
-
-    return ans
-
-
-def parse_option(
-    arg: str,
-    *,
-    cause: FunctionType,
-    expectsabbr: bool,
-    optdict: dict,
-    **kwargs: Any,
-) -> Option:
-    if parse_islong(arg, **kwargs):
-        return parse_long(
-            arg,
-            cause=cause,
-            expectsabbr=expectsabbr,
-            optdict=optdict,
-        )
-    else:
-        return parse_bundling(
-            arg,
-            cause=cause,
-            optdict=optdict,
-        )
 
 
 def parse_islong(
@@ -179,29 +184,24 @@ def parse_long_startswith(
     return ans
 
 
-def parse_bundling(
+def parse_option(
     arg: str,
     *,
     cause: FunctionType,
+    expectsabbr: bool,
     optdict: dict,
-) -> Bundle:
-    ans: Bundle
-    x: int
-    y: str
-    ans = Bundle(chars="")
-    for x, y in enumerate(arg):
-        if x == 0:
-            continue
-        ans.chars += y
-        try:
-            ans.nargs = optdict["-" + y]
-        except KeyError:
-            cause(PIOW, option=y, islong=False)
-            ans.nargs = Nargs.NO_ARGUMENT
-        if ans.nargs == Nargs.NO_ARGUMENT:
-            continue
-        if ans.nargs == Nargs.OPTIONAL_ARGUMENT or x < len(arg) - 1:
-            ans.joined = True
-            ans.right = arg[x + 1 :]
-        return ans
-    return ans
+    **kwargs: Any,
+) -> Option:
+    if parse_islong(arg, **kwargs):
+        return parse_long(
+            arg,
+            cause=cause,
+            expectsabbr=expectsabbr,
+            optdict=optdict,
+        )
+    else:
+        return parse_bundling(
+            arg,
+            cause=cause,
+            optdict=optdict,
+        )
