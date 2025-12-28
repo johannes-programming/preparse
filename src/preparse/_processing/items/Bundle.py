@@ -1,5 +1,7 @@
 from typing import *
 
+import setdoc
+
 from preparse._processing.items.Item import Item
 from preparse._processing.items.Option import Option
 from preparse._utils.dataprop import dataprop
@@ -12,6 +14,7 @@ class Bundle(Option):
 
     __slots__ = ()
 
+    @setdoc.basic
     def __init__(
         self: Self,
         *,

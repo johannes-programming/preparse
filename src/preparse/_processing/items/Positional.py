@@ -1,5 +1,7 @@
 from typing import *
 
+import setdoc
+
 from preparse._processing.items.Item import Item
 from preparse._utils.dataprop import dataprop
 from preparse.core.enums import *
@@ -11,11 +13,7 @@ class Positional(Item):
 
     __slots__ = ()
 
-    @dataprop
-    def value(self: Self, x: Any) -> str:
-        return str(x)
-
-    #
+    @setdoc.basic
     def __init__(self: Self, value: Any) -> None:
         self.value = value
 
@@ -28,3 +26,7 @@ class Positional(Item):
     @classmethod
     def sortkey(cls: type) -> int:
         return 2
+
+    @dataprop
+    def value(self: Self, x: Any) -> str:
+        return str(x)
