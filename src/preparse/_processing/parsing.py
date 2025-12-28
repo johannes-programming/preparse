@@ -164,7 +164,7 @@ def parse_long_startswith(
     abbr: str,
     *,
     keys: Iterable[str],
-):
+) -> list[str]:
     x: str
     ans: list[str]
     ans = list()
