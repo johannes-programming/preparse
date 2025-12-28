@@ -12,6 +12,11 @@ __all__ = ["Bundle"]
 
 class Bundle(Option):
 
+    chars: str
+    joined: bool
+    nargs: Nargs
+    right: Optional[str]
+
     __slots__ = ()
 
     @setdoc.basic
