@@ -7,7 +7,7 @@ __all__ = ["pull"]
 
 
 def pull(args: Optional[Iterable] = None) -> list[Positional]:
-    "This method parses args."
+    "This method acquires args."
     argiter: Iterable
     if args is None:
         argiter = sys.argv[1:]
