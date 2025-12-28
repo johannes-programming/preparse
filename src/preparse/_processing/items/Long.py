@@ -1,6 +1,8 @@
 import operator
 from typing import *
 
+import setdoc
+
 from preparse._processing.items.Option import Option
 from preparse._utils.dataprop import dataprop
 from preparse.core.enums import *
@@ -12,16 +14,7 @@ class Long(Option):
 
     __slots__ = ()
 
-    @dataprop
-    def fullkey(self: Self, x: Any) -> str:
-        return str(x)
-
-    @dataprop
-    def abbrlen(self: Self, x: Optional[SupportsIndex]) -> Optional[int]:
-        if x is not None:
-            return operator.index(x)
-
-    #
+    @setdoc.basic
     def __init__(
         self: Self,
         *,
@@ -39,6 +32,11 @@ class Long(Option):
     def abbr(self: Self) -> str:
         return self.fullkey[: self.abbrlen]
 
+    @dataprop
+    def abbrlen(self: Self, x: Optional[SupportsIndex]) -> Optional[int]:
+        if x is not None:
+            return operator.index(x)
+
     def deparse(self: Self) -> list[str]:
         if self.right is None:
             return [self.abbr]
@@ -46,3 +44,7 @@ class Long(Option):
             return [self.abbr + "=" + self.right]
         else:
             return [self.abbr, self.right]
+
+    @dataprop
+    def fullkey(self: Self, x: Any) -> str:
+        return str(x)
