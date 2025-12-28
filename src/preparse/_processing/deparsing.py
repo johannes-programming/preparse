@@ -1,6 +1,6 @@
 from typing import *
 
-from preparse._processing.items import *
+from preparse._processing.items.Item import Item
 
 __all__ = ["deparse"]
 
