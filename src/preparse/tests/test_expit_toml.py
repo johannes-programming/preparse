@@ -9,6 +9,8 @@ from click.testing import CliRunner
 
 from preparse.core import *
 
+__all__ = ["TestMainFunction"]
+
 
 class expit:
 

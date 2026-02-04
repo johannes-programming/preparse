@@ -2,13 +2,14 @@ import abc
 from typing import *
 
 import setdoc
+from copyable import Copyable
 
 from preparse.core.enums import *
 
 __all__ = ["Item"]
 
 
-class Item(abc.ABC):
+class Item(Copyable):
     __slots__ = ("_data",)
 
     @setdoc.basic

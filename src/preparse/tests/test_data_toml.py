@@ -6,6 +6,8 @@ from typing import *
 
 from preparse.core import *
 
+__all__ = ["TestDataToml"]
+
 
 class utils:
     def get_data() -> dict[str, Any]:

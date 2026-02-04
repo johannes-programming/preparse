@@ -121,29 +121,29 @@ def digest_order(
     reconcilesorders: bool,
 ) -> list[Item]:
     ans: list[Item]
-    i: int
     comp: bool
+    index: int
     ans = list(items)
     if not reconcilesorders:
         return ans
     if not expectsposix:
         ans.sort(key=digest_order_key)
         return ans
-    i = len(ans)
+    index = len(ans)
     comp = True
     while True:
-        i -= 1
-        if i == -1:
+        index -= 1
+        if index == -1:
             break
-        if isinstance(ans[i], Option):
+        if isinstance(ans[index], Option):
             break
-        if isinstance(ans[i], Special):
+        if isinstance(ans[index], Special):
             comp = True
             break
-        if not ans[i].isobvious():
+        if not ans[index].isobvious():
             comp = False
     if not comp:
-        ans.insert(i + 1, Special())
+        ans.insert(index + 1, Special())
     return ans
 
 
@@ -166,21 +166,21 @@ def digest_special(
 
 def digest_special_max(items: list[Item]) -> list[Item]:
     ans: list[Item]
-    i: int
+    index: int
     ans = list(items)
-    i = len(items)
+    index = len(items)
     while True:
-        i -= 1
-        if i == -1:
+        index -= 1
+        if index == -1:
             break
-        if isinstance(ans[i], Special):
+        if isinstance(ans[index], Special):
             break
-        if isinstance(ans[i], Positional):
+        if isinstance(ans[index], Positional):
             continue
-        if ans[i].ishungry():
-            ans[i].joined = False
-            ans[i].right = "--"
-        ans.insert(i + 1, Special())
+        if ans[index].ishungry():
+            ans[index].joined = False
+            ans[index].right = "--"
+        ans.insert(index + 1, Special())
         break
     return ans
 
@@ -192,26 +192,26 @@ def digest_special_min(
     reconcilesorders: bool,
 ) -> list[Item]:
     ans: list[Item]
+    index: int
     isdel: bool
     isposix: bool
-    i: int
     ans = list(items)
     isdel = True
     isposix = expectsposix and not reconcilesorders
-    i = len(items)
+    index = len(items)
     while True:
-        i -= 1
-        if i == -1:
+        index -= 1
+        if index == -1:
             isdel = False
             break
-        if isinstance(ans[i], Option):
+        if isinstance(ans[index], Option):
             isdel = False
             break
-        if isinstance(ans[i], Special):
+        if isinstance(ans[index], Special):
             break
-        isdel = ans[i].isobvious()
+        isdel = ans[index].isobvious()
         if not (isdel or isposix):
             break
     if isdel:
-        ans.pop(i)
+        ans.pop(index)
     return ans

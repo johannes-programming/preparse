@@ -1,7 +1,8 @@
-import abc
+from abc import abstractmethod
 from typing import *
 
 import setdoc
+from copyable import Copyable
 from datarepr import datarepr
 
 from preparse._utils import *
@@ -15,7 +16,7 @@ __all__ = [
 ]
 
 
-class PreparseWarning(Warning, metaclass=abc.ABCMeta):
+class PreparseWarning(Warning, Copyable):
 
     @setdoc.basic
     def __repr__(self: Self) -> str:
@@ -34,7 +35,7 @@ class PreparseWarning(Warning, metaclass=abc.ABCMeta):
     def copy(self: Self) -> Self:
         return type(self)(**self.todict())
 
-    @abc.abstractmethod
+    @abstractmethod
     def getmsg(self: Self) -> str: ...
 
     @dataprop

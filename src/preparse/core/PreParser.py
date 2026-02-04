@@ -5,6 +5,7 @@ from typing import *
 
 import click as cl
 import setdoc
+from copyable import Copyable
 from datarepr import datarepr
 from tofunc import tofunc
 
@@ -17,9 +18,7 @@ from preparse.core.warnings import *
 __all__ = ["PreParser"]
 
 
-class PreParser:
-
-    __slots__ = ("_data",)
+class PreParser(Copyable):
 
     allowslong: bool
     allowsshort: bool
@@ -32,6 +31,8 @@ class PreParser:
     reconcilesorders: bool
     special: Tuning
     warn: types.FunctionType
+
+    __slots__ = ("_data",)
 
     @setdoc.basic
     def __init__(
