@@ -74,8 +74,8 @@ class Bundle(Option):
             return ["-" + self.chars, self.right]
 
     def split(self: Self, *, allowslong: bool) -> list[Item]:
-        parts: list[str]
         ans: list[Self]
+        parts: list[str]
         x: str
         if allowslong:
             parts = self._split_allowslong(self.chars)
