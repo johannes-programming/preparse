@@ -44,11 +44,11 @@ class TestDataToml(unittest.TestCase):
         warnings: Any,
         **kwargs: Any,
     ) -> None:
+        answer: list
         capture: list
         data: dict
-        msg: str
-        answer: list
         erranswer: list
+        msg: str
         superanswer: list
         parser: PreParser
         capture = list()
