@@ -4,12 +4,14 @@ import types
 from typing import *
 
 import overloadable
+import setdoc
+from copyable import Copyable
 
 __all__ = ["Click"]
 
 
 @dataclasses.dataclass
-class Click:
+class Click(Copyable):
 
     parser: Any
     cmd: Any = True
@@ -48,3 +50,7 @@ class Click:
     def __call__(self: Self, target: Any) -> Any:
         target.parse_args = self(target.parse_args)
         return target
+
+    @setdoc.basic
+    def copy(self: Self) -> Self:
+        return type(self)(parser=self.parser, cmd=self.cmd, ctx=self.ctx)

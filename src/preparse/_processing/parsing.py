@@ -140,8 +140,8 @@ def parse_long(
     expectsabbr: bool,
     optdict: dict,
 ) -> Long:
-    parts: list[str]
     ans: Long
+    parts: list[str]
     parts = arg.split("=", 1)
     ans = Long(fullkey=parts.pop(0))
     if len(parts):
@@ -175,8 +175,8 @@ def parse_long_startswith(
     *,
     keys: Iterable[str],
 ) -> list[str]:
-    x: str
     ans: list[str]
+    x: str
     ans = list()
     for x in keys:
         if x.startswith(abbr):
