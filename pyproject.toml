@@ -20,7 +20,7 @@ classifiers = [
 ]
 dependencies = [
     "click>=8.2,<9",
-    "cmp3>=0.5.1,<1",
+    "cmp3>=1.0,<2",
     "copyable>=1.0,<2",
     "datahold>=3.0,<4",
     "datarepr>=1.0.2,<2",
@@ -34,7 +34,7 @@ keywords = []
 name = "preparse"
 readme = "README.rst"
 requires-python = ">=3.11"
-version = "1.0.1"
+version = "1.0.2"
 
 [project.license]
 file = "LICENSE.txt"
