@@ -407,13 +407,20 @@ def main(x: float) -> None:
             </dd>
         </dl>
     </body>
-    <script src="https://www.johannes-programming.online/script.js"></script>
-    <script>
-        setupLinksCorpus("preparse");
-        setupInstallCorpus("preparse");
-        setupTestingCorpus("preparse");
-        setupLicenseCorpus("preparse");
+    <script type="module">
+        import {
+            setupImpressumCorpus,
+            setupInstallCorpus,
+            setupLicenseCorpus,
+            setupLinksCorpus,
+            setupTestingCorpus,
+            addMetaAndLinkTags,
+        } from "https://www.johannes-programming.online/main.js";
         setupImpressumCorpus("preparse");
+        setupInstallCorpus("preparse");
+        setupLicenseCorpus("preparse");
+        setupLinksCorpus("preparse");
+        setupTestingCorpus("preparse");
         addMetaAndLinkTags();
     </script>
 </html>
