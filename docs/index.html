@@ -85,19 +85,19 @@ def main(x: float) -> None:
                                     <dd>
                                         <p>Calling the class creates und returns a new instance.</p>
                                         <dl class="heading4">
-                                            <dt id="PreParser.allowslong">allowslong</dt>
+                                            <dt id="PreParser.allowslong">allowslong: bool</dt>
                                             <dd>
                                                 <p>
                                                     This boolean property determines whether long options are allowed.
                                                 </p>
                                             </dd>
-                                            <dt id="PreParser.allowsshort">allowsshort</dt>
+                                            <dt id="PreParser.allowsshort">allowsshort: bool</dt>
                                             <dd>
                                                 <p>
                                                     This boolean property determines whether short options are allowed.
                                                 </p>
                                             </dd>
-                                            <dt id="PreParser.bundling">bundling</dt>
+                                            <dt id="PreParser.bundling">bundling: Tuning</dt>
                                             <dd>
                                                 <p>
                                                     This <code><a href="#Tuning.__new__">Tuning</a></code> property determines the approach to bundling of short option.
@@ -122,25 +122,25 @@ def main(x: float) -> None:
                                                     This method returns a copy of the current instance. 
                                                 </p>
                                             </dd>
-                                            <dt id="PreParser.expandsabbr">expandsabbr</dt>
+                                            <dt id="PreParser.expandsabbr">expandsabbr: bool</dt>
                                             <dd>
                                                 <p>
                                                     This boolean property determines whether recognized abbreviations of long options are to be expanded to their full length.
                                                 </p>
                                             </dd>
-                                            <dt id="PreParser.expectsabbr">expectsabbr</dt>
+                                            <dt id="PreParser.expectsabbr">expectsabbr: bool</dt>
                                             <dd>
                                                 <p>
                                                     This boolean property determines whether abbreviations of long options are expected.
                                                 </p>
                                             </dd>
-                                            <dt id="PreParser.expectsposix">expectsposix</dt>
+                                            <dt id="PreParser.expectsposix">expectsposix: bool</dt>
                                             <dd>
                                                 <p>
                                                     This boolean property determines whether the order of arguments to conform to the POSIX standard, i.e. all arguments after the first positional argument also being positonal.
                                                 </p>
                                             </dd>
-                                            <dt id="PreParser.optdict">optdict</dt>
+                                            <dt id="PreParser.optdict">optdict: Optdict</dt>
                                             <dd>
                                                 <p>
                                                     This property holds a dictionary. 
@@ -150,7 +150,7 @@ def main(x: float) -> None:
                                                 </p>
                                             </dd>
                                             <dt id="PreParser.parse_args">
-                                                parse_args(args: Optional[Iterable] = None) -&gt; List[str]
+                                                parse_args(args: Optional[Iterable] = None) -&gt; list[str]
                                             </dt>
                                             <dd>
                                                 <p>
@@ -162,7 +162,7 @@ def main(x: float) -> None:
                                                     to a list there will be no changes after the first run.
                                                 </p>
                                             </dd>
-                                            <dt id="PreParser.prog">prog</dt>
+                                            <dt id="PreParser.prog">prog: str</dt>
                                             <dd>
                                                 <p>
                                                     This <code>str</code> property represents the name of the program. 
@@ -170,7 +170,8 @@ def main(x: float) -> None:
                                                     then <code>str(sys.argv[0])</code> is saved.
                                                 </p>
                                             </dd>
-                                            <dt id="PreParser.reconcilesorders">reconcilesorders</dt>
+                                            <dt id="PreParser.reconcilesorders">reconcilesorders: bool
+                                            </dt>
                                             <dd>
                                                 <p>
                                                     This boolean property determines whether compatibility with both orders, POSIX and the interleaving of options with positonal arguments, should be enforced.
@@ -196,7 +197,7 @@ def main(x: float) -> None:
                                                     Concretely the <code><a href="#PreParser.prog">prog</a></code> property is changed.
                                                 </p>
                                             </dd>
-                                            <dt id="PreParser.special">special</dt>
+                                            <dt id="PreParser.special">special: Tuning</dt>
                                             <dd>
                                                 <p>
                                                     This <code><a href="#Tuning.__new__">Tuning</a></code> property determines the approach to the special argument <code>'--'</code>.
