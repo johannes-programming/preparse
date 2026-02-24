@@ -3,9 +3,8 @@ from typing import *
 import cmp3
 import datahold
 import setdoc
-from copyable import Copyable
 from datarepr import datarepr
-from scaevola import Scaevola
+from frozendict import frozendict
 
 from preparse.core.enums import *
 from preparse.core.warnings import *
@@ -13,28 +12,19 @@ from preparse.core.warnings import *
 __all__ = ["Optdict"]
 
 
-class Optdict(cmp3.CmpABC, datahold.HoldDict, Scaevola, Copyable):
+class Optdict(cmp3.CmpABC, datahold.HoldDict[str, Nargs]):
     __slots__ = ()
 
-    @setdoc.basic
-    def __bool__(self: Self, /) -> bool:
-        return bool(self._data)
+    data: frozendict[str, Nargs]
 
     @setdoc.basic
     def __cmp__(self: Self, other: Any, /) -> Optional[int]:
-        opp: Self
         if type(self) is type(other):
-            opp = other
+            return cmp3.cmp(self._data, other._data, mode="eq_strict")
         else:
-            try:
-                opp = type(self)(other)
-            except Exception:
-                return
-        return cmp3.cmp(self._data, opp._data, mode="eq_strict")
+            return cmp3.cmp(self._data, other, mode="eq_strict")
 
-    @setdoc.basic
-    def __format__(self: Self, format_spec: Any = "", /) -> str:
-        return datarepr(type(self).__name__, format(dict(self._data), format_spec))
+    __format__ = object.__format__
 
     @setdoc.basic
     def __init__(self: Self, data: Iterable = (), /, **kwargs: Any) -> None:
@@ -44,21 +34,22 @@ class Optdict(cmp3.CmpABC, datahold.HoldDict, Scaevola, Copyable):
     def __repr__(self: Self, /) -> str:
         return datarepr(type(self).__name__, dict(self._data))
 
-    @setdoc.basic
-    def __str__(self: Self, /) -> str:
-        return repr(self)
+    __str__ = object.__str__
 
     @setdoc.basic
     def copy(self: Self, /) -> Self:
         return type(self)(self.data)
 
     @property
-    def data(self: Self) -> dict:
-        return dict(self._data)
+    def data(self: Self) -> frozendict[str, Nargs]:
+        return frozendict[str, Nargs](self._data)
 
     @data.setter
     def data(self: Self, value: Any) -> None:
-        d: dict
-        d = dict(value)
-        d = dict(zip(map(str, d.keys()), map(Nargs, d.values()), strict=True))
-        self._data = d
+        a: frozendict
+        x: map
+        y: map
+        a = frozendict(value)
+        x = map(str, a.keys())
+        y = map(Nargs, a.values())
+        self._data = frozendict[str, Nargs](zip(x, y, strict=True))
