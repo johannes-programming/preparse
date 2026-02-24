@@ -17,6 +17,9 @@ __all__ = [
 
 
 class PreparseWarning(Warning, Copyable):
+    args: tuple[str]
+    option: str
+    prog: str
 
     @setdoc.basic
     def __repr__(self: Self) -> str:
@@ -27,7 +30,7 @@ class PreparseWarning(Warning, Copyable):
         return f"{self.prog}: {self.getmsg()}"
 
     @property
-    def args(self: Self) -> tuple:
+    def args(self: Self) -> tuple[str]:
         "This property returns (str(self),)."
         return (str(self),)
 
@@ -53,17 +56,16 @@ class PreparseWarning(Warning, Copyable):
             ans = self._data
         except AttributeError:
             self._data = dict()
-            ans = dict()
+            return dict()
         else:
-            ans = dict(ans)
-        return ans
+            return dict(ans)
 
 
 class PreparseDualWarning(PreparseWarning):
 
-    @dataprop
-    def islong(self: Self, value: Any) -> bool:
-        return bool(value)
+    args: tuple[str]
+    option: str
+    prog: str
 
     @setdoc.basic
     def __init__(self: Self, *, prog: Any, option: Any, islong: Any) -> None:
@@ -78,25 +80,39 @@ class PreparseDualWarning(PreparseWarning):
         else:
             return type(self)._shortmsg % self.option
 
+    @dataprop
+    def islong(self: Self, value: Any) -> bool:
+        return bool(value)
+
 
 class PreparseInvalidOptionWarning(PreparseDualWarning):
+    args: tuple[str]
+    option: str
+    prog: str
     _longmsg = "unrecognized option '%s'"
     _shortmsg = "invalid option -- '%s'"
 
 
 class PreparseRequiredArgumentWarning(PreparseDualWarning):
+    args: tuple[str]
+    option: str
+    prog: str
     _longmsg = "option '%s' requires an argument"
     _shortmsg = "option requires an argument -- '%s'"
 
 
-class PreparseLongonlyWarning(PreparseWarning): ...  # only possible for long options
+class PreparseLongonlyWarning(PreparseWarning):
+    args: tuple[str]
+    option: str
+    prog: str
+    # only possible for long options
 
 
 class PreparseAmbiguousOptionWarning(PreparseLongonlyWarning):
-
-    @dataprop
-    def possibilities(self: Self, value: Iterable) -> tuple[str, ...]:
-        return tuple(map(str, value))
+    args: tuple[str]
+    option: str
+    possibilities: tuple[str, ...]
+    prog: str
 
     @setdoc.basic
     def __init__(
@@ -115,8 +131,15 @@ class PreparseAmbiguousOptionWarning(PreparseLongonlyWarning):
             ans += " '%s'" % x
         return ans
 
+    @dataprop
+    def possibilities(self: Self, value: Iterable) -> tuple[str, ...]:
+        return tuple(map(str, value))
+
 
 class PreparseUnallowedArgumentWarning(PreparseLongonlyWarning):
+    args: tuple[str]
+    option: str
+    prog: str
     # option is always full key without value
 
     @setdoc.basic
