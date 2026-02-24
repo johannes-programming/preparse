@@ -5,7 +5,6 @@ import datahold
 import setdoc
 from copyable import Copyable
 from datarepr import datarepr
-from scaevola import Scaevola
 
 from preparse.core.enums import *
 from preparse.core.warnings import *
@@ -13,12 +12,8 @@ from preparse.core.warnings import *
 __all__ = ["Optdict"]
 
 
-class Optdict(cmp3.CmpABC, datahold.HoldDict, Scaevola, Copyable):
+class Optdict(cmp3.CmpABC, datahold.HoldDict):
     __slots__ = ()
-
-    @setdoc.basic
-    def __bool__(self: Self, /) -> bool:
-        return bool(self._data)
 
     @setdoc.basic
     def __cmp__(self: Self, other: Any, /) -> Optional[int]:
