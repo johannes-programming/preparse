@@ -13,7 +13,7 @@ def dataprop(func: Callable) -> property:
         self._data = getattr(self, "_data", dict())
         self._data[func.__name__] = func(self, value)
 
-    kwargs: dict
+    kwargs: dict[str, Any]
     kwargs = dict()
     kwargs["doc"] = func.__doc__
     kwargs["fget"] = fget
