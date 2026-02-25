@@ -5,6 +5,7 @@ import datahold
 import setdoc
 from copyable import Copyable
 from datarepr import datarepr
+from tofunc import tofunc
 
 from preparse.core.enums import *
 from preparse.core.warnings import *
@@ -27,9 +28,7 @@ class Optdict(cmp3.CmpABC, datahold.HoldDict):
                 return
         return cmp3.cmp(self._data, opp._data, mode="eq_strict")
 
-    @setdoc.basic
-    def __format__(self: Self, format_spec: Any = "", /) -> str:
-        return datarepr(type(self).__name__, format(dict(self._data), format_spec))
+    __format__ = setdoc.basic(tofunc(object.__format__))
 
     @setdoc.basic
     def __init__(self: Self, data: Iterable = (), /, **kwargs: Any) -> None:
@@ -39,9 +38,7 @@ class Optdict(cmp3.CmpABC, datahold.HoldDict):
     def __repr__(self: Self, /) -> str:
         return datarepr(type(self).__name__, dict(self._data))
 
-    @setdoc.basic
-    def __str__(self: Self, /) -> str:
-        return repr(self)
+    __str__ = setdoc.basic(tofunc(object.__str__))
 
     @setdoc.basic
     def copy(self: Self, /) -> Self:
