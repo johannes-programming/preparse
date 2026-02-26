@@ -123,12 +123,10 @@ class PreParser(Copyable):
     @dataprop
     def prog(self: Self, value: Any) -> str:
         "This property represents the name of the program."
-        v: Any
         if value is None:
-            v = os.path.basename(sys.argv[0])
+            return str(os.path.basename(sys.argv[0]))
         else:
-            v = value
-        return str(v)
+            return str(value)
 
     @dataprop
     def reconcilesorders(self: Self, value: Any) -> bool:
@@ -171,10 +169,9 @@ class PreParser(Copyable):
             ans = self._data
         except AttributeError:
             self._data = dict()
-            ans = dict()
+            return dict()
         else:
-            ans = dict(ans)
-        return ans
+            return dict(ans)
 
     @dataprop
     def warn(self: Self, value: Callable) -> types.FunctionType:
