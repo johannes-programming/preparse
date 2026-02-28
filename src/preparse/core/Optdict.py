@@ -27,18 +27,10 @@ class Optdict(cmp3.CmpABC, datahold.HoldDict[str, Nargs]):
     __format__ = object.__format__
 
     @setdoc.basic
-    def __init__(self: Self, data: Iterable = (), /, **kwargs: Any) -> None:
-        self.data = dict(data, **kwargs)
-
-    @setdoc.basic
     def __repr__(self: Self, /) -> str:
         return datarepr(type(self).__name__, dict(self._data))
 
     __str__ = object.__str__
-
-    @setdoc.basic
-    def copy(self: Self, /) -> Self:
-        return type(self)(self.data)
 
     @property
     def data(self: Self) -> frozendict[str, Nargs]:
