@@ -1,12 +1,15 @@
 import unittest
 from typing import *
 
-from preparse.core import *
+from preparse.core.Click import Click
+from preparse.core.enums import *
+from preparse.core.PreParser import PreParser
+from preparse.core.warnings import *
 
 __all__ = ["TestPreparse"]
 
 
-class TestPreparse(unittest.TestCase):
+class TestPreParser(unittest.TestCase):
 
     def test_nargs_enum(self: Self) -> None:
         self.assertEqual(Nargs.NO_ARGUMENT, 0)
