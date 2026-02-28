@@ -26,7 +26,7 @@ dependencies = [
     "datarepr>=1.1,<2",
     "frozendict>=2.4.7,<3",
     "overloadable>=1.1,<2",
-    "setdoc>=1.2.9,<2",
+    "setdoc>=1.2.10,<2",
     "tofunc>=1.0,<2",
 ]
 description = "This project preparses args for further parsing later on."
@@ -34,7 +34,7 @@ keywords = []
 name = "preparse"
 readme = "README.rst"
 requires-python = ">=3.11"
-version = "1.0.7"
+version = "1.0.8"
 
 [project.license]
 file = "LICENSE.txt"
