@@ -1,0 +1,283 @@
+Overview
+--------
+
+The preparse project allows to preparse arguments before the main parsing. Its ability to deabbreviate options is especially useful for use with click.
+
+Links
+-----
+
+- Download: https://pypi.org/project/preparse/#files
+- Index: https://pypi.org/project/preparse/
+- Source: https://github.com/johannes-programming/preparse/
+- Website: https://preparse.johannes-programming.online/
+
+Installation
+------------
+
+To install preparse, you can use pip. Open your terminal and run:
+
+.. code-block:: shell
+
+    pip install preparse
+
+Introduction
+------------
+
+The preparse project allows for preprocessing a list of arguments so that they can be parsed definitively in a later step. This way, the functionality of another parsing system can be modified. The project is especially adapted to work with the click project.
+
+The project preparse is strongly inspired by the getopt and getopt_long libraries within C.
+
+Here is the implementation of the expit project (Version 1.0.13) to illustrate how preparse can be used to modify click.
+
+.. code-block:: python
+
+    import math
+
+    import click
+    import preparse
+
+    __all__ = ["function", "main"]
+
+
+    def function(x: float) -> float:
+        "This function is the logistical sigmoid, i.e. the expit function."
+        try:
+            p = math.exp(-x)
+        except OverflowError:
+            p = float("+inf")
+        return 1 / (1 + p)
+
+
+    @preparse.PreParser().click()
+    @click.command(add_help_option=False)
+    @click.help_option("-h", "--help")
+    @click.version_option(None, "-V", "--version")
+    @click.argument("x", type=float)
+    def main(x: float) -> None:
+        "This command applies the expit function to x."
+        click.echo(function(x))
+
+Features
+--------
+
+The PreParser class
+~~~~~~~~~~~~~~~~~~~
+
+This class is the centerpiece of the preparse. Its behaviour follows the principles of getopt from C.
+
+``class preparse.PreParser(*, allowslong: Any = True, allowsshort: Any = True, bundling: Any = Tuning.MAINTAIN, expandsabbr: Any = True, expectsabbr: Any = True, expectsposix: Any = False, optdict: Any = None, prog: Any = None, reconcilesorders: Any = True, special: Any = Tuning.MAINTAIN, warn: Callable = str)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Calling the class creates und returns a new instance.
+
+``allowslong: bool``
+""""""""""""""""""""
+
+This boolean property determines whether long options are allowed.
+
+``allowsshort: bool``
+"""""""""""""""""""""
+
+This boolean property determines whether short options are allowed.
+
+``bundling: Tuning``
+""""""""""""""""""""
+
+This Tuning property determines the approach to bundling of short option.
+
+``click(parser: Any, cmd: Any = True, ctx: Any = True) -> preparse.Click``
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+This method returns a decorator that infuses the current instance into parse_args.
+
+``copy() -> Self``
+""""""""""""""""""
+
+This method returns a copy of the current instance.
+
+``expandsabbr: bool``
+"""""""""""""""""""""
+
+This boolean property determines whether recognized abbreviations of long options are to be expanded to their full length.
+
+``expectsabbr: bool``
+"""""""""""""""""""""
+
+This boolean property determines whether abbreviations of long options are expected.
+
+``expectsposix: bool``
+""""""""""""""""""""""
+
+This boolean property determines whether the order of arguments to conform to the POSIX standard, i.e. all arguments after the first positional argument also being positonal.
+
+``optdict: Optdict``
+""""""""""""""""""""
+
+This property holds a dictionary. Its keys are the options. Its values specify Nargs. Options not found within the dictionary cause a PreparseInvalidOptionWarning and are then assumed to have no arguments.
+
+``parse_args(args: Optional[Iterable] = None) -> list[str]``
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+This method is at the core of the class. It returns a preparsed list of arguments. If None is passed as args then sys.argv[1:] is used. If the method is applied repeatedly to a list there will be no changes after the first run.
+
+``prog: str``
+"""""""""""""
+
+This str property represents the name of the program. If the value passed to the property is None then str(sys.argv[0]) is saved.
+
+``reconcilesorders: bool``
+""""""""""""""""""""""""""
+
+This boolean property determines whether compatibility with both orders, POSIX and the interleaving of options with positonal arguments, should be enforced.
+
+``reflectClickCommand(cmd: click.Command) -> None``
+"""""""""""""""""""""""""""""""""""""""""""""""""""
+
+This method alters the current instance to reflect a click.Command object. Concretely the optdict property is changed.
+
+``reflectClickContext(ctx: click.Context) -> None``
+"""""""""""""""""""""""""""""""""""""""""""""""""""
+
+This method alters the current instance to reflect a click.Context object. Concretely the prog property is changed.
+
+``special: Tuning``
+"""""""""""""""""""
+
+This Tuning property determines the approach to the special argument '--'.
+
+``todict() -> dict``
+""""""""""""""""""""
+
+This method a dict representing the current instance.
+
+``warn``
+""""""""
+
+This property holds a function that is called whenever parse_args encounters a warning. The warning is given as the only positional arguments. No keyword arguments are given. Its return value is discarded. Therefore, str is used to discard the warnings.
+
+The Click class
+~~~~~~~~~~~~~~~
+
+This dataclass provides decorators for embedding a PreParser object.
+
+``class preparse.Click(parser: Any, cmd: Any = True, ctx: Any = True)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Calling the class creates und returns a new instance.
+
+``__call__(target: Any) -> Any``
+""""""""""""""""""""""""""""""""
+
+This magic method implements self(target). It works as a decorator that embeds its parser into a given target from the library click.
+
+``cmd``
+"""""""
+
+This property determines if the reflectClickCommand method of parser is to be called.
+
+``copy() -> Self``
+""""""""""""""""""
+
+``ctx``
+"""""""
+
+This property determines if the reflectClickContext method of parser is to be called.
+
+``parser``
+""""""""""
+
+This property holds the parser to be embedded.
+
+The Optdict class
+~~~~~~~~~~~~~~~~~
+
+This class is a subclass of datahold.HoldDict with strings as keys and with Nargs as values. It is designed for PreParser.optdict.
+
+The Enums
+~~~~~~~~~
+
+These classes are subclasses of enum.IntEnum. Any value different from 0 (meaning no) and 1 (meaning yes) is interpreted as 2 (meaning intermediate).
+
+``class preparse.Tuning``
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
++-----------+-------+-----------------------------------------------------------------------------+
+| Name      | Value | Explanation                                                                 |
++===========+=======+=============================================================================+
+| MINIMIZE  | 0     | The PreParser minimizes the aspect in question.                             |
++-----------+-------+-----------------------------------------------------------------------------+
+| MAXIMIZE  | 1     | The PreParser maximizes the aspect in question.                             |
++-----------+-------+-----------------------------------------------------------------------------+
+| MAINTAIN  | 2     | The PreParser does not make any unforced changes to the aspect in question. |
++-----------+-------+-----------------------------------------------------------------------------+
+
+``class preparse.Nargs``
+^^^^^^^^^^^^^^^^^^^^^^^^
+
++-------------------+-------+----------------------------------------------+
+| Name              | Value | Explanation                                  |
++===================+=======+==============================================+
+| NO_ARGUMENT       | 0     | The option does not take an argument.        |
++-------------------+-------+----------------------------------------------+
+| REQUIRED_ARGUMENT | 1     | The option requires an argument.             |
++-------------------+-------+----------------------------------------------+
+| OPTIONAL_ARGUMENT | 2     | The option may take an argument.             |
++-------------------+-------+----------------------------------------------+
+
+The Warnings
+~~~~~~~~~~~~
+
+These classes are subclasses of Warning that are specifically designed to communicate issues with parsing.
+
+``class preparse.PreparseWarning``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This abstract base class is the base for all other warning types.
+
+``class preparse.PreparseAmbiguousOptionWarning(prog: Any, option: Any, possibilities: Any)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This class warns about ambiguous options. This can only happen for long options.
+
+``class preparse.PreparseInvalidOptionWarning(prog: Any, option: Any, islong: Any)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This class warns about invalid options.
+
+``class preparse.PreparseRequiredArgumentWarning(prog: Any, option: Any, islong: Any)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This class warns about missing required arguments.
+
+``class preparse.PreparseUnallowedArgumentWarning(prog: Any, option: Any)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This class warns about unallowed arguments. This can only happen for long options.
+
+The Tests
+~~~~~~~~~
+
+``preparse.test() -> unittest.TextTestResult``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This project can be tested through its test function.
+
+.. code-block:: python
+
+    import preparse
+    preparse.test()
+
+License
+-------
+
+This project is licensed under the MIT License.
+
+Impressum
+---------
+
+**Johannes Programming**
+
+- Name: Johannes
+- Email: johannes.programming@gmail.com
+- Homepage: https://www.johannes-programming.online/
+- Gravatar: https://www.johannes-programming.fyi/
