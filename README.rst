@@ -2,4 +2,6 @@
 preparse
 ========
 
-Visit the website `https://preparse.johannes-programming.online/ <https://preparse.johannes-programming.online/>`_ for more information.
+Each minor version of the project has its own RST file in this projects ``docs`` folder.
+They are also exposed through the website of the project.
+Read there for more information.
