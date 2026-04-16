@@ -182,21 +182,21 @@ This dataclass provides decorators for embedding a ``PreParser`` object.
 This magic method implements ``self(target)``.
 It works as a decorator that embeds its parser into a given target from the library click.
 
-``cmd``
-"""""""
+``cmd: Any``
+""""""""""""
 
 This property determines if the ``reflectClickCommand`` method of parser is to be called.
 
 ``copy() -> Self``
 """"""""""""""""""
 
-``ctx``
-"""""""
+``ctx: Any``
+""""""""""""
 
 This property determines if the ``reflectClickContext`` method of parser is to be called.
 
-``parser``
-""""""""""
+``parser: Any``
+"""""""""""""""
 
 This property holds the parser to be embedded.
 
