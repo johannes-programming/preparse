@@ -1,7 +1,8 @@
 Overview
 --------
 
-The preparse project allows to preparse arguments before the main parsing. Its ability to deabbreviate options is especially useful for use with click.
+The preparse project allows to preparse arguments before the main parsing. 
+Its ability to deabbreviate options is especially useful for use with ``click``.
 
 Links
 -----
@@ -27,7 +28,7 @@ The preparse project allows for preprocessing a list of arguments so that they c
 
 The project preparse is strongly inspired by the getopt and getopt_long libraries within C.
 
-Here is the implementation of the expit project (Version 1.0.13) to illustrate how preparse can be used to modify click.
+Here is the implementation of the ``expit`` project (Version 1.0.13) to illustrate how preparse can be used to modify click.
 
 .. code-block:: python
 
@@ -67,7 +68,6 @@ The PreParser class
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This class is the centerpiece of the preparse. Its behaviour follows the principles of getopt from C.
-Calling the class creates und returns a new instance.
 
 ``allowslong: bool``
 """"""""""""""""""""
