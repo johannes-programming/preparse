@@ -159,8 +159,8 @@ This ``Tuning`` property determines the approach to the special argument ``'--'`
 
 This method a dict representing the current instance.
 
-``warn``
-""""""""
+``warn: types.FunctionType``
+""""""""""""""""""""""""""""
 
 This property holds a function that is called whenever ``parse_args`` encounters a warning. 
 The warning is given as the only positional arguments. 
