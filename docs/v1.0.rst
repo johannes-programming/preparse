@@ -63,11 +63,10 @@ Features
 The PreParser class
 ~~~~~~~~~~~~~~~~~~~
 
-This class is the centerpiece of the preparse. Its behaviour follows the principles of getopt from C.
-
 ``class preparse.PreParser(*, allowslong: Any = True, allowsshort: Any = True, bundling: Any = Tuning.MAINTAIN, expandsabbr: Any = True, expectsabbr: Any = True, expectsposix: Any = False, optdict: Any = None, prog: Any = None, reconcilesorders: Any = True, special: Any = Tuning.MAINTAIN, warn: Callable = str)``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+This class is the centerpiece of the preparse. Its behaviour follows the principles of getopt from C.
 Calling the class creates und returns a new instance.
 
 ``allowslong: bool``
@@ -83,12 +82,12 @@ This boolean property determines whether short options are allowed.
 ``bundling: Tuning``
 """"""""""""""""""""
 
-This Tuning property determines the approach to bundling of short option.
+This ``Tuning`` property determines the approach to bundling of short option.
 
-``click(parser: Any, cmd: Any = True, ctx: Any = True) -> preparse.Click``
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+``click(cmd: Any = True, ctx: Any = True) -> preparse.Click``
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-This method returns a decorator that infuses the current instance into parse_args.
+This method returns a decorator that infuses the current instance into ``parse_args``.
 
 ``copy() -> Self``
 """"""""""""""""""
@@ -113,37 +112,47 @@ This boolean property determines whether the order of arguments to conform to th
 ``optdict: Optdict``
 """"""""""""""""""""
 
-This property holds a dictionary. Its keys are the options. Its values specify Nargs. Options not found within the dictionary cause a PreparseInvalidOptionWarning and are then assumed to have no arguments.
+This property holds a dictionary. 
+Its keys are the options. 
+Its values specify ``Nargs``. 
+Options not found within the dictionary cause a PreparseInvalidOptionWarning and are then assumed to have no arguments.
 
 ``parse_args(args: Optional[Iterable] = None) -> list[str]``
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-This method is at the core of the class. It returns a preparsed list of arguments. If None is passed as args then sys.argv[1:] is used. If the method is applied repeatedly to a list there will be no changes after the first run.
+This method is at the core of the class. 
+It returns a preparsed list of arguments. 
+If ``None`` is passed as args then ``sys.argv[1:]`` is used. 
+If the method is applied repeatedly to a list there will be no changes after the first run.
 
 ``prog: str``
 """""""""""""
 
-This str property represents the name of the program. If the value passed to the property is None then str(sys.argv[0]) is saved.
+This ``str`` property represents the name of the program. 
+If the value passed to the property is ``None`` then ``str(sys.argv[0])`` is saved.
 
 ``reconcilesorders: bool``
 """"""""""""""""""""""""""
 
-This boolean property determines whether compatibility with both orders, POSIX and the interleaving of options with positonal arguments, should be enforced.
+This boolean property determines whether compatibility with both orders, 
+POSIX and the interleaving of options with positonal arguments, should be enforced.
 
 ``reflectClickCommand(cmd: click.Command) -> None``
 """""""""""""""""""""""""""""""""""""""""""""""""""
 
-This method alters the current instance to reflect a click.Command object. Concretely the optdict property is changed.
+This method alters the current instance to reflect a ``click.Command`` object. 
+Concretely the optdict property is changed.
 
 ``reflectClickContext(ctx: click.Context) -> None``
 """""""""""""""""""""""""""""""""""""""""""""""""""
 
-This method alters the current instance to reflect a click.Context object. Concretely the prog property is changed.
+This method alters the current instance to reflect a ``click.Context`` object. 
+Concretely the prog property is changed.
 
 ``special: Tuning``
 """""""""""""""""""
 
-This Tuning property determines the approach to the special argument '--'.
+This ``Tuning`` property determines the approach to the special argument ``'--'``.
 
 ``todict() -> dict``
 """"""""""""""""""""
@@ -153,27 +162,30 @@ This method a dict representing the current instance.
 ``warn``
 """"""""
 
-This property holds a function that is called whenever parse_args encounters a warning. The warning is given as the only positional arguments. No keyword arguments are given. Its return value is discarded. Therefore, str is used to discard the warnings.
+This property holds a function that is called whenever ``parse_args`` encounters a warning. 
+The warning is given as the only positional arguments. 
+No keyword arguments are given. 
+Its return value is discarded. 
+Therefore, ``str`` is used to discard the warnings.
 
 The Click class
 ~~~~~~~~~~~~~~~
 
-This dataclass provides decorators for embedding a PreParser object.
-
 ``class preparse.Click(parser: Any, cmd: Any = True, ctx: Any = True)``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Calling the class creates und returns a new instance.
+This dataclass provides decorators for embedding a ``PreParser`` object.
 
 ``__call__(target: Any) -> Any``
 """"""""""""""""""""""""""""""""
 
-This magic method implements self(target). It works as a decorator that embeds its parser into a given target from the library click.
+This magic method implements ``self(target)``.
+It works as a decorator that embeds its parser into a given target from the library click.
 
 ``cmd``
 """""""
 
-This property determines if the reflectClickCommand method of parser is to be called.
+This property determines if the ``reflectClickCommand`` method of parser is to be called.
 
 ``copy() -> Self``
 """"""""""""""""""
@@ -181,7 +193,7 @@ This property determines if the reflectClickCommand method of parser is to be ca
 ``ctx``
 """""""
 
-This property determines if the reflectClickContext method of parser is to be called.
+This property determines if the ``reflectClickContext`` method of parser is to be called.
 
 ``parser``
 """"""""""
@@ -191,25 +203,30 @@ This property holds the parser to be embedded.
 The Optdict class
 ~~~~~~~~~~~~~~~~~
 
-This class is a subclass of datahold.HoldDict with strings as keys and with Nargs as values. It is designed for PreParser.optdict.
+``class preparse.Optdict``
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This class is a subclass of ``datahold.HoldDict`` with strings as keys and with ``Nargs`` as values. 
+It is designed for ``PreParser.optdict``.
 
 The Enums
 ~~~~~~~~~
 
-These classes are subclasses of enum.IntEnum. Any value different from 0 (meaning no) and 1 (meaning yes) is interpreted as 2 (meaning intermediate).
+These classes are subclasses of ``enum.IntEnum``. 
+Any value different from ``0`` (meaning no) and ``1`` (meaning yes) is interpreted as ``2`` (meaning intermediate).
 
 ``class preparse.Tuning``
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-+-----------+-------+-----------------------------------------------------------------------------+
-| Name      | Value | Explanation                                                                 |
-+===========+=======+=============================================================================+
-| MINIMIZE  | 0     | The PreParser minimizes the aspect in question.                             |
-+-----------+-------+-----------------------------------------------------------------------------+
-| MAXIMIZE  | 1     | The PreParser maximizes the aspect in question.                             |
-+-----------+-------+-----------------------------------------------------------------------------+
-| MAINTAIN  | 2     | The PreParser does not make any unforced changes to the aspect in question. |
-+-----------+-------+-----------------------------------------------------------------------------+
++--------------+-------+-----------------------------------------------------------------------------+
+| Name         | Value | Explanation                                                                 |
++==============+=======+=============================================================================+
+| ``MINIMIZE`` | ``0`` | The PreParser minimizes the aspect in question.                             |
++--------------+-------+-----------------------------------------------------------------------------+
+| ``MAXIMIZE`` | ``1`` | The PreParser maximizes the aspect in question.                             |
++--------------+-------+-----------------------------------------------------------------------------+
+| ``MAINTAIN`` | ``2`` | The PreParser does not make any unforced changes to the aspect in question. |
++--------------+-------+-----------------------------------------------------------------------------+
 
 ``class preparse.Nargs``
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -217,17 +234,17 @@ These classes are subclasses of enum.IntEnum. Any value different from 0 (meanin
 +-------------------+-------+----------------------------------------------+
 | Name              | Value | Explanation                                  |
 +===================+=======+==============================================+
-| NO_ARGUMENT       | 0     | The option does not take an argument.        |
+| NO_ARGUMENT       | ``0`` | The option does not take an argument.        |
 +-------------------+-------+----------------------------------------------+
-| REQUIRED_ARGUMENT | 1     | The option requires an argument.             |
+| REQUIRED_ARGUMENT | ``1`` | The option requires an argument.             |
 +-------------------+-------+----------------------------------------------+
-| OPTIONAL_ARGUMENT | 2     | The option may take an argument.             |
+| OPTIONAL_ARGUMENT | ``2`` | The option may take an argument.             |
 +-------------------+-------+----------------------------------------------+
 
 The Warnings
 ~~~~~~~~~~~~
 
-These classes are subclasses of Warning that are specifically designed to communicate issues with parsing.
+These classes are subclasses of ``Warning`` that are specifically designed to communicate issues with parsing.
 
 ``class preparse.PreparseWarning``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
