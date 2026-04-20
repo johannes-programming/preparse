@@ -206,7 +206,8 @@ The Optdict class
 ``class preparse.Optdict``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This class is a subclass of ``datahold.HoldDict`` with strings as keys and with ``Nargs`` as values. 
+This class is a subclass of ``datahold.HoldDict[str, Nargs]``
+with strings as keys and with ``preparse.Nargs`` as values.
 It is designed for ``PreParser.optdict``.
 
 The Enums
