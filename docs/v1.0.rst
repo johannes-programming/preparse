@@ -79,8 +79,8 @@ This boolean property determines whether long options are allowed.
 
 This boolean property determines whether short options are allowed.
 
-``bundling: Tuning``
-""""""""""""""""""""
+``bundling: preparse.Tuning``
+"""""""""""""""""""""""""""""
 
 This ``Tuning`` property determines the approach to bundling of short option.
 
@@ -109,8 +109,8 @@ This boolean property determines whether abbreviations of long options are expec
 
 This boolean property determines whether the order of arguments to conform to the POSIX standard, i.e. all arguments after the first positional argument also being positonal.
 
-``optdict: Optdict``
-""""""""""""""""""""
+``optdict: preparse.Optdict``
+"""""""""""""""""""""""""""""
 
 This property holds a dictionary. 
 Its keys are the options. 
@@ -149,10 +149,10 @@ Concretely the optdict property is changed.
 This method alters the current instance to reflect a ``click.Context`` object. 
 Concretely the prog property is changed.
 
-``special: Tuning``
-"""""""""""""""""""
+``special: preparse.Tuning``
+""""""""""""""""""""""""""""
 
-This ``Tuning`` property determines the approach to the special argument ``'--'``.
+This ``preparse.Tuning`` property determines the approach to the special argument ``'--'``.
 
 ``todict() -> dict``
 """"""""""""""""""""
@@ -171,8 +171,8 @@ Therefore, ``str`` is used to discard the warnings.
 The Click class
 ~~~~~~~~~~~~~~~
 
-``class preparse.Click(parser: Any, cmd: Any = True, ctx: Any = True)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.Click(parser: preparse.PreParser, cmd: Any = True, ctx: Any = True)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This dataclass provides decorators for embedding a ``PreParser`` object.
 
@@ -195,8 +195,8 @@ This property determines if the ``reflectClickCommand`` method of parser is to b
 
 This property determines if the ``reflectClickContext`` method of parser is to be called.
 
-``parser: Any``
-"""""""""""""""
+``parser: preparse.PreParser``
+""""""""""""""""""""""""""""""
 
 This property holds the parser to be embedded.
 
