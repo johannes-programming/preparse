@@ -112,10 +112,12 @@ This boolean property determines whether the order of arguments to conform to th
 ``optdict: preparse.Optdict``
 """""""""""""""""""""""""""""
 
-This property holds a dictionary. 
+This property holds a dict-like object. 
 Its keys are the options. 
-Its values specify ``Nargs``. 
-Options not found within the dictionary cause a PreparseInvalidOptionWarning and are then assumed to have no arguments.
+Its values specify ``preparse.Nargs``. 
+Options not found within the dictionary 
+cause a ``preparse.PreparseInvalidOptionWarning`` 
+and are then assumed to have no arguments.
 
 ``parse_args(args: Optional[Iterable] = None) -> list[str]``
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -206,9 +208,9 @@ The Optdict class
 ``class preparse.Optdict``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This class is a subclass of ``datahold.HoldDict[str, Nargs]``
+This class is a subclass of ``datahold.HoldDict[str, preparse.Nargs]``
 with strings as keys and with ``preparse.Nargs`` as values.
-It is designed for ``PreParser.optdict``.
+It is designed for ``preparse.PreParser.optdict``.
 
 The Enums
 ~~~~~~~~~
