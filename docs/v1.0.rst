@@ -64,7 +64,7 @@ Features
 The PreParser class
 ~~~~~~~~~~~~~~~~~~~
 
-``class preparse.PreParser(*, allowslong: Any = True, allowsshort: Any = True, bundling: Any = Tuning.MAINTAIN, expandsabbr: Any = True, expectsabbr: Any = True, expectsposix: Any = False, optdict: Any = (), prog: Any = None, reconcilesorders: Any = True, special: Any = Tuning.MAINTAIN, warn: Callable = str)``
+``class preparse.PreParser(*, allowslong: Any = True, allowsshort: Any = True, bundling: Any = Tuning.MAINTAIN, expandsabbr: Any = True, expectsabbr: Any = True, expectsposix: Any = False, optdict: Any = (), prog: Any = None, reconcilesorders: Any = True, special: Any = preparse.Tuning.MAINTAIN, warn: Callable = str)``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This class is the centerpiece of the preparse. Its behaviour follows the principles of getopt from C.
@@ -82,7 +82,7 @@ This boolean property determines whether short options are allowed.
 ``bundling: preparse.Tuning``
 """""""""""""""""""""""""""""
 
-This ``Tuning`` property determines the approach to bundling of short option.
+This ``preparse.Tuning`` property determines the approach to bundling of short option.
 
 ``click(cmd: Any = True, ctx: Any = True) -> preparse.Click``
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
