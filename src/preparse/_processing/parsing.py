@@ -1,12 +1,12 @@
 from types import FunctionType
 from typing import *
 
-from preparse._processing.items.Bundle import Bundle
-from preparse._processing.items.Item import Item
-from preparse._processing.items.Long import Long
-from preparse._processing.items.Option import Option
-from preparse._processing.items.Positional import Positional
-from preparse._processing.items.Special import Special
+from preparse._items.Bundle import Bundle
+from preparse._items.Item import Item
+from preparse._items.Long import Long
+from preparse._items.Option import Option
+from preparse._items.Positional import Positional
+from preparse._items.Special import Special
 from preparse.core import warnings
 from preparse.core.enums import *
 
