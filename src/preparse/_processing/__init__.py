@@ -8,6 +8,7 @@ from preparse._processing.parsing import *
 from preparse._processing.pulling import *
 from preparse._utils import *
 from preparse.core.enums import *
+from preparse.core.OptDict import OptDict
 
 __all__ = ["process"]
 
@@ -21,7 +22,7 @@ def process(
     expandsabbr: bool,
     expectsabbr: bool,
     expectsposix: bool,
-    optdict: dict,
+    optDict: OptDict,
     prog: str,
     reconcilesorders: bool,
     special: Tuning,
@@ -36,7 +37,7 @@ def process(
         allowsshort=allowsshort,
         expectsabbr=expectsabbr,
         expectsposix=expectsposix,
-        optdict=optdict,
+        optDict=optDict,
         prog=prog,
         warn=warn,
     )
