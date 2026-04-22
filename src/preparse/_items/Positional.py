@@ -2,7 +2,7 @@ from typing import *
 
 import setdoc
 
-from preparse._processing.items.Item import Item
+from preparse._items.Item import Item
 from preparse._utils.dataprop import dataprop
 from preparse.core.enums import *
 
