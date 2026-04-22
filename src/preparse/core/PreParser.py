@@ -16,7 +16,7 @@ from preparse._utils.dataprop import dataprop
 from preparse.core.Click import Click
 from preparse.core.enums import *
 from preparse.core.Optdict import *
-from preparse.core.warnings import *
+from preparse.warners import *
 
 __all__ = ["PreParser"]
 
@@ -33,7 +33,7 @@ class PreParser(Copyable):
     prog: str
     reconcilesorders: bool
     special: Tuning
-    warn: types.FunctionType
+    warn: Callable
 
     __slots__ = ("_data",)
 
@@ -51,7 +51,7 @@ class PreParser(Copyable):
         prog: Any = None,
         reconcilesorders: Any = True,
         special: Any = Tuning.MAINTAIN,
-        warn: Callable = str,
+        warn: types.FunctionType = str,
     ) -> None:
         self.allowslong = allowslong
         self.allowsshort = allowsshort

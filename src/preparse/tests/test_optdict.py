@@ -3,7 +3,6 @@ from typing import *
 
 from preparse.core.enums import *
 from preparse.core.Optdict import Optdict
-from preparse.core.warnings import *
 
 __all__ = ["TestPreparse"]
 

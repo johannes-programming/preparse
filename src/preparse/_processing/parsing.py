@@ -7,15 +7,13 @@ from preparse._items.Long import Long
 from preparse._items.Option import Option
 from preparse._items.Positional import Positional
 from preparse._items.Special import Special
-from preparse.core import warnings
 from preparse.core.enums import *
+from preparse.warners.AmbiguousOptionWarner import AmbiguousOptionWarner as PAOW
+from preparse.warners.InvalidOptionWarner import InvalidOptionWarner as PIOW
+from preparse.warners.RequiredArgumentWarner import RequiredArgumentWarner as PRAW
+from preparse.warners.UnallowedArgumentWarner import UnallowedArgumentWarner as PUAW
 
 __all__ = ["parse"]
-
-PAOW = warnings.PreparseAmbiguousOptionWarning
-PIOW = warnings.PreparseInvalidOptionWarning
-PUAW = warnings.PreparseUnallowedArgumentWarning
-PRAW = warnings.PreparseRequiredArgumentWarning
 
 
 def parse(args: list[str], **kwargs: Any) -> list[Item]:

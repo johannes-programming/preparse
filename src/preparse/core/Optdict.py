@@ -7,7 +7,6 @@ from datarepr import datarepr
 from frozendict import frozendict
 
 from preparse.core.enums import *
-from preparse.core.warnings import *
 
 __all__ = ["Optdict"]
 
