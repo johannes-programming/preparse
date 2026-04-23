@@ -6,7 +6,7 @@ import setdoc
 from datarepr import datarepr
 from frozendict import frozendict
 
-from preparse.core.enums import *
+from preparse.enums import *
 
 __all__ = ["OptDict"]
 

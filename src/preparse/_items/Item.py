@@ -4,7 +4,7 @@ from typing import *
 import setdoc
 from copyable import Copyable
 
-from preparse.core.enums import *
+from preparse.enums import *
 
 __all__ = ["Item"]
 

@@ -1,8 +1,8 @@
 import unittest
 from typing import *
 
-from preparse.core.enums import *
 from preparse.core.OptDict import OptDict
+from preparse.enums import *
 
 __all__ = ["TestPreparse"]
 

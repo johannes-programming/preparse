@@ -7,7 +7,7 @@ from preparse._items.Long import Long
 from preparse._items.Option import Option
 from preparse._items.Positional import Positional
 from preparse._items.Special import Special
-from preparse.core.enums import *
+from preparse.enums import *
 from preparse.warners.AmbiguousOptionWarner import AmbiguousOptionWarner as PAOW
 from preparse.warners.InvalidOptionWarner import InvalidOptionWarner as PIOW
 from preparse.warners.RequiredArgumentWarner import RequiredArgumentWarner as PRAW

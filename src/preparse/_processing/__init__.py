@@ -7,7 +7,7 @@ from preparse._processing.digesting import *
 from preparse._processing.parsing import *
 from preparse._processing.pulling import *
 from preparse._utils import *
-from preparse.core.enums import *
+from preparse.enums import *
 
 __all__ = ["process"]
 

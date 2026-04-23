@@ -1,7 +1,7 @@
 from typing import *
 
 from preparse._items.Item import Item
-from preparse.core.enums import *
+from preparse.enums import *
 
 __all__ = ["Special"]
 
