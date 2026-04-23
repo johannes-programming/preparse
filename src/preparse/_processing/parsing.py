@@ -65,7 +65,7 @@ def parse_generator(
     allowslong: bool,
     allowsshort: bool,
     expectsabbr: bool,
-    expectsposix: bool,
+    expectsPOSIX: bool,
     optDict: dict,
     prog: str,
     warn: FunctionType,
@@ -96,7 +96,7 @@ def parse_generator(
         if item.isobvious():
             # if the item is positional
             yield item
-            broken = expectsposix
+            broken = expectsPOSIX
             continue
         last = parse_option(
             item.value,

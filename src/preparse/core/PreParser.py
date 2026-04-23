@@ -28,7 +28,7 @@ class PreParser(Copyable):
     bundling: Tuning
     expandsabbr: bool
     expectsabbr: bool
-    expectsposix: bool
+    expectsPOSIX: bool
     optDict: OptDict
     prog: str
     reconcilesorders: bool
@@ -46,7 +46,7 @@ class PreParser(Copyable):
         bundling: Any = Tuning.MAINTAIN,
         expandsabbr: Any = True,
         expectsabbr: Any = True,
-        expectsposix: Any = False,
+        expectsPOSIX: Any = False,
         optDict: Any = (),
         prog: Any = None,
         reconcilesorders: Any = True,
@@ -58,7 +58,7 @@ class PreParser(Copyable):
         self.bundling = bundling
         self.expandsabbr = expandsabbr
         self.expectsabbr = expectsabbr
-        self.expectsposix = expectsposix
+        self.expectsPOSIX = expectsPOSIX
         self.optDict = optDict
         self.prog = prog
         self.reconcilesorders = reconcilesorders
@@ -99,7 +99,7 @@ class PreParser(Copyable):
         return bool(value)
 
     @dataprop
-    def expectsposix(self: Self, value: Any) -> bool:
+    def expectsPOSIX(self: Self, value: Any) -> bool:
         if value == "infer":
             return bool(os.environ.get("POSIXLY_CORRECT"))
         else:
