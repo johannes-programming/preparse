@@ -8,10 +8,10 @@ from frozendict import frozendict
 
 from preparse.core.enums import *
 
-__all__ = ["Optdict"]
+__all__ = ["OptDict"]
 
 
-class Optdict(cmp3.CmpABC, datahold.HoldDict[str, Nargs]):
+class OptDict(cmp3.CmpABC, datahold.HoldDict[str, Nargs]):
     __slots__ = ()
 
     data: frozendict[str, Nargs]

@@ -2,17 +2,17 @@ import unittest
 from typing import *
 
 from preparse.core.enums import *
-from preparse.core.Optdict import Optdict
+from preparse.core.OptDict import OptDict
 
 __all__ = ["TestPreparse"]
 
 
 class TestPreparse(unittest.TestCase):
 
-    def test_optdict_copy(self: Self) -> None:
-        original: Optdict
-        dublicate: Optdict
-        original = Optdict({"--foo": 0, "-bar": 1})
+    def test_OptDict_copy(self: Self) -> None:
+        original: OptDict
+        dublicate: OptDict
+        original = OptDict({"--foo": 0, "-bar": 1})
         dublicate = original.copy()
         self.assertEqual(original, dublicate)
 

@@ -64,7 +64,7 @@ Features
 The PreParser class
 ~~~~~~~~~~~~~~~~~~~
 
-``class preparse.PreParser(*, allowslong: Any = True, allowsshort: Any = True, bundling: Any = Tuning.MAINTAIN, expandsabbr: Any = True, expectsabbr: Any = True, expectsposix: Any = False, optdict: Any = (), prog: Any = None, reconcilesorders: Any = True, special: Any = preparse.Tuning.MAINTAIN, warn: Callable = str)``
+``class preparse.PreParser(*, allowslong: Any = True, allowsshort: Any = True, bundling: Any = Tuning.MAINTAIN, expandsabbr: Any = True, expectsabbr: Any = True, expectsposix: Any = False, optDict: Any = (), prog: Any = None, reconcilesorders: Any = True, special: Any = preparse.Tuning.MAINTAIN, warn: Callable = str)``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This class is the centerpiece of the preparse. Its behaviour follows the principles of getopt from C.
@@ -109,7 +109,7 @@ This boolean property determines whether abbreviations of long options are expec
 
 This boolean property determines whether the order of arguments to conform to the POSIX standard, i.e. all arguments after the first positional argument also being positonal.
 
-``optdict: preparse.Optdict``
+``optDict: preparse.OptDict``
 """""""""""""""""""""""""""""
 
 This property holds a dict-like object. 
@@ -143,7 +143,7 @@ POSIX and the interleaving of options with positonal arguments, should be enforc
 """""""""""""""""""""""""""""""""""""""""""""""""""
 
 This method alters the current instance to reflect a ``click.Command`` object. 
-Concretely the optdict property is changed.
+Concretely the optDict property is changed.
 
 ``reflectClickContext(ctx: click.Context) -> None``
 """""""""""""""""""""""""""""""""""""""""""""""""""
@@ -202,15 +202,15 @@ This property determines if the ``reflectClickContext`` method of parser is to b
 
 This property holds the parser to be embedded.
 
-The Optdict class
+The OptDict class
 ~~~~~~~~~~~~~~~~~
 
-``class preparse.Optdict``
+``class preparse.OptDict``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This class is a subclass of ``datahold.HoldDict[str, preparse.Nargs]``
 with strings as keys and with ``preparse.Nargs`` as values.
-It is designed for ``preparse.PreParser.optdict``.
+It is designed for ``preparse.PreParser.optDict``.
 
 The Enums
 ~~~~~~~~~
