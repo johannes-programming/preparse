@@ -23,15 +23,15 @@ __all__ = ["PreParser"]
 
 class PreParser(Copyable):
 
-    allowslong: bool
-    allowsshort: bool
+    allowsLong: bool
+    allowsShort: bool
     bundling: Tuning
     expandsabbr: bool
     expectsabbr: bool
     expectsPOSIX: bool
     optDict: OptDict
     prog: str
-    reconcilesorders: bool
+    reconcilesOrders: bool
     special: Tuning
     warn: Callable
 
@@ -41,27 +41,27 @@ class PreParser(Copyable):
     def __init__(
         self: Self,
         *,
-        allowslong: Any = True,
-        allowsshort: Any = True,
+        allowsLong: Any = True,
+        allowsShort: Any = True,
         bundling: Any = Tuning.MAINTAIN,
         expandsabbr: Any = True,
         expectsabbr: Any = True,
         expectsPOSIX: Any = False,
         optDict: Any = (),
         prog: Any = None,
-        reconcilesorders: Any = True,
+        reconcilesOrders: Any = True,
         special: Any = Tuning.MAINTAIN,
         warn: types.FunctionType = str,
     ) -> None:
-        self.allowslong = allowslong
-        self.allowsshort = allowsshort
+        self.allowsLong = allowsLong
+        self.allowsShort = allowsShort
         self.bundling = bundling
         self.expandsabbr = expandsabbr
         self.expectsabbr = expectsabbr
         self.expectsPOSIX = expectsPOSIX
         self.optDict = optDict
         self.prog = prog
-        self.reconcilesorders = reconcilesorders
+        self.reconcilesOrders = reconcilesOrders
         self.special = special
         self.warn = warn
 
@@ -70,11 +70,11 @@ class PreParser(Copyable):
         return datarepr(type(self).__name__, **self.todict())
 
     @dataprop
-    def allowslong(self: Self, value: Any) -> bool:
+    def allowsLong(self: Self, value: Any) -> bool:
         return bool(value)
 
     @dataprop
-    def allowsshort(self: Self, value: Any) -> bool:
+    def allowsShort(self: Self, value: Any) -> bool:
         return bool(value)
 
     @dataprop
@@ -132,7 +132,7 @@ class PreParser(Copyable):
             return str(value)
 
     @dataprop
-    def reconcilesorders(self: Self, value: Any) -> bool:
+    def reconcilesOrders(self: Self, value: Any) -> bool:
         return bool(value)
 
     def reflectClickCommand(self: Self, cmd: cl.Command) -> None:

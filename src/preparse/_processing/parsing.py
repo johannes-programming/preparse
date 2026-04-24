@@ -62,8 +62,8 @@ def parse_cause(
 def parse_generator(
     items: list[Positional],
     *,
-    allowslong: bool,
-    allowsshort: bool,
+    allowsLong: bool,
+    allowsShort: bool,
     expectsabbr: bool,
     expectsPOSIX: bool,
     optDict: dict,
@@ -74,7 +74,7 @@ def parse_generator(
     cause: FunctionType
     last: Optional[Option]
     item: Positional
-    broken = not (allowslong or allowsshort)
+    broken = not (allowsLong or allowsShort)
     cause = parse_cause(prog=prog, warn=warn)
     last = None
     for item in items:
@@ -100,8 +100,8 @@ def parse_generator(
             continue
         last = parse_option(
             item.value,
-            allowslong=allowslong,
-            allowsshort=allowsshort,
+            allowsLong=allowsLong,
+            allowsShort=allowsShort,
             cause=cause,
             expectsabbr=expectsabbr,
             optDict=optDict,
@@ -122,13 +122,13 @@ def parse_generator(
 def parse_islong(
     arg: str,
     *,
-    allowslong: bool,
-    allowsshort: bool,
+    allowsLong: bool,
+    allowsShort: bool,
 ) -> bool:
-    if allowslong and allowsshort:
+    if allowsLong and allowsShort:
         return arg.startswith("--")
     else:
-        return not allowsshort
+        return not allowsShort
 
 
 def parse_long(

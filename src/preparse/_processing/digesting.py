@@ -14,11 +14,11 @@ __all__ = ["digest"]
 def digest(
     items: list[Item],
     *,
-    allowslong: bool,
+    allowsLong: bool,
     bundling: Tuning,
     expandsabbr: bool,
     expectsPOSIX: bool,
-    reconcilesorders: bool,
+    reconcilesOrders: bool,
     special: Tuning,
 ) -> list[Item]:
     ans: list[Item]
@@ -30,18 +30,18 @@ def digest(
     ans = digest_special(
         ans,
         expectsPOSIX=expectsPOSIX,
-        reconcilesorders=reconcilesorders,
+        reconcilesOrders=reconcilesOrders,
         special=special,
     )
     ans = digest_order(
         ans,
         expectsPOSIX=expectsPOSIX,
-        reconcilesorders=reconcilesorders,
+        reconcilesOrders=reconcilesOrders,
     )
     ans = digest_bundling(
         ans,
         bundling=bundling,
-        allowslong=allowslong,
+        allowsLong=allowsLong,
     )
     return ans
 
@@ -65,11 +65,11 @@ def digest_abbr(
 def digest_bundling(
     items: list[Item],
     *,
-    allowslong: bool,
+    allowsLong: bool,
     bundling: Tuning,
 ) -> list[Item]:
     if bundling == Tuning.MINIMIZE:
-        return digest_bundling_min(items, allowslong=allowslong)
+        return digest_bundling_min(items, allowsLong=allowsLong)
     if bundling == Tuning.MAXIMIZE:
         return digest_bundling_max(items)
     return items
@@ -78,14 +78,14 @@ def digest_bundling(
 def digest_bundling_min(
     items: list[Item],
     *,
-    allowslong: bool,
+    allowsLong: bool,
 ) -> list[Item]:
     ans: list[Item]
     item: Item
     ans = list()
     for item in items:
         if isinstance(item, Bundle):
-            ans += item.split(allowslong=allowslong)
+            ans += item.split(allowsLong=allowsLong)
         else:
             ans.append(item)
     return ans
@@ -117,13 +117,13 @@ def digest_order(
     items: list[Item],
     *,
     expectsPOSIX: bool,
-    reconcilesorders: bool,
+    reconcilesOrders: bool,
 ) -> list[Item]:
     ans: list[Item]
     comp: bool
     index: int
     ans = list(items)
-    if not reconcilesorders:
+    if not reconcilesOrders:
         return ans
     if not expectsPOSIX:
         ans.sort(key=digest_order_key)
@@ -188,7 +188,7 @@ def digest_special_min(
     items: list[Item],
     *,
     expectsPOSIX: bool,
-    reconcilesorders: bool,
+    reconcilesOrders: bool,
 ) -> list[Item]:
     ans: list[Item]
     index: int
@@ -196,7 +196,7 @@ def digest_special_min(
     isposix: bool
     ans = list(items)
     isdel = True
-    isposix = expectsPOSIX and not reconcilesorders
+    isposix = expectsPOSIX and not reconcilesOrders
     index = len(items)
     while True:
         index -= 1

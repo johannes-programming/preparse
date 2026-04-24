@@ -15,15 +15,15 @@ __all__ = ["process"]
 def process(
     args: Optional[Iterable] = None,
     *,
-    allowslong: bool,
-    allowsshort: bool,
+    allowsLong: bool,
+    allowsShort: bool,
     bundling: Tuning,
     expandsabbr: bool,
     expectsabbr: bool,
     expectsPOSIX: bool,
     optDict: dict,
     prog: str,
-    reconcilesorders: bool,
+    reconcilesOrders: bool,
     special: Tuning,
     warn: FunctionType,
 ) -> list[str]:
@@ -32,8 +32,8 @@ def process(
     items = pull(args)
     items = parse(
         items,
-        allowslong=allowslong,
-        allowsshort=allowsshort,
+        allowsLong=allowsLong,
+        allowsShort=allowsShort,
         expectsabbr=expectsabbr,
         expectsPOSIX=expectsPOSIX,
         optDict=optDict,
@@ -42,11 +42,11 @@ def process(
     )
     items = digest(
         items,
-        allowslong=allowslong,
+        allowsLong=allowsLong,
         bundling=bundling,
         expandsabbr=expandsabbr,
         expectsPOSIX=expectsPOSIX,
-        reconcilesorders=reconcilesorders,
+        reconcilesOrders=reconcilesOrders,
         special=special,
     )
     return deparse(items)
