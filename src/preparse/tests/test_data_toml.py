@@ -31,10 +31,24 @@ class TestDataToml(unittest.TestCase):
         data: dict[str, Any]
         name: str
         kwargs: dict
+        kwargs_: dict
         data = utils.get_data()
         for name, kwargs in data.items():
             with self.subTest(msg=name, **kwargs):
-                self.parse(**kwargs)
+                kwargs_ = self.convert(**kwargs)
+                self.parse(**kwargs_)
+
+    def convert(self: Self, **kwargs: Any) -> dict:
+        ans: dict
+        x: str
+        y: Any
+        ans = dict()
+        for x, y in kwargs.items():
+            if utils.istestable(y):
+                ans[x] = y
+            else:
+                ans[x] = None
+        return ans
 
     def parse(
         self: Self,
@@ -74,7 +88,7 @@ class TestDataToml(unittest.TestCase):
         self.assertEqual(answer, superanswer, msg=msg)
         msg = "\n\ndata=%s,\nanswer=%s,\nsolution=%s,\n\n" % (data, answer, solution)
         self.assertEqual(answer, solution, msg=msg)
-        if not utils.istestable(warnings):
+        if warnings is None:
             return
         msg = "\n\ndata=%s,\nerranswer=%s,\nwarnings=%s,\n\n" % (
             data,
