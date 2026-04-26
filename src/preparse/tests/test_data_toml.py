@@ -1,6 +1,8 @@
+import enum
 import math
 import tomllib
 import unittest
+from functools import cached_property
 from importlib import resources
 from typing import *
 
@@ -9,31 +11,26 @@ from preparse.core import *
 __all__ = ["TestDataToml"]
 
 
-class utils:
-    def get_data() -> dict[str, Any]:
-        text: str
+class Utils(enum.Enum):
+
+    utils = None
+
+    @cached_property
+    def data(self: Self) -> dict[str, Any]:
         data: dict[str, Any]
+        text: str
         text = resources.read_text("preparse.tests", "data.toml")
         data = tomllib.loads(text)
         return data
-
-    def istestable(x: Any) -> bool:
-        if not isinstance(x, float):
-            return True
-        if not math.isnan(x):
-            return True
-        return False
 
 
 class TestDataToml(unittest.TestCase):
 
     def test_0(self: Self) -> None:
-        data: dict[str, Any]
         name: str
         kwargs: dict
         kwargs_: dict
-        data = utils.get_data()
-        for name, kwargs in data.items():
+        for name, kwargs in Utils.utils.data.items():
             with self.subTest(msg=name, **kwargs):
                 kwargs_ = self.convert(**kwargs)
                 self.parse(**kwargs_)
@@ -44,10 +41,10 @@ class TestDataToml(unittest.TestCase):
         y: Any
         ans = dict()
         for x, y in kwargs.items():
-            if utils.istestable(y):
-                ans[x] = y
-            else:
+            if type(y) is float and math.isnan(y):
                 ans[x] = None
+            else:
+                ans[x] = y
         return ans
 
     def parse(
