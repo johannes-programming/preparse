@@ -167,6 +167,8 @@ def parse_long(
         return ans
     (ans.fullkey,) = parts
     ans.nargs = optdict[ans.fullkey]
+    if (ans.nargs == Nargs.NO_ARGUMENT) and (ans.right is not None):
+        cause(PUAW, option=ans.fullkey)
     return ans
 
 
