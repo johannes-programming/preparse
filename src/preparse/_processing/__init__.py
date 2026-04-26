@@ -28,14 +28,20 @@ def process(
     warn: FunctionType,
 ) -> list[str]:
     "This method parses args."
+    abbr: Optional[Tuning]
     items: list[Item]
+    if not expectsabbr:
+        abbr = None
+    elif expandsabbr:
+        abbr = Tuning.MINIMIZE
+    else:
+        abbr = Tuning.MAINTAIN
     items = pull(args)
     items = parse(
         items,
+        abbr=abbr,
         allowslong=allowslong,
         allowsshort=allowsshort,
-        expandsabbr=expandsabbr,
-        expectsabbr=expectsabbr,
         expectsposix=expectsposix,
         optdict=optdict,
         prog=prog,

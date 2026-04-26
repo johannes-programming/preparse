@@ -20,24 +20,9 @@ PRAW = warnings.PreparseRequiredArgumentWarning
 
 def parse(
     args: list[str],
-    expandsabbr: bool,
-    expectsabbr: bool,
     **kwargs: Any,
 ) -> list[Item]:
-    abbr: Optional[Tuning]
-    if not expectsabbr:
-        abbr = None
-    elif expandsabbr:
-        abbr = Tuning.MINIMIZE
-    else:
-        abbr = Tuning.MAINTAIN
-    return list(
-        parse_generator(
-            args,
-            abbr=abbr,
-            **kwargs,
-        )
-    )
+    return list(parse_generator(args, **kwargs))
 
 
 def parse_bundling(
