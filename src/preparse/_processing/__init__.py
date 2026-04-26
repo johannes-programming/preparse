@@ -15,11 +15,10 @@ __all__ = ["process"]
 def process(
     args: Optional[Iterable] = None,
     *,
+    abbr:Optional[Tuning],
     allowsLong: bool,
     allowsShort: bool,
     bundling: Tuning,
-    expandsabbr: bool,
-    expectsabbr: bool,
     expectsPOSIX: bool,
     optDict: dict,
     prog: str,
@@ -32,9 +31,9 @@ def process(
     items = pull(args)
     items = parse(
         items,
+        abbr=abbr,
         allowsLong=allowsLong,
         allowsShort=allowsShort,
-        expectsabbr=expectsabbr,
         expectsPOSIX=expectsPOSIX,
         optDict=optDict,
         prog=prog,
@@ -42,9 +41,9 @@ def process(
     )
     items = digest(
         items,
+        abbr=abbr,
         allowsLong=allowsLong,
         bundling=bundling,
-        expandsabbr=expandsabbr,
         expectsPOSIX=expectsPOSIX,
         reconcilesOrders=reconcilesOrders,
         special=special,

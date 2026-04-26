@@ -14,9 +14,9 @@ __all__ = ["digest"]
 def digest(
     items: list[Item],
     *,
+    abbr: Optional[Tuning],
     allowsLong: bool,
     bundling: Tuning,
-    expandsabbr: bool,
     expectsPOSIX: bool,
     reconcilesOrders: bool,
     special: Tuning,
@@ -25,7 +25,7 @@ def digest(
     ans = list(items)
     ans = digest_abbr(
         ans,
-        expandsabbr=expandsabbr,
+        abbr=abbr,
     )
     ans = digest_special(
         ans,
@@ -49,16 +49,22 @@ def digest(
 def digest_abbr(
     items: list[Item],
     *,
-    expandsabbr: bool,
+    abbr: Optional[Tuning],
 ) -> list[Item]:
     ans: list[Item]
     item: Item
     ans = list(items)
-    if not expandsabbr:
+    if abbr is None:
+        return ans
+    if abbr == Tuning.MAINTAIN:
         return ans
     for item in ans:
-        if isinstance(item, Long):
+        if not isinstance(item, Long):
+            continue
+        if abbr == Tuning.MINIMIZE:
             item.abbrlen = None
+        else:
+            item.abbrlen = item.minlen
     return ans
 
 

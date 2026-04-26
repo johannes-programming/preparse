@@ -8,10 +8,10 @@ from preparse._items.Option import Option
 from preparse._items.Positional import Positional
 from preparse._items.Special import Special
 from preparse.enums import *
-from preparse.warners.AmbiguousOptionWarner import AmbiguousOptionWarner as PAOW
-from preparse.warners.InvalidOptionWarner import InvalidOptionWarner as PIOW
+from preparse.warners.AmbiguousOptionWarner import AmbiguousOptionWarner
+from preparse.warners.InvalidOptionWarner import InvalidOptionWarner
 from preparse.warners.RequiredArgumentWarner import RequiredArgumentWarner as PRAW
-from preparse.warners.UnallowedArgumentWarner import UnallowedArgumentWarner as PUAW
+from preparse.warners.UnallowedArgumentWarner import UnallowedArgumentWarner
 
 __all__ = ["parse"]
 
@@ -37,7 +37,7 @@ def parse_bundling(
         try:
             ans.nargs = optDict["-" + y]
         except KeyError:
-            cause(PIOW, option=y, islong=False)
+            cause(InvalidOptionWarner, option=y, islong=False)
             ans.nargs = Nargs.NO_ARGUMENT
         if ans.nargs == Nargs.NO_ARGUMENT:
             continue
@@ -62,9 +62,9 @@ def parse_cause(
 def parse_generator(
     items: list[Positional],
     *,
+    abbr: Optional[Tuning],
     allowsLong: bool,
     allowsShort: bool,
-    expectsabbr: bool,
     expectsPOSIX: bool,
     optDict: dict,
     prog: str,
@@ -100,10 +100,10 @@ def parse_generator(
             continue
         last = parse_option(
             item.value,
+            abbr=abbr,
             allowsLong=allowsLong,
             allowsShort=allowsShort,
             cause=cause,
-            expectsabbr=expectsabbr,
             optDict=optDict,
         )
         if not last.ishungry():
@@ -134,8 +134,8 @@ def parse_islong(
 def parse_long(
     arg: str,
     *,
+    abbr:Optional[Tuning],
     cause: FunctionType,
-    expectsabbr: bool,
     optDict: dict,
 ) -> Long:
     ans: Long
@@ -147,23 +147,23 @@ def parse_long(
         ans.right = parts.pop()
     ans.abbrlen = len(ans.fullkey)
     if ans.fullkey in optDict.keys():
-        ans.nargs = optDict[ans.fullkey]
-        if (ans.nargs == Nargs.NO_ARGUMENT) and (ans.right is not None):
-            cause(PUAW, option=ans.fullkey)
-        return ans
-    if expectsabbr:
-        parts = parse_long_startswith(ans.abbr, keys=optDict.keys())
-    else:
+        parts = [ans.fullkey]
+    elif abbr is None:
         parts = list()  # can be assumed
+    else:
+        parts = parse_long_startswith(ans.abbr, keys=optDict.keys())
     if len(parts) == 0:
         ans.nargs = Nargs.OPTIONAL_ARGUMENT
-        cause(PIOW, option=arg, islong=True)
+        cause(InvalidOptionWarner, option=arg, islong=True)
         return ans
     if len(parts) >= 2:
         ans.nargs = Nargs.OPTIONAL_ARGUMENT
-        cause(PAOW, option=arg, possibilities=parts)
+        cause(AmbiguousOptionWarner, option=arg, possibilities=parts)
         return ans
-    (ans.fullkey,) = parts
+    (ans.fullkey,) = parts#################################
+    ans.nargs = optDict[ans.fullkey]
+    if (ans.nargs == Nargs.NO_ARGUMENT) and (ans.right is not None):
+        cause(UnallowedArgumentWarner, option=ans.fullkey)
     ans.nargs = optDict[ans.fullkey]
     return ans
 
@@ -185,16 +185,16 @@ def parse_long_startswith(
 def parse_option(
     arg: str,
     *,
+    abbr: Optional[Tuning],
     cause: FunctionType,
-    expectsabbr: bool,
     optDict: dict,
     **kwargs: Any,
 ) -> Option:
     if parse_islong(arg, **kwargs):
         return parse_long(
             arg,
+            abbr=abbr,
             cause=cause,
-            expectsabbr=expectsabbr,
             optDict=optDict,
         )
     else:

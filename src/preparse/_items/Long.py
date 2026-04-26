@@ -16,6 +16,7 @@ class Long(Option):
     abbrlen: Optional[int]
     fullkey: str
     joined: bool
+    minlen: Optional[int]
     nargs: Nargs
     right: Optional[str]
 
@@ -28,11 +29,13 @@ class Long(Option):
         fullkey: str,
         abbrlen: Optional[int] = None,
         joined: bool | str = False,
+        minlen: Optional[int] = None,
         right: Optional[str] = None,
     ) -> None:
         self.fullkey = fullkey
         self.abbrlen = abbrlen
         self.joined = joined
+        self.minlen = minlen
         self.right = right
 
     @property
@@ -55,3 +58,8 @@ class Long(Option):
     @dataprop
     def fullkey(self: Self, x: Any) -> str:
         return str(x)
+    
+    @dataprop
+    def minlen(self: Self, x: Optional[SupportsIndex]) -> Optional[int]:
+        if x is not None:
+            return operator.index(x)
