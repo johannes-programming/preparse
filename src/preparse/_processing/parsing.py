@@ -124,22 +124,11 @@ def parse_generator(
     yield last
 
 
-def parse_islong(
-    arg: str,
-    *,
-    allowslong: bool,
-    allowsshort: bool,
-) -> bool:
-    if allowslong and allowsshort:
-        return arg.startswith("--")
-    else:
-        return not allowsshort
-
-
 def parse_long(
     arg: str,
     *,
     abbr: Optional[Tuning],
+    allowsshort: bool,
     cause: FunctionType,
     optdict: dict,
 ) -> Long:
@@ -168,6 +157,15 @@ def parse_long(
     (ans.fullkey,) = parts
     if abbr == Tuning.MINIMIZE:
         ans.abbrlen = len(ans.fullkey)
+    if abbr == Tuning.MAXIMIZE:
+        parts = list(optdict.keys())
+        parts.remove(ans.fullkey)
+        ans.abbrlen = parse_minlen(
+            abbr=ans.abbr,
+            allowsshort=allowsshort,
+            joined=ans.joined,
+            keys=tuple(parts),
+        )
     ans.nargs = optdict[ans.fullkey]
     if (ans.nargs == Nargs.NO_ARGUMENT) and (ans.right is not None):
         cause(PUAW, option=ans.fullkey)
@@ -188,18 +186,36 @@ def parse_long_startswith(
     return ans
 
 
+def parse_minlen(
+    *,
+    abbr: str,
+    allowsshort: bool,
+    joined: bool,
+    keys: tuple[str, ...],
+) -> int:
+    m: int
+    n: int
+    m = 2 + allowsshort - joined
+    n = len(abbr)
+    while n >= m and not any(z.startswith(abbr[:n]) for z in keys):
+        n -= 1
+    return n + 1
+
+
 def parse_option(
     arg: str,
     *,
     abbr: Optional[Tuning],
+    allowslong: bool,
+    allowsshort: bool,
     cause: FunctionType,
     optdict: dict,
-    **kwargs: Any,
 ) -> Option:
-    if parse_islong(arg, **kwargs):
+    if (allowslong and arg.startswith("--")) or not allowsshort:
         return parse_long(
             arg,
             abbr=abbr,
+            allowsshort=allowsshort,
             cause=cause,
             optdict=optdict,
         )
