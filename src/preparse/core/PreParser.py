@@ -26,8 +26,7 @@ class PreParser(Copyable):
     allowslong: bool
     allowsshort: bool
     bundling: Tuning
-    expandsabbr: bool
-    expectsabbr: bool
+    abbr: Optional[Tuning]
     expectsposix: bool
     optdict: Optdict
     prog: str
@@ -41,11 +40,10 @@ class PreParser(Copyable):
     def __init__(
         self: Self,
         *,
+        abbr: Optional[Tuning] = Tuning.MINIMIZE,
         allowslong: Any = True,
         allowsshort: Any = True,
         bundling: Any = Tuning.MAINTAIN,
-        expandsabbr: Any = True,
-        expectsabbr: Any = True,
         expectsposix: Any = False,
         optdict: Any = (),
         prog: Any = None,
@@ -53,11 +51,10 @@ class PreParser(Copyable):
         special: Any = Tuning.MAINTAIN,
         warn: Callable = str,
     ) -> None:
+        self.abbr = abbr
         self.allowslong = allowslong
         self.allowsshort = allowsshort
         self.bundling = bundling
-        self.expandsabbr = expandsabbr
-        self.expectsabbr = expectsabbr
         self.expectsposix = expectsposix
         self.optdict = optdict
         self.prog = prog
@@ -69,6 +66,11 @@ class PreParser(Copyable):
     def __repr__(self: Self) -> str:
         return datarepr(type(self).__name__, **self.todict())
 
+    @dataprop
+    def abbr(self: Self, value: Any) -> bool:
+        if value is not None:
+            return Tuning(value)
+        
     @dataprop
     def allowslong(self: Self, value: Any) -> bool:
         return bool(value)
@@ -89,14 +91,6 @@ class PreParser(Copyable):
     @setdoc.basic
     def copy(self: Self) -> Self:
         return type(self)(**self.todict())
-
-    @dataprop
-    def expandsabbr(self: Self, value: Any) -> bool:
-        return bool(value)
-
-    @dataprop
-    def expectsabbr(self: Self, value: Any) -> bool:
-        return bool(value)
 
     @dataprop
     def expectsposix(self: Self, value: Any) -> bool:

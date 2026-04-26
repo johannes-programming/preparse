@@ -64,19 +64,23 @@ def parse_cause(
 def parse_generator(
     items: list[Positional],
     *,
+    abbr: Optional[Tuning],
     allowslong: bool,
     allowsshort: bool,
-    expandsabbr: bool,
-    expectsabbr: bool,
     expectsposix: bool,
     optdict: dict,
     prog: str,
     warn: FunctionType,
 ) -> Generator[Any, Any, Any]:
+    abbrdict:dict[str, int]
     broken: bool
     cause: FunctionType
     last: Optional[Option]
     item: Positional
+    if abbr is None:
+        abbrdict = dict()
+    else:
+        abbrdict = parse_abbrdict(keys=optdict.keys())
     broken = not (allowslong or allowsshort)
     cause = parse_cause(prog=prog, warn=warn)
     last = None
@@ -103,11 +107,11 @@ def parse_generator(
             continue
         last = parse_option(
             item.value,
+            abbr=abbr,
+            abbrdict=abbrdict,
             allowslong=allowslong,
             allowsshort=allowsshort,
             cause=cause,
-            expandsabbr=expandsabbr,
-            expectsabbr=expectsabbr,
             optdict=optdict,
         )
         if not last.ishungry():
@@ -138,9 +142,9 @@ def parse_islong(
 def parse_long(
     arg: str,
     *,
+    abbr: Optional[Tuning],
+    abbrdict: dict[str, int],
     cause: FunctionType,
-    expandsabbr: bool,
-    expectsabbr: bool,
     optdict: dict,
 ) -> Long:
     ans: Long
@@ -153,10 +157,11 @@ def parse_long(
     ans.abbrlen = len(ans.fullkey)
     if ans.fullkey in optdict.keys():
         parts = [ans.fullkey]
-    elif expectsabbr:
-        parts = parse_long_startswith(ans.abbr, keys=optdict.keys())
     else:
-        parts = list()  # can be assumed
+        parts = parse_long_startswith(
+            abbr=ans.abbr, 
+            abbrdict=abbrdict,
+        )
     if len(parts) == 0:
         ans.nargs = Nargs.OPTIONAL_ARGUMENT
         cause(PIOW, option=arg, islong=True)
@@ -166,8 +171,10 @@ def parse_long(
         cause(PAOW, option=arg, possibilities=parts)
         return ans
     (ans.fullkey,) = parts
-    if expandsabbr:
+    if abbr == Tuning.MINIMIZE:
         ans.abbrlen = len(ans.fullkey)
+    if abbr == Tuning.MAXIMIZE:
+        ans.abbrlen = abbrdict[ans.fullkey]
     ans.nargs = optdict[ans.fullkey]
     if (ans.nargs == Nargs.NO_ARGUMENT) and (ans.right is not None):
         cause(PUAW, option=ans.fullkey)
@@ -177,32 +184,36 @@ def parse_long(
 def parse_long_startswith(
     abbr: str,
     *,
-    keys: Iterable[str],
+    abbrdict: dict[str, int],
 ) -> list[str]:
     ans: list[str]
     x: str
-    ans = list()
-    for x in keys:
-        if x.startswith(abbr):
-            ans.append(x)
+    y: int
+    ans = []
+    for x, y in abbrdict.items():
+        if not x.startswith(abbr):
+            continue
+        if len(abbr) >= y:
+            return [x]
+        ans.append(x)
     return ans
 
 
 def parse_option(
     arg: str,
     *,
+    abbr:Optional[Tuning],
+    abbrdict:dict[str, int],
     cause: FunctionType,
-    expandsabbr: bool,
-    expectsabbr: bool,
     optdict: dict,
     **kwargs: Any,
 ) -> Option:
     if parse_islong(arg, **kwargs):
         return parse_long(
             arg,
+            abbr=abbr,
+            abbrdict=abbrdict,
             cause=cause,
-            expandsabbr=expandsabbr,
-            expectsabbr=expectsabbr,
             optdict=optdict,
         )
     else:
@@ -211,3 +222,20 @@ def parse_option(
             cause=cause,
             optdict=optdict,
         )
+
+def parse_abbrdict(keys: Iterable[str]) -> dict[str, int]:
+    ans: dict[str, int]
+    x: int
+    y: str
+    keys_: tuple[str]
+    keys__: tuple[str]
+    ans = dict()
+    keys_ = tuple(keys)
+    for x, y in enumerate(keys_):
+        keys__= keys_[:x] + keys_[x+1:]
+        ans[y] = len(y)
+        while y[:ans[y]] not in keys__:
+            ans[y]-=1
+    return ans
+
+
