@@ -9,6 +9,7 @@ from preparse._items.Positional import Positional
 from preparse._items.Special import Special
 from preparse.core import warnings
 from preparse.core.enums import *
+from frozendict import frozendict
 
 __all__ = ["parse"]
 
@@ -20,6 +21,28 @@ PRAW = warnings.PreparseRequiredArgumentWarning
 
 def parse(args: list[str], **kwargs: Any) -> list[Item]:
     return list(parse_generator(args, **kwargs))
+
+
+def parse_abbrdict(keys: Iterator[str], allowsshort: bool) -> frozendict[str, int]:
+    data:dict[str, int] 
+    keys_:tuple[str]
+    keys__:tuple[str]
+    m:int
+    x:str
+    y:int
+    m = 1 + allowsshort
+    keys_=tuple(keys)
+    data = dict()
+    for x,y in enumerate(keys_):
+        if len(y) < m:
+            data[y] = m
+            continue
+        data[y] = len(y)
+        keys__ = keys_[:x] + keys_[x+1:]
+        while not any(z.startswith(y[data[y]:]) for z in keys__):
+            data[y] -= 1
+    return frozendict(data)
+
 
 
 def parse_bundling(
