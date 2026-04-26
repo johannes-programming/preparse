@@ -15,11 +15,10 @@ __all__ = ["process"]
 def process(
     args: Optional[Iterable] = None,
     *,
+    abbr: Optional[Tuning],
     allowslong: bool,
     allowsshort: bool,
     bundling: Tuning,
-    expandsabbr: bool,
-    expectsabbr: bool,
     expectsposix: bool,
     optdict: dict,
     prog: str,
@@ -28,14 +27,7 @@ def process(
     warn: FunctionType,
 ) -> list[str]:
     "This method parses args."
-    abbr: Optional[Tuning]
     items: list[Item]
-    if not expectsabbr:
-        abbr = None
-    elif expandsabbr:
-        abbr = Tuning.MINIMIZE
-    else:
-        abbr = Tuning.MAINTAIN
     items = pull(args)
     items = parse(
         items,
