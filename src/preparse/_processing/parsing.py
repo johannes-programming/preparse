@@ -66,6 +66,7 @@ def parse_generator(
     *,
     allowslong: bool,
     allowsshort: bool,
+    expandsabbr: bool,
     expectsabbr: bool,
     expectsposix: bool,
     optdict: dict,
@@ -105,6 +106,7 @@ def parse_generator(
             allowslong=allowslong,
             allowsshort=allowsshort,
             cause=cause,
+            expandsabbr=expandsabbr,
             expectsabbr=expectsabbr,
             optdict=optdict,
         )
@@ -137,6 +139,7 @@ def parse_long(
     arg: str,
     *,
     cause: FunctionType,
+    expandsabbr: bool,
     expectsabbr: bool,
     optdict: dict,
 ) -> Long:
@@ -163,6 +166,8 @@ def parse_long(
         cause(PAOW, option=arg, possibilities=parts)
         return ans
     (ans.fullkey,) = parts
+    if expandsabbr:
+        ans.abbrlen = len(ans.fullkey)
     ans.nargs = optdict[ans.fullkey]
     if (ans.nargs == Nargs.NO_ARGUMENT) and (ans.right is not None):
         cause(PUAW, option=ans.fullkey)
@@ -187,6 +192,7 @@ def parse_option(
     arg: str,
     *,
     cause: FunctionType,
+    expandsabbr: bool,
     expectsabbr: bool,
     optdict: dict,
     **kwargs: Any,
@@ -195,6 +201,7 @@ def parse_option(
         return parse_long(
             arg,
             cause=cause,
+            expandsabbr=expandsabbr,
             expectsabbr=expectsabbr,
             optdict=optdict,
         )

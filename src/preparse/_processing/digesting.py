@@ -2,7 +2,6 @@ from typing import *
 
 from preparse._items.Bundle import Bundle
 from preparse._items.Item import Item
-from preparse._items.Long import Long
 from preparse._items.Option import Option
 from preparse._items.Positional import Positional
 from preparse._items.Special import Special
@@ -17,17 +16,13 @@ def digest(
     *,
     allowslong: bool,
     bundling: Tuning,
-    expandsabbr: bool,
     expectsposix: bool,
     reconcilesorders: bool,
     special: Tuning,
 ) -> list[Item]:
     ans: list[Item]
     ans = list(items)
-    ans = digest_abbr(
-        ans,
-        expandsabbr=expandsabbr,
-    )
+
     ans = digest_special(
         ans,
         expectsposix=expectsposix,
@@ -44,22 +39,6 @@ def digest(
         bundling=bundling,
         allowslong=allowslong,
     )
-    return ans
-
-
-def digest_abbr(
-    items: list[Item],
-    *,
-    expandsabbr: bool,
-) -> list[Item]:
-    ans: list[Item]
-    item: Item
-    ans = list(items)
-    if not expandsabbr:
-        return ans
-    for item in ans:
-        if isinstance(item, Long):
-            item.abbrlen = None
     return ans
 
 
