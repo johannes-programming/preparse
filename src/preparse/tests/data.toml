@@ -1285985,3 +1285985,49 @@ warnings = []
 --mode = 2
 -x = 2
 -y = 1
+
+[run35318go]
+bundling = 2
+query = [
+    "--verbose=42",
+]
+solution = [
+    "--verbose=42",
+]
+prog = "run35318go"
+expectsposix = false
+reconcilesorders = false
+expectsabbr = true
+expandsabbr = false
+allowsshort = true
+allowslong = true
+special = 2
+warnings = [
+    "run35318go: option '--verbose' doesn't allow an argument",
+]
+
+[run35318go.optdict]
+--verbose = 0
+
+[run35319go]
+bundling = 2
+query = [
+    "--verbos=42",
+]
+solution = [
+    "--verbos=42",
+]
+prog = "run35319go"
+expectsposix = false
+reconcilesorders = false
+expectsabbr = true
+expandsabbr = false
+allowsshort = true
+allowslong = true
+special = 2
+warnings = [
+    "run35319go: option '--verbose' doesn't allow an argument",
+]
+
+[run35319go.optdict]
+--verbose = 0
