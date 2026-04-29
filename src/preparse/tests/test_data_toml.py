@@ -5,8 +5,9 @@ import unittest
 from functools import cached_property
 from importlib import resources
 from typing import *
+from namings import Naming
 
-from preparse.core import *
+from preparse.core.PreParser import PreParser
 
 __all__ = ["TestDataToml"]
 
@@ -16,12 +17,10 @@ class Utils(enum.Enum):
     utils = None
 
     @cached_property
-    def data(self: Self) -> dict[str, Any]:
-        data: dict[str, Any]
+    def data(self: Self) -> Naming:
         text: str
         text = resources.read_text("preparse.tests", "data.toml")
-        data = tomllib.loads(text)
-        return data
+        return Naming(tomllib.loads(text))
 
 
 class TestDataToml(unittest.TestCase):
@@ -43,6 +42,8 @@ class TestDataToml(unittest.TestCase):
         for x, y in kwargs.items():
             if type(y) is float and math.isnan(y):
                 ans[x] = None
+            elif type(y) is dict:
+                ans[x] = Naming(y)
             else:
                 ans[x] = y
         return ans
@@ -57,7 +58,7 @@ class TestDataToml(unittest.TestCase):
     ) -> None:
         answer: list
         capture: list
-        data: dict
+        data: Naming
         erranswer: list
         msg: str
         superanswer: list
@@ -68,7 +69,7 @@ class TestDataToml(unittest.TestCase):
             capture.append(str(value))
 
         parser = PreParser(warn=warn, **kwargs)
-        data = dict(
+        data = Naming(
             query=query,
             solution=solution,
             warnings=warnings,

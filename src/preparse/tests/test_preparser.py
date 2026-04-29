@@ -26,16 +26,16 @@ class TestPreParser(unittest.TestCase):
         parser_copy: PreParser
         parser = PreParser()
         parser_copy = parser.copy()
-        self.assertEqual(parser.optdict, parser_copy.optdict)
+        self.assertEqual(parser.optNaming, parser_copy.optNaming)
 
-    def test_preparser_todict(self: Self) -> None:
+    def test_preparser_toNaming(self: Self) -> None:
         expected_keys: list
         parser: PreParser
         result: Any
         parser = PreParser()
-        result = parser.todict()
+        result = parser.toNaming()
         expected_keys = [
-            "optdict",
+            "optNaming",
             "prog",
         ]
         self.assertTrue(all(key in result for key in expected_keys))

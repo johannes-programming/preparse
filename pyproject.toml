@@ -22,12 +22,13 @@ dependencies = [
     "click>=8.2,<9",
     "cmp3>=1.0,<2",
     "copyable>=1.0,<2",
-    "datahold>=3.0,<4",
+    "datahold>=3.1.dev1,<4",
     "datarepr>=1.1,<2",
     "frozendict>=2.4.7,<3",
     "overloadable>=1.1,<2",
     "setdoc>=1.2.10,<2",
     "tofunc>=1.0,<2",
+    "namings>=1.0,<2",
 ]
 description = "This project preparses args for further parsing later on."
 keywords = []

@@ -2,12 +2,13 @@ from types import FunctionType
 from typing import *
 
 from preparse._items import *
-from preparse._processing.deparsing import *
-from preparse._processing.digesting import *
-from preparse._processing.parsing import *
-from preparse._processing.pulling import *
+from preparse._processing.deparsing import deparse
+from preparse._processing.digesting import digest
+from preparse._processing.parsing import parse
+from preparse._processing.pulling import pull
 from preparse._utils import *
 from preparse.core.enums import *
+from datahold import HoldNaming
 
 __all__ = ["process"]
 
@@ -20,7 +21,7 @@ def process(
     allowsshort: bool,
     bundling: Tuning,
     expectsposix: bool,
-    optdict: dict,
+    optNaming: HoldNaming,
     prog: str,
     reconcilesorders: bool,
     special: Tuning,
@@ -35,7 +36,7 @@ def process(
         allowslong=allowslong,
         allowsshort=allowsshort,
         expectsposix=expectsposix,
-        optdict=optdict,
+        optNaming=optNaming,
         prog=prog,
         warn=warn,
     )

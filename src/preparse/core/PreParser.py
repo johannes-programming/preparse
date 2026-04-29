@@ -10,12 +10,13 @@ import setdoc
 from copyable import Copyable
 from datarepr import datarepr
 from tofunc import tofunc
+from namings import FrozenNaming, Naming
 
-from preparse._processing import *
+from preparse._processing import process
 from preparse._utils.dataprop import dataprop
 from preparse.core.Click import Click
 from preparse.core.enums import *
-from preparse.core.Optdict import *
+from preparse.core.OptNaming import OptNaming
 from preparse.core.warnings import *
 
 __all__ = ["PreParser"]
@@ -28,7 +29,7 @@ class PreParser(Copyable):
     allowsshort: bool
     bundling: Tuning
     expectsposix: bool
-    optdict: Optdict
+    optNaming: OptNaming
     prog: str
     reconcilesorders: bool
     special: Tuning
@@ -45,7 +46,7 @@ class PreParser(Copyable):
         allowsshort: Any = True,
         bundling: Any = Tuning.MAINTAIN,
         expectsposix: Any = False,
-        optdict: Any = (),
+        optNaming: Any = (),
         prog: Any = None,
         reconcilesorders: Any = True,
         special: Any = Tuning.MAINTAIN,
@@ -56,7 +57,7 @@ class PreParser(Copyable):
         self.allowsshort = allowsshort
         self.bundling = bundling
         self.expectsposix = expectsposix
-        self.optdict = optdict
+        self.optNaming = optNaming
         self.prog = prog
         self.reconcilesorders = reconcilesorders
         self.special = special
@@ -64,7 +65,7 @@ class PreParser(Copyable):
 
     @setdoc.basic
     def __repr__(self: Self) -> str:
-        return datarepr(type(self).__name__, **self.todict())
+        return datarepr(type(self).__name__, **self.toNaming())
 
     @dataprop
     def abbr(self: Self, value: Any) -> bool:
@@ -90,7 +91,7 @@ class PreParser(Copyable):
 
     @setdoc.basic
     def copy(self: Self) -> Self:
-        return type(self)(**self.todict())
+        return type(self)(**self.toNaming())
 
     @dataprop
     def expectsposix(self: Self, value: Any) -> bool:
@@ -100,22 +101,22 @@ class PreParser(Copyable):
             return bool(value)
 
     @dataprop
-    def optdict(self: Self, value: Any) -> Optdict:
+    def optNaming(self: Self, value: Any) -> OptNaming:
         "This property gives a dictionary of options."
-        dataA: Optdict
-        if "optdict" not in self._data.keys():
-            self._data["optdict"] = Optdict()
-        dataA = Optdict(value)
-        self._data["optdict"].clear()
-        self._data["optdict"].update(dataA)
-        return self._data["optdict"]
+        data: OptNaming
+        if "optNaming" not in self._data.keys():
+            self._data["optNaming"] = OptNaming()
+        data = OptNaming(value)
+        self._data["optNaming"].clear()
+        self._data["optNaming"].update(data)
+        return self._data["optNaming"]
 
     def parse_args(
         self: Self,
         args: Optional[Iterable] = None,
     ) -> list[str]:
         "This method parses args."
-        return process(args, **self.todict())
+        return process(args, **self.toNaming())
 
     @dataprop
     def prog(self: Self, value: Any) -> str:
@@ -131,11 +132,11 @@ class PreParser(Copyable):
 
     def reflectClickCommand(self: Self, cmd: cl.Command) -> None:
         "This method causes the current instance to reflect a click.Command object."
-        optdict: dict[str, Nargs]
+        optNaming: Naming[Nargs]
         nargs: Nargs
         opt: Any
         param: Any
-        optdict = dict()
+        optNaming = Naming()
         for param in cmd.params:
             if not isinstance(param, cl.Option):
                 continue
@@ -146,9 +147,9 @@ class PreParser(Copyable):
             else:
                 nargs = Nargs.OPTIONAL_ARGUMENT
             for opt in param.opts:
-                optdict[str(opt)] = nargs
-        self.optdict.clear()
-        self.optdict.update(optdict)
+                optNaming[opt] = nargs
+        self.optNaming.clear()
+        self.optNaming.update(optNaming)
 
     def reflectClickContext(self: Self, ctx: cl.Context) -> None:
         "This method causes the current instance to reflect a click.Context object."
@@ -159,16 +160,16 @@ class PreParser(Copyable):
         "This Tuning property determines the approach towards the special argument."
         return Tuning(value)
 
-    def todict(self: Self) -> dict:
-        "This method returns a dict representing the current instance."
-        ans: dict
+    def toNaming(self: Self) -> Naming:
+        "This method returns a naming representing the current instance."
+        ans: Naming
         try:
             ans = self._data
         except AttributeError:
-            self._data = dict()
-            return dict()
+            self._data = Naming()
+            return Naming()
         else:
-            return dict(ans)
+            return Naming(ans)
 
     @dataprop
     def warn(self: Self, value: Callable) -> types.FunctionType:

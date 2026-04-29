@@ -7,7 +7,10 @@ from typing import *
 import click
 from click.testing import CliRunner
 
-from preparse.core import *
+from preparse.core.PreParser import PreParser
+from namings import Naming
+import enum
+from functools import cached_property
 
 __all__ = ["TestMainFunction"]
 
@@ -32,13 +35,13 @@ class expit:
         click.echo(expit.function(x))
 
 
-class utils:
-    def get_data() -> dict:
-        data: dict
+class Utils(enum.Enum):
+    utils = None
+    @cached_property
+    def data() -> Naming:
         text: str
         text = resources.read_text("preparse.tests", "expit.toml")
-        data = tomllib.loads(text)
-        return data
+        return Naming(tomllib.loads(text))
 
     def istestable(x: Any) -> bool:
         if not isinstance(x, float):
@@ -67,24 +70,22 @@ class TestMainFunction(unittest.TestCase):
         extra = dict()
         extra["cli"] = expit.main
         extra["args"] = query
-        if utils.istestable(prog):
+        if Utils.istestable(prog):
             extra["prog_name"] = prog
         result = runner.invoke(**extra)
-        if utils.istestable(exit_code):
+        if Utils.istestable(exit_code):
             self.assertEqual(exit_code, result.exit_code)
-        if utils.istestable(output):
+        if Utils.istestable(output):
             self.assertEqual(output, result.output)
-        if utils.istestable(stdout):
+        if Utils.istestable(stdout):
             self.assertEqual(stdout, result.stdout)
-        if utils.istestable(stderr):
+        if Utils.istestable(stderr):
             self.assertEqual(stderr, result.stderr)
 
     def test_0(self: Self) -> None:
-        data: dict
         kwargs: dict
         name: str
-        data = utils.get_data()
-        for name, kwargs in data.items():
+        for name, kwargs in Utils.utils.data.items():
             with self.subTest(msg=name, **kwargs):
                 self.parse(**kwargs)
 
