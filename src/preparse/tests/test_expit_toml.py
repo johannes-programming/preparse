@@ -7,7 +7,7 @@ from typing import *
 import click
 from click.testing import CliRunner
 
-from preparse.core import *
+from preparse.core.PreParser import PreParser
 
 __all__ = ["TestMainFunction"]
 

@@ -5,6 +5,7 @@ import setdoc
 from copyable import Copyable
 
 from preparse.core.enums import *
+from namings import Naming
 
 __all__ = ["Item"]
 
@@ -14,7 +15,7 @@ class Item(Copyable):
 
     @setdoc.basic
     def copy(self: Self) -> Self:
-        return type(self)(**self.todict())
+        return type(self)(**self.toNaming())
 
     @abc.abstractmethod
     def deparse(self: Self) -> list[str]: ...
@@ -23,14 +24,14 @@ class Item(Copyable):
     @abc.abstractmethod
     def sortkey(cls: type) -> int: ...
 
-    def todict(self: Self) -> dict:
-        "This method returns a dict representing the current instance."
-        ans: dict
+    def toNaming(self: Self) -> Naming:
+        "This method returns a naming representing the current instance."
+        ans: Naming
         try:
             ans = self._data
         except AttributeError:
-            self._data = dict()
-            ans = dict()
+            self._data = Naming()
+            ans = Naming()
         else:
-            ans = dict(ans)
+            ans = Naming(ans)
         return ans

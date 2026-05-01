@@ -29,7 +29,7 @@ dependencies = [
     "overloadable>=1.1,<2",
     "setdoc>=1.2.12,<2",
     "tofunc>=1.0,<2",
-    "tomlhold>=2.0a4,<3",
+    "tomlhold>=2.0a11,<3",
 ]
 description = "This project preparses args for further parsing later on."
 keywords = []

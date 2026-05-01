@@ -9,6 +9,7 @@ from preparse._items.Positional import Positional
 from preparse._items.Special import Special
 from preparse.core import warnings
 from preparse.core.enums import *
+import datahold
 
 __all__ = ["parse"]
 
@@ -29,7 +30,7 @@ def parse_bundling(
     arg: str,
     *,
     cause: FunctionType,
-    optdict: dict,
+    optNaming: datahold.HoldNaming,
 ) -> Bundle:
     ans: Bundle
     x: int
@@ -40,7 +41,7 @@ def parse_bundling(
             continue
         ans.chars += y
         try:
-            ans.nargs = optdict["-" + y]
+            ans.nargs = optNaming["-" + y]
         except KeyError:
             cause(PIOW, option=y, islong=False)
             ans.nargs = Nargs.NO_ARGUMENT
@@ -71,7 +72,7 @@ def parse_generator(
     allowslong: bool,
     allowsshort: bool,
     expectsposix: bool,
-    optdict: dict,
+    optNaming: datahold.HoldNaming,
     prog: str,
     warn: FunctionType,
 ) -> Generator[Any, Any, Any]:
@@ -109,7 +110,7 @@ def parse_generator(
             allowslong=allowslong,
             allowsshort=allowsshort,
             cause=cause,
-            optdict=optdict,
+            optNaming=optNaming,
         )
         if not last.ishungry():
             yield last
@@ -130,7 +131,7 @@ def parse_long(
     abbr: Optional[Tuning],
     allowsshort: bool,
     cause: FunctionType,
-    optdict: dict,
+    optNaming: datahold.HoldNaming,
 ) -> Long:
     ans: Long
     parts: list[str]
@@ -140,10 +141,10 @@ def parse_long(
         ans.joined = True
         ans.right = parts.pop()
     ans.abbrlen = len(ans.fullkey)
-    if ans.fullkey in optdict.keys():
+    if ans.fullkey in optNaming.keys():
         parts = [ans.fullkey]
     elif abbr is not None:
-        parts = parse_long_startswith(ans.abbr, keys=optdict.keys())
+        parts = parse_long_startswith(ans.abbr, keys=optNaming.keys())
     else:
         parts = list()  # can be assumed
     if len(parts) == 0:
@@ -158,7 +159,7 @@ def parse_long(
     if abbr == Tuning.MINIMIZE:
         ans.abbrlen = len(ans.fullkey)
     if abbr == Tuning.MAXIMIZE:
-        parts = list(optdict.keys())
+        parts = list(optNaming.keys())
         parts.remove(ans.fullkey)
         ans.abbrlen = parse_minlen(
             abbr=ans.abbr,
@@ -166,7 +167,7 @@ def parse_long(
             joined=ans.joined,
             keys=tuple(parts),
         )
-    ans.nargs = optdict[ans.fullkey]
+    ans.nargs = optNaming[ans.fullkey]
     if (ans.nargs == Nargs.NO_ARGUMENT) and (ans.right is not None):
         cause(PUAW, option=ans.fullkey)
     return ans
@@ -209,7 +210,7 @@ def parse_option(
     allowslong: bool,
     allowsshort: bool,
     cause: FunctionType,
-    optdict: dict,
+    optNaming: datahold.HoldNaming,
 ) -> Option:
     if (allowslong and arg.startswith("--")) or not allowsshort:
         return parse_long(
@@ -217,11 +218,11 @@ def parse_option(
             abbr=abbr,
             allowsshort=allowsshort,
             cause=cause,
-            optdict=optdict,
+            optNaming=optNaming,
         )
     else:
         return parse_bundling(
             arg,
             cause=cause,
-            optdict=optdict,
+            optNaming=optNaming,
         )

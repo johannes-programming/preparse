@@ -1,12 +1,13 @@
 import enum
 import math
-import tomllib
 import unittest
 from functools import cached_property
 from importlib import resources
 from typing import *
+import tomlhold
+from namings import FrozenNaming, Naming
 
-from preparse.core import *
+from preparse.core.PreParser import PreParser
 
 __all__ = ["TestDataToml"]
 
@@ -16,30 +17,28 @@ class Utils(enum.Enum):
     utils = None
 
     @cached_property
-    def data(self: Self) -> dict[str, Any]:
-        data: dict[str, Any]
+    def data(self: Self) -> FrozenNaming:
         text: str
         text = resources.read_text("preparse.tests", "data.toml")
-        data = tomllib.loads(text)
-        return data
+        return tomlhold.TOMLHolder.loads(text).data
 
 
 class TestDataToml(unittest.TestCase):
 
     def test_0(self: Self) -> None:
         name: str
-        kwargs: dict
-        kwargs_: dict
+        kwargs: FrozenNaming
+        kwargs_: Naming
         for name, kwargs in Utils.utils.data.items():
             with self.subTest(msg=name, **kwargs):
                 kwargs_ = self.convert(**kwargs)
                 self.parse(**kwargs_)
 
-    def convert(self: Self, **kwargs: Any) -> dict:
-        ans: dict
+    def convert(self: Self, **kwargs: Any) -> Naming:
+        ans: Naming
         x: str
         y: Any
-        ans = dict()
+        ans = Naming()
         for x, y in kwargs.items():
             if type(y) is float and math.isnan(y):
                 ans[x] = None
