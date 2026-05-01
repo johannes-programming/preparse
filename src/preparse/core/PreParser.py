@@ -107,8 +107,7 @@ class PreParser(Copyable):
         if "optNaming" not in self._data.keys():
             self._data["optNaming"] = OptNaming()
         dataA = OptNaming(value)
-        self._data["optNaming"].clear()
-        self._data["optNaming"].update(dataA)
+        self._data["optNaming"].data = dataA
         return self._data["optNaming"]
 
     def parse_args(

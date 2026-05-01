@@ -36,9 +36,7 @@ class OptNaming(datahold.HoldNaming[Nargs]):
     @data.setter
     def data(self: Self, value: Any) -> None:
         a: namings.FrozenNaming
-        x: map
         y: map
         a = namings.FrozenNaming(value)
-        x = map(str, a.keys())
         y = map(Nargs, a.values())
-        self._data = namings.FrozenNaming[Nargs](zip(x, y, strict=True))
+        self._data = namings.FrozenNaming[Nargs](zip(a.keys(), y, strict=True))
