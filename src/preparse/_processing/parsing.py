@@ -1,6 +1,8 @@
 from types import FunctionType
 from typing import *
 
+import datahold
+
 from preparse._items.Bundle import Bundle
 from preparse._items.Item import Item
 from preparse._items.Long import Long
@@ -29,7 +31,7 @@ def parse_bundling(
     arg: str,
     *,
     cause: FunctionType,
-    optNaming: dict,
+    optNaming: datahold.DataNaming,
 ) -> Bundle:
     ans: Bundle
     x: int
@@ -71,7 +73,7 @@ def parse_generator(
     allowslong: bool,
     allowsshort: bool,
     expectsposix: bool,
-    optNaming: dict,
+    optNaming: datahold.DataNaming,
     prog: str,
     warn: FunctionType,
 ) -> Generator[Any, Any, Any]:
@@ -130,7 +132,7 @@ def parse_long(
     abbr: Optional[Tuning],
     allowsshort: bool,
     cause: FunctionType,
-    optNaming: dict,
+    optNaming: datahold.DataNaming,
 ) -> Long:
     ans: Long
     parts: list[str]
@@ -209,7 +211,7 @@ def parse_option(
     allowslong: bool,
     allowsshort: bool,
     cause: FunctionType,
-    optNaming: dict,
+    optNaming: datahold.DataNaming,
 ) -> Option:
     if (allowslong and arg.startswith("--")) or not allowsshort:
         return parse_long(

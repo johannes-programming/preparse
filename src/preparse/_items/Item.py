@@ -1,6 +1,7 @@
 import abc
 from typing import *
 
+import namings
 import setdoc
 from copyable import Copyable
 
@@ -14,7 +15,7 @@ class Item(Copyable):
 
     @setdoc.basic
     def copy(self: Self) -> Self:
-        return type(self)(**self.todict())
+        return type(self)(**self.toNaming())
 
     @abc.abstractmethod
     def deparse(self: Self) -> list[str]: ...
@@ -23,14 +24,14 @@ class Item(Copyable):
     @abc.abstractmethod
     def sortkey(cls: type) -> int: ...
 
-    def todict(self: Self) -> dict:
+    def toNaming(self: Self) -> namings.Naming:
         "This method returns a dict representing the current instance."
-        ans: dict
+        ans: namings.Naming
         try:
             ans = self._data
         except AttributeError:
-            self._data = dict()
-            ans = dict()
+            self._data = namings.Naming()
+            ans = namings.Naming()
         else:
-            ans = dict(ans)
+            ans = namings.Naming(ans)
         return ans

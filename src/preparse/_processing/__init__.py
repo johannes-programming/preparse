@@ -1,6 +1,8 @@
 from types import FunctionType
 from typing import *
 
+import datahold
+
 from preparse._items import *
 from preparse._processing.deparsing import *
 from preparse._processing.digesting import *
@@ -20,7 +22,7 @@ def process(
     allowsshort: bool,
     bundling: Tuning,
     expectsposix: bool,
-    optNaming: dict,
+    optNaming: datahold.DataNaming,
     prog: str,
     reconcilesorders: bool,
     special: Tuning,
