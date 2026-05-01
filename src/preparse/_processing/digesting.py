@@ -5,7 +5,7 @@ from preparse._items.Item import Item
 from preparse._items.Option import Option
 from preparse._items.Positional import Positional
 from preparse._items.Special import Special
-from preparse.core.enums import *
+from preparse.enums.Tuning import Tuning
 
 __all__ = ["digest"]
 

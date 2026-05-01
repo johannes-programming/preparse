@@ -6,7 +6,7 @@ import setdoc
 from copyable import Copyable
 from datarepr import datarepr
 
-from preparse._utils import *
+from preparse._utils import dataprop
 from preparse.core.PreparseWarning import PreparseWarning
 
 __all__ = ["Warner"]

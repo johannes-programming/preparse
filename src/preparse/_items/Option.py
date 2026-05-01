@@ -3,7 +3,7 @@ from typing import *
 
 from preparse._items.Item import Item
 from preparse._utils.dataprop import dataprop
-from preparse.core.enums import *
+from preparse.enums.Nargs import Nargs
 
 __all__ = ["Option"]
 

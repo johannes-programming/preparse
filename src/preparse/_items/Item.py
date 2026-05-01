@@ -5,8 +5,6 @@ import namings
 import setdoc
 from copyable import Copyable
 
-from preparse.core.enums import *
-
 __all__ = ["Item"]
 
 

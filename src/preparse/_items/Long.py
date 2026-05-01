@@ -1,11 +1,10 @@
-import operator
 from typing import *
 
 import setdoc
 
 from preparse._items.Option import Option
 from preparse._utils.dataprop import dataprop
-from preparse.core.enums import *
+from preparse.enums.Nargs import Nargs
 
 __all__ = ["Long"]
 
