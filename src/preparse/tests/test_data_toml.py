@@ -6,7 +6,7 @@ from functools import cached_property
 from importlib import resources
 from typing import *
 
-from preparse.core import *
+from preparse.core.PreParser import PreParser
 
 __all__ = ["TestDataToml"]
 

@@ -15,7 +15,7 @@ from preparse._processing import *
 from preparse._utils.dataprop import dataprop
 from preparse.core.Click import Click
 from preparse.core.enums import *
-from preparse.core.Optdict import *
+from preparse.core.OptNaming import OptNaming
 from preparse.core.warnings import *
 
 __all__ = ["PreParser"]
@@ -28,7 +28,7 @@ class PreParser(Copyable):
     allowsshort: bool
     bundling: Tuning
     expectsposix: bool
-    optdict: Optdict
+    optNaming: OptNaming
     prog: str
     reconcilesorders: bool
     special: Tuning
@@ -45,7 +45,7 @@ class PreParser(Copyable):
         allowsshort: Any = True,
         bundling: Any = Tuning.MAINTAIN,
         expectsposix: Any = False,
-        optdict: Any = (),
+        optNaming: Any = (),
         prog: Any = None,
         reconcilesorders: Any = True,
         special: Any = Tuning.MAINTAIN,
@@ -56,7 +56,7 @@ class PreParser(Copyable):
         self.allowsshort = allowsshort
         self.bundling = bundling
         self.expectsposix = expectsposix
-        self.optdict = optdict
+        self.optNaming = optNaming
         self.prog = prog
         self.reconcilesorders = reconcilesorders
         self.special = special
@@ -100,15 +100,15 @@ class PreParser(Copyable):
             return bool(value)
 
     @dataprop
-    def optdict(self: Self, value: Any) -> Optdict:
+    def optNaming(self: Self, value: Any) -> OptNaming:
         "This property gives a dictionary of options."
-        dataA: Optdict
-        if "optdict" not in self._data.keys():
-            self._data["optdict"] = Optdict()
-        dataA = Optdict(value)
-        self._data["optdict"].clear()
-        self._data["optdict"].update(dataA)
-        return self._data["optdict"]
+        dataA: OptNaming
+        if "optNaming" not in self._data.keys():
+            self._data["optNaming"] = OptNaming()
+        dataA = OptNaming(value)
+        self._data["optNaming"].clear()
+        self._data["optNaming"].update(dataA)
+        return self._data["optNaming"]
 
     def parse_args(
         self: Self,
@@ -131,11 +131,11 @@ class PreParser(Copyable):
 
     def reflectClickCommand(self: Self, cmd: cl.Command) -> None:
         "This method causes the current instance to reflect a click.Command object."
-        optdict: dict[str, Nargs]
+        optNaming: dict[str, Nargs]
         nargs: Nargs
         opt: Any
         param: Any
-        optdict = dict()
+        optNaming = dict()
         for param in cmd.params:
             if not isinstance(param, cl.Option):
                 continue
@@ -146,9 +146,9 @@ class PreParser(Copyable):
             else:
                 nargs = Nargs.OPTIONAL_ARGUMENT
             for opt in param.opts:
-                optdict[str(opt)] = nargs
-        self.optdict.clear()
-        self.optdict.update(optdict)
+                optNaming[str(opt)] = nargs
+        self.optNaming.clear()
+        self.optNaming.update(optNaming)
 
     def reflectClickContext(self: Self, ctx: cl.Context) -> None:
         "This method causes the current instance to reflect a click.Context object."
