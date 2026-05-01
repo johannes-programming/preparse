@@ -1,9 +1,7 @@
 import unittest
 from typing import *
 
-from preparse.core.enums import *
 from preparse.core.OptNaming import OptNaming
-from preparse.core.PreparseWarning import *
 
 __all__ = ["TestPreparse"]
 

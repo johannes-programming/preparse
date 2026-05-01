@@ -1,7 +1,7 @@
 import unittest
 from typing import *
 
-from preparse.core.enums import *
+from preparse.enums.Nargs import Nargs
 
 __all__ = ["TestEnums"]
 

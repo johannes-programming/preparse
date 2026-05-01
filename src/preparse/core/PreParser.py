@@ -15,8 +15,9 @@ from tofunc import tofunc
 from preparse._processing import *
 from preparse._utils.dataprop import dataprop
 from preparse.core.Click import Click
-from preparse.core.enums import *
 from preparse.core.OptNaming import OptNaming
+from preparse.enums.Nargs import Nargs
+from preparse.enums.Tuning import Tuning
 
 __all__ = ["PreParser"]
 

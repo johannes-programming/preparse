@@ -5,7 +5,7 @@ import namings
 import setdoc
 from datarepr import datarepr
 
-from preparse.core.enums import *
+from preparse.enums.Nargs import Nargs
 
 __all__ = ["OptNaming"]
 
