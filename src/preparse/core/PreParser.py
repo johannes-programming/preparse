@@ -103,11 +103,9 @@ class PreParser(Copyable):
     @dataprop
     def optNaming(self: Self, value: Any) -> OptNaming:
         "This property gives a naming of options."
-        dataA: OptNaming
         if "optNaming" not in self._data.keys():
             self._data["optNaming"] = OptNaming()
-        dataA = OptNaming(value)
-        self._data["optNaming"].data = dataA
+        self._data["optNaming"].data = value
         return self._data["optNaming"]
 
     def parse_args(
