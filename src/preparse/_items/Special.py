@@ -14,5 +14,5 @@ class Special(Item):
         return ["--"]
 
     @classmethod
-    def sortkey(cls: type) -> int:
+    def sortkey(cls: type[Self]) -> int:
         return 1
