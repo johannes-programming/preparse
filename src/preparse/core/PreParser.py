@@ -6,6 +6,7 @@ import types
 from typing import *
 
 import click as cl
+import namings
 import setdoc
 from copyable import Copyable
 from datarepr import datarepr
@@ -64,7 +65,7 @@ class PreParser(Copyable):
 
     @setdoc.basic
     def __repr__(self: Self) -> str:
-        return datarepr(type(self).__name__, **self.todict())
+        return datarepr(type(self).__name__, **self.toNaming())
 
     @dataprop
     def abbr(self: Self, value: Any) -> bool:
@@ -90,7 +91,7 @@ class PreParser(Copyable):
 
     @setdoc.basic
     def copy(self: Self) -> Self:
-        return type(self)(**self.todict())
+        return type(self)(**self.toNaming())
 
     @dataprop
     def expectsposix(self: Self, value: Any) -> bool:
@@ -101,7 +102,7 @@ class PreParser(Copyable):
 
     @dataprop
     def optNaming(self: Self, value: Any) -> OptNaming:
-        "This property gives a dictionary of options."
+        "This property gives a naming of options."
         dataA: OptNaming
         if "optNaming" not in self._data.keys():
             self._data["optNaming"] = OptNaming()
@@ -115,7 +116,7 @@ class PreParser(Copyable):
         args: Optional[Iterable] = None,
     ) -> list[str]:
         "This method parses args."
-        return process(args, **self.todict())
+        return process(args, **self.toNaming())
 
     @dataprop
     def prog(self: Self, value: Any) -> str:
@@ -131,11 +132,11 @@ class PreParser(Copyable):
 
     def reflectClickCommand(self: Self, cmd: cl.Command) -> None:
         "This method causes the current instance to reflect a click.Command object."
-        optNaming: dict[str, Nargs]
+        optNaming: namings.Naming[Nargs]
         nargs: Nargs
         opt: Any
         param: Any
-        optNaming = dict()
+        optNaming = namings.Naming()
         for param in cmd.params:
             if not isinstance(param, cl.Option):
                 continue
@@ -159,16 +160,16 @@ class PreParser(Copyable):
         "This Tuning property determines the approach towards the special argument."
         return Tuning(value)
 
-    def todict(self: Self) -> dict:
-        "This method returns a dict representing the current instance."
-        ans: dict
+    def toNaming(self: Self) -> namings.Naming:
+        "This method returns a naming representing the current instance."
+        ans: namings.Naming
         try:
             ans = self._data
         except AttributeError:
-            self._data = dict()
-            return dict()
+            self._data = namings.Naming()
+            return namings.Naming()
         else:
-            return dict(ans)
+            return namings.Naming(ans)
 
     @dataprop
     def warn(self: Self, value: Callable) -> types.FunctionType:
