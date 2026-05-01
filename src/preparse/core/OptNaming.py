@@ -1,6 +1,5 @@
 from typing import *
 
-import cmp3
 import datahold
 import namings
 import setdoc

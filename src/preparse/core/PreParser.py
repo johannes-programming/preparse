@@ -28,7 +28,7 @@ class PreParser(Copyable):
     allowslong: bool
     allowsshort: bool
     bundling: Tuning
-    expectsposix: bool
+    expectsPOSIX: bool
     optNaming: OptNaming
     prog: str
     reconcilesorders: bool
@@ -45,7 +45,7 @@ class PreParser(Copyable):
         allowslong: Any = True,
         allowsshort: Any = True,
         bundling: Any = Tuning.MAINTAIN,
-        expectsposix: Any = False,
+        expectsPOSIX: Any = False,
         optNaming: Any = (),
         prog: Any = None,
         reconcilesorders: Any = True,
@@ -56,7 +56,7 @@ class PreParser(Copyable):
         self.allowslong = allowslong
         self.allowsshort = allowsshort
         self.bundling = bundling
-        self.expectsposix = expectsposix
+        self.expectsPOSIX = expectsPOSIX
         self.optNaming = optNaming
         self.prog = prog
         self.reconcilesorders = reconcilesorders
@@ -94,7 +94,7 @@ class PreParser(Copyable):
         return type(self)(**self.toNaming())
 
     @dataprop
-    def expectsposix(self: Self, value: Any) -> bool:
+    def expectsPOSIX(self: Self, value: Any) -> bool:
         if value == "infer":
             return bool(os.environ.get("POSIXLY_CORRECT"))
         else:
@@ -147,7 +147,7 @@ class PreParser(Copyable):
             else:
                 nargs = Nargs.OPTIONAL_ARGUMENT
             for opt in param.opts:
-                optNaming[str(opt)] = nargs
+                optNaming[opt] = nargs
         self.optNaming.clear()
         self.optNaming.update(optNaming)
 

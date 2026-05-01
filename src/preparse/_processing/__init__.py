@@ -4,10 +4,10 @@ from typing import *
 import datahold
 
 from preparse._items import *
-from preparse._processing.deparsing import *
-from preparse._processing.digesting import *
-from preparse._processing.parsing import *
-from preparse._processing.pulling import *
+from preparse._processing.deparsing import deparse
+from preparse._processing.digesting import digest
+from preparse._processing.parsing import parse
+from preparse._processing.pulling import pull
 from preparse._utils import *
 from preparse.core.enums import *
 
@@ -21,7 +21,7 @@ def process(
     allowslong: bool,
     allowsshort: bool,
     bundling: Tuning,
-    expectsposix: bool,
+    expectsPOSIX: bool,
     optNaming: datahold.DataNaming,
     prog: str,
     reconcilesorders: bool,
@@ -36,7 +36,7 @@ def process(
         abbr=abbr,
         allowslong=allowslong,
         allowsshort=allowsshort,
-        expectsposix=expectsposix,
+        expectsPOSIX=expectsPOSIX,
         optNaming=optNaming,
         prog=prog,
         warn=warn,
@@ -45,7 +45,7 @@ def process(
         items,
         allowslong=allowslong,
         bundling=bundling,
-        expectsposix=expectsposix,
+        expectsPOSIX=expectsPOSIX,
         reconcilesorders=reconcilesorders,
         special=special,
     )

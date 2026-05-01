@@ -24,7 +24,7 @@ class expit:
             p = float("+inf")
         return 1 / (1 + p)
 
-    @PreParser(reconcilesorders=True, expectsposix=False).click()
+    @PreParser(reconcilesorders=True, expectsPOSIX=False).click()
     @click.command(add_help_option=False)
     @click.help_option("-h", "--help")
     @click.version_option("1.2.3", "-V", "--version")
