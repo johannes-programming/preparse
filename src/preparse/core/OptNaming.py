@@ -6,7 +6,6 @@ import setdoc
 from datarepr import datarepr
 
 from preparse.core.enums import *
-from preparse.core.warnings import *
 
 __all__ = ["OptNaming"]
 
