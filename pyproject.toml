@@ -24,7 +24,6 @@ dependencies = [
     "copyable>=1.0,<2",
     "datahold>=3.1.dev1,<4",
     "datarepr>=1.1,<2",
-    "frozendict>=2.4.7,<3",
     "namings>=1.0,<2",
     "overloadable>=1.1,<2",
     "setdoc>=1.2.10,<2",
@@ -35,7 +34,7 @@ keywords = []
 name = "preparse"
 readme = "README.rst"
 requires-python = ">=3.11"
-version = "2.0.0.dev17+local.2"
+version = "2.0.0.dev17+local.3"
 
 [project.license]
 file = "LICENSE.txt"
