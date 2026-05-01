@@ -132,9 +132,9 @@ class PreParser(Copyable):
 
     def reflectClickCommand(self: Self, cmd: cl.Command) -> None:
         "This method causes the current instance to reflect a click.Command object."
-        optNaming: namings.Naming[Nargs]
         nargs: Nargs
         opt: Any
+        optNaming: namings.Naming[Nargs]
         param: Any
         optNaming = namings.Naming()
         for param in cmd.params:
