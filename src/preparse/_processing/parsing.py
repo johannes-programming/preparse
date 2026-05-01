@@ -135,19 +135,20 @@ def parse_long(
     optNaming: datahold.DataNaming,
 ) -> Long:
     ans: Long
+    fullkey_: str
+    minlen: int
     parts: list[str]
     parts = arg.split("=", 1)
     ans = Long(fullkey=parts.pop(0))
     if len(parts):
         ans.joined = True
         ans.right = parts.pop()
-    ans.abbrlen = len(ans.fullkey)
     if ans.fullkey in optNaming.keys():
         parts = [ans.fullkey]
-    elif abbr is not None:
-        parts = parse_long_startswith(ans.abbr, keys=optNaming.keys())
+    elif abbr is None:
+        parts = []  # can be assumed
     else:
-        parts = list()  # can be assumed
+        parts = parse_long_startswith(ans.fullkey, keys=optNaming.keys())
     if len(parts) == 0:
         ans.nargs = Nargs.OPTIONAL_ARGUMENT
         cause(PIOW, option=arg, islong=True)
@@ -156,21 +157,22 @@ def parse_long(
         ans.nargs = Nargs.OPTIONAL_ARGUMENT
         cause(PAOW, option=arg, possibilities=parts)
         return ans
-    (ans.fullkey,) = parts
+    (fullkey_,) = parts
     if abbr == Tuning.MINIMIZE:
-        ans.abbrlen = len(ans.fullkey)
+        ans.fullkey = fullkey_
     if abbr == Tuning.MAXIMIZE:
         parts = list(optNaming.keys())
-        parts.remove(ans.fullkey)
-        ans.abbrlen = parse_minlen(
-            abbr=ans.abbr,
+        parts.remove(fullkey_)
+        minlen = parse_minlen(
+            abbr=ans.fullkey,
             allowsshort=allowsshort,
             joined=ans.joined,
             keys=tuple(parts),
         )
-    ans.nargs = optNaming[ans.fullkey]
+        ans.fullkey = fullkey_[:minlen]
+    ans.nargs = optNaming[fullkey_]
     if (ans.nargs == Nargs.NO_ARGUMENT) and (ans.right is not None):
-        cause(PUAW, option=ans.fullkey)
+        cause(PUAW, option=fullkey_)
     return ans
 
 
