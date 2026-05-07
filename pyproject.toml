@@ -22,7 +22,7 @@ dependencies = [
     "copyable>=1.0,<2",
     "datahold>=3.1.dev3,<4",
     "datarepr>=1.1,<2",
-    "namings>=1.0,<2",
+    "namings>=1.0.dev0,<2",
     "overloadable>=1.1,<2",
     "setdoc>=1.2.20,<2",
     "tofunc>=1.0,<2",
@@ -36,7 +36,7 @@ license-files = [
 name = "preparse"
 readme = "README.rst"
 requires-python = ">=3.11"
-version = "2.0.0.dev17+local.13"
+version = "2.0.0.dev17+local.14"
 
 [project.urls]
 Download = "https://pypi.org/project/preparse/#files"
