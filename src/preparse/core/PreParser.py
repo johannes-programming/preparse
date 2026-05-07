@@ -26,7 +26,7 @@ class PreParser(Copyable):
 
     abbr: Optional[Tuning]
     allowsLong: bool
-    allowsshort: bool
+    allowsShort: bool
     bundling: Tuning
     expectsPOSIX: bool
     optNaming: OptNaming
@@ -43,7 +43,7 @@ class PreParser(Copyable):
         *,
         abbr: Optional[Tuning] = Tuning.MINIMIZE,
         allowsLong: Any = True,
-        allowsshort: Any = True,
+        allowsShort: Any = True,
         bundling: Any = Tuning.MAINTAIN,
         expectsPOSIX: Any = False,
         optNaming: Any = (),
@@ -54,7 +54,7 @@ class PreParser(Copyable):
     ) -> None:
         self.abbr = abbr
         self.allowsLong = allowsLong
-        self.allowsshort = allowsshort
+        self.allowsShort = allowsShort
         self.bundling = bundling
         self.expectsPOSIX = expectsPOSIX
         self.optNaming = optNaming
@@ -77,7 +77,7 @@ class PreParser(Copyable):
         return bool(value)
 
     @dataprop
-    def allowsshort(self: Self, value: Any) -> bool:
+    def allowsShort(self: Self, value: Any) -> bool:
         return bool(value)
 
     @dataprop

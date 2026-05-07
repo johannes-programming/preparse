@@ -70,7 +70,7 @@ def parse_generator(
     *,
     abbr: Optional[Tuning],
     allowsLong: bool,
-    allowsshort: bool,
+    allowsShort: bool,
     expectsPOSIX: bool,
     optNaming: datahold.DataNaming,
     prog: str,
@@ -80,7 +80,7 @@ def parse_generator(
     cause: FunctionType
     last: Optional[Option]
     item: Positional
-    broken = not (allowsLong or allowsshort)
+    broken = not (allowsLong or allowsShort)
     cause = parse_cause(prog=prog, warn=warn)
     last = None
     for item in items:
@@ -108,7 +108,7 @@ def parse_generator(
             item.value,
             abbr=abbr,
             allowsLong=allowsLong,
-            allowsshort=allowsshort,
+            allowsShort=allowsShort,
             cause=cause,
             optNaming=optNaming,
         )
@@ -129,7 +129,7 @@ def parse_long(
     arg: str,
     *,
     abbr: Optional[Tuning],
-    allowsshort: bool,
+    allowsShort: bool,
     cause: FunctionType,
     optNaming: datahold.DataNaming,
 ) -> Long:
@@ -164,7 +164,7 @@ def parse_long(
         parts.remove(fullkey_)
         minlen = parse_minlen(
             abbr=ans.fullkey,
-            allowsshort=allowsshort,
+            allowsShort=allowsShort,
             joined=ans.joined,
             keys=tuple(parts),
         )
@@ -192,13 +192,13 @@ def parse_long_startswith(
 def parse_minlen(
     *,
     abbr: str,
-    allowsshort: bool,
+    allowsShort: bool,
     joined: bool,
     keys: tuple[str, ...],
 ) -> int:
     m: int
     n: int
-    m = 2 + allowsshort - joined
+    m = 2 + allowsShort - joined
     n = len(abbr)
     while n >= m and not any(z.startswith(abbr[:n]) for z in keys):
         n -= 1
@@ -210,15 +210,15 @@ def parse_option(
     *,
     abbr: Optional[Tuning],
     allowsLong: bool,
-    allowsshort: bool,
+    allowsShort: bool,
     cause: FunctionType,
     optNaming: datahold.DataNaming,
 ) -> Option:
-    if (allowsLong and arg.startswith("--")) or not allowsshort:
+    if (allowsLong and arg.startswith("--")) or not allowsShort:
         return parse_long(
             arg,
             abbr=abbr,
-            allowsshort=allowsshort,
+            allowsShort=allowsShort,
             cause=cause,
             optNaming=optNaming,
         )
