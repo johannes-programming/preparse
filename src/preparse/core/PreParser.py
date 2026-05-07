@@ -31,7 +31,7 @@ class PreParser(Copyable):
     expectsPOSIX: bool
     optNaming: OptNaming
     prog: str
-    reconcilesorders: bool
+    reconcilesOrders: bool
     special: Tuning
     warn: types.FunctionType
 
@@ -48,7 +48,7 @@ class PreParser(Copyable):
         expectsPOSIX: Any = False,
         optNaming: Any = (),
         prog: Any = None,
-        reconcilesorders: Any = True,
+        reconcilesOrders: Any = True,
         special: Any = Tuning.MAINTAIN,
         warn: Callable = str,
     ) -> None:
@@ -59,7 +59,7 @@ class PreParser(Copyable):
         self.expectsPOSIX = expectsPOSIX
         self.optNaming = optNaming
         self.prog = prog
-        self.reconcilesorders = reconcilesorders
+        self.reconcilesOrders = reconcilesOrders
         self.special = special
         self.warn = warn
 
@@ -124,7 +124,7 @@ class PreParser(Copyable):
             return str(value)
 
     @dataprop
-    def reconcilesorders(self: Self, value: Any) -> bool:
+    def reconcilesOrders(self: Self, value: Any) -> bool:
         return bool(value)
 
     def reflectClickCommand(self: Self, cmd: cl.Command) -> None:

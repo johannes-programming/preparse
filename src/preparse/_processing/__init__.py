@@ -23,7 +23,7 @@ def process(
     expectsPOSIX: bool,
     optNaming: datahold.DataNaming,
     prog: str,
-    reconcilesorders: bool,
+    reconcilesOrders: bool,
     special: Tuning,
     warn: FunctionType,
 ) -> list[str]:
@@ -45,7 +45,7 @@ def process(
         allowslong=allowslong,
         bundling=bundling,
         expectsPOSIX=expectsPOSIX,
-        reconcilesorders=reconcilesorders,
+        reconcilesOrders=reconcilesOrders,
         special=special,
     )
     return deparse(items)
