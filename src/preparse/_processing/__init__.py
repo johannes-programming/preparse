@@ -20,7 +20,7 @@ def process(
     allowsshort: bool,
     bundling: Tuning,
     expectsposix: bool,
-    optdict: dict,
+    optNaming: dict,
     prog: str,
     reconcilesorders: bool,
     special: Tuning,
@@ -35,7 +35,7 @@ def process(
         allowslong=allowslong,
         allowsshort=allowsshort,
         expectsposix=expectsposix,
-        optdict=optdict,
+        optNaming=optNaming,
         prog=prog,
         warn=warn,
     )
