@@ -18,7 +18,7 @@ PUAW = warnings.PreparseUnallowedArgumentWarning
 PRAW = warnings.PreparseRequiredArgumentWarning
 
 
-def parse(args: list[str], **kwargs: Any) -> list[Item]:
+def parse(args: list[Item], **kwargs: Any) -> list[Item]:
     return list(parse_generator(args, **kwargs))
 
 
@@ -31,7 +31,7 @@ def parse_bundling(
     ans: Bundle
     x: int
     y: str
-    ans = Bundle(chars="")
+    ans = Bundle(chars="", nargs=Nargs.NO_ARGUMENT)
     for x, y in enumerate(arg):
         if x == 0:
             continue
@@ -40,7 +40,6 @@ def parse_bundling(
             ans.nargs = optdict["-" + y]
         except KeyError:
             cause(PIOW, option=y, islong=False)
-            ans.nargs = Nargs.NO_ARGUMENT
         if ans.nargs == Nargs.NO_ARGUMENT:
             continue
         if ans.nargs == Nargs.OPTIONAL_ARGUMENT or x < len(arg) - 1:
@@ -54,7 +53,7 @@ def parse_cause(
     *,
     prog: str,
     warn: FunctionType,
-) -> FunctionType:
+) -> Any:
     def ans(cls: type, **kwargs: Any) -> None:
         warn(cls(prog=prog, **kwargs))
 
@@ -62,7 +61,7 @@ def parse_cause(
 
 
 def parse_generator(
-    items: list[Positional],
+    items: list[Any],
     *,
     allowslong: bool,
     allowsshort: bool,
@@ -74,8 +73,8 @@ def parse_generator(
 ) -> Generator[Any, Any, Any]:
     broken: bool
     cause: FunctionType
-    last: Optional[Option]
-    item: Positional
+    last: Any
+    item: Any
     broken = not (allowslong or allowsshort)
     cause = parse_cause(prog=prog, warn=warn)
     last = None

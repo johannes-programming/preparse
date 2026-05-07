@@ -17,7 +17,7 @@ __all__ = [
 
 
 class PreparseWarning(Warning, Copyable):
-    args: tuple[str]
+
     option: str
     prog: str
 
@@ -28,11 +28,6 @@ class PreparseWarning(Warning, Copyable):
     @setdoc.basic
     def __str__(self: Self) -> str:
         return f"{self.prog}: {self.getmsg()}"
-
-    @property
-    def args(self: Self) -> tuple[str]:
-        "This property returns (str(self),)."
-        return (str(self),)
 
     @setdoc.basic
     def copy(self: Self) -> Self:
