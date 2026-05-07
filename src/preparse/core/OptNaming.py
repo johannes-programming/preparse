@@ -1,3 +1,4 @@
+import types
 from typing import *
 
 import datahold
@@ -15,8 +16,11 @@ class OptNaming(datahold.HoldNaming[Nargs]):
 
     data: namings.FrozenNaming[Nargs]
 
-    def __eq__(self: Self, other: Any) -> bool:
-        return type(self) is type(other) and self.data == other.data
+    def __eq__(self: Self, other: Any) -> types.NotImplementedType | bool:
+        if isinstance(other, namings.abc.BaseNamingABC.BaseNamingABC):
+            return self.data == other.data
+        else:
+            return NotImplemented
 
     __format__ = object.__format__
 
@@ -24,7 +28,7 @@ class OptNaming(datahold.HoldNaming[Nargs]):
 
     @setdoc.basic
     def __repr__(self: Self, /) -> str:
-        return datarepr(type(self).__name__, dict(self._data))
+        return datarepr(type(self).__name__, dict(self))
 
     __str__ = object.__str__
 
