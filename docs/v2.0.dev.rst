@@ -98,14 +98,15 @@ This property holds the parser to be embedded.
 ``class preparse.core.OptNaming.OptNaming``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This class is a subclass of ``datahold.HoldDict[str, preparse.Nargs]``
+This class is a subclass of ``datahold.DataNaming[preparse.Nargs]``
 with strings as keys and with ``preparse.Nargs`` as values.
 It is designed for ``preparse.PreParser.optNaming``.
 
 ``class preparse.core.PreParser.PreParser(*, abbr: Optional[Tuning] = Tuning.MINIMIZE, allowsLong: Any = True, allowsShort: Any = True, bundling: Any = Tuning.MAINTAIN, expectsPOSIX: Any = False, optNaming: Any = (), prog: Any = None, reconcilesOrders: Any = True, special: Any = Tuning.MAINTAIN, warn: Callable = str)``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This class is the centerpiece of the preparse. Its behaviour follows the principles of getopt from C.
+This class is the centerpiece of the ``preparse``. 
+Its behaviour follows the principles of getopt from C.
 
 ``abbr: Optional[Tuning]``
 """"""""""""""""""""""""""
