@@ -17,7 +17,7 @@ def process(
     args: Optional[Iterable] = None,
     *,
     abbr: Optional[Tuning],
-    allowslong: bool,
+    allowsLong: bool,
     allowsshort: bool,
     bundling: Tuning,
     expectsPOSIX: bool,
@@ -33,7 +33,7 @@ def process(
     items = parse(
         items,
         abbr=abbr,
-        allowslong=allowslong,
+        allowsLong=allowsLong,
         allowsshort=allowsshort,
         expectsPOSIX=expectsPOSIX,
         optNaming=optNaming,
@@ -42,7 +42,7 @@ def process(
     )
     items = digest(
         items,
-        allowslong=allowslong,
+        allowsLong=allowsLong,
         bundling=bundling,
         expectsPOSIX=expectsPOSIX,
         reconcilesOrders=reconcilesOrders,

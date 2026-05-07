@@ -32,7 +32,7 @@ class Bundle(Option):
         self.right = right
 
     @classmethod
-    def _split_allowslong(cls: type, chars: str) -> list[str]:
+    def _split_allowsLong(cls: type, chars: str) -> list[str]:
         ans: list[str]
         x: str
         ans = list()
@@ -73,12 +73,12 @@ class Bundle(Option):
         else:
             return ["-" + self.chars, self.right]
 
-    def split(self: Self, *, allowslong: bool) -> list[Item]:
+    def split(self: Self, *, allowsLong: bool) -> list[Item]:
         ans: list[Self]
         parts: list[str]
         x: str
-        if allowslong:
-            parts = self._split_allowslong(self.chars)
+        if allowsLong:
+            parts = self._split_allowsLong(self.chars)
         else:
             parts = self._split_shortonly(self.chars)
         ans = list()

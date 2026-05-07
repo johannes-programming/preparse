@@ -13,7 +13,7 @@ __all__ = ["digest"]
 def digest(
     items: list[Item],
     *,
-    allowslong: bool,
+    allowsLong: bool,
     bundling: Tuning,
     expectsPOSIX: bool,
     reconcilesOrders: bool,
@@ -36,7 +36,7 @@ def digest(
     ans = digest_bundling(
         ans,
         bundling=bundling,
-        allowslong=allowslong,
+        allowsLong=allowsLong,
     )
     return ans
 
@@ -44,11 +44,11 @@ def digest(
 def digest_bundling(
     items: list[Item],
     *,
-    allowslong: bool,
+    allowsLong: bool,
     bundling: Tuning,
 ) -> list[Item]:
     if bundling == Tuning.MINIMIZE:
-        return digest_bundling_min(items, allowslong=allowslong)
+        return digest_bundling_min(items, allowsLong=allowsLong)
     if bundling == Tuning.MAXIMIZE:
         return digest_bundling_max(items)
     return items
@@ -57,14 +57,14 @@ def digest_bundling(
 def digest_bundling_min(
     items: list[Item],
     *,
-    allowslong: bool,
+    allowsLong: bool,
 ) -> list[Item]:
     ans: list[Item]
     item: Item
     ans = list()
     for item in items:
         if isinstance(item, Bundle):
-            ans += item.split(allowslong=allowslong)
+            ans += item.split(allowsLong=allowsLong)
         else:
             ans.append(item)
     return ans

@@ -69,7 +69,7 @@ def parse_generator(
     items: list[Positional],
     *,
     abbr: Optional[Tuning],
-    allowslong: bool,
+    allowsLong: bool,
     allowsshort: bool,
     expectsPOSIX: bool,
     optNaming: datahold.DataNaming,
@@ -80,7 +80,7 @@ def parse_generator(
     cause: FunctionType
     last: Optional[Option]
     item: Positional
-    broken = not (allowslong or allowsshort)
+    broken = not (allowsLong or allowsshort)
     cause = parse_cause(prog=prog, warn=warn)
     last = None
     for item in items:
@@ -107,7 +107,7 @@ def parse_generator(
         last = parse_option(
             item.value,
             abbr=abbr,
-            allowslong=allowslong,
+            allowsLong=allowsLong,
             allowsshort=allowsshort,
             cause=cause,
             optNaming=optNaming,
@@ -209,12 +209,12 @@ def parse_option(
     arg: str,
     *,
     abbr: Optional[Tuning],
-    allowslong: bool,
+    allowsLong: bool,
     allowsshort: bool,
     cause: FunctionType,
     optNaming: datahold.DataNaming,
 ) -> Option:
-    if (allowslong and arg.startswith("--")) or not allowsshort:
+    if (allowsLong and arg.startswith("--")) or not allowsshort:
         return parse_long(
             arg,
             abbr=abbr,

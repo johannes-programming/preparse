@@ -25,7 +25,7 @@ __all__ = ["PreParser"]
 class PreParser(Copyable):
 
     abbr: Optional[Tuning]
-    allowslong: bool
+    allowsLong: bool
     allowsshort: bool
     bundling: Tuning
     expectsPOSIX: bool
@@ -42,7 +42,7 @@ class PreParser(Copyable):
         self: Self,
         *,
         abbr: Optional[Tuning] = Tuning.MINIMIZE,
-        allowslong: Any = True,
+        allowsLong: Any = True,
         allowsshort: Any = True,
         bundling: Any = Tuning.MAINTAIN,
         expectsPOSIX: Any = False,
@@ -53,7 +53,7 @@ class PreParser(Copyable):
         warn: Callable = str,
     ) -> None:
         self.abbr = abbr
-        self.allowslong = allowslong
+        self.allowsLong = allowsLong
         self.allowsshort = allowsshort
         self.bundling = bundling
         self.expectsPOSIX = expectsPOSIX
@@ -73,7 +73,7 @@ class PreParser(Copyable):
             return Tuning(value)
 
     @dataprop
-    def allowslong(self: Self, value: Any) -> bool:
+    def allowsLong(self: Self, value: Any) -> bool:
         return bool(value)
 
     @dataprop
