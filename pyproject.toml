@@ -10,7 +10,6 @@ authors = [
 ]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
-    "License :: OSI Approved :: MIT License",
     "Natural Language :: English",
     "Operating System :: OS Independent",
     "Programming Language :: Python",
@@ -31,13 +30,14 @@ dependencies = [
 ]
 description = "This project preparses args for further parsing later on."
 keywords = []
+license = "MIT"
+license-files = [
+    "LICENSE.txt",
+]
 name = "preparse"
 readme = "README.rst"
 requires-python = ">=3.11"
-version = "1.0.13"
-
-[project.license]
-file = "LICENSE.txt"
+version = "1.0.15"
 
 [project.urls]
 Download = "https://pypi.org/project/preparse/#files"
