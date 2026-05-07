@@ -1,7 +1,7 @@
 Overview
 --------
 
-This project allows to preparse arguments before the main parsing. 
+This project allows to preparse arguments before the main parsing.
 Its ability to deabbreviate options is especially useful for use with ``click``.
 
 Links
@@ -15,7 +15,8 @@ Links
 Installation
 ------------
 
-To install preparse, you can use pip. Open your terminal and run:
+To install preparse, you can use ``pip``.
+Open your terminal and run:
 
 .. code-block:: shell
 
@@ -24,13 +25,16 @@ To install preparse, you can use pip. Open your terminal and run:
 Introduction
 ------------
 
-The preparse project allows for preprocessing a list of arguments so that they can be parsed definitively in a later step. 
-This way, the functionality of another parsing system can be modified. 
-The project is especially adapted to work with the click project.
+The preparse project allows for preprocessing a list of arguments
+so that they can be parsed definitively in a later step.
+This way, the functionality of another parsing system can be modified.
+The project is especially adapted to work with the ``click`` project.
 
-The project preparse is strongly inspired by the getopt and getopt_long libraries within C.
+The project preparse is strongly inspired by
+the ``getopt`` and ``getopt_long`` libraries within C.
 
-Here is the implementation of the ``expit`` project (Version 1.0.13) to illustrate how preparse can be used to modify click.
+Here is the implementation of the ``expit`` project (Version 1.0.13)
+to illustrate how preparse can be used to modify ``click``.
 
 .. code-block:: python
 
@@ -95,17 +99,17 @@ This property determines if the ``reflectClickContext`` method of parser is to b
 
 This property holds the parser to be embedded.
 
-``class preparse.core.OptNaming.OptNaming``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.core.OptNaming.OptNaming(data: Any = (), /, **kwargs: Any)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This class is a subclass of ``datahold.DataNaming[preparse.Nargs]``
-with strings as keys and with ``preparse.Nargs`` as values.
-It is designed for ``preparse.PreParser.optNaming``.
+with strings as keys and with ``preparse.enums.Nargs.Nargs`` as values.
+It is designed for ``preparse.core.PreParser.PreParser.optNaming``.
 
-``class preparse.core.PreParser.PreParser(*, abbr: Optional[Tuning] = Tuning.MINIMIZE, allowsLong: Any = True, allowsShort: Any = True, bundling: Any = Tuning.MAINTAIN, expectsPOSIX: Any = False, optNaming: Any = (), prog: Any = None, reconcilesOrders: Any = True, special: Any = Tuning.MAINTAIN, warn: Callable = str)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.core.PreParser.PreParser(*, abbr: Any = Tuning.MINIMIZE, allowsLong: Any = True, allowsShort: Any = True, bundling: Any = Tuning.MAINTAIN, expectsPOSIX: Any = False, optNaming: Any = (), prog: Any = None, reconcilesOrders: Any = True, special: Any = Tuning.MAINTAIN, warn: Callable = str)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This class is the centerpiece of the ``preparse``. 
+This class is the centerpiece of the ``preparse``.
 Its behaviour follows the principles of getopt from C.
 
 ``abbr: Optional[Tuning]``
@@ -139,54 +143,57 @@ This method returns a copy of the current instance.
 ``expectsPOSIX: bool``
 """"""""""""""""""""""
 
-This boolean property determines whether the order of arguments to conform to the POSIX standard, i.e. all arguments after the first positional argument also being positonal.
+This boolean property determines whether the order of arguments to conform to the POSIX standard,
+i.e. all arguments after the first positional argument also being positonal.
 
 ``optNaming: preparse.OptNaming``
 """""""""""""""""""""""""""""""""
 
-This property holds a naming-like object. 
-Its keys are the options. 
-Its values specify ``preparse.Nargs``. 
-Options not found within the dictionary 
-cause a ``preparse.PreparseInvalidOptionWarning`` 
+This property holds a naming-like object.
+Its keys are the options.
+Its values specify ``preparse.enums.Nargs.Nargs``.
+Options not found within the dictionary
+lauch a ``preparse.warners.InvalidOptionWarner.InvalidOptionWarner``
 and are then assumed to have no arguments.
 
 ``parse_args(args: Optional[Iterable] = None) -> list[str]``
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-This method is at the core of the class. 
-It returns a preparsed list of arguments. 
-If ``None`` is passed as args then ``sys.argv[1:]`` is used. 
-If the method is applied repeatedly to a list there will be no changes after the first run.
+This method is at the core of the class.
+It returns a preparsed list of arguments.
+If ``None`` is passed as args then ``sys.argv[1:]`` is used.
+If the method is applied repeatedly to a list
+there will be no changes after the first run.
 
 ``prog: str``
 """""""""""""
 
-This ``str`` property represents the name of the program. 
+This ``str`` property represents the name of the program.
 If the value passed to the property is ``None`` then ``str(sys.argv[0])`` is saved.
 
 ``reconcilesOrders: bool``
 """"""""""""""""""""""""""
 
-This boolean property determines whether compatibility with both orders, 
+This boolean property determines whether compatibility with both orders,
 POSIX and the interleaving of options with positonal arguments, should be enforced.
 
 ``reflectClickCommand(cmd: click.Command) -> None``
 """""""""""""""""""""""""""""""""""""""""""""""""""
 
-This method alters the current instance to reflect a ``click.Command`` object. 
+This method alters the current instance to reflect a ``click.Command`` object.
 Concretely the ``optNaming`` property is changed.
 
 ``reflectClickContext(ctx: click.Context) -> None``
 """""""""""""""""""""""""""""""""""""""""""""""""""
 
-This method alters the current instance to reflect a ``click.Context`` object. 
+This method alters the current instance to reflect a ``click.Context`` object.
 Concretely the prog property is changed.
 
 ``special: preparse.Tuning``
 """"""""""""""""""""""""""""
 
-This ``preparse.Tuning`` property determines the approach to the special argument ``'--'``.
+This ``preparse.enums.Tuning.Tuning`` property
+determines the approach to the special argument ``'--'``.
 
 ``toNaming() -> namings.Naming``
 """"""""""""""""""""""""""""""""
@@ -196,10 +203,11 @@ This method a naming representing the current instance.
 ``warn: types.FunctionType``
 """"""""""""""""""""""""""""
 
-This property holds a function that is called whenever ``parse_args`` encounters a warning. 
-The warning is given as the only positional arguments. 
-No keyword arguments are given. 
-Its return value is discarded. 
+This property holds a function that is called
+whenever ``parse_args`` encounters a warning.
+The warning is given as the only positional arguments.
+No keyword arguments are given.
+Its return value is discarded.
 Therefore, ``str`` is used to discard the warnings.
 
 ``preparse.core.PreparseWarning.PreparseWarning(*args: Any)``
@@ -208,7 +216,7 @@ Therefore, ``str`` is used to discard the warnings.
 ``preparse.enums``
 ~~~~~~~~~~~~~~~~~~
 
-These classes are subclasses of ``enum.IntEnum``. 
+These classes are subclasses of ``enum.IntEnum``.
 Any value different from ``0`` (meaning no) and ``1`` (meaning yes) is interpreted as ``2`` (meaning intermediate).
 
 ``class preparse.enums.BaseEnum.BaseEnum``
@@ -217,28 +225,28 @@ Any value different from ``0`` (meaning no) and ``1`` (meaning yes) is interpret
 ``class preparse.enums.Nargs.Nargs``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-+-------------------+-------+----------------------------------------------+
-| Name              | Value | Explanation                                  |
-+===================+=======+==============================================+
-| NO_ARGUMENT       | ``0`` | The option does not take an argument.        |
-+-------------------+-------+----------------------------------------------+
-| REQUIRED_ARGUMENT | ``1`` | The option requires an argument.             |
-+-------------------+-------+----------------------------------------------+
-| OPTIONAL_ARGUMENT | ``2`` | The option may take an argument.             |
-+-------------------+-------+----------------------------------------------+
++-------------------+-------+---------------------------------------+
+| Name              | Value | Explanation                           |
++===================+=======+=======================================+
+| NO_ARGUMENT       | ``0`` | The option does not take an argument. |
++-------------------+-------+---------------------------------------+
+| REQUIRED_ARGUMENT | ``1`` | The option requires an argument.      |
++-------------------+-------+---------------------------------------+
+| OPTIONAL_ARGUMENT | ``2`` | The option may take an argument.      |
++-------------------+-------+---------------------------------------+
 
 ``class preparse.enums.Tuning.Tuning``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-+--------------+-------+-----------------------------------------------------------------------------+
-| Name         | Value | Explanation                                                                 |
-+==============+=======+=============================================================================+
-| ``MINIMIZE`` | ``0`` | The PreParser minimizes the aspect in question.                             |
-+--------------+-------+-----------------------------------------------------------------------------+
-| ``MAXIMIZE`` | ``1`` | The PreParser maximizes the aspect in question.                             |
-+--------------+-------+-----------------------------------------------------------------------------+
-| ``MAINTAIN`` | ``2`` | The PreParser does not make any unforced changes to the aspect in question. |
-+--------------+-------+-----------------------------------------------------------------------------+
++--------------+-------+---------------------------------------------------------------------------------+
+| Name         | Value | Explanation                                                                     |
++==============+=======+=================================================================================+
+| ``MINIMIZE`` | ``0`` | The ``PreParser`` minimizes the aspect in question.                             |
++--------------+-------+---------------------------------------------------------------------------------+
+| ``MAXIMIZE`` | ``1`` | The ``PreParser`` maximizes the aspect in question.                             |
++--------------+-------+---------------------------------------------------------------------------------+
+| ``MAINTAIN`` | ``2`` | The ``PreParser`` does not make any unforced changes to the aspect in question. |
++--------------+-------+---------------------------------------------------------------------------------+
 
 ``preparse.tests``
 ~~~~~~~~~~~~~~~~~~
@@ -246,7 +254,7 @@ Any value different from ``0`` (meaning no) and ``1`` (meaning yes) is interpret
 ``preparse.tests.test() -> unittest.TextTestResult``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This project can be tested through its test function.
+This project can be tested through its ``test`` function.
 
 .. code-block:: python
 
@@ -256,20 +264,26 @@ This project can be tested through its test function.
 ``preparse.warners``
 ~~~~~~~~~~~~~~~~~~~~
 
-``class preparse.warners.Warner.Warner``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
 ``class preparse.warners.AmbiguousOptionWarner.AmbiguousOptionWarner``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+``class preparse.warners.DualWarner.DualWarner``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 ``class preparse.warners.InvalidOptionWarner.InvalidOptionWarner``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+``class preparse.warners.LongonlyWarner.LongonlyWarner``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ``class preparse.warners.RequiredArgumentWarner.RequiredArgumentWarner``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ``class preparse.warners.UnallowedArgumentWarner.UnallowedArgumentWarner``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+``class preparse.warners.Warner.Warner``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 License
 -------
