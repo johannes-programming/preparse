@@ -1,7 +1,7 @@
 Overview
 --------
 
-The preparse project allows to preparse arguments before the main parsing. 
+The preparse project allows to preparse arguments before the main parsing.
 Its ability to deabbreviate options is especially useful for use with ``click``.
 
 Links
@@ -112,43 +112,43 @@ This boolean property determines whether the order of arguments to conform to th
 ``optdict: preparse.Optdict``
 """""""""""""""""""""""""""""
 
-This property holds a dict-like object. 
-Its keys are the options. 
-Its values specify ``preparse.Nargs``. 
-Options not found within the dictionary 
-cause a ``preparse.PreparseInvalidOptionWarning`` 
+This property holds a dict-like object.
+Its keys are the options.
+Its values specify ``preparse.Nargs``.
+Options not found within the dictionary
+cause a ``preparse.PreparseInvalidOptionWarning``
 and are then assumed to have no arguments.
 
 ``parse_args(args: Optional[Iterable] = None) -> list[str]``
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-This method is at the core of the class. 
-It returns a preparsed list of arguments. 
-If ``None`` is passed as args then ``sys.argv[1:]`` is used. 
+This method is at the core of the class.
+It returns a preparsed list of arguments.
+If ``None`` is passed as args then ``sys.argv[1:]`` is used.
 If the method is applied repeatedly to a list there will be no changes after the first run.
 
 ``prog: str``
 """""""""""""
 
-This ``str`` property represents the name of the program. 
+This ``str`` property represents the name of the program.
 If the value passed to the property is ``None`` then ``str(sys.argv[0])`` is saved.
 
 ``reconcilesorders: bool``
 """"""""""""""""""""""""""
 
-This boolean property determines whether compatibility with both orders, 
+This boolean property determines whether compatibility with both orders,
 POSIX and the interleaving of options with positonal arguments, should be enforced.
 
 ``reflectClickCommand(cmd: click.Command) -> None``
 """""""""""""""""""""""""""""""""""""""""""""""""""
 
-This method alters the current instance to reflect a ``click.Command`` object. 
+This method alters the current instance to reflect a ``click.Command`` object.
 Concretely the optdict property is changed.
 
 ``reflectClickContext(ctx: click.Context) -> None``
 """""""""""""""""""""""""""""""""""""""""""""""""""
 
-This method alters the current instance to reflect a ``click.Context`` object. 
+This method alters the current instance to reflect a ``click.Context`` object.
 Concretely the prog property is changed.
 
 ``special: preparse.Tuning``
@@ -164,10 +164,10 @@ This method a dict representing the current instance.
 ``warn: types.FunctionType``
 """"""""""""""""""""""""""""
 
-This property holds a function that is called whenever ``parse_args`` encounters a warning. 
-The warning is given as the only positional arguments. 
-No keyword arguments are given. 
-Its return value is discarded. 
+This property holds a function that is called whenever ``parse_args`` encounters a warning.
+The warning is given as the only positional arguments.
+No keyword arguments are given.
+Its return value is discarded.
 Therefore, ``str`` is used to discard the warnings.
 
 The Click class
@@ -215,7 +215,7 @@ It is designed for ``preparse.PreParser.optdict``.
 The Enums
 ~~~~~~~~~
 
-These classes are subclasses of ``enum.IntEnum``. 
+These classes are subclasses of ``enum.IntEnum``.
 Any value different from ``0`` (meaning no) and ``1`` (meaning yes) is interpreted as ``2`` (meaning intermediate).
 
 ``class preparse.Tuning``
