@@ -41,7 +41,7 @@ class PreParser(Copyable):
     def __init__(
         self: Self,
         *,
-        abbr: Optional[Tuning] = Tuning.MINIMIZE,
+        abbr: Any = Tuning.MINIMIZE,
         allowsLong: Any = True,
         allowsShort: Any = True,
         bundling: Any = Tuning.MAINTAIN,
