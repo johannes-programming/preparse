@@ -5,32 +5,12 @@ import unittest
 from importlib import resources
 from typing import *
 
-import click
 from click.testing import CliRunner
 
+from preparse._tests import expit
 from preparse.core import *
 
 __all__ = ["TestMainFunction"]
-
-
-class expit:
-
-    def function(x: float) -> float:
-        p: float
-        try:
-            p = math.exp(-x)
-        except OverflowError:
-            p = float("+inf")
-        return 1 / (1 + p)
-
-    @PreParser(reconcilesorders=True, expectsposix=False).click()
-    @click.command(add_help_option=False)
-    @click.help_option("-h", "--help")
-    @click.version_option("1.2.3", "-V", "--version")
-    @click.argument("x", type=float)
-    def main(x: float) -> None:
-        """applies the expit function to x"""
-        click.echo(expit.function(x))
 
 
 class Utils(enum.Enum):
