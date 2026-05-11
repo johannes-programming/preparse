@@ -39,7 +39,7 @@ class Bundle(Option):
         ans = list()
         for x in chars:
             if x == "-":
-                ans[-1].chars += "-"
+                ans[-1] += "-"
             else:
                 ans.append(x)
         return ans
