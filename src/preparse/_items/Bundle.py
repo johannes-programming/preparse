@@ -67,7 +67,7 @@ class Bundle(Option):
         return self._chars
 
     @chars.setter
-    def chars(self: Self, x: Any) -> str:
+    def chars(self: Self, x: Any) -> None:
         self._chars = str(x)
 
     def deparse(self: Self) -> list[str]:
