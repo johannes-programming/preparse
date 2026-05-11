@@ -36,7 +36,7 @@ license-files = [
 name = "preparse"
 readme = "README.rst"
 requires-python = ">=3.11"
-version = "1.0.18+tested.2"
+version = "1.0.18+tested.3"
 
 [project.urls]
 Download = "https://pypi.org/project/preparse/#files"
