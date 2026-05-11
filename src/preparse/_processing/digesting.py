@@ -120,7 +120,7 @@ def digest_order(
     expectsposix: bool,
     reconcilesorders: bool,
 ) -> list[Item]:
-    ans: list[Item]
+    ans: list[Any]
     comp: bool
     index: int
     ans = list(items)
@@ -165,7 +165,7 @@ def digest_special(
 
 
 def digest_special_max(items: list[Item]) -> list[Item]:
-    ans: list[Item]
+    ans: list[Any]
     index: int
     ans = list(items)
     index = len(items)
