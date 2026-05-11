@@ -11,13 +11,6 @@ __all__ = ["Long"]
 
 class Long(Option):
 
-    abbr: str
-    abbrlen: Optional[int]
-    fullkey: str
-    joined: bool
-    nargs: Nargs
-    right: Optional[str]
-
     __slots__ = (
         "_nargs",
         "_joined",

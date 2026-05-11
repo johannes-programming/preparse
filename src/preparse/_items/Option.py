@@ -11,10 +11,6 @@ __all__ = ["Option"]
 
 class Option(Item):
 
-    joined: bool
-    nargs: Nargs
-    right: Optional[str]
-
     __slots__ = ()
 
     def ishungry(self: Self) -> bool:
