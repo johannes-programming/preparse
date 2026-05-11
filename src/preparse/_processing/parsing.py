@@ -61,7 +61,7 @@ def parse_cause(
 
 
 def parse_generator(
-    items: list[Positional],
+    items: list[Any],
     *,
     allowslong: bool,
     allowsshort: bool,
