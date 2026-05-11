@@ -87,7 +87,7 @@ class Bundle(Option):
             "_right",
         )
 
-    def split(self: Self, *, allowslong: bool) -> list[Item]:
+    def split(self: Self, *, allowslong: bool) -> list[Self]:
         ans: list[Self]
         parts: list[str]
         x: str
@@ -97,7 +97,7 @@ class Bundle(Option):
             parts = self._split_shortonly(self.chars)
         ans = list()
         for x in parts:
-            ans.append(Bundle(chars=x, nargs=Nargs.NO_ARGUMENT))
+            ans.append(type(self)(chars=x, nargs=Nargs.NO_ARGUMENT))
         self.chars = ans[-1].chars
         ans[-1] = self
         return ans
