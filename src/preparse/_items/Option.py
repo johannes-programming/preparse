@@ -21,7 +21,7 @@ class Option(Item):
         return self._joined
 
     @joined.setter
-    def joined(self: Self, x: SupportsIndex) -> bool:
+    def joined(self: Self, x: SupportsIndex) -> None:
         self._joined = bool(operator.index(x))
 
     @property
