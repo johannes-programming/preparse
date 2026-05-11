@@ -4,7 +4,6 @@ from typing import *
 import setdoc
 
 from preparse._items.Option import Option
-from preparse._utils.dataprop import dataprop
 from preparse.core.enums import *
 
 __all__ = ["Long"]
@@ -30,6 +29,7 @@ class Long(Option):
         joined: bool | str = False,
         right: Optional[str] = None,
     ) -> None:
+        self._data: dict[str, Any] = dict()
         self.fullkey = fullkey
         self.abbrlen = abbrlen
         self.joined = joined
@@ -39,10 +39,16 @@ class Long(Option):
     def abbr(self: Self) -> str:
         return self.fullkey[: self.abbrlen]
 
-    @dataprop
-    def abbrlen(self: Self, x: Optional[SupportsIndex]) -> Optional[int]:
-        if x is not None:
-            return operator.index(x)
+    @property
+    def abbrlen(self: Self) -> Optional[int]:
+        return self._data["abbrlen"]
+
+    @abbrlen.setter
+    def abbrlen(self: Self, x: Optional[SupportsIndex]) -> None:
+        if x is None:
+            self._data["abbrlen"] = None
+        else:
+            self._data["abbrlen"] = operator.index(x)
 
     def deparse(self: Self) -> list[str]:
         if self.right is None:
@@ -52,6 +58,10 @@ class Long(Option):
         else:
             return [self.abbr, self.right]
 
-    @dataprop
-    def fullkey(self: Self, x: Any) -> str:
-        return str(x)
+    @property
+    def fullkey(self: Self) -> str:
+        return self._data["fullkey"]
+
+    @fullkey.setter
+    def fullkey(self: Self, x: Any) -> None:
+        self._data["fullkey"] = str(x)

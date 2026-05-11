@@ -17,6 +17,7 @@ class Positional(Item):
 
     @setdoc.basic
     def __init__(self: Self, value: Any) -> None:
+        self._data = dict()
         self.value = value
 
     def deparse(self: Self) -> list[str]:
@@ -29,6 +30,10 @@ class Positional(Item):
     def sortkey(cls: type) -> int:
         return 2
 
-    @dataprop
-    def value(self: Self, x: Any) -> str:
-        return str(x)
+    @property
+    def value(self: Self) -> str:
+        return self._data["value"]
+
+    @value.setter
+    def value(self: Self, x: Any) -> None:
+        self._data["value"] = str(x)

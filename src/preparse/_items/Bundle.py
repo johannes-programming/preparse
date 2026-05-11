@@ -4,7 +4,6 @@ import setdoc
 
 from preparse._items.Item import Item
 from preparse._items.Option import Option
-from preparse._utils.dataprop import dataprop
 from preparse.core.enums import *
 
 __all__ = ["Bundle"]
@@ -27,6 +26,7 @@ class Bundle(Option):
         joined: bool = False,
         right: Optional[str] = None,
     ) -> None:
+        self._data: dict[str, Any] = dict()
         self.chars = chars
         self.joined = joined
         self.right = right
@@ -61,9 +61,13 @@ class Bundle(Option):
                 x = x[:-1]
         return ans
 
-    @dataprop
+    @property
+    def chars(self: Self) -> str:
+        return self._data["chars"]
+
+    @chars.setter
     def chars(self: Self, x: Any) -> str:
-        return str(x)
+        self._data["chars"] = str(x)
 
     def deparse(self: Self) -> list[str]:
         if self.right is None:

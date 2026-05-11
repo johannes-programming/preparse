@@ -12,6 +12,10 @@ __all__ = ["Item"]
 class Item(Copyable):
     __slots__ = ("_data",)
 
+    @abc.abstractmethod
+    @setdoc.basic
+    def __init__(self: Self, *args: Any, **kwargs: Any) -> None: ...
+
     @setdoc.basic
     def copy(self: Self) -> Self:
         return type(self)(**self.todict())
