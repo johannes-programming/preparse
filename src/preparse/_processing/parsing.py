@@ -74,7 +74,7 @@ def parse_generator(
     broken: bool
     cause: FunctionType
     last: Any
-    item: Positional
+    item: Any
     broken = not (allowslong or allowsshort)
     cause = parse_cause(prog=prog, warn=warn)
     last = None
