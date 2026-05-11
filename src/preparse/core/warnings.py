@@ -17,7 +17,7 @@ __all__ = [
 
 
 class PreparseWarning(Warning, Copyable):
-    args: tuple[str]
+
     option: str
     prog: str
 

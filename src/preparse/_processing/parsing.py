@@ -53,7 +53,7 @@ def parse_cause(
     *,
     prog: str,
     warn: FunctionType,
-) -> FunctionType:
+) -> Any:
     def ans(cls: type, **kwargs: Any) -> None:
         warn(cls(prog=prog, **kwargs))
 
@@ -73,7 +73,7 @@ def parse_generator(
 ) -> Generator[Any, Any, Any]:
     broken: bool
     cause: FunctionType
-    last: Optional[Option]
+    last: Any
     item: Positional
     broken = not (allowslong or allowsshort)
     cause = parse_cause(prog=prog, warn=warn)
