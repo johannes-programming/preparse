@@ -18,7 +18,7 @@ PUAW = warnings.PreparseUnallowedArgumentWarning
 PRAW = warnings.PreparseRequiredArgumentWarning
 
 
-def parse(args: list[str], **kwargs: Any) -> list[Item]:
+def parse(args: list[Item], **kwargs: Any) -> list[Item]:
     return list(parse_generator(args, **kwargs))
 
 
