@@ -6,10 +6,10 @@ __all__ = ["dataprop"]
 def dataprop(func: Callable) -> property:
     "This magic method implements calling the current instance."
 
-    def fget(self: Self) -> Any:
+    def fget(self: Any) -> Any:
         return self._data[func.__name__]
 
-    def fset(self: Self, value: Any) -> None:
+    def fset(self: Any, value: Any) -> None:
         self._data = getattr(self, "_data", dict())
         self._data[func.__name__] = func(self, value)
 

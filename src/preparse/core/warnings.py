@@ -29,11 +29,6 @@ class PreparseWarning(Warning, Copyable):
     def __str__(self: Self) -> str:
         return f"{self.prog}: {self.getmsg()}"
 
-    @property
-    def args(self: Self) -> tuple[str]:
-        "This property returns (str(self),)."
-        return (str(self),)
-
     @setdoc.basic
     def copy(self: Self) -> Self:
         return type(self)(**self.todict())
