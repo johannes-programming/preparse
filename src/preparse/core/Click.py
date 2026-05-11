@@ -29,7 +29,7 @@ class Click(Copyable):
             return self._call_method(target)
         return self._call_other(target)
 
-    def _call_function(self: Self, target: types.FunctionType) -> types.FunctionType:
+    def _call_function(self: Self, target: types.FunctionType) -> Any:
         @functools.wraps(target)
         def ans(cmd: Any, ctx: Any, args: Any) -> Any:
             p: Any
