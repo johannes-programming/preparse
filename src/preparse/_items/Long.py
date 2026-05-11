@@ -25,7 +25,7 @@ class Long(Option):
         *,
         fullkey: str,
         abbrlen: Optional[int] = None,
-        joined: bool | str = False,
+        joined: bool = False,
         right: Optional[str] = None,
     ) -> None:
         self.fullkey = fullkey
