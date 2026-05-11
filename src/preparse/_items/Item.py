@@ -33,7 +33,7 @@ class Item(Copyable):
 
     def todict(self: Self) -> dict:
         "This method returns a dict representing the current instance."
-        ans: dict[str]
+        ans: dict[str, Any]
         x: str
         ans = dict()
         for x in self.getslotnames():
