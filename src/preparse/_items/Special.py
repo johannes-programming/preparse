@@ -14,10 +14,14 @@ class Special(Item):
 
     @setdoc.basic
     def __init__(self: Self) -> None:
-        self._data: dict = dict()
+        pass
 
     def deparse(self: Self) -> list[str]:
         return ["--"]
+
+    @classmethod
+    def getslotnames(cls: type[Self]) -> tuple[str, ...]:
+        return ()
 
     @classmethod
     def sortkey(cls: type) -> int:

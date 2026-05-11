@@ -18,7 +18,13 @@ class Long(Option):
     nargs: Nargs
     right: Optional[str]
 
-    __slots__ = ()
+    __slots__ = (
+        "_nargs",
+        "_joined",
+        "_right",
+        "_abbrlen",
+        "_fullkey",
+    )
 
     @setdoc.basic
     def __init__(
@@ -29,7 +35,6 @@ class Long(Option):
         joined: bool | str = False,
         right: Optional[str] = None,
     ) -> None:
-        self._data: dict[str, Any] = dict()
         self.fullkey = fullkey
         self.abbrlen = abbrlen
         self.joined = joined
@@ -41,14 +46,14 @@ class Long(Option):
 
     @property
     def abbrlen(self: Self) -> Optional[int]:
-        return self._data["abbrlen"]
+        return self._abbrlen
 
     @abbrlen.setter
     def abbrlen(self: Self, x: Optional[SupportsIndex]) -> None:
         if x is None:
-            self._data["abbrlen"] = None
+            self._abbrlen = None
         else:
-            self._data["abbrlen"] = operator.index(x)
+            self._abbrlen = operator.index(x)
 
     def deparse(self: Self) -> list[str]:
         if self.right is None:
@@ -60,8 +65,18 @@ class Long(Option):
 
     @property
     def fullkey(self: Self) -> str:
-        return self._data["fullkey"]
+        return self._fullkey
 
     @fullkey.setter
     def fullkey(self: Self, x: Any) -> None:
-        self._data["fullkey"] = str(x)
+        self._fullkey = str(x)
+
+    @classmethod
+    def getslotnames(cls: type[Self]) -> tuple[str, ...]:
+        return (
+            "_nargs",
+            "_joined",
+            "_right",
+            "_abbrlen",
+            "_fullkey",
+        )

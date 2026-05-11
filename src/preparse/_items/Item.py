@@ -10,7 +10,7 @@ __all__ = ["Item"]
 
 
 class Item(Copyable):
-    __slots__ = ("_data",)
+    __slots__ = ()
 
     @abc.abstractmethod
     @setdoc.basic
@@ -25,16 +25,17 @@ class Item(Copyable):
 
     @classmethod
     @abc.abstractmethod
+    def getslotnames(cls: type[Self]) -> tuple[str, ...]: ...
+
+    @classmethod
+    @abc.abstractmethod
     def sortkey(cls: type) -> int: ...
 
     def todict(self: Self) -> dict:
         "This method returns a dict representing the current instance."
-        ans: dict
-        try:
-            ans = self._data
-        except AttributeError:
-            self._data = dict()
-            ans = dict()
-        else:
-            ans = dict(ans)
+        ans: dict[str]
+        x: str
+        ans = dict()
+        for x in self.getslotnames():
+            ans[x] = getattr(self, x)
         return ans

@@ -31,7 +31,7 @@ def parse_bundling(
     ans: Bundle
     x: int
     y: str
-    ans = Bundle(chars="")
+    ans = Bundle(chars="", nargs=Nargs.NO_ARGUMENT)
     for x, y in enumerate(arg):
         if x == 0:
             continue
@@ -40,7 +40,6 @@ def parse_bundling(
             ans.nargs = optdict["-" + y]
         except KeyError:
             cause(PIOW, option=y, islong=False)
-            ans.nargs = Nargs.NO_ARGUMENT
         if ans.nargs == Nargs.NO_ARGUMENT:
             continue
         if ans.nargs == Nargs.OPTIONAL_ARGUMENT or x < len(arg) - 1:
