@@ -1,8 +1,6 @@
 import operator
 from typing import *
 
-import setdoc
-
 from preparse._items.Item import Item
 from preparse.core.enums import *
 
@@ -12,6 +10,10 @@ __all__ = ["Option"]
 class Option(Item):
 
     __slots__ = ()
+
+    _joined: Any
+    _nargs: Any
+    _right: Any
 
     def ishungry(self: Self) -> bool:
         return (self.right is None) and (self.nargs == Nargs.REQUIRED_ARGUMENT)

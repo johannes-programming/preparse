@@ -15,6 +15,8 @@ __all__ = ["Optdict"]
 class Optdict(cmp3.CmpABC, datahold.HoldDict[str, Nargs]):
     __slots__ = ()
 
+    _data: Any
+
     @setdoc.basic
     def __cmp__(self: Self, other: Any, /) -> Optional[int]:
         if type(self) is type(other):

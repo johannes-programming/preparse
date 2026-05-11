@@ -10,8 +10,6 @@ __all__ = ["Positional"]
 
 class Positional(Item):
 
-    value: str
-
     __slots__ = ("_value",)
 
     @setdoc.basic
