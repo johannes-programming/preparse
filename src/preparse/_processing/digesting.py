@@ -191,7 +191,7 @@ def digest_special_min(
     expectsposix: bool,
     reconcilesorders: bool,
 ) -> list[Item]:
-    ans: list[Item]
+    ans: list[Any]
     index: int
     isdel: bool
     isposix: bool
