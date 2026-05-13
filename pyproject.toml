@@ -20,12 +20,12 @@ classifiers = [
 dependencies = [
     "click>=8.2,<9",
     "cmp3>=1.0,<2",
-    "copyable>=1.1,<2",
+    "copyable>=1.0,<2",
     "datahold>=3.0,<4",
-    "datarepr>=1.2,<2",
+    "datarepr>=1.1,<2",
     "frozendict>=2.4.7,<3",
     "setdoc>=1.2.20,<2",
-    "tofunc>=1.1,<2",
+    "tofunc>=1.0,<2",
 ]
 description = "This project preparses args for further parsing later on."
 keywords = []
@@ -36,7 +36,7 @@ license-files = [
 name = "preparse"
 readme = "README.rst"
 requires-python = ">=3.11"
-version = "1.1.1"
+version = "1.1.0"
 
 [project.urls]
 Download = "https://pypi.org/project/preparse/#files"
