@@ -4,6 +4,14 @@ Overview
 The preparse project allows to preparse arguments before the main parsing.
 Its ability to deabbreviate options is especially useful for use with ``click``.
 
+Links
+-----
+
+- Download: https://pypi.org/project/preparse/#files
+- Index: https://pypi.org/project/preparse/
+- Source: https://github.com/johannes-programming/preparse/
+- Website: https://preparse.johannes-programming.online/
+
 Installation
 ------------
 
@@ -269,28 +277,20 @@ This class warns about unallowed arguments. This can only happen for long option
 The Tests
 ~~~~~~~~~
 
-``preparse.tests.test() -> unittest.TextTestResult``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``preparse.test() -> unittest.TextTestResult``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This project can be tested through its test function.
 
 .. code-block:: python
 
-    import preparse.tests
-    preparse.tests.test()
+    import preparse
+    preparse.test()
 
 License
 -------
 
 This project is licensed under the MIT License.
-
-Links
------
-
-- Download: https://pypi.org/project/preparse/#files
-- Index: https://pypi.org/project/preparse/
-- Source: https://github.com/johannes-programming/preparse/
-- Website: https://preparse.johannes-programming.online/
 
 Impressum
 ---------

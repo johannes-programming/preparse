@@ -18,7 +18,8 @@ __all__ = [
 
 class PreparseWarning(Warning, Copyable):
 
-    _data: dict[str, Any]
+    option: str
+    prog: str
 
     @setdoc.basic
     def __repr__(self: Self) -> str:
@@ -57,26 +58,22 @@ class PreparseWarning(Warning, Copyable):
 
 class PreparseDualWarning(PreparseWarning):
 
+    args: tuple[str]
+    option: str
+    prog: str
+
     @setdoc.basic
     def __init__(self: Self, *, prog: Any, option: Any, islong: Any) -> None:
         self.prog = prog
         self.option = option
         self.islong = islong
 
-    @classmethod
-    @abstractmethod
-    def _longmsg(cls: type[Self]) -> str: ...
-
-    @classmethod
-    @abstractmethod
-    def _shortmsg(cls: type[Self]) -> str: ...
-
     def getmsg(self: Self) -> str:
         "This method returns the core message."
         if self.islong:
-            return self._longmsg() % self.option
+            return type(self)._longmsg % self.option
         else:
-            return self._shortmsg() % self.option
+            return type(self)._shortmsg % self.option
 
     @dataprop
     def islong(self: Self, value: Any) -> bool:
@@ -84,32 +81,33 @@ class PreparseDualWarning(PreparseWarning):
 
 
 class PreparseInvalidOptionWarning(PreparseDualWarning):
-
-    @classmethod
-    def _longmsg(cls: type[Self]) -> str:
-        return "unrecognized option '%s'"
-
-    @classmethod
-    def _shortmsg(cls: type[Self]) -> str:
-        return "invalid option -- '%s'"
+    args: tuple[str]
+    option: str
+    prog: str
+    _longmsg = "unrecognized option '%s'"
+    _shortmsg = "invalid option -- '%s'"
 
 
 class PreparseRequiredArgumentWarning(PreparseDualWarning):
-
-    @classmethod
-    def _longmsg(cls: type[Self]) -> str:
-        return "option '%s' requires an argument"
-
-    @classmethod
-    def _shortmsg(cls: type[Self]) -> str:
-        return "option requires an argument -- '%s'"
+    args: tuple[str]
+    option: str
+    prog: str
+    _longmsg = "option '%s' requires an argument"
+    _shortmsg = "option requires an argument -- '%s'"
 
 
 class PreparseLongonlyWarning(PreparseWarning):
-    pass  # only possible for long options
+    args: tuple[str]
+    option: str
+    prog: str
+    # only possible for long options
 
 
 class PreparseAmbiguousOptionWarning(PreparseLongonlyWarning):
+    args: tuple[str]
+    option: str
+    possibilities: tuple[str, ...]
+    prog: str
 
     @setdoc.basic
     def __init__(
@@ -134,7 +132,9 @@ class PreparseAmbiguousOptionWarning(PreparseLongonlyWarning):
 
 
 class PreparseUnallowedArgumentWarning(PreparseLongonlyWarning):
-
+    args: tuple[str]
+    option: str
+    prog: str
     # option is always full key without value
 
     @setdoc.basic
