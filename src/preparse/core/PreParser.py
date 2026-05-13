@@ -23,18 +23,6 @@ __all__ = ["PreParser"]
 
 class PreParser(Copyable):
 
-    allowslong: bool
-    allowsshort: bool
-    bundling: Tuning
-    expandsabbr: bool
-    expectsabbr: bool
-    expectsposix: bool
-    optdict: Optdict
-    prog: str
-    reconcilesorders: bool
-    special: Tuning
-    warn: types.FunctionType
-
     __slots__ = ("_data",)
 
     @setdoc.basic
@@ -53,6 +41,7 @@ class PreParser(Copyable):
         special: Any = Tuning.MAINTAIN,
         warn: Callable = str,
     ) -> None:
+        self._data: dict[str, Any] = dict()
         self.allowslong = allowslong
         self.allowsshort = allowsshort
         self.bundling = bundling

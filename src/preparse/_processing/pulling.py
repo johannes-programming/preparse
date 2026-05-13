@@ -1,12 +1,13 @@
 import sys
 from typing import *
 
+from preparse._items.Item import Item
 from preparse._items.Positional import Positional
 
 __all__ = ["pull"]
 
 
-def pull(args: Optional[Iterable] = None) -> list[Positional]:
+def pull(args: Optional[Iterable] = None) -> list[Item]:
     "This method acquires args."
     argiter: Iterable
     if args is None:
