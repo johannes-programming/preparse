@@ -4,42 +4,41 @@ import setdoc
 
 from preparse._items.Item import Item
 from preparse._items.Option import Option
-from preparse.core.enums import *
+from preparse._utils.dataprop import dataprop
+from preparse.enums.Nargs import Nargs
 
 __all__ = ["Bundle"]
 
 
 class Bundle(Option):
 
-    __slots__ = (
-        "_chars",
-        "_joined",
-        "_nargs",
-        "_right",
-    )
+    chars: str
+    joined: bool
+    nargs: Nargs
+    right: Optional[str]
+
+    __slots__ = ()
 
     @setdoc.basic
     def __init__(
         self: Self,
         *,
         chars: str,
-        nargs: Any,
         joined: bool = False,
         right: Optional[str] = None,
     ) -> None:
         self.chars = chars
         self.joined = joined
-        self.nargs = nargs
         self.right = right
 
     @classmethod
-    def _split_allowslong(cls: type, chars: str) -> list[str]:
+    def _split_allowsLong(cls: type, chars: str) -> list[str]:
         ans: list[str]
         x: str
         ans = list()
         for x in chars:
             if x == "-":
-                ans[-1] += "-"
+                ans[-1].chars += "-"
             else:
                 ans.append(x)
         return ans
@@ -62,13 +61,9 @@ class Bundle(Option):
                 x = x[:-1]
         return ans
 
-    @property
-    def chars(self: Self) -> str:
-        return self._chars
-
-    @chars.setter
-    def chars(self: Self, x: Any) -> None:
-        self._chars = str(x)
+    @dataprop
+    def chars(self: Self, x: Any) -> str:
+        return str(x)
 
     def deparse(self: Self) -> list[str]:
         if self.right is None:
@@ -78,26 +73,17 @@ class Bundle(Option):
         else:
             return ["-" + self.chars, self.right]
 
-    @classmethod
-    def getslotnames(cls: type[Self]) -> tuple[str, ...]:
-        return (
-            "_chars",
-            "_joined",
-            "_nargs",
-            "_right",
-        )
-
-    def split(self: Self, *, allowslong: bool) -> list[Self]:
+    def split(self: Self, *, allowsLong: bool) -> list[Item]:
         ans: list[Self]
         parts: list[str]
         x: str
-        if allowslong:
-            parts = self._split_allowslong(self.chars)
+        if allowsLong:
+            parts = self._split_allowsLong(self.chars)
         else:
             parts = self._split_shortonly(self.chars)
         ans = list()
         for x in parts:
-            ans.append(type(self)(chars=x, nargs=Nargs.NO_ARGUMENT))
+            ans.append(Bundle(chars=x))
         self.chars = ans[-1].chars
         ans[-1] = self
         return ans

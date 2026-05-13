@@ -1,13 +1,14 @@
 from types import FunctionType
 from typing import *
 
-from preparse._items import *
-from preparse._processing.deparsing import *
-from preparse._processing.digesting import *
-from preparse._processing.parsing import *
-from preparse._processing.pulling import *
-from preparse._utils import *
-from preparse.core.enums import *
+import datahold
+
+from preparse._items import Item
+from preparse._processing.deparsing import deparse
+from preparse._processing.digesting import digest
+from preparse._processing.parsing import parse
+from preparse._processing.pulling import pull
+from preparse.enums.Tuning import Tuning
 
 __all__ = ["process"]
 
@@ -15,15 +16,14 @@ __all__ = ["process"]
 def process(
     args: Optional[Iterable] = None,
     *,
-    allowslong: bool,
-    allowsshort: bool,
+    abbr: Optional[Tuning],
+    allowsLong: bool,
+    allowsShort: bool,
     bundling: Tuning,
-    expandsabbr: bool,
-    expectsabbr: bool,
-    expectsposix: bool,
-    optdict: dict,
+    expectsPOSIX: bool,
+    optNaming: datahold.DataNaming,
     prog: str,
-    reconcilesorders: bool,
+    reconcilesOrders: bool,
     special: Tuning,
     warn: FunctionType,
 ) -> list[str]:
@@ -32,21 +32,20 @@ def process(
     items = pull(args)
     items = parse(
         items,
-        allowslong=allowslong,
-        allowsshort=allowsshort,
-        expectsabbr=expectsabbr,
-        expectsposix=expectsposix,
-        optdict=optdict,
+        abbr=abbr,
+        allowsLong=allowsLong,
+        allowsShort=allowsShort,
+        expectsPOSIX=expectsPOSIX,
+        optNaming=optNaming,
         prog=prog,
         warn=warn,
     )
     items = digest(
         items,
-        allowslong=allowslong,
+        allowsLong=allowsLong,
         bundling=bundling,
-        expandsabbr=expandsabbr,
-        expectsposix=expectsposix,
-        reconcilesorders=reconcilesorders,
+        expectsPOSIX=expectsPOSIX,
+        reconcilesOrders=reconcilesOrders,
         special=special,
     )
     return deparse(items)

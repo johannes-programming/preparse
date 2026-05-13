@@ -1,24 +1,28 @@
 from types import FunctionType
 from typing import *
 
+import datahold
+
 from preparse._items.Bundle import Bundle
 from preparse._items.Item import Item
 from preparse._items.Long import Long
 from preparse._items.Option import Option
 from preparse._items.Positional import Positional
 from preparse._items.Special import Special
-from preparse.core import warnings
-from preparse.core.enums import *
+from preparse.enums.Nargs import Nargs
+from preparse.enums.Tuning import Tuning
+from preparse.warners.AmbiguousOptionWarner import AmbiguousOptionWarner as PAOW
+from preparse.warners.InvalidOptionWarner import InvalidOptionWarner as PIOW
+from preparse.warners.RequiredArgumentWarner import RequiredArgumentWarner as PRAW
+from preparse.warners.UnallowedArgumentWarner import UnallowedArgumentWarner as PUAW
 
 __all__ = ["parse"]
 
-PAOW = warnings.PreparseAmbiguousOptionWarning
-PIOW = warnings.PreparseInvalidOptionWarning
-PUAW = warnings.PreparseUnallowedArgumentWarning
-PRAW = warnings.PreparseRequiredArgumentWarning
 
-
-def parse(args: list[Item], **kwargs: Any) -> list[Item]:
+def parse(
+    args: list[str],
+    **kwargs: Any,
+) -> list[Item]:
     return list(parse_generator(args, **kwargs))
 
 
@@ -26,20 +30,21 @@ def parse_bundling(
     arg: str,
     *,
     cause: FunctionType,
-    optdict: dict,
+    optNaming: datahold.DataNaming,
 ) -> Bundle:
     ans: Bundle
     x: int
     y: str
-    ans = Bundle(chars="", nargs=Nargs.NO_ARGUMENT)
+    ans = Bundle(chars="")
     for x, y in enumerate(arg):
         if x == 0:
             continue
         ans.chars += y
         try:
-            ans.nargs = optdict["-" + y]
+            ans.nargs = optNaming["-" + y]
         except KeyError:
             cause(PIOW, option=y, islong=False)
+            ans.nargs = Nargs.NO_ARGUMENT
         if ans.nargs == Nargs.NO_ARGUMENT:
             continue
         if ans.nargs == Nargs.OPTIONAL_ARGUMENT or x < len(arg) - 1:
@@ -53,7 +58,7 @@ def parse_cause(
     *,
     prog: str,
     warn: FunctionType,
-) -> Any:
+) -> FunctionType:
     def ans(cls: type, **kwargs: Any) -> None:
         warn(cls(prog=prog, **kwargs))
 
@@ -61,21 +66,21 @@ def parse_cause(
 
 
 def parse_generator(
-    items: list[Any],
+    items: list[Positional],
     *,
-    allowslong: bool,
-    allowsshort: bool,
-    expectsabbr: bool,
-    expectsposix: bool,
-    optdict: dict,
+    abbr: Optional[Tuning],
+    allowsLong: bool,
+    allowsShort: bool,
+    expectsPOSIX: bool,
+    optNaming: datahold.DataNaming,
     prog: str,
     warn: FunctionType,
 ) -> Generator[Any, Any, Any]:
     broken: bool
     cause: FunctionType
-    last: Any
-    item: Any
-    broken = not (allowslong or allowsshort)
+    last: Optional[Option]
+    item: Positional
+    broken = not (allowsLong or allowsShort)
     cause = parse_cause(prog=prog, warn=warn)
     last = None
     for item in items:
@@ -97,15 +102,15 @@ def parse_generator(
         if item.isobvious():
             # if the item is positional
             yield item
-            broken = expectsposix
+            broken = expectsPOSIX
             continue
         last = parse_option(
             item.value,
-            allowslong=allowslong,
-            allowsshort=allowsshort,
+            abbr=abbr,
+            allowsLong=allowsLong,
+            allowsShort=allowsShort,
             cause=cause,
-            expectsabbr=expectsabbr,
-            optdict=optdict,
+            optNaming=optNaming,
         )
         if not last.ishungry():
             yield last
@@ -120,39 +125,29 @@ def parse_generator(
     yield last
 
 
-def parse_islong(
-    arg: str,
-    *,
-    allowslong: bool,
-    allowsshort: bool,
-) -> bool:
-    if allowslong and allowsshort:
-        return arg.startswith("--")
-    else:
-        return not allowsshort
-
-
 def parse_long(
     arg: str,
     *,
+    abbr: Optional[Tuning],
+    allowsShort: bool,
     cause: FunctionType,
-    expectsabbr: bool,
-    optdict: dict,
+    optNaming: datahold.DataNaming,
 ) -> Long:
     ans: Long
+    fullkey_: str
+    minlen: int
     parts: list[str]
     parts = arg.split("=", 1)
     ans = Long(fullkey=parts.pop(0))
     if len(parts):
         ans.joined = True
         ans.right = parts.pop()
-    ans.abbrlen = len(ans.fullkey)
-    if ans.fullkey in optdict.keys():
+    if ans.fullkey in optNaming.keys():
         parts = [ans.fullkey]
-    elif expectsabbr:
-        parts = parse_long_startswith(ans.abbr, keys=optdict.keys())
+    elif abbr is None:
+        parts = []  # can be assumed
     else:
-        parts = list()  # can be assumed
+        parts = parse_long_startswith(ans.fullkey, keys=optNaming.keys())
     if len(parts) == 0:
         ans.nargs = Nargs.OPTIONAL_ARGUMENT
         cause(PIOW, option=arg, islong=True)
@@ -161,10 +156,22 @@ def parse_long(
         ans.nargs = Nargs.OPTIONAL_ARGUMENT
         cause(PAOW, option=arg, possibilities=parts)
         return ans
-    (ans.fullkey,) = parts
-    ans.nargs = optdict[ans.fullkey]
+    (fullkey_,) = parts
+    if abbr == Tuning.MINIMIZE:
+        ans.fullkey = fullkey_
+    if abbr == Tuning.MAXIMIZE:
+        parts = list(optNaming.keys())
+        parts.remove(fullkey_)
+        minlen = parse_minlen(
+            abbr=ans.fullkey,
+            allowsShort=allowsShort,
+            joined=ans.joined,
+            keys=tuple(parts),
+        )
+        ans.fullkey = fullkey_[:minlen]
+    ans.nargs = optNaming[fullkey_]
     if (ans.nargs == Nargs.NO_ARGUMENT) and (ans.right is not None):
-        cause(PUAW, option=ans.fullkey)
+        cause(PUAW, option=fullkey_)
     return ans
 
 
@@ -182,24 +189,42 @@ def parse_long_startswith(
     return ans
 
 
+def parse_minlen(
+    *,
+    abbr: str,
+    allowsShort: bool,
+    joined: bool,
+    keys: tuple[str, ...],
+) -> int:
+    m: int
+    n: int
+    m = 2 + allowsShort - joined
+    n = len(abbr)
+    while n >= m and not any(z.startswith(abbr[:n]) for z in keys):
+        n -= 1
+    return n + 1
+
+
 def parse_option(
     arg: str,
     *,
+    abbr: Optional[Tuning],
+    allowsLong: bool,
+    allowsShort: bool,
     cause: FunctionType,
-    expectsabbr: bool,
-    optdict: dict,
-    **kwargs: Any,
+    optNaming: datahold.DataNaming,
 ) -> Option:
-    if parse_islong(arg, **kwargs):
+    if (allowsLong and arg.startswith("--")) or not allowsShort:
         return parse_long(
             arg,
+            abbr=abbr,
+            allowsShort=allowsShort,
             cause=cause,
-            expectsabbr=expectsabbr,
-            optdict=optdict,
+            optNaming=optNaming,
         )
     else:
         return parse_bundling(
             arg,
             cause=cause,
-            optdict=optdict,
+            optNaming=optNaming,
         )

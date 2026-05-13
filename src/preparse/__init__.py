@@ -1,2 +1,1 @@
-from preparse.core import *
-from preparse.tests import *
+from preparse.core.PreParser import PreParser

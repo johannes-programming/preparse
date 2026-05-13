@@ -5,6 +5,7 @@ import functools
 import types
 from typing import *
 
+import overloadable
 import setdoc
 from copyable import Copyable
 
@@ -21,15 +22,17 @@ class Click(Copyable):
     cmd: Any = True
     ctx: Any = True
 
+    @overloadable.Overloadable
     def __call__(self: Self, target: Any) -> Any:
         "This magic method implements self(target)."
         if isinstance(target, types.FunctionType):
-            return self._call_function(target)
+            return "function"
         if isinstance(target, types.MethodType):
-            return self._call_method(target)
-        return self._call_other(target)
+            return "method"
+        return "other"
 
-    def _call_function(self: Self, target: types.FunctionType) -> Any:
+    @__call__.overload("function")
+    def __call__(self: Self, target: types.FunctionType) -> types.FunctionType:
         @functools.wraps(target)
         def ans(cmd: Any, ctx: Any, args: Any) -> Any:
             p: Any
@@ -42,12 +45,14 @@ class Click(Copyable):
 
         return ans
 
-    def _call_method(self: Self, target: types.MethodType) -> types.MethodType:
+    @__call__.overload("method")
+    def __call__(self: Self, target: types.MethodType) -> types.MethodType:
         func: Callable
         func = self(target.__func__)
         return types.MethodType(func, target.__self__)
 
-    def _call_other(self: Self, target: Any) -> Any:
+    @__call__.overload("other")
+    def __call__(self: Self, target: Any) -> Any:
         target.parse_args = self(target.parse_args)
         return target
 

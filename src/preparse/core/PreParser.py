@@ -6,6 +6,7 @@ import types
 from typing import *
 
 import click as cl
+import namings
 import setdoc
 from copyable import Copyable
 from datarepr import datarepr
@@ -14,14 +15,25 @@ from tofunc import tofunc
 from preparse._processing import *
 from preparse._utils.dataprop import dataprop
 from preparse.core.Click import Click
-from preparse.core.enums import *
-from preparse.core.Optdict import *
-from preparse.core.warnings import *
+from preparse.core.OptNaming import OptNaming
+from preparse.enums.Nargs import Nargs
+from preparse.enums.Tuning import Tuning
 
 __all__ = ["PreParser"]
 
 
 class PreParser(Copyable):
+
+    abbr: Optional[Tuning]
+    allowsLong: bool
+    allowsShort: bool
+    bundling: Tuning
+    expectsPOSIX: bool
+    optNaming: OptNaming
+    prog: str
+    reconcilesOrders: bool
+    special: Tuning
+    warn: types.FunctionType
 
     __slots__ = ("_data",)
 
@@ -29,41 +41,43 @@ class PreParser(Copyable):
     def __init__(
         self: Self,
         *,
-        allowslong: Any = True,
-        allowsshort: Any = True,
+        abbr: Optional[Tuning] = Tuning.MINIMIZE,
+        allowsLong: Any = True,
+        allowsShort: Any = True,
         bundling: Any = Tuning.MAINTAIN,
-        expandsabbr: Any = True,
-        expectsabbr: Any = True,
-        expectsposix: Any = False,
-        optdict: Any = (),
+        expectsPOSIX: Any = False,
+        optNaming: Any = (),
         prog: Any = None,
-        reconcilesorders: Any = True,
+        reconcilesOrders: Any = True,
         special: Any = Tuning.MAINTAIN,
         warn: Callable = str,
     ) -> None:
-        self._data: dict[str, Any] = dict()
-        self.allowslong = allowslong
-        self.allowsshort = allowsshort
+        self.abbr = abbr
+        self.allowsLong = allowsLong
+        self.allowsShort = allowsShort
         self.bundling = bundling
-        self.expandsabbr = expandsabbr
-        self.expectsabbr = expectsabbr
-        self.expectsposix = expectsposix
-        self.optdict = optdict
+        self.expectsPOSIX = expectsPOSIX
+        self.optNaming = optNaming
         self.prog = prog
-        self.reconcilesorders = reconcilesorders
+        self.reconcilesOrders = reconcilesOrders
         self.special = special
         self.warn = warn
 
     @setdoc.basic
     def __repr__(self: Self) -> str:
-        return datarepr(type(self).__name__, **self.todict())
+        return datarepr(type(self).__name__, **self.toNaming())
 
     @dataprop
-    def allowslong(self: Self, value: Any) -> bool:
+    def abbr(self: Self, value: Any) -> bool:
+        if value is not None:
+            return Tuning(value)
+
+    @dataprop
+    def allowsLong(self: Self, value: Any) -> bool:
         return bool(value)
 
     @dataprop
-    def allowsshort(self: Self, value: Any) -> bool:
+    def allowsShort(self: Self, value: Any) -> bool:
         return bool(value)
 
     @dataprop
@@ -77,40 +91,29 @@ class PreParser(Copyable):
 
     @setdoc.basic
     def copy(self: Self) -> Self:
-        return type(self)(**self.todict())
+        return type(self)(**self.toNaming())
 
     @dataprop
-    def expandsabbr(self: Self, value: Any) -> bool:
-        return bool(value)
-
-    @dataprop
-    def expectsabbr(self: Self, value: Any) -> bool:
-        return bool(value)
-
-    @dataprop
-    def expectsposix(self: Self, value: Any) -> bool:
+    def expectsPOSIX(self: Self, value: Any) -> bool:
         if value == "infer":
             return bool(os.environ.get("POSIXLY_CORRECT"))
         else:
             return bool(value)
 
     @dataprop
-    def optdict(self: Self, value: Any) -> Optdict:
-        "This property gives a dictionary of options."
-        dataA: Optdict
-        if "optdict" not in self._data.keys():
-            self._data["optdict"] = Optdict()
-        dataA = Optdict(value)
-        self._data["optdict"].clear()
-        self._data["optdict"].update(dataA)
-        return self._data["optdict"]
+    def optNaming(self: Self, value: Any) -> OptNaming:
+        "This property gives a naming of options."
+        if "optNaming" not in self._data.keys():
+            self._data["optNaming"] = OptNaming()
+        self._data["optNaming"].data = value
+        return self._data["optNaming"]
 
     def parse_args(
         self: Self,
         args: Optional[Iterable] = None,
     ) -> list[str]:
         "This method parses args."
-        return process(args, **self.todict())
+        return process(args, **self.toNaming())
 
     @dataprop
     def prog(self: Self, value: Any) -> str:
@@ -121,16 +124,16 @@ class PreParser(Copyable):
             return str(value)
 
     @dataprop
-    def reconcilesorders(self: Self, value: Any) -> bool:
+    def reconcilesOrders(self: Self, value: Any) -> bool:
         return bool(value)
 
     def reflectClickCommand(self: Self, cmd: cl.Command) -> None:
         "This method causes the current instance to reflect a click.Command object."
-        optdict: dict[str, Nargs]
         nargs: Nargs
         opt: Any
+        optNaming: namings.Naming[Nargs]
         param: Any
-        optdict = dict()
+        optNaming = namings.Naming()
         for param in cmd.params:
             if not isinstance(param, cl.Option):
                 continue
@@ -141,9 +144,9 @@ class PreParser(Copyable):
             else:
                 nargs = Nargs.OPTIONAL_ARGUMENT
             for opt in param.opts:
-                optdict[str(opt)] = nargs
-        self.optdict.clear()
-        self.optdict.update(optdict)
+                optNaming[opt] = nargs
+        self.optNaming.clear()
+        self.optNaming.update(optNaming)
 
     def reflectClickContext(self: Self, ctx: cl.Context) -> None:
         "This method causes the current instance to reflect a click.Context object."
@@ -154,16 +157,16 @@ class PreParser(Copyable):
         "This Tuning property determines the approach towards the special argument."
         return Tuning(value)
 
-    def todict(self: Self) -> dict:
-        "This method returns a dict representing the current instance."
-        ans: dict
+    def toNaming(self: Self) -> namings.Naming:
+        "This method returns a naming representing the current instance."
+        ans: namings.Naming
         try:
             ans = self._data
         except AttributeError:
-            self._data = dict()
-            return dict()
+            self._data = namings.Naming()
+            return namings.Naming()
         else:
-            return dict(ans)
+            return namings.Naming(ans)
 
     @dataprop
     def warn(self: Self, value: Callable) -> types.FunctionType:

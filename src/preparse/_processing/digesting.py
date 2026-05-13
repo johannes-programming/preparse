@@ -2,12 +2,10 @@ from typing import *
 
 from preparse._items.Bundle import Bundle
 from preparse._items.Item import Item
-from preparse._items.Long import Long
 from preparse._items.Option import Option
 from preparse._items.Positional import Positional
 from preparse._items.Special import Special
-from preparse.core.enums import *
-from preparse.core.warnings import *
+from preparse.enums.Tuning import Tuning
 
 __all__ = ["digest"]
 
@@ -15,62 +13,42 @@ __all__ = ["digest"]
 def digest(
     items: list[Item],
     *,
-    allowslong: bool,
+    allowsLong: bool,
     bundling: Tuning,
-    expandsabbr: bool,
-    expectsposix: bool,
-    reconcilesorders: bool,
+    expectsPOSIX: bool,
+    reconcilesOrders: bool,
     special: Tuning,
 ) -> list[Item]:
     ans: list[Item]
     ans = list(items)
-    ans = digest_abbr(
-        ans,
-        expandsabbr=expandsabbr,
-    )
+
     ans = digest_special(
         ans,
-        expectsposix=expectsposix,
-        reconcilesorders=reconcilesorders,
+        expectsPOSIX=expectsPOSIX,
+        reconcilesOrders=reconcilesOrders,
         special=special,
     )
     ans = digest_order(
         ans,
-        expectsposix=expectsposix,
-        reconcilesorders=reconcilesorders,
+        expectsPOSIX=expectsPOSIX,
+        reconcilesOrders=reconcilesOrders,
     )
     ans = digest_bundling(
         ans,
         bundling=bundling,
-        allowslong=allowslong,
+        allowsLong=allowsLong,
     )
-    return ans
-
-
-def digest_abbr(
-    items: list[Item],
-    *,
-    expandsabbr: bool,
-) -> list[Item]:
-    ans: list[Item]
-    item: Item
-    ans = list(items)
-    if not expandsabbr:
-        return ans
-    for item in ans:
-        if isinstance(item, Long):
-            item.abbrlen = None
     return ans
 
 
 def digest_bundling(
     items: list[Item],
     *,
-    allowslong: bool,
+    allowsLong: bool,
     bundling: Tuning,
 ) -> list[Item]:
     if bundling == Tuning.MINIMIZE:
-        return digest_bundling_min(items, allowslong=allowslong)
+        return digest_bundling_min(items, allowsLong=allowsLong)
     if bundling == Tuning.MAXIMIZE:
         return digest_bundling_max(items)
     return items
@@ -79,14 +57,14 @@ def digest_bundling(
 def digest_bundling_min(
     items: list[Item],
     *,
-    allowslong: bool,
+    allowsLong: bool,
 ) -> list[Item]:
     ans: list[Item]
     item: Item
     ans = list()
     for item in items:
         if isinstance(item, Bundle):
-            ans += item.split(allowslong=allowslong)
+            ans += item.split(allowsLong=allowsLong)
         else:
             ans.append(item)
     return ans
@@ -117,16 +95,16 @@ def digest_bundling_max(items: list[Item]) -> list[Item]:
 def digest_order(
     items: list[Item],
     *,
-    expectsposix: bool,
-    reconcilesorders: bool,
+    expectsPOSIX: bool,
+    reconcilesOrders: bool,
 ) -> list[Item]:
-    ans: list[Any]
+    ans: list[Item]
     comp: bool
     index: int
     ans = list(items)
-    if not reconcilesorders:
+    if not reconcilesOrders:
         return ans
-    if not expectsposix:
+    if not expectsPOSIX:
         ans.sort(key=digest_order_key)
         return ans
     index = len(ans)
@@ -165,7 +143,7 @@ def digest_special(
 
 
 def digest_special_max(items: list[Item]) -> list[Item]:
-    ans: list[Any]
+    ans: list[Item]
     index: int
     ans = list(items)
     index = len(items)
@@ -188,16 +166,16 @@ def digest_special_max(items: list[Item]) -> list[Item]:
 def digest_special_min(
     items: list[Item],
     *,
-    expectsposix: bool,
-    reconcilesorders: bool,
+    expectsPOSIX: bool,
+    reconcilesOrders: bool,
 ) -> list[Item]:
-    ans: list[Any]
+    ans: list[Item]
     index: int
     isdel: bool
     isposix: bool
     ans = list(items)
     isdel = True
-    isposix = expectsposix and not reconcilesorders
+    isposix = expectsPOSIX and not reconcilesOrders
     index = len(items)
     while True:
         index -= 1

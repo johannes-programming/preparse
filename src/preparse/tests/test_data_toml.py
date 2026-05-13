@@ -2,44 +2,50 @@ import enum
 import math
 import tomllib
 import unittest
+from functools import cached_property
 from importlib import resources
 from typing import *
 
-from preparse.core import *
+from preparse.core.PreParser import PreParser
 
 __all__ = ["TestDataToml"]
 
 
 class Utils(enum.Enum):
+
     utils = None
 
-    @staticmethod
-    def get_data() -> dict[str, Any]:
-        text: str
+    @cached_property
+    def data(self: Self) -> dict[str, Any]:
         data: dict[str, Any]
+        text: str
         text = resources.read_text("preparse.tests", "data.toml")
         data = tomllib.loads(text)
         return data
-
-    @staticmethod
-    def istestable(x: Any) -> bool:
-        if not isinstance(x, float):
-            return True
-        if not math.isnan(x):
-            return True
-        return False
 
 
 class TestDataToml(unittest.TestCase):
 
     def test_0(self: Self) -> None:
-        data: dict[str, Any]
         name: str
         kwargs: dict
-        data = Utils.utils.get_data()
-        for name, kwargs in data.items():
+        kwargs_: dict
+        for name, kwargs in Utils.utils.data.items():
             with self.subTest(msg=name, **kwargs):
-                self.parse(**kwargs)
+                kwargs_ = self.convert(**kwargs)
+                self.parse(**kwargs_)
+
+    def convert(self: Self, **kwargs: Any) -> dict:
+        ans: dict
+        x: str
+        y: Any
+        ans = dict()
+        for x, y in kwargs.items():
+            if type(y) is float and math.isnan(y):
+                ans[x] = None
+            else:
+                ans[x] = y
+        return ans
 
     def parse(
         self: Self,
@@ -79,7 +85,7 @@ class TestDataToml(unittest.TestCase):
         self.assertEqual(answer, superanswer, msg=msg)
         msg = "\n\ndata=%s,\nanswer=%s,\nsolution=%s,\n\n" % (data, answer, solution)
         self.assertEqual(answer, solution, msg=msg)
-        if not Utils.utils.istestable(warnings):
+        if warnings is None:
             return
         msg = "\n\ndata=%s,\nerranswer=%s,\nwarnings=%s,\n\n" % (
             data,
