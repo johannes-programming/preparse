@@ -1,6 +1,6 @@
 from typing import *
 
-import cmp3
+import cmp3  # type: ignore
 import datahold
 import setdoc
 from datarepr import datarepr
