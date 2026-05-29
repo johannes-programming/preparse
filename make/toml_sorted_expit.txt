@@ -1,0 +1,4 @@
+--sort
+--sort
+--all-keys
+src/preparse/tests/expit.toml
