@@ -1,9 +1,8 @@
 import unittest
-from typing import *
+from typing import Self
 
-from preparse.core.enums import *
 from preparse.core.Optdict import Optdict
-from preparse.core.warnings import *
+from preparse.enums.Nargs import Nargs
 
 __all__ = ["TestPreparse"]
 
@@ -16,6 +15,15 @@ class TestPreparse(unittest.TestCase):
         original = Optdict({"--foo": 0, "-bar": 1})
         dublicate = original.copy()
         self.assertEqual(original, dublicate)
+
+    def test_optdict_repr(self: Self) -> None:
+        data: dict[str, Nargs]
+        original: Optdict
+        data = {"--foo": Nargs.NO_ARGUMENT, "-bar": Nargs.REQUIRED_ARGUMENT}
+        original = Optdict(data)
+        self.assertEqual(repr(original), f"Optdict({data})")
+        self.assertEqual(repr(original), str(original))
+        self.assertEqual(repr(original), format(original))
 
 
 if __name__ == "__main__":

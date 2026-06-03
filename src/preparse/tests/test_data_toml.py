@@ -1,15 +1,19 @@
+import enum
 import math
 import tomllib
 import unittest
 from importlib import resources
-from typing import *
+from typing import Any, Self
 
-from preparse.core import *
+from preparse.core.PreParser import PreParser
 
 __all__ = ["TestDataToml"]
 
 
-class utils:
+class Utils(enum.Enum):
+    utils = None
+
+    @staticmethod
     def get_data() -> dict[str, Any]:
         text: str
         data: dict[str, Any]
@@ -17,6 +21,7 @@ class utils:
         data = tomllib.loads(text)
         return data
 
+    @staticmethod
     def istestable(x: Any) -> bool:
         if not isinstance(x, float):
             return True
@@ -30,8 +35,8 @@ class TestDataToml(unittest.TestCase):
     def test_0(self: Self) -> None:
         data: dict[str, Any]
         name: str
-        kwargs: dict
-        data = utils.get_data()
+        kwargs: dict[str, Any]
+        data = Utils.utils.get_data()
         for name, kwargs in data.items():
             with self.subTest(msg=name, **kwargs):
                 self.parse(**kwargs)
@@ -44,12 +49,12 @@ class TestDataToml(unittest.TestCase):
         warnings: Any,
         **kwargs: Any,
     ) -> None:
-        answer: list
-        capture: list
-        data: dict
-        erranswer: list
+        answer: list[Any]
+        capture: list[Any]
+        data: dict[str, Any]
+        erranswer: list[Any]
         msg: str
-        superanswer: list
+        superanswer: list[Any]
         parser: PreParser
         capture = list()
 
@@ -72,9 +77,13 @@ class TestDataToml(unittest.TestCase):
             superanswer,
         )
         self.assertEqual(answer, superanswer, msg=msg)
-        msg = "\n\ndata=%s,\nanswer=%s,\nsolution=%s,\n\n" % (data, answer, solution)
+        msg = "\n\ndata=%s,\nanswer=%s,\nsolution=%s,\n\n" % (
+            data,
+            answer,
+            solution,
+        )
         self.assertEqual(answer, solution, msg=msg)
-        if not utils.istestable(warnings):
+        if not Utils.utils.istestable(warnings):
             return
         msg = "\n\ndata=%s,\nerranswer=%s,\nwarnings=%s,\n\n" % (
             data,
