@@ -1,4 +1,4 @@
-from collections.abc import Hashable
+from collections.abc import Hashable, Iterable
 from typing import Any, Optional, Self, cast
 
 import cmp3
@@ -8,6 +8,7 @@ from datarepr import datarepr
 from frozendict import frozendict
 
 from preparse.enums.Nargs import Nargs
+from preparse.typing.SupportsKeysAndGetitem import SupportsKeysAndGetitem
 
 __all__ = ["Optdict"]
 
@@ -53,7 +54,10 @@ class Optdict(cmp3.CmpABC, datahold.HoldDict[str, Nargs]):
         return frozendict(self._data)
 
     @data.setter
-    def data(self: Self, value: Any) -> None:
+    def data(
+        self: Self,
+        value: SupportsKeysAndGetitem | Iterable[tuple[Hashable, object]],
+    ) -> None:
         a: frozendict[Hashable, object]
         x: map[str]
         y: map[Nargs]
