@@ -4,7 +4,6 @@ from typing import Any, Optional, Self, cast
 import cmp3
 import datahold
 import setdoc
-from datarepr import datarepr
 from frozendict import frozendict
 
 from preparse.enums.Nargs import Nargs
@@ -37,18 +36,6 @@ class Optdict(cmp3.CmpABC, datahold.HoldDict[str, Nargs]):
                 Optional[int], cmp3.cmp(self._data, other, mode="eq_strict")
             )
 
-    __format__ = object.__format__
-
-    @setdoc.basic
-    def __init__(self: Self, data: Any = (), /) -> None:
-        datahold.HoldDict.__init__(self, data)
-
-    @setdoc.basic
-    def __repr__(self: Self, /) -> str:
-        return datarepr(type(self).__name__, dict(self._data))
-
-    __str__ = object.__str__
-
     @property  # type: ignore[override]
     def data(self: Self) -> frozendict[str, Nargs]:
         return frozendict(self._data)
@@ -57,6 +44,7 @@ class Optdict(cmp3.CmpABC, datahold.HoldDict[str, Nargs]):
     def data(
         self: Self,
         value: SupportsKeysAndGetitem | Iterable[tuple[Hashable, object]],
+        /,
     ) -> None:
         a: frozendict[Hashable, object]
         x: map[str]

@@ -15,6 +15,15 @@ class TestPreparse(unittest.TestCase):
         dublicate = original.copy()
         self.assertEqual(original, dublicate)
 
+    def test_optdict_repr(self: Self) -> None:
+        data: dict[str, int]
+        original: Optdict
+        data = {"--foo": 0, "-bar": 1}
+        original = Optdict(data)
+        self.assertEqual(repr(original), f"Optdict({data})")
+        self.assertEqual(repr(original), str(original))
+        self.assertEqual(repr(original), format(original))
+
 
 if __name__ == "__main__":
     unittest.main()
