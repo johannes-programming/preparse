@@ -42,7 +42,7 @@ class PreparseWarning(Warning, Copyable):
         return cast(str, self._data["option"])
 
     @option.setter
-    def option(self: Self, value: object) -> None:
+    def option(self: Self, value: object, /) -> None:
         self._data["option"] = str(value)
 
     @property
@@ -50,7 +50,7 @@ class PreparseWarning(Warning, Copyable):
         return cast(str, self._data["prog"])
 
     @prog.setter
-    def prog(self: Self, value: object) -> None:
+    def prog(self: Self, value: object, /) -> None:
         self._data["prog"] = str(value)
 
     def todict(self: Self) -> dict[str, Any]:

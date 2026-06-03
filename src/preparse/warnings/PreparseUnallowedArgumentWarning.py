@@ -12,7 +12,7 @@ class PreparseUnallowedArgumentWarning(PreparseLongonlyWarning):
     # option is always full key without value
 
     @setdoc.basic
-    def __post_init__(self: Self, *, prog: Any, option: Any) -> None:
+    def __post_init__(self: Self, *, prog: object, option: object) -> None:
         self.prog = prog
         self.option = option
 

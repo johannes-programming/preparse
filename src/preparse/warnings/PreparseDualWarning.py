@@ -12,7 +12,11 @@ class PreparseDualWarning(PreparseWarning):
 
     @setdoc.basic
     def __post_init__(
-        self: Self, *, prog: Any, option: Any, islong: Any
+        self: Self,
+        *,
+        prog: object,
+        option: object,
+        islong: object,
     ) -> None:
         self.prog = prog
         self.option = option
@@ -38,5 +42,5 @@ class PreparseDualWarning(PreparseWarning):
         return cast(bool, self._data["islong"])
 
     @islong.setter
-    def islong(self: Self, value: Any) -> None:
+    def islong(self: Self, value: object, /) -> None:
         self._data["islong"] = bool(value)

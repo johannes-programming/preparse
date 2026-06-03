@@ -14,8 +14,8 @@ class PreparseAmbiguousOptionWarning(PreparseLongonlyWarning):
     def __post_init__(
         self: Self,
         *,
-        prog: Any,
-        option: Any,
+        prog: object,
+        option: object,
         possibilities: Iterable[object],
     ) -> None:
         self.prog = prog
@@ -36,5 +36,5 @@ class PreparseAmbiguousOptionWarning(PreparseLongonlyWarning):
         return cast(tuple[str, ...], self._data["possibilities"])
 
     @possibilities.setter
-    def possibilities(self: Self, value: Iterable[object]) -> None:
+    def possibilities(self: Self, value: Iterable[object], /) -> None:
         self._data["possibilities"] = tuple(map(str, value))
