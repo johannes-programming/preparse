@@ -95,20 +95,20 @@ This ``property`` determines if the ``reflectClickCommand`` method of parser is 
 
 This ``property`` determines if the ``reflectClickContext`` method of parser is to be called.
 
-``parser: preparse.PreParser``
-""""""""""""""""""""""""""""""
+``parser: preparse.core.PreParser.PreParser``
+"""""""""""""""""""""""""""""""""""""""""""""
 
 This ``property`` holds the parser to be embedded.
 
-``class preparse.core.Optdict.Optdict``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.core.Optdict.Optdict(data: preparse.typing.SupportsKeysAndGetitem.SupportsKeysAndGetitem | Iterable[tuple[Hashable, object]] = (), /)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This class is a subclass of ``datahold.HoldDict[str, preparse.Nargs]``
 with strings as keys and with ``preparse.Nargs`` as values.
 It is designed for ``preparse.PreParser.optdict``.
 
-``class preparse.core.PreParser.PreParser(*, allowslong: object = True, allowsshort: object = True, bundling: int = Tuning.MAINTAIN, expandsabbr: object = True, expectsabbr: object = True, expectsposix: object = False, optdict: Any = (), prog: object = None, reconcilesorders: object = True, special: int = preparse.Tuning.MAINTAIN, warn: Callable[[PreparseWarning], Any] = str)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.core.PreParser.PreParser(*, allowslong: object = True, allowsshort: object = True, bundling: int = Tuning.MAINTAIN, expandsabbr: object = True, expectsabbr: object = True, expectsposix: object = False, optdict: preparse.typing.SupportsKeysAndGetitem.SupportsKeysAndGetitem | Iterable[tuple[Hashable, object]] = (), prog: object = None, reconcilesorders: object = True, special: int = preparse.Tuning.MAINTAIN, warn: Callable[[PreparseWarning], Any] = str)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This ``class`` is the centerpiece of the ``preparse``.
 Its behaviour follows the principles of ``getopt`` from ``C``.
@@ -249,36 +249,6 @@ Any value different from ``0`` (meaning no) and ``1`` (meaning yes) is interpret
 | OPTIONAL_ARGUMENT | ``2`` | The option may take an argument.             |
 +-------------------+-------+----------------------------------------------+
 
-``preparse.warnings``
-~~~~~~~~~~~~~~~~~~~~~
-
-These classes are subclasses of ``Warning`` that are specifically designed to communicate issues with parsing.
-
-``class preparse.warnings.PreparseWarning.PreparseWarning``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-This abstract base ``class`` is the base for all other warning types.
-
-``class preparse.warnings.PreparseAmbiguousOptionWarning.PreparseAmbiguousOptionWarning(prog: Any, option: Any, possibilities: Any)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-This ``class`` warns about ambiguous options. This can only happen for long options.
-
-``class preparse.warnings.PreparseInvalidOptionWarning.PreparseInvalidOptionWarning(prog: Any, option: Any, islong: Any)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-This ``class`` warns about invalid options.
-
-``class preparse.warnings.PreparseRequiredArgumentWarning.PreparseRequiredArgumentWarning(prog: Any, option: Any, islong: Any)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-This ``class`` warns about missing required arguments.
-
-``class preparse.warnings.PreparseUnallowedArgumentWarning.PreparseUnallowedArgumentWarning(prog: Any, option: Any)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-This ``class`` warns about unallowed arguments. This can only happen for long options.
-
 ``preparse.tests``
 ~~~~~~~~~~~~~~~~~~
 
@@ -291,6 +261,50 @@ This project can be tested through its ``test`` function.
 
     import preparse.tests
     preparse.tests.test()
+
+``preparse.typing``
+~~~~~~~~~~~~~~~~~~~
+
+``class preparse.typing.SupportsKeysAndGetitem.SupportsKeysAndGetitem``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This protocol is included in the project for type annotation.
+
+``__getitem__(key: Hashable, /) -> object``
+"""""""""""""""""""""""""""""""""""""""""""
+
+``keys() -> tuple[Hashable, ...]``
+""""""""""""""""""""""""""""""""""
+
+``preparse.warnings``
+~~~~~~~~~~~~~~~~~~~~~
+
+These classes are subclasses of ``Warning`` that are specifically designed to communicate issues with parsing.
+
+``class preparse.warnings.PreparseWarning.PreparseWarning(**kwargs: Any)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This abstract base ``class`` is the base for all other warning types.
+
+``class preparse.warnings.PreparseAmbiguousOptionWarning.PreparseAmbiguousOptionWarning(*, prog: Any, option: Any, possibilities: Any)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This ``class`` warns about ambiguous options. This can only happen for long options.
+
+``class preparse.warnings.PreparseInvalidOptionWarning.PreparseInvalidOptionWarning(*, prog: Any, option: Any, islong: Any)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This ``class`` warns about invalid options.
+
+``class preparse.warnings.PreparseRequiredArgumentWarning.PreparseRequiredArgumentWarning(*, prog: Any, option: Any, islong: Any)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This ``class`` warns about missing required arguments.
+
+``class preparse.warnings.PreparseUnallowedArgumentWarning.PreparseUnallowedArgumentWarning(*, prog: Any, option: Any)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This ``class`` warns about unallowed arguments. This can only happen for long options.
 
 License
 -------

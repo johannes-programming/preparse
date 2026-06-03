@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, cast
 
 from preparse._items.Bundle import Bundle
 from preparse._items.Item import Item
@@ -154,7 +154,7 @@ def digest_special(
     items: list[Item],
     *,
     special: Tuning,
-    **kwargs: Any,
+    **kwargs: bool,
 ) -> list[Item]:
     if special == Tuning.MINIMIZE:
         return digest_special_min(items, **kwargs)

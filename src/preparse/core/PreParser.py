@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 import sys
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Hashable, Iterable
 from typing import Any, Optional, Self, cast
 
 import click as cl
@@ -16,6 +16,7 @@ from preparse.core.Click import Click
 from preparse.core.Optdict import Optdict
 from preparse.enums.Nargs import Nargs
 from preparse.enums.Tuning import Tuning
+from preparse.typing.SupportsKeysAndGetitem import SupportsKeysAndGetitem
 from preparse.warnings.PreparseWarning import PreparseWarning
 
 __all__ = ["PreParser"]
@@ -35,7 +36,9 @@ class PreParser(Copyable):
         expandsabbr: object = True,
         expectsabbr: object = True,
         expectsposix: object = False,
-        optdict: Any = (),
+        optdict: (
+            SupportsKeysAndGetitem | Iterable[tuple[Hashable, object]]
+        ) = (),
         prog: object = None,
         reconcilesorders: object = True,
         special: int = Tuning.MAINTAIN,

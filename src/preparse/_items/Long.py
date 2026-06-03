@@ -60,7 +60,7 @@ class Long(Option):
         return self._fullkey
 
     @fullkey.setter
-    def fullkey(self: Self, x: Any) -> None:
+    def fullkey(self: Self, x: object) -> None:
         self._fullkey = str(x)
 
     @classmethod
