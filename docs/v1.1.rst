@@ -291,18 +291,18 @@ This abstract base ``class`` is the base for all other warning types.
 
 This ``class`` warns about ambiguous options. This can only happen for long options.
 
-``class preparse.warnings.PreparseInvalidOptionWarning.PreparseInvalidOptionWarning(*, prog: Any, option: Any, islong: Any)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.warnings.PreparseInvalidOptionWarning.PreparseInvalidOptionWarning(*, prog: object, option: object, islong: object)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This ``class`` warns about invalid options.
 
-``class preparse.warnings.PreparseRequiredArgumentWarning.PreparseRequiredArgumentWarning(*, prog: Any, option: Any, islong: Any)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.warnings.PreparseRequiredArgumentWarning.PreparseRequiredArgumentWarning(*, prog: object, option: object, islong: object)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This ``class`` warns about missing required arguments.
 
-``class preparse.warnings.PreparseUnallowedArgumentWarning.PreparseUnallowedArgumentWarning(*, prog: Any, option: Any)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.warnings.PreparseUnallowedArgumentWarning.PreparseUnallowedArgumentWarning(*, prog: object, option: object)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This ``class`` warns about unallowed arguments. This can only happen for long options.
 
