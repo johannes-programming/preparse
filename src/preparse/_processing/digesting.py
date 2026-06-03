@@ -1,4 +1,4 @@
-from typing import *
+from typing import Any, cast
 
 from preparse._items.Bundle import Bundle
 from preparse._items.Item import Item
@@ -6,8 +6,7 @@ from preparse._items.Long import Long
 from preparse._items.Option import Option
 from preparse._items.Positional import Positional
 from preparse._items.Special import Special
-from preparse.core.enums import *
-from preparse.core.warnings import *
+from preparse.enums.Tuning import Tuning
 
 __all__ = ["digest"]
 
@@ -120,7 +119,7 @@ def digest_order(
     expectsposix: bool,
     reconcilesorders: bool,
 ) -> list[Item]:
-    ans: list[Item]
+    ans: list[Any]
     comp: bool
     index: int
     ans = list(items)
@@ -155,7 +154,7 @@ def digest_special(
     items: list[Item],
     *,
     special: Tuning,
-    **kwargs: Any,
+    **kwargs: bool,
 ) -> list[Item]:
     if special == Tuning.MINIMIZE:
         return digest_special_min(items, **kwargs)
@@ -165,7 +164,7 @@ def digest_special(
 
 
 def digest_special_max(items: list[Item]) -> list[Item]:
-    ans: list[Item]
+    ans: list[Any]
     index: int
     ans = list(items)
     index = len(items)
@@ -191,7 +190,7 @@ def digest_special_min(
     expectsposix: bool,
     reconcilesorders: bool,
 ) -> list[Item]:
-    ans: list[Item]
+    ans: list[Any]
     index: int
     isdel: bool
     isposix: bool

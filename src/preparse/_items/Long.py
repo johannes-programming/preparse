@@ -1,25 +1,22 @@
 import operator
-from typing import *
+from typing import Any, Optional, Self, SupportsIndex
 
 import setdoc
 
 from preparse._items.Option import Option
-from preparse._utils.dataprop import dataprop
-from preparse.core.enums import *
 
 __all__ = ["Long"]
 
 
 class Long(Option):
 
-    abbr: str
-    abbrlen: Optional[int]
-    fullkey: str
-    joined: bool
-    nargs: Nargs
-    right: Optional[str]
-
-    __slots__ = ()
+    __slots__ = (
+        "_nargs",
+        "_joined",
+        "_right",
+        "_abbrlen",
+        "_fullkey",
+    )
 
     @setdoc.basic
     def __init__(
@@ -27,7 +24,7 @@ class Long(Option):
         *,
         fullkey: str,
         abbrlen: Optional[int] = None,
-        joined: bool | str = False,
+        joined: bool = False,
         right: Optional[str] = None,
     ) -> None:
         self.fullkey = fullkey
@@ -39,10 +36,16 @@ class Long(Option):
     def abbr(self: Self) -> str:
         return self.fullkey[: self.abbrlen]
 
-    @dataprop
-    def abbrlen(self: Self, x: Optional[SupportsIndex]) -> Optional[int]:
-        if x is not None:
-            return operator.index(x)
+    @property
+    def abbrlen(self: Self) -> Optional[int]:
+        return self._abbrlen
+
+    @abbrlen.setter
+    def abbrlen(self: Self, x: Optional[SupportsIndex]) -> None:
+        if x is None:
+            self._abbrlen = None
+        else:
+            self._abbrlen = operator.index(x)
 
     def deparse(self: Self) -> list[str]:
         if self.right is None:
@@ -52,6 +55,20 @@ class Long(Option):
         else:
             return [self.abbr, self.right]
 
-    @dataprop
-    def fullkey(self: Self, x: Any) -> str:
-        return str(x)
+    @property
+    def fullkey(self: Self) -> str:
+        return self._fullkey
+
+    @fullkey.setter
+    def fullkey(self: Self, x: object) -> None:
+        self._fullkey = str(x)
+
+    @classmethod
+    def getslotnames(cls: type[Self]) -> tuple[str, ...]:
+        return (
+            "_nargs",
+            "_joined",
+            "_right",
+            "_abbrlen",
+            "_fullkey",
+        )
