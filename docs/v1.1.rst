@@ -85,7 +85,7 @@ It works as a decorator that embeds its parser into a given target from the libr
 ``cmd: object``
 """""""""""""""
 
-This ``property`` determines if the ``reflectClickCommand`` method of parser is to be called.
+This dataclass field determines if the ``reflectClickCommand`` method of parser is to be called.
 
 ``copy() -> Self``
 """"""""""""""""""
@@ -95,12 +95,12 @@ This method returns a shallow copy of the current decorator.
 ``ctx: object``
 """""""""""""""
 
-This ``property`` determines if the ``reflectClickContext`` method of parser is to be called.
+This dataclass field determines if the ``reflectClickContext`` method of parser is to be called.
 
 ``parser: preparse.core.PreParser.PreParser``
 """""""""""""""""""""""""""""""""""""""""""""
 
-This ``property`` holds the parser to be embedded.
+This dataclass field holds the parser to be embedded.
 
 ``class preparse.core.Optdict.Optdict(data: preparse.typing.SupportsKeysAndGetitem.SupportsKeysAndGetitem | Iterable[tuple[Hashable, object]] = (), /)``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
