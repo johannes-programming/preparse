@@ -19,7 +19,10 @@ def nargs(value: Any, /) -> Nargs:
         return Nargs.OPTIONAL_ARGUMENT
 
 
-class Optdict(cmp3.CmpABC, datahold.HoldDict[str, Nargs]):
+class Optdict(
+    cmp3.CmpABC,
+    datahold.HoldDict[str, Nargs],
+):
     __slots__ = ()
 
     _data: frozendict[str, Nargs]
@@ -36,11 +39,13 @@ class Optdict(cmp3.CmpABC, datahold.HoldDict[str, Nargs]):
                 Optional[int], cmp3.cmp(self._data, other, mode="eq_strict")
             )
 
-    @property  # type: ignore[override]
+    __init__ = datahold.HoldDict[Hashable, object].__init__
+
+    @property
     def data(self: Self) -> frozendict[str, Nargs]:
         return frozendict(self._data)
 
-    @data.setter
+    @data.setter  # type: ignore[override]
     def data(
         self: Self,
         value: SupportsKeysAndGetitem | Iterable[tuple[Hashable, object]],
@@ -49,7 +54,7 @@ class Optdict(cmp3.CmpABC, datahold.HoldDict[str, Nargs]):
         a: frozendict[Hashable, object]
         x: map[str]
         y: map[Nargs]
-        a = frozendict(value)
+        a = frozendict(value)  # type: ignore[arg-type]
         x = map(str, a.keys())
         y = map(nargs, a.values())
         self._data = frozendict(zip(x, y, strict=True))

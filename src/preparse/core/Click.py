@@ -4,20 +4,15 @@ import dataclasses
 import functools
 from collections.abc import Callable
 from types import FunctionType, MethodType
-from typing import TYPE_CHECKING, Any, Self, TypeVar, overload
+from typing import TYPE_CHECKING, Any, Self, cast, overload
 
 import setdoc
 from copyable import Copyable
-
-from ..typing.Parser import Parser
 
 if TYPE_CHECKING:
     from .PreParser import PreParser
 
 __all__ = ["Click"]
-
-
-ParserTarget = TypeVar("Parser", bound=Parser)
 
 
 @dataclasses.dataclass
@@ -38,14 +33,14 @@ class Click(Copyable):
         ...
 
     @overload
-    def __call__(self: Self, target: ParserTarget) -> ParserTarget:
+    def __call__(self: Self, target: Any) -> Any:
         "This magic method implements self(target)."
         ...
 
     def __call__(
         self: Self,
-        target: FunctionType | MethodType | ParserTarget,
-    ) -> FunctionType | MethodType | ParserTarget:
+        target: Any,
+    ) -> Any:
         "This magic method implements self(target)."
         if isinstance(target, FunctionType):
             return self._call_function(target)
@@ -64,14 +59,14 @@ class Click(Copyable):
                 p.reflectClickContext(ctx)
             return target(cmd, ctx, p.parse_args(args))
 
-        return ans
+        return cast(FunctionType, ans)
 
     def _call_method(self: Self, target: MethodType) -> MethodType:
         func: Callable[..., Any]
         func = self(target.__func__)
         return MethodType(func, target.__self__)
 
-    def _call_other(self: Self, target: Parser) -> Parser:
+    def _call_other(self: Self, target: Any) -> Any:
         target.parse_args = self(target.parse_args)
         return target
 

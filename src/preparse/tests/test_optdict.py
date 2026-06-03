@@ -2,6 +2,7 @@ import unittest
 from typing import Self
 
 from preparse.core.Optdict import Optdict
+from preparse.enums.Nargs import Nargs
 
 __all__ = ["TestPreparse"]
 
@@ -16,9 +17,9 @@ class TestPreparse(unittest.TestCase):
         self.assertEqual(original, dublicate)
 
     def test_optdict_repr(self: Self) -> None:
-        data: dict[str, int]
+        data: dict[str, Nargs]
         original: Optdict
-        data = {"--foo": 0, "-bar": 1}
+        data = {"--foo": Nargs.NO_ARGUMENT, "-bar": Nargs.REQUIRED_ARGUMENT}
         original = Optdict(data)
         self.assertEqual(repr(original), f"Optdict({data})")
         self.assertEqual(repr(original), str(original))

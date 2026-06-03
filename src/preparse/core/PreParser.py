@@ -39,7 +39,7 @@ class PreParser(Copyable):
         prog: object = None,
         reconcilesorders: object = True,
         special: int = Tuning.MAINTAIN,
-        warn: Callable[[PreparseWarning], Any] = str,  # type: ignore[type-arg]
+        warn: Callable[[PreparseWarning], Any] = str,
     ) -> None:
         self._data: dict[str, Any]
         self._data = dict()
