@@ -68,11 +68,47 @@ how ``preparse`` can be used to modify ``click``.
 Features
 --------
 
-The ``PreParser`` class
-~~~~~~~~~~~~~~~~~~~~~~~
+``preparse.core``
+~~~~~~~~~~~~~~~~~
 
-``class preparse.PreParser(*, allowslong: Any = True, allowsshort: Any = True, bundling: Any = Tuning.MAINTAIN, expandsabbr: Any = True, expectsabbr: Any = True, expectsposix: Any = False, optdict: Any = (), prog: Any = None, reconcilesorders: Any = True, special: Any = preparse.Tuning.MAINTAIN, warn: Callable = str)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.core.Click.Click(parser: preparse.PreParser, cmd: Any = True, ctx: Any = True)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This dataclass provides decorators for embedding a ``PreParser`` object.
+
+``__call__(target: Any) -> Any``
+""""""""""""""""""""""""""""""""
+
+This magic method implements ``self(target)``.
+It works as a decorator that embeds its parser into a given target from the library ``click``.
+
+``cmd: Any``
+""""""""""""
+
+This ``property`` determines if the ``reflectClickCommand`` method of parser is to be called.
+
+``copy() -> Self``
+""""""""""""""""""
+
+``ctx: Any``
+""""""""""""
+
+This ``property`` determines if the ``reflectClickContext`` method of parser is to be called.
+
+``parser: preparse.PreParser``
+""""""""""""""""""""""""""""""
+
+This ``property`` holds the parser to be embedded.
+
+``class preparse.core.Optdict.Optdict``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This class is a subclass of ``datahold.HoldDict[str, preparse.Nargs]``
+with strings as keys and with ``preparse.Nargs`` as values.
+It is designed for ``preparse.PreParser.optdict``.
+
+``class preparse.core.PreParser.PreParser(*, allowslong: Any = True, allowsshort: Any = True, bundling: Any = Tuning.MAINTAIN, expandsabbr: Any = True, expectsabbr: Any = True, expectsposix: Any = False, optdict: Any = (), prog: Any = None, reconcilesorders: Any = True, special: Any = preparse.Tuning.MAINTAIN, warn: Callable = str)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This ``class`` is the centerpiece of the ``preparse``.
 Its behaviour follows the principles of ``getopt`` from ``C``.
@@ -181,56 +217,14 @@ No keyword arguments are given.
 Its return value is discarded.
 Therefore, ``str`` is used to discard the warnings.
 
-The Click class
-~~~~~~~~~~~~~~~
-
-``class preparse.Click(parser: preparse.PreParser, cmd: Any = True, ctx: Any = True)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-This dataclass provides decorators for embedding a ``PreParser`` object.
-
-``__call__(target: Any) -> Any``
-""""""""""""""""""""""""""""""""
-
-This magic method implements ``self(target)``.
-It works as a decorator that embeds its parser into a given target from the library ``click``.
-
-``cmd: Any``
-""""""""""""
-
-This ``property`` determines if the ``reflectClickCommand`` method of parser is to be called.
-
-``copy() -> Self``
-""""""""""""""""""
-
-``ctx: Any``
-""""""""""""
-
-This ``property`` determines if the ``reflectClickContext`` method of parser is to be called.
-
-``parser: preparse.PreParser``
-""""""""""""""""""""""""""""""
-
-This ``property`` holds the parser to be embedded.
-
-The Optdict class
-~~~~~~~~~~~~~~~~~
-
-``class preparse.Optdict``
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-This class is a subclass of ``datahold.HoldDict[str, preparse.Nargs]``
-with strings as keys and with ``preparse.Nargs`` as values.
-It is designed for ``preparse.PreParser.optdict``.
-
-The Enums
-~~~~~~~~~
+``preparse.enums``
+~~~~~~~~~~~~~~~~~~
 
 These classes are subclasses of ``enum.IntEnum``.
 Any value different from ``0`` (meaning no) and ``1`` (meaning yes) is interpreted as ``2`` (meaning intermediate).
 
-``class preparse.Tuning``
-^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.enums.Tuning.Tuning``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 +--------------+-------+-----------------------------------------------------------------------------+
 | Name         | Value | Explanation                                                                 |
@@ -242,8 +236,8 @@ Any value different from ``0`` (meaning no) and ``1`` (meaning yes) is interpret
 | ``MAINTAIN`` | ``2`` | The PreParser does not make any unforced changes to the aspect in question. |
 +--------------+-------+-----------------------------------------------------------------------------+
 
-``class preparse.Nargs``
-^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.enums.Nargs.Nargs``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 +-------------------+-------+----------------------------------------------+
 | Name              | Value | Explanation                                  |
@@ -255,38 +249,38 @@ Any value different from ``0`` (meaning no) and ``1`` (meaning yes) is interpret
 | OPTIONAL_ARGUMENT | ``2`` | The option may take an argument.             |
 +-------------------+-------+----------------------------------------------+
 
-The Warnings
-~~~~~~~~~~~~
+``preparse.warnings``
+~~~~~~~~~~~~~~~~~~~~~
 
 These classes are subclasses of ``Warning`` that are specifically designed to communicate issues with parsing.
 
-``class preparse.PreparseWarning``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.warnings.PreparseWarning.PreparseWarning``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This abstract base ``class`` is the base for all other warning types.
 
-``class preparse.PreparseAmbiguousOptionWarning(prog: Any, option: Any, possibilities: Any)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.warnings.PreparseAmbiguousOptionWarning.PreparseAmbiguousOptionWarning(prog: Any, option: Any, possibilities: Any)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This ``class`` warns about ambiguous options. This can only happen for long options.
 
-``class preparse.PreparseInvalidOptionWarning(prog: Any, option: Any, islong: Any)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.warnings.PreparseInvalidOptionWarning.PreparseInvalidOptionWarning(prog: Any, option: Any, islong: Any)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This ``class`` warns about invalid options.
 
-``class preparse.PreparseRequiredArgumentWarning(prog: Any, option: Any, islong: Any)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.warnings.PreparseRequiredArgumentWarning.PreparseRequiredArgumentWarning(prog: Any, option: Any, islong: Any)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This ``class`` warns about missing required arguments.
 
-``class preparse.PreparseUnallowedArgumentWarning(prog: Any, option: Any)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.warnings.PreparseUnallowedArgumentWarning.PreparseUnallowedArgumentWarning(prog: Any, option: Any)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This ``class`` warns about unallowed arguments. This can only happen for long options.
 
-The Tests
-~~~~~~~~~
+``preparse.tests``
+~~~~~~~~~~~~~~~~~~
 
 ``preparse.tests.test() -> unittest.TextTestResult``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
