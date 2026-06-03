@@ -1,5 +1,3 @@
-from typing import *
-
 from preparse._items.Item import Item
 
 __all__ = ["deparse"]

@@ -1,19 +1,19 @@
+from collections.abc import Iterable
 from types import FunctionType
-from typing import *
+from typing import Any, Optional
 
-from preparse._items import *
-from preparse._processing.deparsing import *
-from preparse._processing.digesting import *
-from preparse._processing.parsing import *
-from preparse._processing.pulling import *
-from preparse._utils import *
-from preparse.core.enums import *
+from preparse._items.Item import Item
+from preparse._processing.deparsing import deparse
+from preparse._processing.digesting import digest
+from preparse._processing.parsing import parse
+from preparse._processing.pulling import pull
+from preparse.enums.Tuning import Tuning
 
 __all__ = ["process"]
 
 
 def process(
-    args: Optional[Iterable] = None,
+    args: Optional[Iterable[object]] = None,
     *,
     allowslong: bool,
     allowsshort: bool,
@@ -21,7 +21,7 @@ def process(
     expandsabbr: bool,
     expectsabbr: bool,
     expectsposix: bool,
-    optdict: dict,
+    optdict: dict[Any, Any],
     prog: str,
     reconcilesorders: bool,
     special: Tuning,
