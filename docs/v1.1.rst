@@ -292,8 +292,8 @@ These classes are subclasses of ``Warning`` that are specifically designed to co
 
 This abstract base ``class`` is the base for all other warning types.
 
-``class preparse.warnings.PreparseAmbiguousOptionWarning.PreparseAmbiguousOptionWarning(*, prog: Any, option: Any, possibilities: Any)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.warnings.PreparseAmbiguousOptionWarning.PreparseAmbiguousOptionWarning(*, prog: object, option: object, possibilities: Iterable[object])``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This ``class`` warns about ambiguous options. This can only happen for long options.
 
