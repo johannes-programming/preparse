@@ -1286031,3 +1286031,29 @@ warnings = [
 
 [run35319go.optdict]
 --verbose = 0
+
+[_split_allowslong]
+bundling = 0
+query = [
+    "-a-bc42",
+]
+solution = [
+    "-a-",
+    "-b",
+    "-c42",
+]
+prog = "_split_allowslong"
+expectsposix = false
+reconcilesorders = false
+expectsabbr = true
+expandsabbr = false
+allowsshort = true
+allowslong = true
+special = 2
+warnings = []
+
+[_split_allowslong.optdict]
+-a = 0
+-b = 0
+-c = 1
+-- = 0

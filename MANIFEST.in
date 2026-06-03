@@ -1,1 +1,2 @@
-include src/preparse/tests/*.toml
+recursive-include docs *.rst
+recursive-include src/preparse *.toml
