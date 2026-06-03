@@ -29,17 +29,17 @@ class PreParser(Copyable):
     def __init__(
         self: Self,
         *,
-        allowslong: Any = True,
-        allowsshort: Any = True,
-        bundling: Any = Tuning.MAINTAIN,
-        expandsabbr: Any = True,
-        expectsabbr: Any = True,
-        expectsposix: Any = False,
+        allowslong: object = True,
+        allowsshort: object = True,
+        bundling: int = Tuning.MAINTAIN,
+        expandsabbr: object = True,
+        expectsabbr: object = True,
+        expectsposix: object = False,
         optdict: Any = (),
         prog: object = None,
-        reconcilesorders: Any = True,
-        special: Any = Tuning.MAINTAIN,
-        warn: Callable = str,  # type: ignore[type-arg]
+        reconcilesorders: object = True,
+        special: int = Tuning.MAINTAIN,
+        warn: Callable[[PreparseWarning], Any] = str,  # type: ignore[type-arg]
     ) -> None:
         self._data: dict[str, Any]
         self._data = dict()
@@ -64,7 +64,7 @@ class PreParser(Copyable):
         return cast(bool, self._data["allowslong"])
 
     @allowslong.setter
-    def allowslong(self: Self, value: Any) -> None:
+    def allowslong(self: Self, value: object) -> None:
         self._data["allowslong"] = bool(value)
 
     @property
@@ -72,7 +72,7 @@ class PreParser(Copyable):
         return cast(bool, self._data["allowsshort"])
 
     @allowsshort.setter
-    def allowsshort(self: Self, value: Any) -> None:
+    def allowsshort(self: Self, value: object) -> None:
         self._data["allowsshort"] = bool(value)
 
     @property
@@ -85,7 +85,7 @@ class PreParser(Copyable):
         "This property decides how to approach the bundling of short options."
         self._data["bundling"] = Tuning(value)
 
-    def click(self: Self, cmd: Any = True, ctx: Any = True) -> Click:
+    def click(self: Self, cmd: object = True, ctx: object = True) -> Click:
         "This method returns a decorator that infuses the current instance into parse_args."
         return Click(parser=self, cmd=cmd, ctx=ctx)
 
@@ -98,7 +98,7 @@ class PreParser(Copyable):
         return cast(bool, self._data["expandsabbr"])
 
     @expandsabbr.setter
-    def expandsabbr(self: Self, value: Any, /) -> None:
+    def expandsabbr(self: Self, value: object, /) -> None:
         self._data["expandsabbr"] = bool(value)
 
     @property
@@ -106,7 +106,7 @@ class PreParser(Copyable):
         return cast(bool, self._data["expectsabbr"])
 
     @expectsabbr.setter
-    def expectsabbr(self: Self, value: Any) -> None:
+    def expectsabbr(self: Self, value: object) -> None:
         self._data["expectsabbr"] = bool(value)
 
     @property
@@ -114,7 +114,7 @@ class PreParser(Copyable):
         return cast(bool, self._data["expectsposix"])
 
     @expectsposix.setter
-    def expectsposix(self: Self, value: Any) -> None:
+    def expectsposix(self: Self, value: object) -> None:
         value_: Any
         if value == "infer":
             value_ = os.environ.get("POSIXLY_CORRECT")
@@ -162,7 +162,7 @@ class PreParser(Copyable):
         return cast(bool, self._data["reconcilesorders"])
 
     @reconcilesorders.setter
-    def reconcilesorders(self: Self, value: Any, /) -> None:
+    def reconcilesorders(self: Self, value: object, /) -> None:
         self._data["reconcilesorders"] = bool(value)
 
     def reflectClickCommand(self: Self, cmd: cl.Command) -> None:

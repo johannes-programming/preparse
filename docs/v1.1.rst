@@ -71,27 +71,27 @@ Features
 ``preparse.core``
 ~~~~~~~~~~~~~~~~~
 
-``class preparse.core.Click.Click(parser: preparse.PreParser, cmd: Any = True, ctx: Any = True)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.core.Click.Click(parser: preparse.PreParser, cmd: object = True, ctx: object = True)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This dataclass provides decorators for embedding a ``PreParser`` object.
 
-``__call__(target: Any) -> Any``
-""""""""""""""""""""""""""""""""
+``__call__(target: types.FunctionType) -> types.FunctionType`` ``__call__(target: types.MethodType) -> types.MethodType`` ``__call__(target: types.TargetParser) -> types.TargetParser``
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 This magic method implements ``self(target)``.
 It works as a decorator that embeds its parser into a given target from the library ``click``.
 
-``cmd: Any``
-""""""""""""
+``cmd: object``
+"""""""""""""""
 
 This ``property`` determines if the ``reflectClickCommand`` method of parser is to be called.
 
 ``copy() -> Self``
 """"""""""""""""""
 
-``ctx: Any``
-""""""""""""
+``ctx: object``
+"""""""""""""""
 
 This ``property`` determines if the ``reflectClickContext`` method of parser is to be called.
 
@@ -107,8 +107,8 @@ This class is a subclass of ``datahold.HoldDict[str, preparse.Nargs]``
 with strings as keys and with ``preparse.Nargs`` as values.
 It is designed for ``preparse.PreParser.optdict``.
 
-``class preparse.core.PreParser.PreParser(*, allowslong: Any = True, allowsshort: Any = True, bundling: Any = Tuning.MAINTAIN, expandsabbr: Any = True, expectsabbr: Any = True, expectsposix: Any = False, optdict: Any = (), prog: Any = None, reconcilesorders: Any = True, special: Any = preparse.Tuning.MAINTAIN, warn: Callable = str)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.core.PreParser.PreParser(*, allowslong: object = True, allowsshort: object = True, bundling: int = Tuning.MAINTAIN, expandsabbr: object = True, expectsabbr: object = True, expectsposix: object = False, optdict: Any = (), prog: object = None, reconcilesorders: object = True, special: int = preparse.Tuning.MAINTAIN, warn: Callable[[PreparseWarning], Any] = str)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This ``class`` is the centerpiece of the ``preparse``.
 Its behaviour follows the principles of ``getopt`` from ``C``.
@@ -128,8 +128,8 @@ This boolean ``property`` determines whether short options are allowed.
 
 This ``property`` determines the approach to bundling of short option.
 
-``click(cmd: Any = True, ctx: Any = True) -> preparse.Click``
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+``click(cmd: object = True, ctx: object = True) -> preparse.Click``
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 This method returns a decorator that infuses the current instance into ``parse_args``.
 
