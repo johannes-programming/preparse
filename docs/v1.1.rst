@@ -166,8 +166,10 @@ This ``property`` holds a dict-like object.
 Its keys are the options.
 Its values specify ``preparse.Nargs``.
 Options not found within the dictionary
-cause a ``preparse.PreparseInvalidOptionWarning``
-and are then assumed to have no arguments.
+cause a ``preparse.PreparseInvalidOptionWarning``.
+Unknown short options are assumed to take no argument.
+Unknown long options are assumed to take an optional argument.
+This behaviour reflects ``getopt``.
 
 ``parse_args(args: Optional[Iterable[object]] = None) -> list[str]``
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

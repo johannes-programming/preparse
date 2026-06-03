@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Any, Self, cast
+from typing import Self, cast
 
 import setdoc
 
