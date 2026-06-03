@@ -76,8 +76,8 @@ Features
 
 This dataclass provides decorators for embedding a ``PreParser`` object.
 
-``__call__(target: types.FunctionType) -> types.FunctionType`` ``__call__(target: types.MethodType) -> types.MethodType`` ``__call__(target: types.TargetParser) -> types.TargetParser``
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+``__call__(target: types.FunctionType) -> types.FunctionType`` ``__call__(target: types.MethodType) -> types.MethodType`` ``__call__(target: typing.Any) -> typing.Any``
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 This magic method implements ``self(target)``.
 It works as a decorator that embeds its parser into a given target from the library ``click``.
@@ -89,6 +89,8 @@ This ``property`` determines if the ``reflectClickCommand`` method of parser is 
 
 ``copy() -> Self``
 """"""""""""""""""
+
+This method returns a shallow copy of the current decorator.
 
 ``ctx: object``
 """""""""""""""
@@ -126,7 +128,7 @@ This boolean ``property`` determines whether short options are allowed.
 ``bundling: preparse.Tuning``
 """""""""""""""""""""""""""""
 
-This ``property`` determines the approach to bundling of short option.
+This ``property`` determines the approach to bundling of short options.
 
 ``click(cmd: object = True, ctx: object = True) -> preparse.Click``
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -152,8 +154,10 @@ This boolean ``property`` determines whether abbreviations of long options are e
 ``expectsposix: bool``
 """"""""""""""""""""""
 
-This boolean ``property`` determines whether the order of arguments to conform to the POSIX standard,
-i.e. all arguments after the first positional argument also being positonal.
+This boolean ``property`` determines whether the order of arguments conforms to the POSIX standard,
+i.e. all arguments after the first positional argument are also positional.
+If the value passed to the property is ``"infer"``, the value is inferred from
+the ``POSIXLY_CORRECT`` environment variable.
 
 ``optdict: preparse.Optdict``
 """""""""""""""""""""""""""""
@@ -165,8 +169,8 @@ Options not found within the dictionary
 cause a ``preparse.PreparseInvalidOptionWarning``
 and are then assumed to have no arguments.
 
-``parse_args(args: Optional[Iterable] = None) -> list[str]``
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+``parse_args(args: Optional[Iterable[object]] = None) -> list[str]``
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 This method is at the core of the class.
 It returns a preparsed list of arguments.
@@ -178,19 +182,21 @@ there will be no changes after the first run.
 """""""""""""
 
 This ``str`` property represents the name of the program.
-If the value passed to the property is ``None`` then ``str(sys.argv[0])`` is saved.
+If the value passed to the property is ``None`` then ``str(os.path.basename(sys.argv[0]))`` is saved.
 
 ``reconcilesorders: bool``
 """"""""""""""""""""""""""
 
-This boolean ``property`` determines whether compatibility with both orders,
-POSIX and the interleaving of options with positonal arguments, should be enforced.
+This boolean ``property`` determines whether compatibility with both POSIX ordering
+and interleaving options with positional arguments should be enforced.
 
 ``reflectClickCommand(cmd: click.Command) -> None``
 """""""""""""""""""""""""""""""""""""""""""""""""""
 
 This method alters the current instance to reflect a ``click.Command`` object.
 Concretely the ``optdict`` property is changed.
+Only entries in each Click option's ``opts`` are reflected; secondary option names
+are not added.
 
 ``reflectClickContext(ctx: click.Context) -> None``
 """""""""""""""""""""""""""""""""""""""""""""""""""
@@ -206,13 +212,13 @@ This ``property`` determines the approach to the special argument ``'--'``.
 ``todict() -> dict[str, Any]``
 """"""""""""""""""""""""""""""
 
-This method a ``dict`` representing the current instance.
+This method returns a ``dict`` representing the current instance.
 
 ``warn: Callable[[PreparseWarning], Any]``
 """"""""""""""""""""""""""""""""""""""""""
 
 This property holds a function that is called whenever ``parse_args`` encounters a warning.
-The warning is given as the only positional arguments.
+The warning is given as the only positional argument.
 No keyword arguments are given.
 Its return value is discarded.
 Therefore, ``str`` is used to discard the warnings.
