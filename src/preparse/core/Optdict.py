@@ -52,9 +52,15 @@ class Optdict(
         /,
     ) -> None:
         a: frozendict[Hashable, object]
-        x: map[str]
-        y: map[Nargs]
+        b: list[tuple[str, Nargs]]
+        x: Hashable
+        y: object
         a = frozendict(value)  # type: ignore[arg-type]
-        x = map(str, a.keys())
-        y = map(nargs, a.values())
-        self._data = frozendict(zip(x, y, strict=True))
+        b = list()
+        for x, y in a.items():
+            if isinstance(y, int):
+                b.append((str(x), Nargs(y)))
+            else:
+                b.append((str(x), Nargs.OPTIONAL_ARGUMENT))
+        b.sort()
+        self._data = frozendict(b)

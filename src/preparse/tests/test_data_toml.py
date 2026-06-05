@@ -2,6 +2,7 @@ import enum
 import math
 import tomllib
 import unittest
+from functools import cached_property
 from importlib import resources
 from typing import Any, Self
 
@@ -13,13 +14,11 @@ __all__ = ["TestDataToml"]
 class Utils(enum.Enum):
     utils = None
 
-    @staticmethod
-    def get_data() -> dict[str, Any]:
+    @cached_property
+    def data(self: Self) -> dict[str, Any]:
         text: str
-        data: dict[str, Any]
         text = resources.read_text("preparse.tests", "data.toml")
-        data = tomllib.loads(text)
-        return data
+        return tomllib.loads(text)
 
     @staticmethod
     def istestable(x: Any) -> bool:
@@ -33,11 +32,9 @@ class Utils(enum.Enum):
 class TestDataToml(unittest.TestCase):
 
     def test_0(self: Self) -> None:
-        data: dict[str, Any]
         name: str
         kwargs: dict[str, Any]
-        data = Utils.utils.get_data()
-        for name, kwargs in data.items():
+        for name, kwargs in Utils.utils.data.items():
             with self.subTest(msg=name, **kwargs):
                 self.parse(**kwargs)
 

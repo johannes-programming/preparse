@@ -178,14 +178,18 @@ class PreParser(Copyable):
         for param in cmd.params:
             if not isinstance(param, cl.Option):
                 continue
-            if param.is_flag or param.nargs == 0:
+            if param.is_flag:
                 nargs = Nargs.NO_ARGUMENT
-            elif param.nargs == 1:
-                nargs = Nargs.REQUIRED_ARGUMENT
-            else:
+            elif not param.nargs:
+                nargs = Nargs.NO_ARGUMENT
+            elif param.flag_value is not None:
                 nargs = Nargs.OPTIONAL_ARGUMENT
-            for opt in param.opts:
-                optdict[str(opt)] = nargs
+            elif param.prompt and not param.prompt_required:
+                nargs = Nargs.OPTIONAL_ARGUMENT
+            else:
+                nargs = Nargs.REQUIRED_ARGUMENT
+            for opt in param.opts + param.secondary_opts:
+                optdict[opt] = nargs
         self.optdict.clear()
         self.optdict.update(optdict)
 
