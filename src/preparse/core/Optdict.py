@@ -1,3 +1,5 @@
+__all__: list[str] = ["Optdict"]
+
 from typing import *
 
 import cmp3
@@ -8,8 +10,6 @@ from frozendict import frozendict
 
 from preparse.core.enums import *
 from preparse.core.warnings import *
-
-__all__ = ["Optdict"]
 
 
 class Optdict(cmp3.CmpABC, datahold.HoldDict[str, Nargs]):

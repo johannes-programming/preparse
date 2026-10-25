@@ -1,3 +1,5 @@
+__all__: list[str] = ["TestMainFunction"]
+
 import math
 import tomllib
 import unittest
@@ -8,8 +10,6 @@ import click
 from click.testing import CliRunner
 
 from preparse.core import *
-
-__all__ = ["TestMainFunction"]
 
 
 class expit:
@@ -53,12 +53,12 @@ class TestMainFunction(unittest.TestCase):
     def parse(
         self: Self,
         *,
-        query: Any,
         exit_code: Any,
         output: Any,
         prog: Any,
-        stdout: Any,
+        query: Any,
         stderr: Any,
+        stdout: Any,
     ) -> None:
         extra: dict
         result: Any

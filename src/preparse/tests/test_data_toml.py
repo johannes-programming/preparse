@@ -1,3 +1,5 @@
+__all__: list[str] = ["TestDataToml"]
+
 import math
 import tomllib
 import unittest
@@ -6,13 +8,11 @@ from typing import *
 
 from preparse.core import *
 
-__all__ = ["TestDataToml"]
-
 
 class utils:
     def get_data() -> dict[str, Any]:
-        text: str
         data: dict[str, Any]
+        text: str
         text = resources.read_text("preparse.tests", "data.toml")
         data = tomllib.loads(text)
         return data
@@ -29,8 +29,8 @@ class TestDataToml(unittest.TestCase):
 
     def test_0(self: Self) -> None:
         data: dict[str, Any]
-        name: str
         kwargs: dict
+        name: str
         data = utils.get_data()
         for name, kwargs in data.items():
             with self.subTest(msg=name, **kwargs):
@@ -49,8 +49,8 @@ class TestDataToml(unittest.TestCase):
         data: dict
         erranswer: list
         msg: str
-        superanswer: list
         parser: PreParser
+        superanswer: list
         capture = list()
 
         def warn(value: Any) -> None:

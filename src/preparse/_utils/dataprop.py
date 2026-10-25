@@ -1,10 +1,12 @@
-from typing import *
+__all__: list[str] = ["dataprop"]
 
-__all__ = ["dataprop"]
+from typing import *
 
 
 def dataprop(func: Callable) -> property:
     "This magic method implements calling the current instance."
+
+    kwargs: dict[str, Any]
 
     def fget(self: Self) -> Any:
         return self._data[func.__name__]
@@ -13,7 +15,6 @@ def dataprop(func: Callable) -> property:
         self._data = getattr(self, "_data", dict())
         self._data[func.__name__] = func(self, value)
 
-    kwargs: dict[str, Any]
     kwargs = dict()
     kwargs["doc"] = func.__doc__
     kwargs["fget"] = fget

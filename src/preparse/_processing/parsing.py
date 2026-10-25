@@ -1,3 +1,5 @@
+__all__: list[str] = ["parse"]
+
 from types import FunctionType
 from typing import *
 
@@ -10,7 +12,10 @@ from preparse._items.Special import Special
 from preparse.core import warnings
 from preparse.core.enums import *
 
-__all__ = ["parse"]
+PAOW: type
+PIOW: type
+PRAW: type
+PUAW: type
 
 PAOW = warnings.PreparseAmbiguousOptionWarning
 PIOW = warnings.PreparseInvalidOptionWarning
@@ -74,8 +79,8 @@ def parse_generator(
 ) -> Generator[Any, Any, Any]:
     broken: bool
     cause: FunctionType
-    last: Optional[Option]
     item: Positional
+    last: Optional[Option]
     broken = not (allowslong or allowsshort)
     cause = parse_cause(prog=prog, warn=warn)
     last = None

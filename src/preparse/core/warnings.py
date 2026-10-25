@@ -1,3 +1,11 @@
+__all__: list[str] = [
+    "PreparseAmbiguousOptionWarning",
+    "PreparseInvalidOptionWarning",
+    "PreparseRequiredArgumentWarning",
+    "PreparseUnallowedArgumentWarning",
+    "PreparseWarning",
+]
+
 from abc import abstractmethod
 from typing import *
 
@@ -6,14 +14,6 @@ from copyable import Copyable
 from datarepr import datarepr
 
 from preparse._utils import *
-
-__all__ = [
-    "PreparseAmbiguousOptionWarning",
-    "PreparseInvalidOptionWarning",
-    "PreparseRequiredArgumentWarning",
-    "PreparseUnallowedArgumentWarning",
-    "PreparseWarning",
-]
 
 
 class PreparseWarning(Warning, Copyable):
@@ -68,7 +68,7 @@ class PreparseDualWarning(PreparseWarning):
     prog: str
 
     @setdoc.basic
-    def __init__(self: Self, *, prog: Any, option: Any, islong: Any) -> None:
+    def __init__(self: Self, *, islong: Any, option: Any, prog: Any) -> None:
         self.prog = prog
         self.option = option
         self.islong = islong
@@ -116,7 +116,7 @@ class PreparseAmbiguousOptionWarning(PreparseLongonlyWarning):
 
     @setdoc.basic
     def __init__(
-        self: Self, *, prog: Any, option: Any, possibilities: Iterable
+        self: Self, *, option: Any, possibilities: Iterable, prog: Any
     ) -> None:
         self.prog = prog
         self.option = option
@@ -143,7 +143,7 @@ class PreparseUnallowedArgumentWarning(PreparseLongonlyWarning):
     # option is always full key without value
 
     @setdoc.basic
-    def __init__(self: Self, *, prog: Any, option: Any) -> None:
+    def __init__(self: Self, *, option: Any, prog: Any) -> None:
         self.prog = prog
         self.option = option
 

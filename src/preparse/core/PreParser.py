@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+__all__: list[str] = ["PreParser"]
+
 import os
 import sys
 import types
@@ -17,8 +19,6 @@ from preparse.core.Click import Click
 from preparse.core.enums import *
 from preparse.core.Optdict import *
 from preparse.core.warnings import *
-
-__all__ = ["PreParser"]
 
 
 class PreParser(Copyable):
@@ -137,9 +137,9 @@ class PreParser(Copyable):
 
     def reflectClickCommand(self: Self, cmd: cl.Command) -> None:
         "This method causes the current instance to reflect a click.Command object."
-        optdict: dict[str, Nargs]
         nargs: Nargs
         opt: Any
+        optdict: dict[str, Nargs]
         param: Any
         optdict = dict()
         for param in cmd.params:

@@ -1,3 +1,5 @@
+__all__: list[str] = ["Long"]
+
 import operator
 from typing import *
 
@@ -6,8 +8,6 @@ import setdoc
 from preparse._items.Option import Option
 from preparse._utils.dataprop import dataprop
 from preparse.core.enums import *
-
-__all__ = ["Long"]
 
 
 class Long(Option):
@@ -25,8 +25,8 @@ class Long(Option):
     def __init__(
         self: Self,
         *,
-        fullkey: str,
         abbrlen: Optional[int] = None,
+        fullkey: str,
         joined: bool | str = False,
         right: Optional[str] = None,
     ) -> None:

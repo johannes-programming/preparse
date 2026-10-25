@@ -1,3 +1,5 @@
+__all__: list[str] = ["Bundle"]
+
 from typing import *
 
 import setdoc
@@ -6,8 +8,6 @@ from preparse._items.Item import Item
 from preparse._items.Option import Option
 from preparse._utils.dataprop import dataprop
 from preparse.core.enums import *
-
-__all__ = ["Bundle"]
 
 
 class Bundle(Option):

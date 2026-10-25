@@ -1,11 +1,11 @@
+__all__: list[str] = ["Option"]
+
 import operator
 from typing import *
 
 from preparse._items.Item import Item
 from preparse._utils.dataprop import dataprop
 from preparse.core.enums import *
-
-__all__ = ["Option"]
 
 
 class Option(Item):

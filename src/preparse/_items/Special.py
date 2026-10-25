@@ -1,9 +1,9 @@
+__all__: list[str] = ["Special"]
+
 from typing import *
 
 from preparse._items.Item import Item
 from preparse.core.enums import *
-
-__all__ = ["Special"]
 
 
 class Special(Item):
