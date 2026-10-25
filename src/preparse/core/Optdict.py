@@ -1,43 +1,37 @@
 __all__: list[str] = ["Optdict"]
 
-from collections.abc import Iterable, Iterator
-from typing import Any, Self, overload
+from collections.abc import Iterator
+from typing import Any, Self
 
 import cmp3
 import datahold
-import datahold.typing
 import setdoc
 from datarepr import datarepr
 from frozendict import frozendict
 
-from preparse.core.enums import Nargs
+from preparse.core.enums import Nargs, Tuning
+from preparse.core.warnings import (
+    PreparseAmbiguousOptionWarning,
+    PreparseInvalidOptionWarning,
+    PreparseRequiredArgumentWarning,
+    PreparseUnallowedArgumentWarning,
+    PreparseWarning,
+)
 
 
 class Optdict(cmp3.CmpABC, datahold.HoldDict[str, Nargs]):
     __slots__ = ()
 
+    data: frozendict[str, Nargs]
+
     @setdoc.basic
     def __cmp__(self: Self, other: Any, /) -> int | None:
         if type(self) is type(other):
-            return cmp3.cmp(self._data, other._data, mode="eq_strict")  # type: ignore[no-any-return]
+            return cmp3.cmp(self._data, other._data, mode="eq_strict")
         else:
-            return cmp3.cmp(self._data, other, mode="eq_strict")  # type: ignore[no-any-return]
+            return cmp3.cmp(self._data, other, mode="eq_strict")
 
     __format__ = object.__format__
-
-    @setdoc.basic
-    def __init__(
-        self: Self,
-        other: (
-            datahold.typing.SupportsKeysAndGetitem.SupportsKeysAndGetitem[
-                object, object
-            ]
-            | Iterable[tuple[object, object]]
-        ) = (),
-        /,
-        **kwargs: object,
-    ) -> None:
-        datahold.HoldDict.__init__(self, other, **kwargs)
 
     @setdoc.basic
     def __repr__(self: Self, /) -> str:
@@ -45,9 +39,9 @@ class Optdict(cmp3.CmpABC, datahold.HoldDict[str, Nargs]):
 
     __str__ = object.__str__
 
-    @property  # type: ignore[override]
+    @property
     def data(self: Self) -> frozendict[str, Nargs]:
-        return frozendict[str, Nargs](self._data)  # type: ignore[arg-type]
+        return frozendict[str, Nargs](self._data)
 
     @data.setter
     def data(self: Self, value: Any) -> None:

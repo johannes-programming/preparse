@@ -6,11 +6,11 @@ from typing import Any, Self
 import setdoc
 from copyable import Copyable
 
+from preparse.core.enums import Nargs, Tuning
+
 
 class Item(Copyable):
     __slots__ = ("_data",)
-
-    _data: dict[str, Any]
 
     @setdoc.basic
     def copy(self: Self) -> Self:

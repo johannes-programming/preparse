@@ -6,16 +6,17 @@ from typing import Any, Self, SupportsIndex
 import setdoc
 
 from preparse._items.Option import Option
+from preparse.core.enums import Nargs, Tuning
 
 
 class Long(Option):
 
-    # abbr: str
-    # abbrlen: int | None
-    # fullkey: str
-    # joined: bool
-    # nargs: Nargs
-    # right: str | None
+    abbr: str
+    abbrlen: int | None
+    fullkey: str
+    joined: bool
+    nargs: Nargs
+    right: str | None
 
     __slots__ = ()
 
@@ -25,7 +26,7 @@ class Long(Option):
         *,
         abbrlen: int | None = None,
         fullkey: str,
-        joined: bool = False,
+        joined: bool | str = False,
         right: str | None = None,
     ) -> None:
         self.fullkey = fullkey
@@ -39,7 +40,7 @@ class Long(Option):
 
     @property
     def abbrlen(self: Self) -> int | None:
-        return self._data["abbrlen"]  # type: ignore[no-any-return]
+        return self._data["abbrlen"]
 
     @abbrlen.setter
     def abbrlen(self: Self, x: SupportsIndex | None) -> None:
@@ -59,7 +60,7 @@ class Long(Option):
 
     @property
     def fullkey(self: Self) -> str:
-        return self._data["fullkey"]  # type: ignore[no-any-return]
+        return self._data["fullkey"]
 
     @fullkey.setter
     def fullkey(self: Self, x: Any) -> None:

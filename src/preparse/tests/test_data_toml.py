@@ -6,11 +6,23 @@ import unittest
 from importlib import resources
 from typing import Any, Self
 
-from preparse.core import PreParser
+from preparse.core import (
+    Click,
+    Nargs,
+    Optdict,
+    PreparseAmbiguousOptionWarning,
+    PreparseInvalidOptionWarning,
+    PreParser,
+    PreparseRequiredArgumentWarning,
+    PreparseUnallowedArgumentWarning,
+    PreparseWarning,
+    Tuning,
+    enums,
+    warnings,
+)
 
 
 class utils:
-    @staticmethod
     def get_data() -> dict[str, Any]:
         data: dict[str, Any]
         text: str
@@ -18,7 +30,6 @@ class utils:
         data = tomllib.loads(text)
         return data
 
-    @staticmethod
     def istestable(x: Any) -> bool:
         if not isinstance(x, float):
             return True

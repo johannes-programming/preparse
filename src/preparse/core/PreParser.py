@@ -18,9 +18,28 @@ from preparse._processing import process
 from preparse.core.Click import Click
 from preparse.core.enums import Nargs, Tuning
 from preparse.core.Optdict import Optdict
+from preparse.core.warnings import (
+    PreparseAmbiguousOptionWarning,
+    PreparseInvalidOptionWarning,
+    PreparseRequiredArgumentWarning,
+    PreparseUnallowedArgumentWarning,
+    PreparseWarning,
+)
 
 
 class PreParser(Copyable):
+
+    allowslong: bool
+    allowsshort: bool
+    bundling: Tuning
+    expandsabbr: bool
+    expectsabbr: bool
+    expectsposix: bool
+    optdict: Optdict
+    prog: str
+    reconcilesorders: bool
+    special: Tuning
+    warn: types.FunctionType
 
     __slots__ = ("_data",)
 
@@ -67,7 +86,7 @@ class PreParser(Copyable):
 
     @property
     def allowsshort(self: Self) -> bool:
-        return self._data["allowsshort"]  # type: ignore[no-any-return]
+        return self._data["allowsshort"]
 
     @allowsshort.setter
     def allowsshort(self: Self, value: Any) -> None:
@@ -77,7 +96,7 @@ class PreParser(Copyable):
     @property
     def bundling(self: Self) -> Tuning:
         "This property decides how to approach the bundling of short options."
-        return self._data["bundling"]  # type: ignore[no-any-return]
+        return self._data["bundling"]
 
     @bundling.setter
     def bundling(self: Self, value: Any) -> None:
@@ -94,7 +113,7 @@ class PreParser(Copyable):
 
     @property
     def expandsabbr(self: Self) -> bool:
-        return self._data["expandsabbr"]  # type: ignore[no-any-return]
+        return self._data["expandsabbr"]
 
     @expandsabbr.setter
     def expandsabbr(self: Self, value: Any) -> None:
@@ -103,7 +122,7 @@ class PreParser(Copyable):
 
     @property
     def expectsabbr(self: Self) -> bool:
-        return self._data["expectsabbr"]  # type: ignore[no-any-return]
+        return self._data["expectsabbr"]
 
     @expectsabbr.setter
     def expectsabbr(self: Self, value: Any) -> None:
@@ -112,7 +131,7 @@ class PreParser(Copyable):
 
     @property
     def expectsposix(self: Self) -> bool:
-        return self._data["expectsposix"]  # type: ignore[no-any-return]
+        return self._data["expectsposix"]
 
     @expectsposix.setter
     def expectsposix(self: Self, value: Any) -> None:
@@ -127,7 +146,7 @@ class PreParser(Copyable):
     @property
     def optdict(self: Self) -> Optdict:
         "This property gives a dictionary of options."
-        return self._data["optdict"]  # type: ignore[no-any-return]
+        return self._data["optdict"]
 
     @optdict.setter
     def optdict(self: Self, value: Any) -> None:
@@ -150,7 +169,7 @@ class PreParser(Copyable):
     @property
     def prog(self: Self) -> str:
         "This property represents the name of the program."
-        return self._data["prog"]  # type: ignore[no-any-return]
+        return self._data["prog"]
 
     @prog.setter
     def prog(self: Self, value: Any) -> None:
@@ -162,7 +181,7 @@ class PreParser(Copyable):
 
     @property
     def reconcilesorders(self: Self) -> bool:
-        return self._data["reconcilesorders"]  # type: ignore[no-any-return]
+        return self._data["reconcilesorders"]
 
     @reconcilesorders.setter
     def reconcilesorders(self: Self, value: Any) -> None:
@@ -197,7 +216,7 @@ class PreParser(Copyable):
     @property
     def special(self: Self) -> Tuning:
         "This Tuning property determines the approach towards the special argument."
-        return self._data["special"]  # type: ignore[no-any-return]
+        return self._data["special"]
 
     @special.setter
     def special(self: Self, value: Any) -> None:
@@ -218,7 +237,7 @@ class PreParser(Copyable):
     @property
     def warn(self: Self) -> types.FunctionType:
         "This property gives a function that takes in the warnings."
-        return self._data["warn"]  # type: ignore[no-any-return]
+        return self._data["warn"]
 
     @warn.setter
     def warn(self: Self, value: Callable[..., Any]) -> None:
