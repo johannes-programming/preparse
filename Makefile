@@ -1,5 +1,5 @@
 .ONESHELL:
-.PHONY: all add amend beautiful black build clean commit commit-version echo isort jacobus pypi rebase reset test toml_sorted upload version works
+.PHONY: all add amend beautiful black build clean commit commit-version dist echo isort jacobus py311 py312 pypi rebase reset test toml_sorted upload version
 SHELL := /bin/zsh
 
 all: beautiful commit-version
@@ -12,43 +12,54 @@ amend: add
 
 beautiful: isort black jacobus toml_sorted
 
-black: works
-	conda run -n works pip install 'black>=24.5,<26' >/dev/null;
-	conda run -n works black --line-length=79 . ;
+black: py311
+	conda run -n py311 pip install 'black>=24.5,<26' >/dev/null;
+	conda run -n py311 black --line-length=79 . ;
 
-build: works
-	conda run -n works pip install 'build>=1.3,<2' >/dev/null;
-	conda run -n works python -m build;
+build: py311
+	conda run -n py311 pip install 'build>=1.3,<2' >/dev/null;
+	conda run -n py311 python -m build;
 
 commit: add
 	git commit --allow-empty $(PARAMS);
 
-commit-version: add works
-	conda run -n works pip install 'toml_get>=1.0,<2' >/dev/null;
-	git commit --allow-empty "$$(conda run -n works python -m toml_get @make/toml_get.txt)";
+commit-version: add py311
+	conda run -n py311 pip install 'toml_get>=1.0,<2' >/dev/null;
+	git commit --allow-empty "$$(conda run -n py311 python -m toml_get @make/toml_get.txt)";
 
 clean:
 	rm -fr 'dist/';
+	rm -fr 'out/';
+
+dist: beautiful clean build
 
 echo:
 	echo $(PARAMS);
 
-isort: works
-	conda run -n works pip install 'isort>=6.0,<7' >/dev/null;
-	conda run -n works isort . ;
+isort: py311
+	conda run -n py311 pip install 'isort>=6.0,<7' >/dev/null;
+	conda run -n py311 isort . ;
 
-jacobus: works
-	conda run -n works pip install 'jacobus>=2.1,<3' >/dev/null;
-	conda run -n works python -m jacobus @make/jacobus.txt;
-	conda run -n works python -m jacobus @make/jacobus_in.txt;
+jacobus: py311
+	conda run -n py311 pip install 'jacobus>=2.3,<3' >/dev/null;
+	conda run -n py311 python -m jacobus @make/jacobus.txt;
+	conda run -n py311 python -m jacobus @make/jacobus_empty.txt;
+	cat make/manifest.txt >> MANIFEST.in;
+	conda run -n py311 python -m jacobus @make/jacobus_sort.txt;
 
-pypi: clean build upload
+py311:
+	conda run -n base python make/env.py py311 --python=3.11;
+
+py312:
+	conda run -n base python make/env.py py312 --python=3.12;
+
+pypi: dist upload
 
 rebase:
 	git rebase --empty=drop --interactive $(PARAMS);
 
 reset:
-	git reset HEAD~1
+	git reset HEAD~1 ;
 
 test:
 	conda run -n base python make/env.py test311 --python=3.11 --recreate >/dev/null;
@@ -65,11 +76,8 @@ toml_sorted: works
 	conda run -n works python -m toml_sorted @make/toml_sorted_pyproject.txt;
 	conda run -n works python -m toml_sorted @make/toml_sorted_secondary.txt;
 
-upload: works
-	conda run -n works pip install 'twine>=5.2,<7' >/dev/null;
-	conda run -n works twine upload 'dist/*';
+upload: py311
+	conda run -n py311 pip install 'twine>=5.2,<7' >/dev/null;
+	conda run -n py311 twine upload 'dist/*';
 
 version: all pypi
-
-works:
-	conda run -n base python make/env.py works --python=3.11;
