@@ -1,2 +1,3 @@
 recursive-include docs *.rst
-recursive-include src/preparse *.toml
+recursive-include src *.toml
+recursive-include tests *.toml
