@@ -6,7 +6,7 @@ import dataclasses
 import functools
 import types
 from collections.abc import Callable
-from typing import Any, Self, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Self
 
 import overloadable
 import setdoc
