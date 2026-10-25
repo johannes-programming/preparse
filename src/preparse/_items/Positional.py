@@ -1,17 +1,15 @@
-__all__: list[str] = ["Positional"]
-
 from typing import Any, Self
 
 import setdoc
 
 from preparse._items.Item import Item
 
+__all__ = ["Positional"]
+
 
 class Positional(Item):
 
-    # value: str
-
-    __slots__ = ()
+    __slots__ = ("_value",)
 
     @setdoc.basic
     def __init__(self: Self, value: Any) -> None:
@@ -19,6 +17,10 @@ class Positional(Item):
 
     def deparse(self: Self) -> list[str]:
         return [self.value]
+
+    @classmethod
+    def getslotnames(cls: type[Self]) -> tuple[str, ...]:
+        return ("_value",)
 
     def isobvious(self: Self) -> bool:
         return self.value == "-" or not self.value.startswith("-")
@@ -29,9 +31,8 @@ class Positional(Item):
 
     @property
     def value(self: Self) -> str:
-        return self._data["value"]  # type: ignore[no-any-return]
+        return self._value
 
     @value.setter
-    def value(self: Self, x: Any) -> None:
-        self._data = getattr(self, "_data", dict())
-        self._data["value"] = str(x)
+    def value(self: Self, x: object) -> None:
+        self._value = str(x)

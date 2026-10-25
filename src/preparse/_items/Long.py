@@ -1,32 +1,31 @@
-__all__: list[str] = ["Long"]
-
 import operator
-from typing import Any, Self, SupportsIndex
+from typing import Any, Optional, Self, SupportsIndex
 
 import setdoc
 
 from preparse._items.Option import Option
 
+__all__ = ["Long"]
+
 
 class Long(Option):
 
-    # abbr: str
-    # abbrlen: int | None
-    # fullkey: str
-    # joined: bool
-    # nargs: Nargs
-    # right: str | None
-
-    __slots__ = ()
+    __slots__ = (
+        "_nargs",
+        "_joined",
+        "_right",
+        "_abbrlen",
+        "_fullkey",
+    )
 
     @setdoc.basic
     def __init__(
         self: Self,
         *,
-        abbrlen: int | None = None,
         fullkey: str,
+        abbrlen: Optional[int] = None,
         joined: bool = False,
-        right: str | None = None,
+        right: Optional[str] = None,
     ) -> None:
         self.fullkey = fullkey
         self.abbrlen = abbrlen
@@ -38,16 +37,15 @@ class Long(Option):
         return self.fullkey[: self.abbrlen]
 
     @property
-    def abbrlen(self: Self) -> int | None:
-        return self._data["abbrlen"]  # type: ignore[no-any-return]
+    def abbrlen(self: Self) -> Optional[int]:
+        return self._abbrlen
 
     @abbrlen.setter
-    def abbrlen(self: Self, x: SupportsIndex | None) -> None:
-        self._data = getattr(self, "_data", dict())
-        if x is not None:
-            self._data["abbrlen"] = operator.index(x)
+    def abbrlen(self: Self, x: Optional[SupportsIndex]) -> None:
+        if x is None:
+            self._abbrlen = None
         else:
-            self._data["abbrlen"] = None
+            self._abbrlen = operator.index(x)
 
     def deparse(self: Self) -> list[str]:
         if self.right is None:
@@ -59,9 +57,18 @@ class Long(Option):
 
     @property
     def fullkey(self: Self) -> str:
-        return self._data["fullkey"]  # type: ignore[no-any-return]
+        return self._fullkey
 
     @fullkey.setter
-    def fullkey(self: Self, x: Any) -> None:
-        self._data = getattr(self, "_data", dict())
-        self._data["fullkey"] = str(x)
+    def fullkey(self: Self, x: object) -> None:
+        self._fullkey = str(x)
+
+    @classmethod
+    def getslotnames(cls: type[Self]) -> tuple[str, ...]:
+        return (
+            "_nargs",
+            "_joined",
+            "_right",
+            "_abbrlen",
+            "_fullkey",
+        )

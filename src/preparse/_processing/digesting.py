@@ -1,6 +1,4 @@
-__all__: list[str] = ["digest"]
-
-from typing import Any
+from typing import Any, cast
 
 from preparse._items.Bundle import Bundle
 from preparse._items.Item import Item
@@ -8,7 +6,9 @@ from preparse._items.Long import Long
 from preparse._items.Option import Option
 from preparse._items.Positional import Positional
 from preparse._items.Special import Special
-from preparse.core.enums import Tuning
+from preparse.enums.Tuning import Tuning
+
+__all__ = ["digest"]
 
 
 def digest(
@@ -119,7 +119,7 @@ def digest_order(
     expectsposix: bool,
     reconcilesorders: bool,
 ) -> list[Item]:
-    ans: list[Item]
+    ans: list[Any]
     comp: bool
     index: int
     ans = list(items)
@@ -139,7 +139,7 @@ def digest_order(
         if isinstance(ans[index], Special):
             comp = True
             break
-        if not ans[index].isobvious():  # type: ignore[attr-defined]
+        if not ans[index].isobvious():
             comp = False
     if not comp:
         ans.insert(index + 1, Special())
@@ -154,7 +154,7 @@ def digest_special(
     items: list[Item],
     *,
     special: Tuning,
-    **kwargs: Any,
+    **kwargs: bool,
 ) -> list[Item]:
     if special == Tuning.MINIMIZE:
         return digest_special_min(items, **kwargs)
@@ -164,7 +164,7 @@ def digest_special(
 
 
 def digest_special_max(items: list[Item]) -> list[Item]:
-    ans: list[Item]
+    ans: list[Any]
     index: int
     ans = list(items)
     index = len(items)
@@ -176,9 +176,9 @@ def digest_special_max(items: list[Item]) -> list[Item]:
             break
         if isinstance(ans[index], Positional):
             continue
-        if ans[index].ishungry():  # type: ignore[attr-defined]
-            ans[index].joined = False  # type: ignore[attr-defined]
-            ans[index].right = "--"  # type: ignore[attr-defined]
+        if ans[index].ishungry():
+            ans[index].joined = False
+            ans[index].right = "--"
         ans.insert(index + 1, Special())
         break
     return ans
@@ -190,7 +190,7 @@ def digest_special_min(
     expectsposix: bool,
     reconcilesorders: bool,
 ) -> list[Item]:
-    ans: list[Item]
+    ans: list[Any]
     index: int
     isdel: bool
     isposix: bool
@@ -208,7 +208,7 @@ def digest_special_min(
             break
         if isinstance(ans[index], Special):
             break
-        isdel = ans[index].isobvious()  # type: ignore[attr-defined]
+        isdel = ans[index].isobvious()
         if not (isdel or isposix):
             break
     if isdel:
