@@ -14,8 +14,6 @@ import setdoc
 from copyable import Copyable
 from datarepr import datarepr
 
-from preparse._utils import dataprop
-
 
 class PreparseWarning(Warning, Copyable):
     args: tuple[str]
@@ -42,13 +40,23 @@ class PreparseWarning(Warning, Copyable):
     @abstractmethod
     def getmsg(self: Self) -> str: ...
 
-    @dataprop
-    def option(self: Self, value: Any) -> str:
-        return str(value)
+    @property
+    def option(self: Self) -> str:
+        return self._data["option"]
 
-    @dataprop
-    def prog(self: Self, value: Any) -> str:
-        return str(value)
+    @option.setter
+    def option(self: Self, value: Any) -> None:
+        self._data = getattr(self, "_data", dict())
+        self._data["option"] = str(value)
+
+    @property
+    def prog(self: Self) -> str:
+        return self._data["prog"]
+
+    @prog.setter
+    def prog(self: Self, value: Any) -> None:
+        self._data = getattr(self, "_data", dict())
+        self._data["prog"] = str(value)
 
     def todict(self: Self) -> dict[str, Any]:
         "This method returns a dict representing the current instance."
@@ -81,9 +89,14 @@ class PreparseDualWarning(PreparseWarning):
         else:
             return type(self)._shortmsg % self.option
 
-    @dataprop
-    def islong(self: Self, value: Any) -> bool:
-        return bool(value)
+    @property
+    def islong(self: Self) -> bool:
+        return self._data["islong"]
+
+    @islong.setter
+    def islong(self: Self, value: Any) -> None:
+        self._data = getattr(self, "_data", dict())
+        self._data["islong"] = bool(value)
 
 
 class PreparseInvalidOptionWarning(PreparseDualWarning):
@@ -132,9 +145,14 @@ class PreparseAmbiguousOptionWarning(PreparseLongonlyWarning):
             ans += " '%s'" % x
         return ans
 
-    @dataprop
-    def possibilities(self: Self, value: Iterable[Any]) -> tuple[str, ...]:
-        return tuple(map(str, value))
+    @property
+    def possibilities(self: Self) -> tuple[str, ...]:
+        return self._data["possibilities"]
+
+    @possibilities.setter
+    def possibilities(self: Self, value: Iterable[Any]) -> None:
+        self._data = getattr(self, "_data", dict())
+        self._data["possibilities"] = tuple(map(str, value))
 
 
 class PreparseUnallowedArgumentWarning(PreparseLongonlyWarning):
