@@ -31,6 +31,7 @@ def env_create(env: str, python: Optional[str]) -> subprocess.CompletedProcess: 
 def env_list() -> list[str]:
     ans: list[str]
     data: Any
+    details: dict[str, Any]
     result: subprocess.CompletedProcess  # type: ignore[type-arg]
     try:
         result = subprocess.run(
