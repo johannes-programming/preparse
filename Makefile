@@ -61,7 +61,7 @@ reset:
 test: dist
 	mkdir dist/out;
 	conda run -n base python make/env.py test_preparse --python=3.11 --recreate >/dev/null;
-	conda run -n test_preparse pip install -e . >/dev/null;
+	conda run -n test_preparse pip install dist/*.tar.gz >/dev/null;
 	conda run -n test_preparse python -c "import preparse.tests; preparse.tests.test();";
 	conda run -n test_preparse pip install mypy >/dev/null;
 	conda run -n test_preparse python -m mypy --exclude build --exclude dist --strict . > dist/out/mypy_dir_out.txt 2> dist/out/mypy_dir_err.txt || true;
