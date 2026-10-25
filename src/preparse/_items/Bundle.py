@@ -6,7 +6,6 @@ import setdoc
 
 from preparse._items.Item import Item
 from preparse._items.Option import Option
-from preparse._utils.dataprop import dataprop
 from preparse.core.enums import Nargs, Tuning
 
 
@@ -61,9 +60,14 @@ class Bundle(Option):
                 x = x[:-1]
         return ans
 
-    @dataprop
-    def chars(self: Self, x: Any) -> str:
-        return str(x)
+    @property
+    def chars(self: Self) -> str:
+        return self._data["chars"]
+
+    @chars.setter
+    def chars(self: Self, x: Any) -> None:
+        self._data = getattr(self, "_data", dict())
+        self._data["chars"] = str(x)
 
     def deparse(self: Self) -> list[str]:
         if self.right is None:

@@ -4,7 +4,6 @@ import operator
 from typing import Any, Self, SupportsIndex
 
 from preparse._items.Item import Item
-from preparse._utils.dataprop import dataprop
 from preparse.core.enums import Nargs, Tuning
 
 
@@ -19,18 +18,35 @@ class Option(Item):
     def ishungry(self: Self) -> bool:
         return (self.right is None) and (self.nargs == Nargs.REQUIRED_ARGUMENT)
 
-    @dataprop
-    def joined(self: Self, x: SupportsIndex) -> bool:
-        return bool(operator.index(x))
+    @property
+    def joined(self: Self) -> bool:
+        return self._data["joined"]
 
-    @dataprop
-    def nargs(self: Self, x: Any) -> Nargs:
-        return Nargs(x)
+    @joined.setter
+    def joined(self: Self, x: SupportsIndex) -> None:
+        self._data = getattr(self, "_data", dict())
+        self._data["joined"] = bool(operator.index(x))
 
-    @dataprop
-    def right(self: Self, x: Any) -> str | None:
+    @property
+    def nargs(self: Self) -> Nargs:
+        return self._data["nargs"]
+
+    @nargs.setter
+    def nargs(self: Self, x: Any) -> None:
+        self._data = getattr(self, "_data", dict())
+        self._data["nargs"] = Nargs(x)
+
+    @property
+    def right(self: Self) -> str | None:
+        return self._data["right"]
+
+    @right.setter
+    def right(self: Self, x: Any) -> None:
+        self._data = getattr(self, "_data", dict())
         if x is not None:
-            return str(x)
+            self._data["right"] = str(x)
+        else:
+            self._data["right"] = None
 
     @classmethod
     def sortkey(cls: type[Self]) -> int:
