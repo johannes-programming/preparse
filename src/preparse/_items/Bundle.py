@@ -1,13 +1,13 @@
-from typing import *
+__all__: list[str] = ["Bundle"]
+
+from typing import Any, Self
 
 import setdoc
 
 from preparse._items.Item import Item
 from preparse._items.Option import Option
 from preparse._utils.dataprop import dataprop
-from preparse.core.enums import *
-
-__all__ = ["Bundle"]
+from preparse.core.enums import Nargs, Tuning
 
 
 class Bundle(Option):
@@ -15,7 +15,7 @@ class Bundle(Option):
     chars: str
     joined: bool
     nargs: Nargs
-    right: Optional[str]
+    right: str | None
 
     __slots__ = ()
 
@@ -25,14 +25,14 @@ class Bundle(Option):
         *,
         chars: str,
         joined: bool = False,
-        right: Optional[str] = None,
+        right: str | None = None,
     ) -> None:
         self.chars = chars
         self.joined = joined
         self.right = right
 
     @classmethod
-    def _split_allowslong(cls: type, chars: str) -> list[str]:
+    def _split_allowslong(cls: type[Self], chars: str) -> list[str]:
         ans: list[str]
         x: str
         ans = list()
@@ -44,7 +44,7 @@ class Bundle(Option):
         return ans
 
     @classmethod
-    def _split_shortonly(cls: type, chars: str) -> list[str]:
+    def _split_shortonly(cls: type[Self], chars: str) -> list[str]:
         ans: list[str]
         x: str
         ans = list()

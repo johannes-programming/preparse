@@ -56,8 +56,8 @@ Features
 The PreParser class
 ~~~~~~~~~~~~~~~~~~~
 
-``class preparse.PreParser(*, allowslong: Any = True, allowsshort: Any = True, bundling: Any = Tuning.MAINTAIN, expandsabbr: Any = True, expectsabbr: Any = True, expectsposix: Any = False, optdict: Any = (), prog: Any = None, reconcilesorders: Any = True, special: Any = preparse.Tuning.MAINTAIN, warn: Callable = str)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.PreParser(*, allowslong: Any = True, allowsshort: Any = True, bundling: Any = Tuning.MAINTAIN, expandsabbr: Any = True, expectsabbr: Any = True, expectsposix: Any = False, optdict: Any = (), prog: Any = None, reconcilesorders: Any = True, special: Any = preparse.Tuning.MAINTAIN, warn: Callable[..., Any] = str)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This class is the centerpiece of the preparse. Its behaviour follows the principles of getopt from C.
 
@@ -111,8 +111,8 @@ Options not found within the dictionary
 cause a ``preparse.PreparseInvalidOptionWarning``
 and are then assumed to have no arguments.
 
-``parse_args(args: Optional[Iterable] = None) -> list[str]``
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+``parse_args(args: Iterable[Any] | None = None) -> list[str]``
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 This method is at the core of the class.
 It returns a preparsed list of arguments.
@@ -148,8 +148,8 @@ Concretely the prog property is changed.
 
 This ``preparse.Tuning`` property determines the approach to the special argument ``'--'``.
 
-``todict() -> dict``
-""""""""""""""""""""
+``todict() -> dict[str, Any]``
+""""""""""""""""""""""""""""""
 
 This method a dict representing the current instance.
 

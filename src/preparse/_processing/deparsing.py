@@ -1,8 +1,6 @@
-from typing import *
+__all__: list[str] = ["deparse"]
 
 from preparse._items.Item import Item
-
-__all__ = ["deparse"]
 
 
 def deparse(items: list[Item]) -> list[str]:
