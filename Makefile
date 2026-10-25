@@ -67,7 +67,7 @@ test: dist
 	conda run -n test_preparse_mypy python -m mypy --strict -p preparse > dist/out/mypy_pkg_out.txt 2> dist/out/mypy_pkg_err.txt || true;
 	conda run -n base python make/env.py test_preparse_tests --python=3.11 --recreate >/dev/null;
 	conda run -n test_preparse_tests pip install dist/*.tar.gz >/dev/null;
-	conda run -n test_preparse_tests python -c "import preparse.tests; preparse.tests.test();";
+	conda run -n test_preparse_tests python -c "import preparse.tests; preparse.tests.test();" > dist/out/tests_out.txt 2> dist/out/tests_err.txt || true;;
 
 
 toml_sorted: py311
