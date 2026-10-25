@@ -1,7 +1,7 @@
-__all__: list[str] = ["BaseEnum"]
-
 import enum
 from typing import Self
+
+__all__ = ["BaseEnum"]
 
 
 class BaseEnum(enum.IntEnum):

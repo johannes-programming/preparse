@@ -1,8 +1,8 @@
-__all__: list[str] = ["secondary"]
-
 from typing import Any
 
 import click
+
+__all__ = ["secondary"]
 
 
 @click.command()

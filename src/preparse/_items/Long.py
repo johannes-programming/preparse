@@ -1,11 +1,11 @@
-__all__: list[str] = ["Long"]
-
 import operator
 from typing import Any, Optional, Self, SupportsIndex
 
 import setdoc
 
 from preparse._items.Option import Option
+
+__all__ = ["Long"]
 
 
 class Long(Option):
@@ -22,8 +22,8 @@ class Long(Option):
     def __init__(
         self: Self,
         *,
-        abbrlen: Optional[int] = None,
         fullkey: str,
+        abbrlen: Optional[int] = None,
         joined: bool = False,
         right: Optional[str] = None,
     ) -> None:

@@ -1,5 +1,3 @@
-__all__: list[str] = ["process"]
-
 from collections.abc import Iterable
 from types import FunctionType
 from typing import Any, Optional
@@ -10,6 +8,8 @@ from preparse._processing.digesting import digest
 from preparse._processing.parsing import parse
 from preparse._processing.pulling import pull
 from preparse.enums.Tuning import Tuning
+
+__all__ = ["process"]
 
 
 def process(

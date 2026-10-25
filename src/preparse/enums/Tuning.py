@@ -1,6 +1,6 @@
-__all__: list[str] = ["Tuning"]
-
 from ..enums.BaseEnum import BaseEnum
+
+__all__ = ["Tuning"]
 
 
 class Tuning(BaseEnum):

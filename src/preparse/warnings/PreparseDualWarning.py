@@ -1,11 +1,11 @@
-__all__: list[str] = ["PreparseDualWarning"]
-
 from abc import abstractmethod
 from typing import Self, cast
 
 import setdoc
 
 from preparse.warnings.PreparseWarning import PreparseWarning
+
+__all__ = ["PreparseDualWarning"]
 
 
 class PreparseDualWarning(PreparseWarning):
@@ -14,9 +14,9 @@ class PreparseDualWarning(PreparseWarning):
     def __post_init__(
         self: Self,
         *,
-        islong: object,
-        option: object,
         prog: object,
+        option: object,
+        islong: object,
     ) -> None:
         self.prog = prog
         self.option = option

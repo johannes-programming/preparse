@@ -1,11 +1,11 @@
-__all__: list[str] = ["pull"]
-
 import sys
 from collections.abc import Iterable
 from typing import Optional
 
 from preparse._items.Item import Item
 from preparse._items.Positional import Positional
+
+__all__ = ["pull"]
 
 
 def pull(args: Optional[Iterable[object]] = None) -> list[Item]:

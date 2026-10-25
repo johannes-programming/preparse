@@ -1,5 +1,3 @@
-__all__: list[str] = ["Optdict"]
-
 from collections.abc import Hashable, Iterable
 from typing import Any, Optional, Self, cast
 
@@ -10,6 +8,8 @@ from frozendict import frozendict
 
 from preparse.enums.Nargs import Nargs
 from preparse.typing.SupportsKeysAndGetitem import SupportsKeysAndGetitem
+
+__all__ = ["Optdict"]
 
 
 def nargs(value: Any, /) -> Nargs:

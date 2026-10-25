@@ -1,10 +1,10 @@
-__all__: list[str] = ["PreparseUnallowedArgumentWarning"]
-
 from typing import Any, Self
 
 import setdoc
 
 from preparse.warnings.PreparseLongonlyWarning import PreparseLongonlyWarning
+
+__all__ = ["PreparseUnallowedArgumentWarning"]
 
 
 class PreparseUnallowedArgumentWarning(PreparseLongonlyWarning):
@@ -12,7 +12,7 @@ class PreparseUnallowedArgumentWarning(PreparseLongonlyWarning):
     # option is always full key without value
 
     @setdoc.basic
-    def __post_init__(self: Self, *, option: object, prog: object) -> None:
+    def __post_init__(self: Self, *, prog: object, option: object) -> None:
         self.prog = prog
         self.option = option
 

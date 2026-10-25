@@ -1,10 +1,10 @@
-__all__: list[str] = ["Positional"]
-
 from typing import Any, Self
 
 import setdoc
 
 from preparse._items.Item import Item
+
+__all__ = ["Positional"]
 
 
 class Positional(Item):
