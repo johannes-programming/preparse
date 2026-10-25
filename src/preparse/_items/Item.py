@@ -1,12 +1,12 @@
-__all__: list[str] = ["Item"]
-
 import abc
-from typing import Any, Self
+from typing import *
 
 import setdoc
 from copyable import Copyable
 
-from preparse.core.enums import Nargs, Tuning
+from preparse.core.enums import *
+
+__all__ = ["Item"]
 
 
 class Item(Copyable):
@@ -21,11 +21,11 @@ class Item(Copyable):
 
     @classmethod
     @abc.abstractmethod
-    def sortkey(cls: type[Self]) -> int: ...
+    def sortkey(cls: type) -> int: ...
 
-    def todict(self: Self) -> dict[str, Any]:
+    def todict(self: Self) -> dict:
         "This method returns a dict representing the current instance."
-        ans: dict[str, Any]
+        ans: dict
         try:
             ans = self._data
         except AttributeError:

@@ -1,24 +1,18 @@
-__all__: list[str] = ["TestPreparse"]
-
 import unittest
-from typing import Self
+from typing import *
 
-from preparse.core.enums import Nargs, Tuning
+from preparse.core.enums import *
 from preparse.core.Optdict import Optdict
-from preparse.core.warnings import (
-    PreparseAmbiguousOptionWarning,
-    PreparseInvalidOptionWarning,
-    PreparseRequiredArgumentWarning,
-    PreparseUnallowedArgumentWarning,
-    PreparseWarning,
-)
+from preparse.core.warnings import *
+
+__all__ = ["TestPreparse"]
 
 
 class TestPreparse(unittest.TestCase):
 
     def test_optdict_copy(self: Self) -> None:
-        dublicate: Optdict
         original: Optdict
+        dublicate: Optdict
         original = Optdict({"--foo": 0, "-bar": 1})
         dublicate = original.copy()
         self.assertEqual(original, dublicate)

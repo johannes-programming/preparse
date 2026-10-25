@@ -1,12 +1,9 @@
 from __future__ import annotations
 
-__all__: list[str] = ["Click"]
-
 import dataclasses
 import functools
 import types
-from collections.abc import Callable
-from typing import TYPE_CHECKING, Any, Self
+from typing import *
 
 import overloadable
 import setdoc
@@ -14,6 +11,8 @@ from copyable import Copyable
 
 if TYPE_CHECKING:
     from .PreParser import PreParser
+
+__all__ = ["Click"]
 
 
 @dataclasses.dataclass
@@ -48,7 +47,7 @@ class Click(Copyable):
 
     @__call__.overload("method")
     def __call__(self: Self, target: types.MethodType) -> types.MethodType:
-        func: Callable[..., Any]
+        func: Callable
         func = self(target.__func__)
         return types.MethodType(func, target.__self__)
 

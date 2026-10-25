@@ -1,6 +1,4 @@
-__all__: list[str] = ["digest"]
-
-from typing import Any
+from typing import *
 
 from preparse._items.Bundle import Bundle
 from preparse._items.Item import Item
@@ -8,14 +6,10 @@ from preparse._items.Long import Long
 from preparse._items.Option import Option
 from preparse._items.Positional import Positional
 from preparse._items.Special import Special
-from preparse.core.enums import Nargs, Tuning
-from preparse.core.warnings import (
-    PreparseAmbiguousOptionWarning,
-    PreparseInvalidOptionWarning,
-    PreparseRequiredArgumentWarning,
-    PreparseUnallowedArgumentWarning,
-    PreparseWarning,
-)
+from preparse.core.enums import *
+from preparse.core.warnings import *
+
+__all__ = ["digest"]
 
 
 def digest(

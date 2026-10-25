@@ -1,9 +1,9 @@
-__all__: list[str] = ["Special"]
-
-from typing import Self
+from typing import *
 
 from preparse._items.Item import Item
-from preparse.core.enums import Nargs, Tuning
+from preparse.core.enums import *
+
+__all__ = ["Special"]
 
 
 class Special(Item):
@@ -14,5 +14,5 @@ class Special(Item):
         return ["--"]
 
     @classmethod
-    def sortkey(cls: type[Self]) -> int:
+    def sortkey(cls: type) -> int:
         return 1

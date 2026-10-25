@@ -1,9 +1,9 @@
-__all__: list[str] = ["TestEnums"]
-
 import unittest
-from typing import Self
+from typing import *
 
-from preparse.core.enums import Nargs, Tuning
+from preparse.core.enums import *
+
+__all__ = ["TestEnums"]
 
 
 class TestEnums(unittest.TestCase):

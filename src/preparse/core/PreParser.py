@@ -1,12 +1,9 @@
 from __future__ import annotations
 
-__all__: list[str] = ["PreParser"]
-
 import os
 import sys
 import types
-from collections.abc import Callable, Iterable
-from typing import Any, Self
+from typing import *
 
 import click as cl
 import setdoc
@@ -14,18 +11,14 @@ from copyable import Copyable
 from datarepr import datarepr
 from tofunc import tofunc
 
-from preparse._processing import process
+from preparse._processing import *
 from preparse._utils.dataprop import dataprop
 from preparse.core.Click import Click
-from preparse.core.enums import Nargs, Tuning
-from preparse.core.Optdict import Optdict
-from preparse.core.warnings import (
-    PreparseAmbiguousOptionWarning,
-    PreparseInvalidOptionWarning,
-    PreparseRequiredArgumentWarning,
-    PreparseUnallowedArgumentWarning,
-    PreparseWarning,
-)
+from preparse.core.enums import *
+from preparse.core.Optdict import *
+from preparse.core.warnings import *
+
+__all__ = ["PreParser"]
 
 
 class PreParser(Copyable):
@@ -58,7 +51,7 @@ class PreParser(Copyable):
         prog: Any = None,
         reconcilesorders: Any = True,
         special: Any = Tuning.MAINTAIN,
-        warn: Callable[..., Any] = str,
+        warn: Callable = str,
     ) -> None:
         self.allowslong = allowslong
         self.allowsshort = allowsshort
@@ -125,7 +118,7 @@ class PreParser(Copyable):
 
     def parse_args(
         self: Self,
-        args: Iterable[Any] | None = None,
+        args: Optional[Iterable] = None,
     ) -> list[str]:
         "This method parses args."
         return process(args, **self.todict())
@@ -144,9 +137,9 @@ class PreParser(Copyable):
 
     def reflectClickCommand(self: Self, cmd: cl.Command) -> None:
         "This method causes the current instance to reflect a click.Command object."
+        optdict: dict[str, Nargs]
         nargs: Nargs
         opt: Any
-        optdict: dict[str, Nargs]
         param: Any
         optdict = dict()
         for param in cmd.params:
@@ -172,9 +165,9 @@ class PreParser(Copyable):
         "This Tuning property determines the approach towards the special argument."
         return Tuning(value)
 
-    def todict(self: Self) -> dict[str, Any]:
+    def todict(self: Self) -> dict:
         "This method returns a dict representing the current instance."
-        ans: dict[str, Any]
+        ans: dict
         try:
             ans = self._data
         except AttributeError:
@@ -184,6 +177,6 @@ class PreParser(Copyable):
             return dict(ans)
 
     @dataprop
-    def warn(self: Self, value: Callable[..., Any]) -> types.FunctionType:
+    def warn(self: Self, value: Callable) -> types.FunctionType:
         "This property gives a function that takes in the warnings."
         return tofunc(value)

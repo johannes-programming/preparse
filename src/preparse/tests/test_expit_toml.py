@@ -1,28 +1,15 @@
-__all__: list[str] = ["TestMainFunction"]
-
 import math
 import tomllib
 import unittest
 from importlib import resources
-from typing import Any, Self
+from typing import *
 
 import click
 from click.testing import CliRunner
 
-from preparse.core import (
-    Click,
-    Nargs,
-    Optdict,
-    PreparseAmbiguousOptionWarning,
-    PreparseInvalidOptionWarning,
-    PreParser,
-    PreparseRequiredArgumentWarning,
-    PreparseUnallowedArgumentWarning,
-    PreparseWarning,
-    Tuning,
-    enums,
-    warnings,
-)
+from preparse.core import *
+
+__all__ = ["TestMainFunction"]
 
 
 class expit:
@@ -46,8 +33,8 @@ class expit:
 
 
 class utils:
-    def get_data() -> dict[str, Any]:
-        data: dict[str, Any]
+    def get_data() -> dict:
+        data: dict
         text: str
         text = resources.read_text("preparse.tests", "expit.toml")
         data = tomllib.loads(text)
@@ -66,14 +53,14 @@ class TestMainFunction(unittest.TestCase):
     def parse(
         self: Self,
         *,
+        query: Any,
         exit_code: Any,
         output: Any,
         prog: Any,
-        query: Any,
-        stderr: Any,
         stdout: Any,
+        stderr: Any,
     ) -> None:
-        extra: dict[str, Any]
+        extra: dict
         result: Any
         runner: CliRunner
         runner = CliRunner()
@@ -93,8 +80,8 @@ class TestMainFunction(unittest.TestCase):
             self.assertEqual(stderr, result.stderr)
 
     def test_0(self: Self) -> None:
-        data: dict[str, Any]
-        kwargs: dict[str, Any]
+        data: dict
+        kwargs: dict
         name: str
         data = utils.get_data()
         for name, kwargs in data.items():

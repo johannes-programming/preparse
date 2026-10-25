@@ -1,15 +1,14 @@
-__all__: list[str] = ["pull"]
-
 import sys
-from collections.abc import Iterable
-from typing import Any
+from typing import *
 
 from preparse._items.Positional import Positional
 
+__all__ = ["pull"]
 
-def pull(args: Iterable[Any] | None = None) -> list[Positional]:
+
+def pull(args: Optional[Iterable] = None) -> list[Positional]:
     "This method acquires args."
-    argiter: Iterable[Any]
+    argiter: Iterable
     if args is None:
         argiter = sys.argv[1:]
     else:

@@ -1,7 +1,4 @@
-__all__: list[str] = ["Optdict"]
-
-from collections.abc import Iterator
-from typing import Any, Self
+from typing import *
 
 import cmp3
 import datahold
@@ -9,14 +6,10 @@ import setdoc
 from datarepr import datarepr
 from frozendict import frozendict
 
-from preparse.core.enums import Nargs, Tuning
-from preparse.core.warnings import (
-    PreparseAmbiguousOptionWarning,
-    PreparseInvalidOptionWarning,
-    PreparseRequiredArgumentWarning,
-    PreparseUnallowedArgumentWarning,
-    PreparseWarning,
-)
+from preparse.core.enums import *
+from preparse.core.warnings import *
+
+__all__ = ["Optdict"]
 
 
 class Optdict(cmp3.CmpABC, datahold.HoldDict[str, Nargs]):
@@ -25,7 +18,7 @@ class Optdict(cmp3.CmpABC, datahold.HoldDict[str, Nargs]):
     data: frozendict[str, Nargs]
 
     @setdoc.basic
-    def __cmp__(self: Self, other: Any, /) -> int | None:
+    def __cmp__(self: Self, other: Any, /) -> Optional[int]:
         if type(self) is type(other):
             return cmp3.cmp(self._data, other._data, mode="eq_strict")
         else:
@@ -45,9 +38,9 @@ class Optdict(cmp3.CmpABC, datahold.HoldDict[str, Nargs]):
 
     @data.setter
     def data(self: Self, value: Any) -> None:
-        a: frozendict[str, Nargs]
-        x: Iterator[str]
-        y: Iterator[Nargs]
+        a: frozendict
+        x: map
+        y: map
         a = frozendict(value)
         x = map(str, a.keys())
         y = map(Nargs, a.values())

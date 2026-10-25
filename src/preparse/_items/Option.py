@@ -1,18 +1,18 @@
-__all__: list[str] = ["Option"]
-
 import operator
-from typing import Any, Self, SupportsIndex
+from typing import *
 
 from preparse._items.Item import Item
 from preparse._utils.dataprop import dataprop
-from preparse.core.enums import Nargs, Tuning
+from preparse.core.enums import *
+
+__all__ = ["Option"]
 
 
 class Option(Item):
 
     joined: bool
     nargs: Nargs
-    right: str | None
+    right: Optional[str]
 
     __slots__ = ()
 
@@ -28,10 +28,10 @@ class Option(Item):
         return Nargs(x)
 
     @dataprop
-    def right(self: Self, x: Any) -> str | None:
+    def right(self: Self, x: Any) -> Optional[str]:
         if x is not None:
             return str(x)
 
     @classmethod
-    def sortkey(cls: type[Self]) -> int:
+    def sortkey(cls: type) -> int:
         return 0
