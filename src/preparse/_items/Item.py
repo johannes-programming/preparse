@@ -1,10 +1,10 @@
+__all__: list[str] = ["Item"]
+
 import abc
 from typing import Any, Self
 
 import setdoc
 from copyable import Copyable
-
-__all__ = ["Item"]
 
 
 class Item(Copyable):

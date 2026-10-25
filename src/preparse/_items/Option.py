@@ -1,10 +1,10 @@
+__all__: list[str] = ["Option"]
+
 import operator
 from typing import Optional, Self, SupportsIndex
 
 from preparse._items.Item import Item
 from preparse.enums.Nargs import Nargs
-
-__all__ = ["Option"]
 
 
 class Option(Item):

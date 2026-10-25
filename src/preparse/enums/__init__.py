@@ -2,3 +2,5 @@
 Following the precedent of getopt, \
 the value of two represents always an intermediary answer \
 between the values zero, meaning no, and one, meaning yes."""
+
+__all__: list[str] = []

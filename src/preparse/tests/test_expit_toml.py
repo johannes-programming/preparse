@@ -1,3 +1,5 @@
+__all__: list[str] = ["TestMainFunction"]
+
 import enum
 import math
 import tomllib
@@ -9,8 +11,6 @@ from typing import Any, Self
 from click.testing import CliRunner
 
 from preparse._tests import expit
-
-__all__ = ["TestMainFunction"]
 
 
 class Utils(enum.Enum):
@@ -36,12 +36,12 @@ class TestMainFunction(unittest.TestCase):
     def parse(
         self: Self,
         *,
-        query: Any,
         exit_code: Any,
         output: Any,
         prog: Any,
-        stdout: Any,
+        query: Any,
         stderr: Any,
+        stdout: Any,
     ) -> None:
         extra: dict[Any, Any]
         result: Any

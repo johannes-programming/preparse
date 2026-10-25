@@ -1,6 +1,6 @@
-from ..enums.BaseEnum import BaseEnum
+__all__: list[str] = ["Nargs"]
 
-__all__ = ["Nargs"]
+from ..enums.BaseEnum import BaseEnum
 
 
 class Nargs(BaseEnum):
