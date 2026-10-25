@@ -46,8 +46,8 @@ class expit:
 
 
 class utils:
-    def get_data() -> dict:
-        data: dict
+    def get_data() -> dict[str, Any]:
+        data: dict[str, Any]
         text: str
         text = resources.read_text("preparse.tests", "expit.toml")
         data = tomllib.loads(text)
@@ -73,7 +73,7 @@ class TestMainFunction(unittest.TestCase):
         stderr: Any,
         stdout: Any,
     ) -> None:
-        extra: dict
+        extra: dict[str, Any]
         result: Any
         runner: CliRunner
         runner = CliRunner()
@@ -93,8 +93,8 @@ class TestMainFunction(unittest.TestCase):
             self.assertEqual(stderr, result.stderr)
 
     def test_0(self: Self) -> None:
-        data: dict
-        kwargs: dict
+        data: dict[str, Any]
+        kwargs: dict[str, Any]
         name: str
         data = utils.get_data()
         for name, kwargs in data.items():

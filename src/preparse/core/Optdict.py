@@ -1,5 +1,6 @@
 __all__: list[str] = ["Optdict"]
 
+from collections.abc import Iterator
 from typing import Any, Self
 
 import cmp3
@@ -44,9 +45,9 @@ class Optdict(cmp3.CmpABC, datahold.HoldDict[str, Nargs]):
 
     @data.setter
     def data(self: Self, value: Any) -> None:
-        a: frozendict
-        x: map
-        y: map
+        a: frozendict[str, Nargs]
+        x: Iterator[str]
+        y: Iterator[Nargs]
         a = frozendict(value)
         x = map(str, a.keys())
         y = map(Nargs, a.values())

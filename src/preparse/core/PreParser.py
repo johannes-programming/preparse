@@ -5,7 +5,8 @@ __all__: list[str] = ["PreParser"]
 import os
 import sys
 import types
-from typing import Any, Callable, Iterable, Self
+from collections.abc import Callable, Iterable
+from typing import Any, Self
 
 import click as cl
 import setdoc
@@ -57,7 +58,7 @@ class PreParser(Copyable):
         prog: Any = None,
         reconcilesorders: Any = True,
         special: Any = Tuning.MAINTAIN,
-        warn: Callable = str,
+        warn: Callable[..., Any] = str,
     ) -> None:
         self.allowslong = allowslong
         self.allowsshort = allowsshort
@@ -124,7 +125,7 @@ class PreParser(Copyable):
 
     def parse_args(
         self: Self,
-        args: Iterable | None = None,
+        args: Iterable[Any] | None = None,
     ) -> list[str]:
         "This method parses args."
         return process(args, **self.todict())
@@ -171,9 +172,9 @@ class PreParser(Copyable):
         "This Tuning property determines the approach towards the special argument."
         return Tuning(value)
 
-    def todict(self: Self) -> dict:
+    def todict(self: Self) -> dict[str, Any]:
         "This method returns a dict representing the current instance."
-        ans: dict
+        ans: dict[str, Any]
         try:
             ans = self._data
         except AttributeError:
@@ -183,6 +184,6 @@ class PreParser(Copyable):
             return dict(ans)
 
     @dataprop
-    def warn(self: Self, value: Callable) -> types.FunctionType:
+    def warn(self: Self, value: Callable[..., Any]) -> types.FunctionType:
         "This property gives a function that takes in the warnings."
         return tofunc(value)

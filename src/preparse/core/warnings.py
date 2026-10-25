@@ -7,7 +7,8 @@ __all__: list[str] = [
 ]
 
 from abc import abstractmethod
-from typing import Any, Iterable, Self
+from collections.abc import Iterable
+from typing import Any, Self
 
 import setdoc
 from copyable import Copyable
@@ -49,9 +50,9 @@ class PreparseWarning(Warning, Copyable):
     def prog(self: Self, value: Any) -> str:
         return str(value)
 
-    def todict(self: Self) -> dict:
+    def todict(self: Self) -> dict[str, Any]:
         "This method returns a dict representing the current instance."
-        ans: dict
+        ans: dict[str, Any]
         try:
             ans = self._data
         except AttributeError:
@@ -116,7 +117,7 @@ class PreparseAmbiguousOptionWarning(PreparseLongonlyWarning):
 
     @setdoc.basic
     def __init__(
-        self: Self, *, option: Any, possibilities: Iterable, prog: Any
+        self: Self, *, option: Any, possibilities: Iterable[Any], prog: Any
     ) -> None:
         self.prog = prog
         self.option = option
@@ -132,7 +133,7 @@ class PreparseAmbiguousOptionWarning(PreparseLongonlyWarning):
         return ans
 
     @dataprop
-    def possibilities(self: Self, value: Iterable) -> tuple[str, ...]:
+    def possibilities(self: Self, value: Iterable[Any]) -> tuple[str, ...]:
         return tuple(map(str, value))
 
 

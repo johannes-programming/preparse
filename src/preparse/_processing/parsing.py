@@ -1,7 +1,8 @@
 __all__: list[str] = ["parse"]
 
+from collections.abc import Generator, Iterable
 from types import FunctionType
-from typing import Any, Generator, Iterable
+from typing import Any
 
 from preparse._items.Bundle import Bundle
 from preparse._items.Item import Item
@@ -12,10 +13,10 @@ from preparse._items.Special import Special
 from preparse.core import warnings
 from preparse.core.enums import Nargs, Tuning
 
-PAOW: type
-PIOW: type
-PRAW: type
-PUAW: type
+PAOW: type[Any]
+PIOW: type[Any]
+PRAW: type[Any]
+PUAW: type[Any]
 
 PAOW = warnings.PreparseAmbiguousOptionWarning
 PIOW = warnings.PreparseInvalidOptionWarning
@@ -31,7 +32,7 @@ def parse_bundling(
     arg: str,
     *,
     cause: FunctionType,
-    optdict: dict,
+    optdict: dict[str, Nargs],
 ) -> Bundle:
     ans: Bundle
     x: int
@@ -60,7 +61,7 @@ def parse_cause(
     prog: str,
     warn: FunctionType,
 ) -> FunctionType:
-    def ans(cls: type, **kwargs: Any) -> None:
+    def ans(cls: type[Any], **kwargs: Any) -> None:
         warn(cls(prog=prog, **kwargs))
 
     return ans
@@ -73,7 +74,7 @@ def parse_generator(
     allowsshort: bool,
     expectsabbr: bool,
     expectsposix: bool,
-    optdict: dict,
+    optdict: dict[str, Nargs],
     prog: str,
     warn: FunctionType,
 ) -> Generator[Any, Any, Any]:
@@ -143,7 +144,7 @@ def parse_long(
     *,
     cause: FunctionType,
     expectsabbr: bool,
-    optdict: dict,
+    optdict: dict[str, Nargs],
 ) -> Long:
     ans: Long
     parts: list[str]
@@ -193,7 +194,7 @@ def parse_option(
     *,
     cause: FunctionType,
     expectsabbr: bool,
-    optdict: dict,
+    optdict: dict[str, Nargs],
     **kwargs: Any,
 ) -> Option:
     if parse_islong(arg, **kwargs):

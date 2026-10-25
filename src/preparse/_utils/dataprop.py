@@ -1,9 +1,10 @@
 __all__: list[str] = ["dataprop"]
 
-from typing import Any, Callable, Self
+from collections.abc import Callable
+from typing import Any, Self
 
 
-def dataprop(func: Callable) -> property:
+def dataprop(func: Callable[..., Any]) -> property:
     "This magic method implements calling the current instance."
 
     kwargs: dict[str, Any]

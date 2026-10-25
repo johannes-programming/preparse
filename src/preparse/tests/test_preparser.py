@@ -35,7 +35,7 @@ class TestPreParser(unittest.TestCase):
         self.assertEqual(parser.optdict, parser_copy.optdict)
 
     def test_preparser_todict(self: Self) -> None:
-        expected_keys: list
+        expected_keys: list[str]
         parser: PreParser
         result: Any
         parser = PreParser()

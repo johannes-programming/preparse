@@ -42,7 +42,7 @@ class TestDataToml(unittest.TestCase):
 
     def test_0(self: Self) -> None:
         data: dict[str, Any]
-        kwargs: dict
+        kwargs: dict[str, Any]
         name: str
         data = utils.get_data()
         for name, kwargs in data.items():
@@ -57,13 +57,13 @@ class TestDataToml(unittest.TestCase):
         warnings: Any,
         **kwargs: Any,
     ) -> None:
-        answer: list
-        capture: list
-        data: dict
-        erranswer: list
+        answer: list[str]
+        capture: list[str]
+        data: dict[str, Any]
+        erranswer: list[str]
         msg: str
         parser: PreParser
-        superanswer: list
+        superanswer: list[str]
         capture = list()
 
         def warn(value: Any) -> None:

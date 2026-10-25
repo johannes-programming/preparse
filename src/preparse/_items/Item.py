@@ -1,7 +1,7 @@
 __all__: list[str] = ["Item"]
 
 import abc
-from typing import Self
+from typing import Any, Self
 
 import setdoc
 from copyable import Copyable
@@ -21,11 +21,11 @@ class Item(Copyable):
 
     @classmethod
     @abc.abstractmethod
-    def sortkey(cls: type) -> int: ...
+    def sortkey(cls: type[Self]) -> int: ...
 
-    def todict(self: Self) -> dict:
+    def todict(self: Self) -> dict[str, Any]:
         "This method returns a dict representing the current instance."
-        ans: dict
+        ans: dict[str, Any]
         try:
             ans = self._data
         except AttributeError:

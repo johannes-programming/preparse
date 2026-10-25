@@ -5,7 +5,8 @@ __all__: list[str] = ["Click"]
 import dataclasses
 import functools
 import types
-from typing import Any, Callable, Self, TYPE_CHECKING
+from collections.abc import Callable
+from typing import Any, Self, TYPE_CHECKING
 
 import overloadable
 import setdoc
@@ -47,7 +48,7 @@ class Click(Copyable):
 
     @__call__.overload("method")
     def __call__(self: Self, target: types.MethodType) -> types.MethodType:
-        func: Callable
+        func: Callable[..., Any]
         func = self(target.__func__)
         return types.MethodType(func, target.__self__)
 

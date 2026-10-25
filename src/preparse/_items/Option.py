@@ -33,5 +33,5 @@ class Option(Item):
             return str(x)
 
     @classmethod
-    def sortkey(cls: type) -> int:
+    def sortkey(cls: type[Self]) -> int:
         return 0

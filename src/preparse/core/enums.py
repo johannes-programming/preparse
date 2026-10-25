@@ -11,7 +11,7 @@ from typing import Any, Self
 
 class BaseEnum(enum.IntEnum):
     @classmethod
-    def _missing_(cls: type, value: Any) -> Self:
+    def _missing_(cls: type[Self], value: Any) -> Self:
         return cls(2)
 
 

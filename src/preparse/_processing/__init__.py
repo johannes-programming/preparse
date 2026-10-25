@@ -1,7 +1,8 @@
 __all__: list[str] = ["process"]
 
+from collections.abc import Iterable
 from types import FunctionType
-from typing import Iterable
+from typing import Any
 
 from preparse._items import Bundle, Item, Long, Option, Positional, Special
 from preparse._processing.deparsing import deparse
@@ -13,7 +14,7 @@ from preparse.core.enums import Nargs, Tuning
 
 
 def process(
-    args: Iterable | None = None,
+    args: Iterable[Any] | None = None,
     *,
     allowslong: bool,
     allowsshort: bool,
@@ -21,7 +22,7 @@ def process(
     expandsabbr: bool,
     expectsabbr: bool,
     expectsposix: bool,
-    optdict: dict,
+    optdict: dict[str, Nargs],
     prog: str,
     reconcilesorders: bool,
     special: Tuning,
