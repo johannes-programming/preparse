@@ -58,8 +58,10 @@ rebase:
 reset:
 	git reset HEAD~1
 
-test: dist
+test: dist py311
 	mkdir dist/out;
+	conda run -n py311 pip install "style-checker>=0.1.2,<0.2";
+	conda run -n py311 python -m style_checker -- "**/*.py" > dist/out/style_checker_out.txt 2> dist/out/style_checker_err.txt || true;
 	conda run -n base python make/env.py test_preparse_mypy --python=3.11 --recreate >/dev/null;
 	conda run -n test_preparse_mypy pip install dist/*.tar.gz >/dev/null;
 	conda run -n test_preparse_mypy pip install mypy >/dev/null;
