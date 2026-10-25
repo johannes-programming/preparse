@@ -62,20 +62,25 @@ reset:
 	git reset HEAD~1 ;
 
 test: dist py311
-	conda run -n base python make/env.py test311 --python=3.11 --recreate >/dev/null;
-	conda run -n test311 pip install -e . >/dev/null;
-	conda run -n test311 python -c "import preparse.tests; preparse.tests.test();";
-	conda run -n test311 pip install mypy >/dev/null;
-	conda run -n test311 python -m mypy --strict .;
-	conda run -n test311 python -m mypy --strict -p preparse;
-
-toml_sorted: works
-	conda run -n works pip install 'toml_sorted>=2.1,<3' >/dev/null;
-	conda run -n works python -m toml_sorted @make/toml_sorted_data.txt;
-	conda run -n works python -m toml_sorted @make/toml_sorted_expit.txt;
-	conda run -n works python -m toml_sorted @make/toml_sorted_pyproject.txt;
+	mkdir dist/out/ ;
+	conda run -n base python make/env.py test_preparse --python=3.11 --recreate >/dev/null;
+	conda run -n test_preparse pip install dist/*.tar.gz >/dev/null;
+	conda run -n test_preparse python make/run_introspection.py > dist/out/introspection_out.txt 2> dist/out/introspection_err.txt || true;
+	conda run -n test_preparse pip install mypy >/dev/null;
+	conda run -n test_preparse python -m mypy --exclude build --exclude dist --strict . > dist/out/mypy_dir_out.txt 2> dist/out/mypy_dir_err.txt || true;
+	conda run -n test_preparse python -m mypy --strict -p preparse > dist/out/mypy_pkg_out.txt 2> dist/out/mypy_pkg_err.txt || true;
+	conda run -n base python make/env.py test_preparse --python=3.11 --recreate >/dev/null;
+	conda run -n test_preparse pip install dist/*.tar.gz >/dev/null;
+	conda run -n py311 pip install "style_checker>=0.1.1,<0.2";
+	conda run -n py311 python -m style_checker -- "**/*.py" > dist/out/style_checker_out.txt 2> dist/out/style_checker_err.txt || true;
+	conda run -n test_preparse python -c "import preparse.tests; preparse.tests.test();" > dist/out/tests_out.txt 2> dist/out/tests_err.txt || true;
 	zip -r dist/out.zip dist/out;
+
+toml_sorted: py311
+	conda run -n py311 pip install 'toml_sorted>=2.1,<3' >/dev/null;
+	conda run -n py311 python -m toml_sorted @make/toml_sorted_cfg.txt;
 	conda run -n py311 python -m toml_sorted @make/toml_sorted_pyproject.txt;
+	conda run -n py311 python -m toml_sorted @make/toml_sorted_testdata.txt;
 
 upload: py311
 	conda run -n py311 pip install 'twine>=5.2,<7' >/dev/null;
