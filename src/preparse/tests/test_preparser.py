@@ -1,10 +1,10 @@
+__all__: list[str] = ["TestPreparse"]
+
 import unittest
 from typing import Any, Self
 
 from preparse.core.Click import Click
 from preparse.core.PreParser import PreParser
-
-__all__ = ["TestPreparse"]
 
 
 class TestPreParser(unittest.TestCase):

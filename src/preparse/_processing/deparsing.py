@@ -1,6 +1,6 @@
-from preparse._items.Item import Item
+__all__: list[str] = ["deparse"]
 
-__all__ = ["deparse"]
+from preparse._items.Item import Item
 
 
 def deparse(items: list[Item]) -> list[str]:

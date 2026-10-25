@@ -1,11 +1,11 @@
+__all__: list[str] = ["PreparseWarning"]
+
 from abc import abstractmethod
 from typing import Any, Self, cast
 
 import setdoc
 from copyable import Copyable
 from datarepr import datarepr
-
-__all__ = ["PreparseWarning"]
 
 
 class PreparseWarning(Warning, Copyable):

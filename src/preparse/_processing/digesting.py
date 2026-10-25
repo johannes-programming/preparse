@@ -1,3 +1,5 @@
+__all__: list[str] = ["digest"]
+
 from typing import Any, cast
 
 from preparse._items.Bundle import Bundle
@@ -7,8 +9,6 @@ from preparse._items.Option import Option
 from preparse._items.Positional import Positional
 from preparse._items.Special import Special
 from preparse.enums.Tuning import Tuning
-
-__all__ = ["digest"]
 
 
 def digest(

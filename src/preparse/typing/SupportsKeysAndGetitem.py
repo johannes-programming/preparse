@@ -1,7 +1,7 @@
+__all__: list[str] = ["SupportsKeysAndGetitem"]
+
 from collections.abc import Hashable
 from typing import Protocol, Self
-
-__all__ = ["SupportsKeysAndGetitem"]
 
 
 class SupportsKeysAndGetitem(Protocol):
