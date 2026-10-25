@@ -61,7 +61,7 @@ rebase:
 reset:
 	git reset HEAD~1 ;
 
-test:
+test: dist py311
 	conda run -n base python make/env.py test311 --python=3.11 --recreate >/dev/null;
 	conda run -n test311 pip install -e . >/dev/null;
 	conda run -n test311 python -c "import preparse.tests; preparse.tests.test();";
@@ -74,7 +74,8 @@ toml_sorted: works
 	conda run -n works python -m toml_sorted @make/toml_sorted_data.txt;
 	conda run -n works python -m toml_sorted @make/toml_sorted_expit.txt;
 	conda run -n works python -m toml_sorted @make/toml_sorted_pyproject.txt;
-	conda run -n works python -m toml_sorted @make/toml_sorted_secondary.txt;
+	zip -r dist/out.zip dist/out;
+	conda run -n py311 python -m toml_sorted @make/toml_sorted_pyproject.txt;
 
 upload: py311
 	conda run -n py311 pip install 'twine>=5.2,<7' >/dev/null;
