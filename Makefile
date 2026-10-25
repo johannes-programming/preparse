@@ -60,12 +60,14 @@ reset:
 
 test: dist
 	mkdir dist/out;
-	conda run -n base python make/env.py test_preparse --python=3.11 --recreate >/dev/null;
-	conda run -n test_preparse pip install dist/*.tar.gz >/dev/null;
-	conda run -n test_preparse python -c "import preparse.tests; preparse.tests.test();";
-	conda run -n test_preparse pip install mypy >/dev/null;
-	conda run -n test_preparse python -m mypy --exclude build --exclude dist --strict . > dist/out/mypy_dir_out.txt 2> dist/out/mypy_dir_err.txt || true;
-	conda run -n test_preparse python -m mypy --strict -p preparse > dist/out/mypy_pkg_out.txt 2> dist/out/mypy_pkg_err.txt || true;
+	conda run -n base python make/env.py test_preparse_mypy --python=3.11 --recreate >/dev/null;
+	conda run -n test_preparse_mypy pip install dist/*.tar.gz >/dev/null;
+	conda run -n test_preparse_mypy pip install mypy >/dev/null;
+	conda run -n test_preparse_mypy python -m mypy --exclude build --exclude dist --strict . > dist/out/mypy_dir_out.txt 2> dist/out/mypy_dir_err.txt || true;
+	conda run -n test_preparse_mypy python -m mypy --strict -p preparse > dist/out/mypy_pkg_out.txt 2> dist/out/mypy_pkg_err.txt || true;
+	conda run -n base python make/env.py test_preparse_tests --python=3.11 --recreate >/dev/null;
+	conda run -n test_preparse_tests pip install dist/*.tar.gz >/dev/null;
+	conda run -n test_preparse_tests python -c "import preparse.tests; preparse.tests.test();";
 
 
 toml_sorted: py311
