@@ -1,7 +1,7 @@
 __all__: list[str] = ["parse"]
 
 from types import FunctionType
-from typing import *
+from typing import Any, Generator, Iterable
 
 from preparse._items.Bundle import Bundle
 from preparse._items.Item import Item
@@ -10,7 +10,7 @@ from preparse._items.Option import Option
 from preparse._items.Positional import Positional
 from preparse._items.Special import Special
 from preparse.core import warnings
-from preparse.core.enums import *
+from preparse.core.enums import Nargs, Tuning
 
 PAOW: type
 PIOW: type
@@ -80,7 +80,7 @@ def parse_generator(
     broken: bool
     cause: FunctionType
     item: Positional
-    last: Optional[Option]
+    last: Option | None
     broken = not (allowslong or allowsshort)
     cause = parse_cause(prog=prog, warn=warn)
     last = None

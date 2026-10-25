@@ -1,12 +1,18 @@
 __all__: list[str] = ["TestPreparse"]
 
 import unittest
-from typing import *
+from typing import Any, Self
 
 from preparse.core.Click import Click
-from preparse.core.enums import *
+from preparse.core.enums import Nargs, Tuning
 from preparse.core.PreParser import PreParser
-from preparse.core.warnings import *
+from preparse.core.warnings import (
+    PreparseAmbiguousOptionWarning,
+    PreparseInvalidOptionWarning,
+    PreparseRequiredArgumentWarning,
+    PreparseUnallowedArgumentWarning,
+    PreparseWarning,
+)
 
 
 class TestPreParser(unittest.TestCase):

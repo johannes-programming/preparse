@@ -7,13 +7,13 @@ __all__: list[str] = [
 ]
 
 from abc import abstractmethod
-from typing import *
+from typing import Any, Iterable, Self
 
 import setdoc
 from copyable import Copyable
 from datarepr import datarepr
 
-from preparse._utils import *
+from preparse._utils import dataprop
 
 
 class PreparseWarning(Warning, Copyable):

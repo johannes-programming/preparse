@@ -5,7 +5,7 @@ __all__: list[str] = ["PreParser"]
 import os
 import sys
 import types
-from typing import *
+from typing import Any, Callable, Iterable, Self
 
 import click as cl
 import setdoc
@@ -13,12 +13,18 @@ from copyable import Copyable
 from datarepr import datarepr
 from tofunc import tofunc
 
-from preparse._processing import *
+from preparse._processing import process
 from preparse._utils.dataprop import dataprop
 from preparse.core.Click import Click
-from preparse.core.enums import *
-from preparse.core.Optdict import *
-from preparse.core.warnings import *
+from preparse.core.enums import Nargs, Tuning
+from preparse.core.Optdict import Optdict
+from preparse.core.warnings import (
+    PreparseAmbiguousOptionWarning,
+    PreparseInvalidOptionWarning,
+    PreparseRequiredArgumentWarning,
+    PreparseUnallowedArgumentWarning,
+    PreparseWarning,
+)
 
 
 class PreParser(Copyable):
@@ -118,7 +124,7 @@ class PreParser(Copyable):
 
     def parse_args(
         self: Self,
-        args: Optional[Iterable] = None,
+        args: Iterable | None = None,
     ) -> list[str]:
         "This method parses args."
         return process(args, **self.todict())

@@ -1,11 +1,17 @@
 __all__: list[str] = ["TestPreparse"]
 
 import unittest
-from typing import *
+from typing import Self
 
-from preparse.core.enums import *
+from preparse.core.enums import Nargs, Tuning
 from preparse.core.Optdict import Optdict
-from preparse.core.warnings import *
+from preparse.core.warnings import (
+    PreparseAmbiguousOptionWarning,
+    PreparseInvalidOptionWarning,
+    PreparseRequiredArgumentWarning,
+    PreparseUnallowedArgumentWarning,
+    PreparseWarning,
+)
 
 
 class TestPreparse(unittest.TestCase):

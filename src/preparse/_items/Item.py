@@ -1,12 +1,12 @@
 __all__: list[str] = ["Item"]
 
 import abc
-from typing import *
+from typing import Self
 
 import setdoc
 from copyable import Copyable
 
-from preparse.core.enums import *
+from preparse.core.enums import Nargs, Tuning
 
 
 class Item(Copyable):

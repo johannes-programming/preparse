@@ -6,7 +6,7 @@ between the values zero, meaning no, and one, meaning yes."""
 __all__: list[str] = ["Nargs", "Tuning"]
 
 import enum
-from typing import *
+from typing import Any, Self
 
 
 class BaseEnum(enum.IntEnum):

@@ -1,7 +1,5 @@
 __all__: list[str] = ["deparse"]
 
-from typing import *
-
 from preparse._items.Item import Item
 
 

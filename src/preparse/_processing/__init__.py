@@ -1,19 +1,19 @@
 __all__: list[str] = ["process"]
 
 from types import FunctionType
-from typing import *
+from typing import Iterable
 
-from preparse._items import *
-from preparse._processing.deparsing import *
-from preparse._processing.digesting import *
-from preparse._processing.parsing import *
-from preparse._processing.pulling import *
-from preparse._utils import *
-from preparse.core.enums import *
+from preparse._items import Bundle, Item, Long, Option, Positional, Special
+from preparse._processing.deparsing import deparse
+from preparse._processing.digesting import digest
+from preparse._processing.parsing import parse
+from preparse._processing.pulling import pull
+from preparse._utils import dataprop
+from preparse.core.enums import Nargs, Tuning
 
 
 def process(
-    args: Optional[Iterable] = None,
+    args: Iterable | None = None,
     *,
     allowslong: bool,
     allowsshort: bool,

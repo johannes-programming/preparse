@@ -4,12 +4,25 @@ import math
 import tomllib
 import unittest
 from importlib import resources
-from typing import *
+from typing import Any, Self
 
 import click
 from click.testing import CliRunner
 
-from preparse.core import *
+from preparse.core import (
+    Click,
+    Nargs,
+    Optdict,
+    PreParser,
+    PreparseAmbiguousOptionWarning,
+    PreparseInvalidOptionWarning,
+    PreparseRequiredArgumentWarning,
+    PreparseUnallowedArgumentWarning,
+    PreparseWarning,
+    Tuning,
+    enums,
+    warnings,
+)
 
 
 class expit:

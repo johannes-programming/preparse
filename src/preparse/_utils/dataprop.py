@@ -1,6 +1,6 @@
 __all__: list[str] = ["dataprop"]
 
-from typing import *
+from typing import Any, Callable, Self
 
 
 def dataprop(func: Callable) -> property:

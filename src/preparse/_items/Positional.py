@@ -1,12 +1,12 @@
 __all__: list[str] = ["Positional"]
 
-from typing import *
+from typing import Any, Self
 
 import setdoc
 
 from preparse._items.Item import Item
 from preparse._utils.dataprop import dataprop
-from preparse.core.enums import *
+from preparse.core.enums import Nargs, Tuning
 
 
 class Positional(Item):

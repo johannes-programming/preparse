@@ -4,9 +4,22 @@ import math
 import tomllib
 import unittest
 from importlib import resources
-from typing import *
+from typing import Any, Self
 
-from preparse.core import *
+from preparse.core import (
+    Click,
+    Nargs,
+    Optdict,
+    PreParser,
+    PreparseAmbiguousOptionWarning,
+    PreparseInvalidOptionWarning,
+    PreparseRequiredArgumentWarning,
+    PreparseUnallowedArgumentWarning,
+    PreparseWarning,
+    Tuning,
+    enums,
+    warnings,
+)
 
 
 class utils:

@@ -5,7 +5,7 @@ __all__: list[str] = ["Click"]
 import dataclasses
 import functools
 import types
-from typing import *
+from typing import Any, Callable, Self, TYPE_CHECKING
 
 import overloadable
 import setdoc
