@@ -1,33 +1,34 @@
-from __future__ import annotations
-
-__all__: list[str] = ["Bundle"]
-
-from typing import Any, Self
+from typing import Any, Optional, Self
 
 import setdoc
 
 from preparse._items.Option import Option
+from preparse.enums.Nargs import Nargs
+
+__all__ = ["Bundle"]
 
 
 class Bundle(Option):
 
-    # chars: str
-    # joined: bool
-    # nargs: Nargs
-    # right: str | None
-
-    __slots__ = ()
+    __slots__ = (
+        "_chars",
+        "_joined",
+        "_nargs",
+        "_right",
+    )
 
     @setdoc.basic
     def __init__(
         self: Self,
         *,
         chars: str,
+        nargs: Any,
         joined: bool = False,
-        right: str | None = None,
+        right: Optional[str] = None,
     ) -> None:
         self.chars = chars
         self.joined = joined
+        self.nargs = nargs
         self.right = right
 
     @classmethod
@@ -62,12 +63,11 @@ class Bundle(Option):
 
     @property
     def chars(self: Self) -> str:
-        return self._data["chars"]  # type: ignore[no-any-return]
+        return self._chars
 
     @chars.setter
     def chars(self: Self, x: Any) -> None:
-        self._data = getattr(self, "_data", dict())
-        self._data["chars"] = str(x)
+        self._chars = str(x)
 
     def deparse(self: Self) -> list[str]:
         if self.right is None:
@@ -77,8 +77,17 @@ class Bundle(Option):
         else:
             return ["-" + self.chars, self.right]
 
-    def split(self: Self, *, allowslong: bool) -> list[Bundle]:
-        ans: list[Bundle]
+    @classmethod
+    def getslotnames(cls: type[Self]) -> tuple[str, ...]:
+        return (
+            "_chars",
+            "_joined",
+            "_nargs",
+            "_right",
+        )
+
+    def split(self: Self, *, allowslong: bool) -> list[Self]:
+        ans: list[Self]
         parts: list[str]
         x: str
         if allowslong:
@@ -87,7 +96,7 @@ class Bundle(Option):
             parts = self._split_shortonly(self.chars)
         ans = list()
         for x in parts:
-            ans.append(Bundle(chars=x))
+            ans.append(type(self)(chars=x, nargs=Nargs.NO_ARGUMENT))
         self.chars = ans[-1].chars
         ans[-1] = self
         return ans

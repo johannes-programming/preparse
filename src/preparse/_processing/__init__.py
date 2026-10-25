@@ -1,19 +1,19 @@
-__all__: list[str] = ["process"]
-
 from collections.abc import Iterable
 from types import FunctionType
-from typing import Any
+from typing import Any, Optional
 
-from preparse._items import Item, Positional
+from preparse._items.Item import Item
 from preparse._processing.deparsing import deparse
 from preparse._processing.digesting import digest
 from preparse._processing.parsing import parse
 from preparse._processing.pulling import pull
-from preparse.core.enums import Nargs, Tuning
+from preparse.enums.Tuning import Tuning
+
+__all__ = ["process"]
 
 
 def process(
-    args: Iterable[Any] | None = None,
+    args: Optional[Iterable[object]] = None,
     *,
     allowslong: bool,
     allowsshort: bool,
@@ -21,7 +21,7 @@ def process(
     expandsabbr: bool,
     expectsabbr: bool,
     expectsposix: bool,
-    optdict: dict[str, Nargs],
+    optdict: dict[Any, Any],
     prog: str,
     reconcilesorders: bool,
     special: Tuning,
@@ -29,10 +29,9 @@ def process(
 ) -> list[str]:
     "This method parses args."
     items: list[Item]
-    positionals: list[Positional]
-    positionals = pull(args)
+    items = pull(args)
     items = parse(
-        positionals,
+        items,
         allowslong=allowslong,
         allowsshort=allowsshort,
         expectsabbr=expectsabbr,

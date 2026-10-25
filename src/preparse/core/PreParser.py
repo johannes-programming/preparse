@@ -1,12 +1,9 @@
 from __future__ import annotations
 
-__all__: list[str] = ["PreParser"]
-
 import os
 import sys
-import types
-from collections.abc import Callable, Iterable
-from typing import Any, Self
+from collections.abc import Callable, Hashable, Iterable
+from typing import Any, Optional, Self, cast
 
 import click as cl
 import setdoc
@@ -16,8 +13,13 @@ from tofunc import tofunc
 
 from preparse._processing import process
 from preparse.core.Click import Click
-from preparse.core.enums import Nargs, Tuning
 from preparse.core.Optdict import Optdict
+from preparse.enums.Nargs import Nargs
+from preparse.enums.Tuning import Tuning
+from preparse.typing.SupportsKeysAndGetitem import SupportsKeysAndGetitem
+from preparse.warnings.PreparseWarning import PreparseWarning
+
+__all__ = ["PreParser"]
 
 
 class PreParser(Copyable):
@@ -28,18 +30,22 @@ class PreParser(Copyable):
     def __init__(
         self: Self,
         *,
-        allowslong: Any = True,
-        allowsshort: Any = True,
-        bundling: Any = Tuning.MAINTAIN,
-        expandsabbr: Any = True,
-        expectsabbr: Any = True,
-        expectsposix: Any = False,
-        optdict: Any = (),
-        prog: Any = None,
-        reconcilesorders: Any = True,
-        special: Any = Tuning.MAINTAIN,
-        warn: Callable[..., Any] = str,
+        allowslong: object = True,
+        allowsshort: object = True,
+        bundling: int = Tuning.MAINTAIN,
+        expandsabbr: object = True,
+        expectsabbr: object = True,
+        expectsposix: object = False,
+        optdict: (
+            SupportsKeysAndGetitem | Iterable[tuple[Hashable, object]]
+        ) = (),
+        prog: object = None,
+        reconcilesorders: object = True,
+        special: int = Tuning.MAINTAIN,
+        warn: Callable[[PreparseWarning], Any] = str,
     ) -> None:
+        self._data: dict[str, Any]
+        self._data = dict()
         self.allowslong = allowslong
         self.allowsshort = allowsshort
         self.bundling = bundling
@@ -58,33 +64,31 @@ class PreParser(Copyable):
 
     @property
     def allowslong(self: Self) -> bool:
-        return self._data["allowslong"]
+        return cast(bool, self._data["allowslong"])
 
     @allowslong.setter
-    def allowslong(self: Self, value: Any) -> None:
-        self._data = getattr(self, "_data", dict())
+    def allowslong(self: Self, value: object) -> None:
         self._data["allowslong"] = bool(value)
 
     @property
     def allowsshort(self: Self) -> bool:
-        return self._data["allowsshort"]  # type: ignore[no-any-return]
+        return cast(bool, self._data["allowsshort"])
 
     @allowsshort.setter
-    def allowsshort(self: Self, value: Any) -> None:
-        self._data = getattr(self, "_data", dict())
+    def allowsshort(self: Self, value: object) -> None:
         self._data["allowsshort"] = bool(value)
 
     @property
     def bundling(self: Self) -> Tuning:
         "This property decides how to approach the bundling of short options."
-        return self._data["bundling"]  # type: ignore[no-any-return]
+        return cast(Tuning, self._data["bundling"])
 
     @bundling.setter
-    def bundling(self: Self, value: Any) -> None:
-        self._data = getattr(self, "_data", dict())
+    def bundling(self: Self, value: int) -> None:
+        "This property decides how to approach the bundling of short options."
         self._data["bundling"] = Tuning(value)
 
-    def click(self: Self, cmd: Any = True, ctx: Any = True) -> Click:
+    def click(self: Self, cmd: object = True, ctx: object = True) -> Click:
         "This method returns a decorator that infuses the current instance into parse_args."
         return Click(parser=self, cmd=cmd, ctx=ctx)
 
@@ -94,55 +98,51 @@ class PreParser(Copyable):
 
     @property
     def expandsabbr(self: Self) -> bool:
-        return self._data["expandsabbr"]  # type: ignore[no-any-return]
+        return cast(bool, self._data["expandsabbr"])
 
     @expandsabbr.setter
-    def expandsabbr(self: Self, value: Any) -> None:
-        self._data = getattr(self, "_data", dict())
+    def expandsabbr(self: Self, value: object, /) -> None:
         self._data["expandsabbr"] = bool(value)
 
     @property
     def expectsabbr(self: Self) -> bool:
-        return self._data["expectsabbr"]  # type: ignore[no-any-return]
+        return cast(bool, self._data["expectsabbr"])
 
     @expectsabbr.setter
-    def expectsabbr(self: Self, value: Any) -> None:
-        self._data = getattr(self, "_data", dict())
+    def expectsabbr(self: Self, value: object) -> None:
         self._data["expectsabbr"] = bool(value)
 
     @property
     def expectsposix(self: Self) -> bool:
-        return self._data["expectsposix"]  # type: ignore[no-any-return]
+        return cast(bool, self._data["expectsposix"])
 
     @expectsposix.setter
-    def expectsposix(self: Self, value: Any) -> None:
-        self._data = getattr(self, "_data", dict())
+    def expectsposix(self: Self, value: object) -> None:
+        value_: Any
         if value == "infer":
-            self._data["expectsposix"] = bool(
-                os.environ.get("POSIXLY_CORRECT")
-            )
+            value_ = os.environ.get("POSIXLY_CORRECT")
         else:
-            self._data["expectsposix"] = bool(value)
+            value_ = value
+        self._data["expectsposix"] = bool(value_)
 
     @property
     def optdict(self: Self) -> Optdict:
         "This property gives a dictionary of options."
-        return self._data["optdict"]  # type: ignore[no-any-return]
+        return cast(Optdict, self._data["optdict"])
 
     @optdict.setter
     def optdict(self: Self, value: Any) -> None:
-        dataA: Optdict
-        self._data = getattr(self, "_data", dict())
+        "This property gives a dictionary of options."
+        value_: Optdict
         if "optdict" not in self._data.keys():
             self._data["optdict"] = Optdict()
-        dataA = Optdict(value)
+        value_ = Optdict(value)
         self._data["optdict"].clear()
-        self._data["optdict"].update(dataA)
-        self._data["optdict"] = self._data["optdict"]
+        self._data["optdict"].update(value_)
 
     def parse_args(
         self: Self,
-        args: Iterable[Any] | None = None,
+        args: Optional[Iterable[object]] = None,
     ) -> list[str]:
         "This method parses args."
         return process(args, **self.todict())
@@ -150,11 +150,11 @@ class PreParser(Copyable):
     @property
     def prog(self: Self) -> str:
         "This property represents the name of the program."
-        return self._data["prog"]  # type: ignore[no-any-return]
+        return cast(str, self._data["prog"])
 
     @prog.setter
-    def prog(self: Self, value: Any) -> None:
-        self._data = getattr(self, "_data", dict())
+    def prog(self: Self, value: object, /) -> None:
+        "This property represents the name of the program."
         if value is None:
             self._data["prog"] = str(os.path.basename(sys.argv[0]))
         else:
@@ -162,31 +162,34 @@ class PreParser(Copyable):
 
     @property
     def reconcilesorders(self: Self) -> bool:
-        return self._data["reconcilesorders"]  # type: ignore[no-any-return]
+        return cast(bool, self._data["reconcilesorders"])
 
     @reconcilesorders.setter
-    def reconcilesorders(self: Self, value: Any) -> None:
-        self._data = getattr(self, "_data", dict())
+    def reconcilesorders(self: Self, value: object, /) -> None:
         self._data["reconcilesorders"] = bool(value)
 
     def reflectClickCommand(self: Self, cmd: cl.Command) -> None:
         "This method causes the current instance to reflect a click.Command object."
+        optdict: dict[str, Nargs]
         nargs: Nargs
         opt: Any
-        optdict: dict[str, Nargs]
         param: Any
         optdict = dict()
         for param in cmd.params:
             if not isinstance(param, cl.Option):
                 continue
-            if param.is_flag or param.nargs == 0:
+            if param.is_flag:
                 nargs = Nargs.NO_ARGUMENT
-            elif param.nargs == 1:
-                nargs = Nargs.REQUIRED_ARGUMENT
-            else:
+            elif not param.nargs:
+                nargs = Nargs.NO_ARGUMENT
+            elif param.flag_value is not None:
                 nargs = Nargs.OPTIONAL_ARGUMENT
-            for opt in param.opts:
-                optdict[str(opt)] = nargs
+            elif param.prompt and not param.prompt_required:
+                nargs = Nargs.OPTIONAL_ARGUMENT
+            else:
+                nargs = Nargs.REQUIRED_ARGUMENT
+            for opt in param.opts + param.secondary_opts:
+                optdict[opt] = nargs
         self.optdict.clear()
         self.optdict.update(optdict)
 
@@ -197,11 +200,11 @@ class PreParser(Copyable):
     @property
     def special(self: Self) -> Tuning:
         "This Tuning property determines the approach towards the special argument."
-        return self._data["special"]  # type: ignore[no-any-return]
+        return cast(Tuning, self._data["special"])
 
     @special.setter
-    def special(self: Self, value: Any) -> None:
-        self._data = getattr(self, "_data", dict())
+    def special(self: Self, value: int, /) -> None:
+        "This Tuning property determines the approach towards the special argument."
         self._data["special"] = Tuning(value)
 
     def todict(self: Self) -> dict[str, Any]:
@@ -216,11 +219,16 @@ class PreParser(Copyable):
             return dict(ans)
 
     @property
-    def warn(self: Self) -> types.FunctionType:
+    def warn(
+        self: Self,
+    ) -> Callable[[PreparseWarning], Any]:
         "This property gives a function that takes in the warnings."
-        return self._data["warn"]  # type: ignore[no-any-return]
+        return cast(Callable[[PreparseWarning], Any], self._data["warn"])
 
     @warn.setter
-    def warn(self: Self, value: Callable[..., Any]) -> None:
-        self._data = getattr(self, "_data", dict())
+    def warn(
+        self: Self,
+        value: Callable[[PreparseWarning], Any],
+    ) -> None:
+        "This property gives a function that takes in the warnings."
         self._data["warn"] = tofunc(value)

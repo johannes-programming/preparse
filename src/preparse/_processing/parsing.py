@@ -1,23 +1,30 @@
-__all__: list[str] = ["parse"]
-
-from collections.abc import Generator, Iterable
+from collections.abc import Iterable
 from types import FunctionType
-from typing import Any
+from typing import Any, Generator
 
 from preparse._items.Bundle import Bundle
 from preparse._items.Item import Item
 from preparse._items.Long import Long
 from preparse._items.Option import Option
-from preparse._items.Positional import Positional
 from preparse._items.Special import Special
-from preparse.core.enums import Nargs
-from preparse.core.warnings import PreparseAmbiguousOptionWarning as PAOW
-from preparse.core.warnings import PreparseInvalidOptionWarning as PIOW
-from preparse.core.warnings import PreparseRequiredArgumentWarning as PRAW
-from preparse.core.warnings import PreparseUnallowedArgumentWarning as PUAW
+from preparse.enums.Nargs import Nargs
+from preparse.warnings.PreparseAmbiguousOptionWarning import (
+    PreparseAmbiguousOptionWarning as PAOW,
+)
+from preparse.warnings.PreparseInvalidOptionWarning import (
+    PreparseInvalidOptionWarning as PIOW,
+)
+from preparse.warnings.PreparseRequiredArgumentWarning import (
+    PreparseRequiredArgumentWarning as PRAW,
+)
+from preparse.warnings.PreparseUnallowedArgumentWarning import (
+    PreparseUnallowedArgumentWarning as PUAW,
+)
+
+__all__ = ["parse"]
 
 
-def parse(args: list[Positional], **kwargs: Any) -> list[Item]:
+def parse(args: list[Item], **kwargs: Any) -> list[Item]:
     return list(parse_generator(args, **kwargs))
 
 
@@ -25,12 +32,12 @@ def parse_bundling(
     arg: str,
     *,
     cause: FunctionType,
-    optdict: dict[str, Nargs],
+    optdict: dict[Any, Any],
 ) -> Bundle:
     ans: Bundle
     x: int
     y: str
-    ans = Bundle(chars="")
+    ans = Bundle(chars="", nargs=Nargs.NO_ARGUMENT)
     for x, y in enumerate(arg):
         if x == 0:
             continue
@@ -39,7 +46,6 @@ def parse_bundling(
             ans.nargs = optdict["-" + y]
         except KeyError:
             cause(PIOW, option=y, islong=False)
-            ans.nargs = Nargs.NO_ARGUMENT
         if ans.nargs == Nargs.NO_ARGUMENT:
             continue
         if ans.nargs == Nargs.OPTIONAL_ARGUMENT or x < len(arg) - 1:
@@ -53,28 +59,28 @@ def parse_cause(
     *,
     prog: str,
     warn: FunctionType,
-) -> FunctionType:
-    def ans(cls: type[Any], **kwargs: Any) -> None:
+) -> Any:
+    def ans(cls: type, **kwargs: Any) -> None:
         warn(cls(prog=prog, **kwargs))
 
-    return ans  # type: ignore[return-value]
+    return ans
 
 
 def parse_generator(
-    items: list[Positional],
+    items: list[Any],
     *,
     allowslong: bool,
     allowsshort: bool,
     expectsabbr: bool,
     expectsposix: bool,
-    optdict: dict[str, Nargs],
+    optdict: dict[Any, Any],
     prog: str,
     warn: FunctionType,
-) -> Generator[Item, None, None]:
+) -> Generator[Any, Any, Any]:
     broken: bool
     cause: FunctionType
-    item: Positional
-    last: Long | Bundle | None
+    last: Any
+    item: Any
     broken = not (allowslong or allowsshort)
     cause = parse_cause(prog=prog, warn=warn)
     last = None
@@ -137,7 +143,7 @@ def parse_long(
     *,
     cause: FunctionType,
     expectsabbr: bool,
-    optdict: dict[str, Nargs],
+    optdict: dict[Any, Any],
 ) -> Long:
     ans: Long
     parts: list[str]
@@ -187,9 +193,9 @@ def parse_option(
     *,
     cause: FunctionType,
     expectsabbr: bool,
-    optdict: dict[str, Nargs],
+    optdict: dict[Any, Any],
     **kwargs: Any,
-) -> Bundle | Long:
+) -> Option:
     if parse_islong(arg, **kwargs):
         return parse_long(
             arg,
