@@ -1,9 +1,9 @@
+__all__: list[str] = ["main", "run"]
+
 import argparse
 import json
 import subprocess
 from typing import Any, Optional
-
-__all__ = ["main", "run"]
 
 
 def env_create(env: str, python: Optional[str]) -> subprocess.CompletedProcess:  # type: ignore[type-arg]
