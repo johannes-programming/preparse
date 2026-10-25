@@ -1,1 +1,3 @@
-from preparse._utils.dataprop import *
+__all__: list[str] = ["dataprop"]
+
+from preparse._utils.dataprop import dataprop

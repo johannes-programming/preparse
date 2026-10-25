@@ -1,12 +1,12 @@
-from typing import *
+__all__: list[str] = ["Positional"]
+
+from typing import Any, Self
 
 import setdoc
 
 from preparse._items.Item import Item
 from preparse._utils.dataprop import dataprop
-from preparse.core.enums import *
-
-__all__ = ["Positional"]
+from preparse.core.enums import Nargs, Tuning
 
 
 class Positional(Item):
@@ -26,7 +26,7 @@ class Positional(Item):
         return self.value == "-" or not self.value.startswith("-")
 
     @classmethod
-    def sortkey(cls: type) -> int:
+    def sortkey(cls: type[Self]) -> int:
         return 2
 
     @dataprop
