@@ -5,7 +5,6 @@ from typing import Any, Self
 import setdoc
 
 from preparse._items.Item import Item
-from preparse._utils.dataprop import dataprop
 from preparse.core.enums import Nargs, Tuning
 
 
@@ -29,6 +28,11 @@ class Positional(Item):
     def sortkey(cls: type[Self]) -> int:
         return 2
 
-    @dataprop
-    def value(self: Self, x: Any) -> str:
-        return str(x)
+    @property
+    def value(self: Self) -> str:
+        return self._data["value"]
+
+    @value.setter
+    def value(self: Self, x: Any) -> None:
+        self._data = getattr(self, "_data", dict())
+        self._data["value"] = str(x)
