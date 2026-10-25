@@ -111,8 +111,8 @@ Options not found within the dictionary
 cause a ``preparse.PreparseInvalidOptionWarning``
 and are then assumed to have no arguments.
 
-``parse_args(args: Optional[Iterable] = None) -> list[str]``
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+``parse_args(args: Iterable | None = None) -> list[str]``
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 This method is at the core of the class.
 It returns a preparsed list of arguments.
