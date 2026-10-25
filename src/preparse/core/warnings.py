@@ -16,9 +16,6 @@ from datarepr import datarepr
 
 
 class PreparseWarning(Warning, Copyable):
-    args: tuple[str]
-    option: str
-    prog: str
 
     @setdoc.basic
     def __repr__(self: Self) -> str:
@@ -29,7 +26,7 @@ class PreparseWarning(Warning, Copyable):
         return f"{self.prog}: {self.getmsg()}"
 
     @property
-    def args(self: Self) -> tuple[str]:
+    def args(self: Self) -> tuple[str]:  # type: ignore[override]
         "This property returns (str(self),)."
         return (str(self),)
 
@@ -51,7 +48,7 @@ class PreparseWarning(Warning, Copyable):
 
     @property
     def prog(self: Self) -> str:
-        return self._data["prog"]
+        return self._data["prog"]  # type: ignore[no-any-return]
 
     @prog.setter
     def prog(self: Self, value: Any) -> None:
@@ -72,26 +69,29 @@ class PreparseWarning(Warning, Copyable):
 
 class PreparseDualWarning(PreparseWarning):
 
-    args: tuple[str]
-    option: str
-    prog: str
-
     @setdoc.basic
     def __init__(self: Self, *, islong: Any, option: Any, prog: Any) -> None:
         self.prog = prog
         self.option = option
         self.islong = islong
 
+    @staticmethod
+    @abstractmethod
+    def _longmsg() -> str: ...
+    @staticmethod
+    @abstractmethod
+    def _shortmsg() -> str: ...
+
     def getmsg(self: Self) -> str:
         "This method returns the core message."
         if self.islong:
-            return type(self)._longmsg % self.option
+            return self._longmsg() % self.option
         else:
-            return type(self)._shortmsg % self.option
+            return self._shortmsg() % self.option
 
     @property
     def islong(self: Self) -> bool:
-        return self._data["islong"]
+        return self._data["islong"]  # type: ignore[no-any-return]
 
     @islong.setter
     def islong(self: Self, value: Any) -> None:
@@ -100,33 +100,32 @@ class PreparseDualWarning(PreparseWarning):
 
 
 class PreparseInvalidOptionWarning(PreparseDualWarning):
-    args: tuple[str]
-    option: str
-    prog: str
-    _longmsg = "unrecognized option '%s'"
-    _shortmsg = "invalid option -- '%s'"
+    @staticmethod
+    def _longmsg() -> str:
+        return "unrecognized option '%s'"
+
+    @staticmethod
+    def _shortmsg() -> str:
+        return "invalid option -- '%s'"
 
 
 class PreparseRequiredArgumentWarning(PreparseDualWarning):
-    args: tuple[str]
-    option: str
-    prog: str
-    _longmsg = "option '%s' requires an argument"
-    _shortmsg = "option requires an argument -- '%s'"
+
+    @staticmethod
+    def _longmsg() -> str:
+        return "option '%s' requires an argument"
+
+    @staticmethod
+    def _shortmsg() -> str:
+        return "option requires an argument -- '%s'"
 
 
 class PreparseLongonlyWarning(PreparseWarning):
-    args: tuple[str]
-    option: str
-    prog: str
+    pass
     # only possible for long options
 
 
 class PreparseAmbiguousOptionWarning(PreparseLongonlyWarning):
-    args: tuple[str]
-    option: str
-    possibilities: tuple[str, ...]
-    prog: str
 
     @setdoc.basic
     def __init__(
@@ -147,7 +146,7 @@ class PreparseAmbiguousOptionWarning(PreparseLongonlyWarning):
 
     @property
     def possibilities(self: Self) -> tuple[str, ...]:
-        return self._data["possibilities"]
+        return self._data["possibilities"]  # type: ignore[no-any-return]
 
     @possibilities.setter
     def possibilities(self: Self, value: Iterable[Any]) -> None:
@@ -156,9 +155,7 @@ class PreparseAmbiguousOptionWarning(PreparseLongonlyWarning):
 
 
 class PreparseUnallowedArgumentWarning(PreparseLongonlyWarning):
-    args: tuple[str]
-    option: str
-    prog: str
+
     # option is always full key without value
 
     @setdoc.basic

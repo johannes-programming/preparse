@@ -4,14 +4,14 @@ import operator
 from typing import Any, Self, SupportsIndex
 
 from preparse._items.Item import Item
-from preparse.core.enums import Nargs, Tuning
+from preparse.core.enums import Nargs
 
 
 class Option(Item):
 
-    joined: bool
-    nargs: Nargs
-    right: str | None
+    # joined: bool
+    # nargs: Nargs
+    # right: str | None
 
     __slots__ = ()
 
@@ -20,7 +20,7 @@ class Option(Item):
 
     @property
     def joined(self: Self) -> bool:
-        return self._data["joined"]
+        return self._data["joined"]  # type: ignore[no-any-return]
 
     @joined.setter
     def joined(self: Self, x: SupportsIndex) -> None:
@@ -29,7 +29,7 @@ class Option(Item):
 
     @property
     def nargs(self: Self) -> Nargs:
-        return self._data["nargs"]
+        return self._data["nargs"]  # type: ignore[no-any-return]
 
     @nargs.setter
     def nargs(self: Self, x: Any) -> None:
@@ -38,7 +38,7 @@ class Option(Item):
 
     @property
     def right(self: Self) -> str | None:
-        return self._data["right"]
+        return self._data["right"]  # type: ignore[no-any-return]
 
     @right.setter
     def right(self: Self, x: Any) -> None:
