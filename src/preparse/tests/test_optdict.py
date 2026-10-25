@@ -1,3 +1,5 @@
+__all__: list[str] = ["TestPreparse"]
+
 import enum
 import tomllib
 import unittest
@@ -9,8 +11,6 @@ from preparse._tests.secondary import secondary
 from preparse.core.Optdict import Optdict
 from preparse.core.PreParser import PreParser
 from preparse.enums.Nargs import Nargs
-
-__all__ = ["TestPreparse"]
 
 
 class Utils(enum.Enum):
@@ -26,8 +26,8 @@ class Utils(enum.Enum):
 class TestPreparse(unittest.TestCase):
 
     def test_optdict_copy(self: Self) -> None:
-        original: Optdict
         dublicate: Optdict
+        original: Optdict
         original = Optdict({"--foo": 0, "-bar": 1})
         dublicate = original.copy()
         self.assertEqual(original, dublicate)

@@ -1,3 +1,5 @@
+__all__: list[str] = ["TestDataToml"]
+
 import enum
 import math
 import tomllib
@@ -7,8 +9,6 @@ from importlib import resources
 from typing import Any, Self
 
 from preparse.core.PreParser import PreParser
-
-__all__ = ["TestDataToml"]
 
 
 class Utils(enum.Enum):
@@ -32,8 +32,8 @@ class Utils(enum.Enum):
 class TestDataToml(unittest.TestCase):
 
     def test_0(self: Self) -> None:
-        name: str
         kwargs: dict[str, Any]
+        name: str
         for name, kwargs in Utils.utils.data.items():
             with self.subTest(msg=name, **kwargs):
                 self.parse(**kwargs)
@@ -51,8 +51,8 @@ class TestDataToml(unittest.TestCase):
         data: dict[str, Any]
         erranswer: list[Any]
         msg: str
-        superanswer: list[Any]
         parser: PreParser
+        superanswer: list[Any]
         capture = list()
 
         def warn(value: Any) -> None:

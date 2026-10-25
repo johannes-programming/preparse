@@ -1,8 +1,8 @@
+__all__: list[str] = ["PreparseRequiredArgumentWarning"]
+
 from typing import Self
 
 from preparse.warnings.PreparseDualWarning import PreparseDualWarning
-
-__all__ = ["PreparseRequiredArgumentWarning"]
 
 
 class PreparseRequiredArgumentWarning(PreparseDualWarning):

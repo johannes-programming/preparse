@@ -1,13 +1,13 @@
-import unittest
+__all__: list[str] = ["test"]
 
-__all__ = ["test"]
+import unittest
 
 
 def test() -> unittest.TextTestResult:
     "This function runs all the tests."
     loader: unittest.TestLoader
-    tests: unittest.TestSuite
     runner: unittest.TextTestRunner
+    tests: unittest.TestSuite
     loader = unittest.TestLoader()
     tests = loader.discover(start_dir="preparse.tests")
     runner = unittest.TextTestRunner()

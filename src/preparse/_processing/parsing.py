@@ -1,3 +1,5 @@
+__all__: list[str] = ["parse"]
+
 from collections.abc import Iterable
 from types import FunctionType
 from typing import Any, Generator
@@ -20,8 +22,6 @@ from preparse.warnings.PreparseRequiredArgumentWarning import (
 from preparse.warnings.PreparseUnallowedArgumentWarning import (
     PreparseUnallowedArgumentWarning as PUAW,
 )
-
-__all__ = ["parse"]
 
 
 def parse(args: list[Item], **kwargs: Any) -> list[Item]:
@@ -79,8 +79,8 @@ def parse_generator(
 ) -> Generator[Any, Any, Any]:
     broken: bool
     cause: FunctionType
-    last: Any
     item: Any
+    last: Any
     broken = not (allowslong or allowsshort)
     cause = parse_cause(prog=prog, warn=warn)
     last = None
