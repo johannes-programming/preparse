@@ -6,6 +6,7 @@ from typing import Any, Self, SupportsIndex
 import setdoc
 
 from preparse._items.Option import Option
+from preparse._utils.dataprop import dataprop
 from preparse.core.enums import Nargs, Tuning
 
 
@@ -38,17 +39,10 @@ class Long(Option):
     def abbr(self: Self) -> str:
         return self.fullkey[: self.abbrlen]
 
-    @property
-    def abbrlen(self: Self) -> int | None:
-        return self._data["abbrlen"]
-
-    @abbrlen.setter
-    def abbrlen(self: Self, x: SupportsIndex | None) -> None:
-        self._data = getattr(self, "_data", dict())
+    @dataprop
+    def abbrlen(self: Self, x: SupportsIndex | None) -> int | None:
         if x is not None:
-            self._data["abbrlen"] = operator.index(x)
-        else:
-            self._data["abbrlen"] = None
+            return operator.index(x)
 
     def deparse(self: Self) -> list[str]:
         if self.right is None:
@@ -58,11 +52,6 @@ class Long(Option):
         else:
             return [self.abbr, self.right]
 
-    @property
-    def fullkey(self: Self) -> str:
-        return self._data["fullkey"]
-
-    @fullkey.setter
-    def fullkey(self: Self, x: Any) -> None:
-        self._data = getattr(self, "_data", dict())
-        self._data["fullkey"] = str(x)
+    @dataprop
+    def fullkey(self: Self, x: Any) -> str:
+        return str(x)

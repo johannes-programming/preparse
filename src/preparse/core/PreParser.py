@@ -15,6 +15,7 @@ from datarepr import datarepr
 from tofunc import tofunc
 
 from preparse._processing import process
+from preparse._utils.dataprop import dataprop
 from preparse.core.Click import Click
 from preparse.core.enums import Nargs, Tuning
 from preparse.core.Optdict import Optdict
@@ -75,33 +76,18 @@ class PreParser(Copyable):
     def __repr__(self: Self) -> str:
         return datarepr(type(self).__name__, **self.todict())
 
-    @property
-    def allowslong(self: Self) -> bool:
-        return self._data["allowslong"]
+    @dataprop
+    def allowslong(self: Self, value: Any) -> bool:
+        return bool(value)
 
-    @allowslong.setter
-    def allowslong(self: Self, value: Any) -> None:
-        self._data = getattr(self, "_data", dict())
-        self._data["allowslong"] = bool(value)
+    @dataprop
+    def allowsshort(self: Self, value: Any) -> bool:
+        return bool(value)
 
-    @property
-    def allowsshort(self: Self) -> bool:
-        return self._data["allowsshort"]
-
-    @allowsshort.setter
-    def allowsshort(self: Self, value: Any) -> None:
-        self._data = getattr(self, "_data", dict())
-        self._data["allowsshort"] = bool(value)
-
-    @property
-    def bundling(self: Self) -> Tuning:
+    @dataprop
+    def bundling(self: Self, value: Any) -> Tuning:
         "This property decides how to approach the bundling of short options."
-        return self._data["bundling"]
-
-    @bundling.setter
-    def bundling(self: Self, value: Any) -> None:
-        self._data = getattr(self, "_data", dict())
-        self._data["bundling"] = Tuning(value)
+        return Tuning(value)
 
     def click(self: Self, cmd: Any = True, ctx: Any = True) -> Click:
         "This method returns a decorator that infuses the current instance into parse_args."
@@ -111,53 +97,31 @@ class PreParser(Copyable):
     def copy(self: Self) -> Self:
         return type(self)(**self.todict())
 
-    @property
-    def expandsabbr(self: Self) -> bool:
-        return self._data["expandsabbr"]
+    @dataprop
+    def expandsabbr(self: Self, value: Any) -> bool:
+        return bool(value)
 
-    @expandsabbr.setter
-    def expandsabbr(self: Self, value: Any) -> None:
-        self._data = getattr(self, "_data", dict())
-        self._data["expandsabbr"] = bool(value)
+    @dataprop
+    def expectsabbr(self: Self, value: Any) -> bool:
+        return bool(value)
 
-    @property
-    def expectsabbr(self: Self) -> bool:
-        return self._data["expectsabbr"]
-
-    @expectsabbr.setter
-    def expectsabbr(self: Self, value: Any) -> None:
-        self._data = getattr(self, "_data", dict())
-        self._data["expectsabbr"] = bool(value)
-
-    @property
-    def expectsposix(self: Self) -> bool:
-        return self._data["expectsposix"]
-
-    @expectsposix.setter
-    def expectsposix(self: Self, value: Any) -> None:
-        self._data = getattr(self, "_data", dict())
+    @dataprop
+    def expectsposix(self: Self, value: Any) -> bool:
         if value == "infer":
-            self._data["expectsposix"] = bool(
-                os.environ.get("POSIXLY_CORRECT")
-            )
+            return bool(os.environ.get("POSIXLY_CORRECT"))
         else:
-            self._data["expectsposix"] = bool(value)
+            return bool(value)
 
-    @property
-    def optdict(self: Self) -> Optdict:
+    @dataprop
+    def optdict(self: Self, value: Any) -> Optdict:
         "This property gives a dictionary of options."
-        return self._data["optdict"]
-
-    @optdict.setter
-    def optdict(self: Self, value: Any) -> None:
         dataA: Optdict
-        self._data = getattr(self, "_data", dict())
         if "optdict" not in self._data.keys():
             self._data["optdict"] = Optdict()
         dataA = Optdict(value)
         self._data["optdict"].clear()
         self._data["optdict"].update(dataA)
-        self._data["optdict"] = self._data["optdict"]
+        return self._data["optdict"]
 
     def parse_args(
         self: Self,
@@ -166,27 +130,17 @@ class PreParser(Copyable):
         "This method parses args."
         return process(args, **self.todict())
 
-    @property
-    def prog(self: Self) -> str:
+    @dataprop
+    def prog(self: Self, value: Any) -> str:
         "This property represents the name of the program."
-        return self._data["prog"]
-
-    @prog.setter
-    def prog(self: Self, value: Any) -> None:
-        self._data = getattr(self, "_data", dict())
         if value is None:
-            self._data["prog"] = str(os.path.basename(sys.argv[0]))
+            return str(os.path.basename(sys.argv[0]))
         else:
-            self._data["prog"] = str(value)
+            return str(value)
 
-    @property
-    def reconcilesorders(self: Self) -> bool:
-        return self._data["reconcilesorders"]
-
-    @reconcilesorders.setter
-    def reconcilesorders(self: Self, value: Any) -> None:
-        self._data = getattr(self, "_data", dict())
-        self._data["reconcilesorders"] = bool(value)
+    @dataprop
+    def reconcilesorders(self: Self, value: Any) -> bool:
+        return bool(value)
 
     def reflectClickCommand(self: Self, cmd: cl.Command) -> None:
         "This method causes the current instance to reflect a click.Command object."
@@ -213,15 +167,10 @@ class PreParser(Copyable):
         "This method causes the current instance to reflect a click.Context object."
         self.prog = ctx.info_name
 
-    @property
-    def special(self: Self) -> Tuning:
+    @dataprop
+    def special(self: Self, value: Any) -> Tuning:
         "This Tuning property determines the approach towards the special argument."
-        return self._data["special"]
-
-    @special.setter
-    def special(self: Self, value: Any) -> None:
-        self._data = getattr(self, "_data", dict())
-        self._data["special"] = Tuning(value)
+        return Tuning(value)
 
     def todict(self: Self) -> dict[str, Any]:
         "This method returns a dict representing the current instance."
@@ -234,12 +183,7 @@ class PreParser(Copyable):
         else:
             return dict(ans)
 
-    @property
-    def warn(self: Self) -> types.FunctionType:
+    @dataprop
+    def warn(self: Self, value: Callable[..., Any]) -> types.FunctionType:
         "This property gives a function that takes in the warnings."
-        return self._data["warn"]
-
-    @warn.setter
-    def warn(self: Self, value: Callable[..., Any]) -> None:
-        self._data = getattr(self, "_data", dict())
-        self._data["warn"] = tofunc(value)
+        return tofunc(value)
