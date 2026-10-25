@@ -1,6 +1,6 @@
-__all__: list[str] = ["PreparseLongonlyWarning"]
-
 from preparse.warnings.PreparseWarning import PreparseWarning
+
+__all__ = ["PreparseLongonlyWarning"]
 
 
 class PreparseLongonlyWarning(PreparseWarning):

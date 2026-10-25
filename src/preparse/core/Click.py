@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-__all__: list[str] = ["Click"]
-
 import dataclasses
 import functools
 from collections.abc import Callable
@@ -13,6 +11,8 @@ from copyable import Copyable
 
 if TYPE_CHECKING:
     from .PreParser import PreParser
+
+__all__ = ["Click"]
 
 
 @dataclasses.dataclass

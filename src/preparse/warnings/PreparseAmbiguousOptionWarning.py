@@ -1,11 +1,11 @@
-__all__: list[str] = ["PreparseAmbiguousOptionWarning"]
-
 from collections.abc import Iterable
 from typing import Any, Self, cast
 
 import setdoc
 
 from preparse.warnings.PreparseLongonlyWarning import PreparseLongonlyWarning
+
+__all__ = ["PreparseAmbiguousOptionWarning"]
 
 
 class PreparseAmbiguousOptionWarning(PreparseLongonlyWarning):
@@ -14,9 +14,9 @@ class PreparseAmbiguousOptionWarning(PreparseLongonlyWarning):
     def __post_init__(
         self: Self,
         *,
+        prog: object,
         option: object,
         possibilities: Iterable[object],
-        prog: object,
     ) -> None:
         self.prog = prog
         self.option = option

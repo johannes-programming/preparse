@@ -1,10 +1,10 @@
-__all__: list[str] = ["function", "main"]
-
 import math
 
 import click
 
 from preparse.core.PreParser import PreParser
+
+__all__ = ["function", "main"]
 
 
 def function(x: float) -> float:

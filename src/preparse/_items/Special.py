@@ -1,10 +1,10 @@
-__all__: list[str] = ["Special"]
-
 from typing import Self
 
 import setdoc
 
 from preparse._items.Item import Item
+
+__all__ = ["Special"]
 
 
 class Special(Item):

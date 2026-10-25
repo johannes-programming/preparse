@@ -1,11 +1,11 @@
-__all__: list[str] = ["Bundle"]
-
 from typing import Any, Optional, Self
 
 import setdoc
 
 from preparse._items.Option import Option
 from preparse.enums.Nargs import Nargs
+
+__all__ = ["Bundle"]
 
 
 class Bundle(Option):
@@ -22,8 +22,8 @@ class Bundle(Option):
         self: Self,
         *,
         chars: str,
-        joined: bool = False,
         nargs: Any,
+        joined: bool = False,
         right: Optional[str] = None,
     ) -> None:
         self.chars = chars
