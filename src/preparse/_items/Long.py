@@ -1,23 +1,23 @@
+__all__: list[str] = ["Long"]
+
 import operator
-from typing import *
+from typing import Any, Self, SupportsIndex
 
 import setdoc
 
 from preparse._items.Option import Option
 from preparse._utils.dataprop import dataprop
-from preparse.core.enums import *
-
-__all__ = ["Long"]
+from preparse.core.enums import Nargs, Tuning
 
 
 class Long(Option):
 
     abbr: str
-    abbrlen: Optional[int]
+    abbrlen: int | None
     fullkey: str
     joined: bool
     nargs: Nargs
-    right: Optional[str]
+    right: str | None
 
     __slots__ = ()
 
@@ -25,10 +25,10 @@ class Long(Option):
     def __init__(
         self: Self,
         *,
+        abbrlen: int | None = None,
         fullkey: str,
-        abbrlen: Optional[int] = None,
         joined: bool | str = False,
-        right: Optional[str] = None,
+        right: str | None = None,
     ) -> None:
         self.fullkey = fullkey
         self.abbrlen = abbrlen
@@ -40,7 +40,7 @@ class Long(Option):
         return self.fullkey[: self.abbrlen]
 
     @dataprop
-    def abbrlen(self: Self, x: Optional[SupportsIndex]) -> Optional[int]:
+    def abbrlen(self: Self, x: SupportsIndex | None) -> int | None:
         if x is not None:
             return operator.index(x)
 

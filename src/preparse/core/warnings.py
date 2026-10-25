@@ -1,19 +1,20 @@
-from abc import abstractmethod
-from typing import *
-
-import setdoc
-from copyable import Copyable
-from datarepr import datarepr
-
-from preparse._utils import *
-
-__all__ = [
+__all__: list[str] = [
     "PreparseAmbiguousOptionWarning",
     "PreparseInvalidOptionWarning",
     "PreparseRequiredArgumentWarning",
     "PreparseUnallowedArgumentWarning",
     "PreparseWarning",
 ]
+
+from abc import abstractmethod
+from collections.abc import Iterable
+from typing import Any, Self
+
+import setdoc
+from copyable import Copyable
+from datarepr import datarepr
+
+from preparse._utils import dataprop
 
 
 class PreparseWarning(Warning, Copyable):
@@ -49,9 +50,9 @@ class PreparseWarning(Warning, Copyable):
     def prog(self: Self, value: Any) -> str:
         return str(value)
 
-    def todict(self: Self) -> dict:
+    def todict(self: Self) -> dict[str, Any]:
         "This method returns a dict representing the current instance."
-        ans: dict
+        ans: dict[str, Any]
         try:
             ans = self._data
         except AttributeError:
@@ -68,7 +69,7 @@ class PreparseDualWarning(PreparseWarning):
     prog: str
 
     @setdoc.basic
-    def __init__(self: Self, *, prog: Any, option: Any, islong: Any) -> None:
+    def __init__(self: Self, *, islong: Any, option: Any, prog: Any) -> None:
         self.prog = prog
         self.option = option
         self.islong = islong
@@ -116,7 +117,7 @@ class PreparseAmbiguousOptionWarning(PreparseLongonlyWarning):
 
     @setdoc.basic
     def __init__(
-        self: Self, *, prog: Any, option: Any, possibilities: Iterable
+        self: Self, *, option: Any, possibilities: Iterable[Any], prog: Any
     ) -> None:
         self.prog = prog
         self.option = option
@@ -132,7 +133,7 @@ class PreparseAmbiguousOptionWarning(PreparseLongonlyWarning):
         return ans
 
     @dataprop
-    def possibilities(self: Self, value: Iterable) -> tuple[str, ...]:
+    def possibilities(self: Self, value: Iterable[Any]) -> tuple[str, ...]:
         return tuple(map(str, value))
 
 
@@ -143,7 +144,7 @@ class PreparseUnallowedArgumentWarning(PreparseLongonlyWarning):
     # option is always full key without value
 
     @setdoc.basic
-    def __init__(self: Self, *, prog: Any, option: Any) -> None:
+    def __init__(self: Self, *, option: Any, prog: Any) -> None:
         self.prog = prog
         self.option = option
 
