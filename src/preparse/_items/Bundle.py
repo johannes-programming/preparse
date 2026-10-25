@@ -1,20 +1,20 @@
+from __future__ import annotations
+
 __all__: list[str] = ["Bundle"]
 
 from typing import Any, Self
 
 import setdoc
 
-from preparse._items.Item import Item
 from preparse._items.Option import Option
-from preparse.core.enums import Nargs, Tuning
 
 
 class Bundle(Option):
 
-    chars: str
-    joined: bool
-    nargs: Nargs
-    right: str | None
+    # chars: str
+    # joined: bool
+    # nargs: Nargs
+    # right: str | None
 
     __slots__ = ()
 
@@ -37,7 +37,7 @@ class Bundle(Option):
         ans = list()
         for x in chars:
             if x == "-":
-                ans[-1].chars += "-"
+                ans[-1] += "-"
             else:
                 ans.append(x)
         return ans
@@ -62,7 +62,7 @@ class Bundle(Option):
 
     @property
     def chars(self: Self) -> str:
-        return self._data["chars"]
+        return self._data["chars"]  # type: ignore[no-any-return]
 
     @chars.setter
     def chars(self: Self, x: Any) -> None:
@@ -77,8 +77,8 @@ class Bundle(Option):
         else:
             return ["-" + self.chars, self.right]
 
-    def split(self: Self, *, allowslong: bool) -> list[Item]:
-        ans: list[Self]
+    def split(self: Self, *, allowslong: bool) -> list[Bundle]:
+        ans: list[Bundle]
         parts: list[str]
         x: str
         if allowslong:

@@ -8,14 +8,7 @@ from preparse._items.Long import Long
 from preparse._items.Option import Option
 from preparse._items.Positional import Positional
 from preparse._items.Special import Special
-from preparse.core.enums import Nargs, Tuning
-from preparse.core.warnings import (
-    PreparseAmbiguousOptionWarning,
-    PreparseInvalidOptionWarning,
-    PreparseRequiredArgumentWarning,
-    PreparseUnallowedArgumentWarning,
-    PreparseWarning,
-)
+from preparse.core.enums import Tuning
 
 
 def digest(
@@ -146,7 +139,7 @@ def digest_order(
         if isinstance(ans[index], Special):
             comp = True
             break
-        if not ans[index].isobvious():
+        if not ans[index].isobvious():  # type: ignore[attr-defined]
             comp = False
     if not comp:
         ans.insert(index + 1, Special())
@@ -183,9 +176,9 @@ def digest_special_max(items: list[Item]) -> list[Item]:
             break
         if isinstance(ans[index], Positional):
             continue
-        if ans[index].ishungry():
-            ans[index].joined = False
-            ans[index].right = "--"
+        if ans[index].ishungry():  # type: ignore[attr-defined]
+            ans[index].joined = False  # type: ignore[attr-defined]
+            ans[index].right = "--"  # type: ignore[attr-defined]
         ans.insert(index + 1, Special())
         break
     return ans
@@ -215,7 +208,7 @@ def digest_special_min(
             break
         if isinstance(ans[index], Special):
             break
-        isdel = ans[index].isobvious()
+        isdel = ans[index].isobvious()  # type: ignore[attr-defined]
         if not (isdel or isposix):
             break
     if isdel:

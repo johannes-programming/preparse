@@ -32,7 +32,7 @@ class Click(Copyable):
             return "method"
         return "other"
 
-    @__call__.overload("function")
+    @__call__.overload("function")  # type: ignore[no-redef]
     def __call__(self: Self, target: types.FunctionType) -> types.FunctionType:
         @functools.wraps(target)
         def ans(cmd: Any, ctx: Any, args: Any) -> Any:
@@ -46,13 +46,13 @@ class Click(Copyable):
 
         return ans
 
-    @__call__.overload("method")
+    @__call__.overload("method")  # type: ignore[no-redef]
     def __call__(self: Self, target: types.MethodType) -> types.MethodType:
         func: Callable[..., Any]
         func = self(target.__func__)
         return types.MethodType(func, target.__self__)
 
-    @__call__.overload("other")
+    @__call__.overload("other")  # type: ignore[no-redef]
     def __call__(self: Self, target: Any) -> Any:
         target.parse_args = self(target.parse_args)
         return target

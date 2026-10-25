@@ -9,24 +9,12 @@ from typing import Any, Self
 import click
 from click.testing import CliRunner
 
-from preparse.core import (
-    Click,
-    Nargs,
-    Optdict,
-    PreparseAmbiguousOptionWarning,
-    PreparseInvalidOptionWarning,
-    PreParser,
-    PreparseRequiredArgumentWarning,
-    PreparseUnallowedArgumentWarning,
-    PreparseWarning,
-    Tuning,
-    enums,
-    warnings,
-)
+from preparse.core import PreParser
 
 
 class expit:
 
+    @staticmethod
     def function(x: float) -> float:
         p: float
         try:
@@ -35,7 +23,7 @@ class expit:
             p = float("+inf")
         return 1 / (1 + p)
 
-    @PreParser(reconcilesorders=True, expectsposix=False).click()
+    @PreParser(reconcilesorders=True, expectsposix=False).click()  # type: ignore
     @click.command(add_help_option=False)
     @click.help_option("-h", "--help")
     @click.version_option("1.2.3", "-V", "--version")
@@ -46,6 +34,7 @@ class expit:
 
 
 class utils:
+    @staticmethod
     def get_data() -> dict[str, Any]:
         data: dict[str, Any]
         text: str
@@ -53,6 +42,7 @@ class utils:
         data = tomllib.loads(text)
         return data
 
+    @staticmethod
     def istestable(x: Any) -> bool:
         if not isinstance(x, float):
             return True
