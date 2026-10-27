@@ -89,9 +89,7 @@ class PreparseRequiredArgumentWarning(PreparseDualWarning):
     _shortmsg = "option requires an argument -- '%s'"
 
 
-class PreparseLongonlyWarning(
-    PreparseWarning
-): ...  # only possible for long options
+class PreparseLongonlyWarning(PreparseWarning): ...  # only possible for long options
 
 
 class PreparseAmbiguousOptionWarning(PreparseLongonlyWarning):

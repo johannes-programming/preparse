@@ -34,9 +34,7 @@ class Optdict(cmp3.CmpABC, datahold.HoldDict, Scaevola, Copyable):
 
     @setdoc.basic
     def __format__(self: Self, format_spec: Any = "", /) -> str:
-        return datarepr(
-            type(self).__name__, format(dict(self._data), format_spec)
-        )
+        return datarepr(type(self).__name__, format(dict(self._data), format_spec))
 
     @setdoc.basic
     def __init__(self: Self, data: Iterable = (), /, **kwargs: Any) -> None:
