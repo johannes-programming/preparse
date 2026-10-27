@@ -15,4 +15,9 @@
 --sort
 --key=project
 --key=urls
+--sort
+--key=tool
+--sort
+--key=tool
+--key=mypy
 pyproject.toml
