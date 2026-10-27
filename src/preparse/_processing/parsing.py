@@ -149,11 +149,8 @@ def parse_long(
         ans.right = parts.pop()
     ans.abbrlen = len(ans.fullkey)
     if ans.fullkey in optdict.keys():
-        ans.nargs = optdict[ans.fullkey]
-        if (ans.nargs == Nargs.NO_ARGUMENT) and (ans.right is not None):
-            cause(PUAW, option=ans.fullkey)
-        return ans
-    if expectsabbr:
+        parts = [ans.fullkey]
+    elif expectsabbr:
         parts = parse_long_startswith(ans.abbr, keys=optdict.keys())
     else:
         parts = list()  # can be assumed
