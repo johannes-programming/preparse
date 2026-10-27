@@ -32,7 +32,7 @@ def parse_bundling(
     arg: str,
     *,
     cause: FunctionType,
-    optdict: dict[Any, Any],
+    optDict: dict[Any, Any],
 ) -> Bundle:
     ans: Bundle
     x: int
@@ -43,7 +43,7 @@ def parse_bundling(
             continue
         ans.chars += y
         try:
-            ans.nargs = optdict["-" + y]
+            ans.nargs = optDict["-" + y]
         except KeyError:
             cause(PIOW, option=y, islong=False)
         if ans.nargs == Nargs.NO_ARGUMENT:
@@ -73,7 +73,7 @@ def parse_generator(
     allowsshort: bool,
     expectsabbr: bool,
     expectsposix: bool,
-    optdict: dict[Any, Any],
+    optDict: dict[Any, Any],
     prog: str,
     warn: FunctionType,
 ) -> Generator[Any, Any, Any]:
@@ -111,7 +111,7 @@ def parse_generator(
             allowsshort=allowsshort,
             cause=cause,
             expectsabbr=expectsabbr,
-            optdict=optdict,
+            optDict=optDict,
         )
         if not last.ishungry():
             yield last
@@ -143,7 +143,7 @@ def parse_long(
     *,
     cause: FunctionType,
     expectsabbr: bool,
-    optdict: dict[Any, Any],
+    optDict: dict[Any, Any],
 ) -> Long:
     ans: Long
     parts: list[str]
@@ -153,10 +153,10 @@ def parse_long(
         ans.joined = True
         ans.right = parts.pop()
     ans.abbrlen = len(ans.fullkey)
-    if ans.fullkey in optdict.keys():
+    if ans.fullkey in optDict.keys():
         parts = [ans.fullkey]
     elif expectsabbr:
-        parts = parse_long_startswith(ans.abbr, keys=optdict.keys())
+        parts = parse_long_startswith(ans.abbr, keys=optDict.keys())
     else:
         parts = list()  # can be assumed
     if len(parts) == 0:
@@ -168,7 +168,7 @@ def parse_long(
         cause(PAOW, option=arg, possibilities=parts)
         return ans
     (ans.fullkey,) = parts
-    ans.nargs = optdict[ans.fullkey]
+    ans.nargs = optDict[ans.fullkey]
     if (ans.nargs == Nargs.NO_ARGUMENT) and (ans.right is not None):
         cause(PUAW, option=ans.fullkey)
     return ans
@@ -193,7 +193,7 @@ def parse_option(
     *,
     cause: FunctionType,
     expectsabbr: bool,
-    optdict: dict[Any, Any],
+    optDict: dict[Any, Any],
     **kwargs: Any,
 ) -> Option:
     if parse_islong(arg, **kwargs):
@@ -201,11 +201,11 @@ def parse_option(
             arg,
             cause=cause,
             expectsabbr=expectsabbr,
-            optdict=optdict,
+            optDict=optDict,
         )
     else:
         return parse_bundling(
             arg,
             cause=cause,
-            optdict=optdict,
+            optDict=optDict,
         )

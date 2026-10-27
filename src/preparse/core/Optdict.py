@@ -1,4 +1,4 @@
-__all__: list[str] = ["Optdict"]
+__all__: list[str] = ["OptDict"]
 
 from collections.abc import Hashable, Iterable
 from typing import Any, Optional, Self, cast
@@ -19,7 +19,7 @@ def nargs(value: Any, /) -> Nargs:
         return Nargs.OPTIONAL_ARGUMENT
 
 
-class Optdict(
+class OptDict(
     cmp3.CmpABC,
     datahold.HoldDict[str, Nargs],
 ):
