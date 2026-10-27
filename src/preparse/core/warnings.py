@@ -89,21 +89,14 @@ class PreparseRequiredArgumentWarning(PreparseDualWarning):
     _shortmsg = "option requires an argument -- '%s'"
 
 
-class PreparseLongonlyWarning(
-    PreparseWarning
-): ...  # only possible for long options
+class PreparseLongonlyWarning(PreparseWarning): ...  # only possible for long options
 
 
 class PreparseAmbiguousOptionWarning(PreparseLongonlyWarning):
 
     @dataprop
-    def possibilities(self: Self, value: Iterable) -> tuple[str]:
-        l: list
-        i: int
-        l = list(value)
-        for i in range(len(l)):
-            l[i] = str(l[i])
-        return tuple(l)
+    def possibilities(self: Self, value: Iterable) -> tuple[str, ...]:
+        return tuple(map(str, value))
 
     @setdoc.basic
     def __init__(
