@@ -72,11 +72,7 @@ class TestDataToml(unittest.TestCase):
             superanswer,
         )
         self.assertEqual(answer, superanswer, msg=msg)
-        msg = "\n\ndata=%s,\nanswer=%s,\nsolution=%s,\n\n" % (
-            data,
-            answer,
-            solution,
-        )
+        msg = "\n\ndata=%s,\nanswer=%s,\nsolution=%s,\n\n" % (data, answer, solution)
         self.assertEqual(answer, solution, msg=msg)
         if not utils.istestable(warnings):
             return
