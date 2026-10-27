@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import dataclasses
 import functools
 import types
@@ -7,13 +9,16 @@ import overloadable
 import setdoc
 from copyable import Copyable
 
+if TYPE_CHECKING:
+    from .PreParser import PreParser
+
 __all__ = ["Click"]
 
 
 @dataclasses.dataclass
 class Click(Copyable):
 
-    parser: Any
+    parser: PreParser
     cmd: Any = True
     ctx: Any = True
 
