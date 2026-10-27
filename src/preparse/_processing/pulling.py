@@ -1,7 +1,7 @@
 import sys
 from typing import *
 
-from preparse._processing.items.Positional import Positional
+from preparse._items.Positional import Positional
 
 __all__ = ["pull"]
 
