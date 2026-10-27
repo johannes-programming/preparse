@@ -9,7 +9,7 @@ from preparse._processing.pulling import *
 from preparse._utils import *
 from preparse.core.enums import *
 
-__all__ = ["dataprop", "process"]
+__all__ = ["process"]
 
 
 def process(
