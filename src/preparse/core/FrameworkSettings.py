@@ -17,6 +17,7 @@ from preparse._processing import process
 from preparse.core.Click import Click
 from preparse.enums.Nargs import Nargs
 from preparse.enums.Tuning import Tuning
+from preparse.typing.SupportsBool import SupportsBool
 from preparse.typing.SupportsKeysAndGetitem import SupportsKeysAndGetitem
 from preparse.warnings.PreparseWarning import PreparseWarning
 
@@ -34,10 +35,10 @@ class FrameworkSettings(Copyable):
     def __init__(
         self: Self,
         *,
-        allowslong: object = True,
-        allowsshort: object = True,
-        expectsabbr: object = True,
-        expectsposix: object = False,
+        allowslong: SupportsBool = True,
+        allowsshort: SupportsBool = True,
+        expectsabbr: SupportsBool = True,
+        expectsposix: SupportsBool = False,
     ) -> None:
         self.allowslong = allowslong
         self.allowsshort = allowsshort
@@ -53,7 +54,7 @@ class FrameworkSettings(Copyable):
         return self._allowslong
 
     @allowslong.setter
-    def allowslong(self: Self, value: object) -> None:
+    def allowslong(self: Self, value: SupportsBool) -> None:
         self._allowslong = bool(value)
 
     @property
@@ -61,7 +62,7 @@ class FrameworkSettings(Copyable):
         return self._allowsshort
 
     @allowsshort.setter
-    def allowsshort(self: Self, value: object) -> None:
+    def allowsshort(self: Self, value: SupportsBool) -> None:
         self._allowsshort = bool(value)
 
     @setdoc.basic
@@ -73,7 +74,7 @@ class FrameworkSettings(Copyable):
         return self._expectsabbr
 
     @expectsabbr.setter
-    def expectsabbr(self: Self, value: object) -> None:
+    def expectsabbr(self: Self, value: SupportsBool) -> None:
         self._expectsabbr = bool(value)
 
     @property
@@ -81,7 +82,7 @@ class FrameworkSettings(Copyable):
         return self._expectsposix
 
     @expectsposix.setter
-    def expectsposix(self: Self, value: object) -> None:
+    def expectsposix(self: Self, value: SupportsBool) -> None:
         value_: Any
         if value == "infer":
             value_ = os.environ.get("POSIXLY_CORRECT")

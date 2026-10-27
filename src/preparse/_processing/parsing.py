@@ -1,8 +1,8 @@
 __all__: list[str] = ["parse"]
 
-from collections.abc import Iterable
+from collections.abc import Generator, Iterable
 from types import FunctionType
-from typing import Any, Generator
+from typing import Any
 
 from preparse._items.Bundle import Bundle
 from preparse._items.Item import Item
