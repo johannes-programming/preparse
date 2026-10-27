@@ -1,7 +1,7 @@
 __all__: list[str] = [
     "Click",
     "Nargs",
-    "Optdict",
+    "OptDict",
     "PreParser",
     "PreparseAmbiguousOptionWarning",
     "PreparseInvalidOptionWarning",
@@ -12,7 +12,7 @@ __all__: list[str] = [
 ]
 
 from preparse.core.Click import Click
-from preparse.core.Optdict import Optdict
+from preparse.core.OptDict import OptDict
 from preparse.core.PreParser import PreParser
 from preparse.enums.Nargs import Nargs
 from preparse.enums.Tuning import Tuning

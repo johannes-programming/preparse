@@ -8,7 +8,7 @@ from importlib import resources
 from typing import Any, Self
 
 from preparse._tests.secondary import secondary
-from preparse.core.Optdict import Optdict
+from preparse.core.OptDict import OptDict
 from preparse.core.PreParser import PreParser
 from preparse.enums.Nargs import Nargs
 
@@ -25,19 +25,19 @@ class Utils(enum.Enum):
 
 class TestPreparse(unittest.TestCase):
 
-    def test_optdict_copy(self: Self) -> None:
-        dublicate: Optdict
-        original: Optdict
-        original = Optdict({"--foo": 0, "-bar": 1})
+    def test_optDict_copy(self: Self) -> None:
+        dublicate: OptDict
+        original: OptDict
+        original = OptDict({"--foo": 0, "-bar": 1})
         dublicate = original.copy()
         self.assertEqual(original, dublicate)
 
-    def test_optdict_repr(self: Self) -> None:
+    def test_optDict_repr(self: Self) -> None:
         data: dict[str, Nargs]
-        original: Optdict
+        original: OptDict
         data = {"--foo": Nargs.NO_ARGUMENT, "-bar": Nargs.REQUIRED_ARGUMENT}
-        original = Optdict(data)
-        self.assertEqual(repr(original), f"Optdict({data})")
+        original = OptDict(data)
+        self.assertEqual(repr(original), f"OptDict({data})")
         self.assertEqual(repr(original), str(original))
         self.assertEqual(repr(original), format(original))
 
@@ -46,8 +46,8 @@ class TestPreparse(unittest.TestCase):
         parser = PreParser()
         parser.reflectClickCommand(secondary)
         self.assertEqual(
-            tuple(parser.optdict.items()),
-            tuple(Utils.utils.data["optdict"].items()),
+            tuple(parser.optDict.items()),
+            tuple(Utils.utils.data["optDict"].items()),
         )
 
 

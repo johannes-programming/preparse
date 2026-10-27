@@ -21,7 +21,7 @@ def process(
     expandsabbr: bool,
     expectsabbr: bool,
     expectsposix: bool,
-    optdict: dict[Any, Any],
+    optDict: dict[Any, Any],
     prog: str,
     reconcilesorders: bool,
     special: Tuning,
@@ -36,7 +36,7 @@ def process(
         allowsshort=allowsshort,
         expectsabbr=expectsabbr,
         expectsposix=expectsposix,
-        optdict=optdict,
+        optDict=optDict,
         prog=prog,
         warn=warn,
     )
