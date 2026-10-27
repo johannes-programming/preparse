@@ -6,6 +6,7 @@ import tomllib
 import unittest
 from functools import cached_property
 from importlib import resources
+from pathlib import Path
 from typing import Any, Self
 
 from preparse.core.PreParser import PreParser
@@ -15,10 +16,13 @@ class Utils(enum.Enum):
     utils = None
 
     @cached_property
-    def data(self: Self) -> dict[str, Any]:
-        text: str
-        text = resources.read_text("preparse.tests", "data.toml")
-        return tomllib.loads(text)
+    def data(self: Self, /) -> dict[str, Any]:
+        """Load and return the shared TOML test data."""
+        file: Path
+        stream: io.BufferedReader
+        file = Path(__file__).parent / "data.toml"
+        with file.open("rb") as stream:
+            return tomllib.load(stream)
 
     @staticmethod
     def istestable(x: Any) -> bool:
