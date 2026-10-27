@@ -4,7 +4,7 @@ from collections.abc import Iterable
 from types import FunctionType
 from typing import Any
 
-from preparse._items import Item, Positional
+from preparse._items import Bundle, Item, Long, Option, Positional, Special
 from preparse._processing.deparsing import deparse
 from preparse._processing.digesting import digest
 from preparse._processing.parsing import parse
@@ -29,10 +29,9 @@ def process(
 ) -> list[str]:
     "This method parses args."
     items: list[Item]
-    positionals: list[Positional]
-    positionals = pull(args)
+    items = pull(args)
     items = parse(
-        positionals,
+        items,
         allowslong=allowslong,
         allowsshort=allowsshort,
         expectsabbr=expectsabbr,

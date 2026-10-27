@@ -5,11 +5,12 @@ from typing import Any, Self
 import setdoc
 
 from preparse._items.Item import Item
+from preparse.core.enums import Nargs, Tuning
 
 
 class Positional(Item):
 
-    # value: str
+    value: str
 
     __slots__ = ()
 
@@ -29,7 +30,7 @@ class Positional(Item):
 
     @property
     def value(self: Self) -> str:
-        return self._data["value"]  # type: ignore[no-any-return]
+        return self._data["value"]
 
     @value.setter
     def value(self: Self, x: Any) -> None:

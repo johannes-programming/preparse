@@ -10,14 +10,21 @@ from preparse._items.Long import Long
 from preparse._items.Option import Option
 from preparse._items.Positional import Positional
 from preparse._items.Special import Special
-from preparse.core.enums import Nargs
-from preparse.core.warnings import PreparseAmbiguousOptionWarning as PAOW
-from preparse.core.warnings import PreparseInvalidOptionWarning as PIOW
-from preparse.core.warnings import PreparseRequiredArgumentWarning as PRAW
-from preparse.core.warnings import PreparseUnallowedArgumentWarning as PUAW
+from preparse.core import warnings
+from preparse.core.enums import Nargs, Tuning
+
+PAOW: type[Any]
+PIOW: type[Any]
+PRAW: type[Any]
+PUAW: type[Any]
+
+PAOW = warnings.PreparseAmbiguousOptionWarning
+PIOW = warnings.PreparseInvalidOptionWarning
+PUAW = warnings.PreparseUnallowedArgumentWarning
+PRAW = warnings.PreparseRequiredArgumentWarning
 
 
-def parse(args: list[Positional], **kwargs: Any) -> list[Item]:
+def parse(args: list[str], **kwargs: Any) -> list[Item]:
     return list(parse_generator(args, **kwargs))
 
 
@@ -57,7 +64,7 @@ def parse_cause(
     def ans(cls: type[Any], **kwargs: Any) -> None:
         warn(cls(prog=prog, **kwargs))
 
-    return ans  # type: ignore[return-value]
+    return ans
 
 
 def parse_generator(
@@ -70,11 +77,11 @@ def parse_generator(
     optdict: dict[str, Nargs],
     prog: str,
     warn: FunctionType,
-) -> Generator[Item, None, None]:
+) -> Generator[Any, Any, Any]:
     broken: bool
     cause: FunctionType
     item: Positional
-    last: Long | Bundle | None
+    last: Option | None
     broken = not (allowslong or allowsshort)
     cause = parse_cause(prog=prog, warn=warn)
     last = None
@@ -189,7 +196,7 @@ def parse_option(
     expectsabbr: bool,
     optdict: dict[str, Nargs],
     **kwargs: Any,
-) -> Bundle | Long:
+) -> Option:
     if parse_islong(arg, **kwargs):
         return parse_long(
             arg,
