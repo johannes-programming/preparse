@@ -67,7 +67,7 @@ toml_sorted: works
 
 upload: works
 	conda run -n works pip install 'twine>=5.2,<7' >/dev/null;
-	conda run -n works twine upload 'dist/*';
+	conda run -n works twine upload --verbose 'dist/*';
 
 version: all pypi
 
