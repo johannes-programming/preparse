@@ -13,6 +13,8 @@ from copyable import Copyable
 from datarepr import datarepr
 from tofunc import tofunc
 
+from preparse._core.FrameworkSettings import FrameworkSettings
+from preparse._core.TransformationSettings import TransformationSettings
 from preparse._processing import process
 from preparse.core.Click import Click
 from preparse.core.Optdict import Optdict
@@ -23,12 +25,16 @@ from preparse.warnings.PreparseWarning import PreparseWarning
 
 
 class PreParser(Copyable):
+    _frameworkSettings: FrameworkSettings
+    _optdict: Optdict
+    _transformationSettings: TransformationSettings
 
-    __slots__ = ("_data",)
+    __slots__ = ("_frameworkSettings", "_optdict", "_transformationSettings")
 
     @setdoc.basic
     def __init__(
         self: Self,
+        /,
         *,
         allowslong: object = True,
         allowsshort: object = True,
@@ -44,19 +50,21 @@ class PreParser(Copyable):
         special: int = Tuning.MAINTAIN,
         warn: Callable[[PreparseWarning], Any] = str,
     ) -> None:
-        self._data: dict[str, Any]
-        self._data = dict()
-        self.allowslong = allowslong
-        self.allowsshort = allowsshort
-        self.bundling = bundling
-        self.expandsabbr = expandsabbr
-        self.expectsabbr = expectsabbr
-        self.expectsposix = expectsposix
-        self.optdict = optdict
-        self.prog = prog
-        self.reconcilesorders = reconcilesorders
-        self.special = special
-        self.warn = warn
+        self._frameworkSettings = FrameworkSettings(
+            allowslong=allowslong,
+            allowsshort=allowsshort,
+            expectsabbr=expectsabbr,
+            expectsposix=expectsposix,
+        )
+        self._optdict = Optdict(optdict)
+        self._transformationSettings = TransformationSettings(
+            bundling=bundling,
+            expandsabbr=expandsabbr,
+            prog=prog,
+            reconcilesorders=reconcilesorders,
+            special=special,
+            warn=warn,
+        )
 
     @setdoc.basic
     def __repr__(self: Self) -> str:
@@ -64,29 +72,29 @@ class PreParser(Copyable):
 
     @property
     def allowslong(self: Self) -> bool:
-        return cast(bool, self._data["allowslong"])
+        return self._frameworkSettings.allowslong
 
     @allowslong.setter
     def allowslong(self: Self, value: object) -> None:
-        self._data["allowslong"] = bool(value)
+        self._frameworkSettings.allowslong = value
 
     @property
     def allowsshort(self: Self) -> bool:
-        return cast(bool, self._data["allowsshort"])
+        return self._frameworkSettings.allowsshort
 
     @allowsshort.setter
     def allowsshort(self: Self, value: object) -> None:
-        self._data["allowsshort"] = bool(value)
+        self._frameworkSettings.allowsshort = value
 
     @property
     def bundling(self: Self) -> Tuning:
         "This property decides how to approach the bundling of short options."
-        return cast(Tuning, self._data["bundling"])
+        return self._transformationSettings.bundling
 
     @bundling.setter
     def bundling(self: Self, value: int) -> None:
         "This property decides how to approach the bundling of short options."
-        self._data["bundling"] = Tuning(value)
+        self._transformationSettings.bundling = Tuning(value)
 
     def click(self: Self, cmd: object = True, ctx: object = True) -> Click:
         "This method returns a decorator that infuses the current instance into parse_args."
@@ -98,23 +106,23 @@ class PreParser(Copyable):
 
     @property
     def expandsabbr(self: Self) -> bool:
-        return cast(bool, self._data["expandsabbr"])
+        return self._transformationSettings.expandsabbr
 
     @expandsabbr.setter
     def expandsabbr(self: Self, value: object, /) -> None:
-        self._data["expandsabbr"] = bool(value)
+        self._transformationSettings.expandsabbr = value
 
     @property
     def expectsabbr(self: Self) -> bool:
-        return cast(bool, self._data["expectsabbr"])
+        return self._frameworkSettings.expectsabbr
 
     @expectsabbr.setter
     def expectsabbr(self: Self, value: object) -> None:
-        self._data["expectsabbr"] = bool(value)
+        self._frameworkSettings.expectsabbr = value
 
     @property
     def expectsposix(self: Self) -> bool:
-        return cast(bool, self._data["expectsposix"])
+        return self._frameworkSettings.expectsposix
 
     @expectsposix.setter
     def expectsposix(self: Self, value: object) -> None:
@@ -123,22 +131,20 @@ class PreParser(Copyable):
             value_ = os.environ.get("POSIXLY_CORRECT")
         else:
             value_ = value
-        self._data["expectsposix"] = bool(value_)
+        self._frameworkSettings.expectsposix = value_
 
     @property
     def optdict(self: Self) -> Optdict:
         "This property gives a dictionary of options."
-        return cast(Optdict, self._data["optdict"])
+        return self._optdict
 
     @optdict.setter
     def optdict(self: Self, value: Any) -> None:
         "This property gives a dictionary of options."
         value_: Optdict
-        if "optdict" not in self._data.keys():
-            self._data["optdict"] = Optdict()
         value_ = Optdict(value)
-        self._data["optdict"].clear()
-        self._data["optdict"].update(value_)
+        self._optdict.clear()
+        self._optdict.update(value_)
 
     def parse_args(
         self: Self,
@@ -150,23 +156,23 @@ class PreParser(Copyable):
     @property
     def prog(self: Self) -> str:
         "This property represents the name of the program."
-        return cast(str, self._data["prog"])
+        return self._transformationSettings.prog
 
     @prog.setter
     def prog(self: Self, value: object, /) -> None:
         "This property represents the name of the program."
         if value is None:
-            self._data["prog"] = str(os.path.basename(sys.argv[0]))
+            self._transformationSettings.prog = os.path.basename(sys.argv[0])
         else:
-            self._data["prog"] = str(value)
+            self._transformationSettings.prog = value
 
     @property
     def reconcilesorders(self: Self) -> bool:
-        return cast(bool, self._data["reconcilesorders"])
+        return self._transformationSettings.reconcilesorders
 
     @reconcilesorders.setter
     def reconcilesorders(self: Self, value: object, /) -> None:
-        self._data["reconcilesorders"] = bool(value)
+        self._transformationSettings.reconcilesorders = value
 
     def reflectClickCommand(self: Self, cmd: cl.Command) -> None:
         "This method causes the current instance to reflect a click.Command object."
@@ -200,30 +206,27 @@ class PreParser(Copyable):
     @property
     def special(self: Self) -> Tuning:
         "This Tuning property determines the approach towards the special argument."
-        return cast(Tuning, self._data["special"])
+        return self._transformationSettings.special
 
     @special.setter
     def special(self: Self, value: int, /) -> None:
         "This Tuning property determines the approach towards the special argument."
-        self._data["special"] = Tuning(value)
+        self._transformationSettings.special = value
 
     def todict(self: Self) -> dict[str, Any]:
         "This method returns a dict representing the current instance."
         ans: dict[str, Any]
-        try:
-            ans = self._data
-        except AttributeError:
-            self._data = dict()
-            return dict()
-        else:
-            return dict(ans)
+        ans = self._frameworkSettings.todict()
+        ans |= dict(optdict=self.optdict)
+        ans |= self._transformationSettings.todict()
+        return dict(tuple(ans.items()))
 
     @property
     def warn(
         self: Self,
     ) -> Callable[[PreparseWarning], Any]:
         "This property gives a function that takes in the warnings."
-        return cast(Callable[[PreparseWarning], Any], self._data["warn"])
+        return self._transformationSettings.warn
 
     @warn.setter
     def warn(
@@ -231,4 +234,4 @@ class PreParser(Copyable):
         value: Callable[[PreparseWarning], Any],
     ) -> None:
         "This property gives a function that takes in the warnings."
-        self._data["warn"] = tofunc(value)
+        self._transformationSettings.warn = tofunc(value)
