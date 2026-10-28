@@ -8,6 +8,7 @@ import datahold
 import setdoc
 from frozendict import frozendict
 
+from preparse._core.no_change_setter import no_change_setter
 from preparse.enums.Nargs import Nargs
 from preparse.typing.SupportsKeysAndGetitem import SupportsKeysAndGetitem
 
@@ -46,6 +47,7 @@ class Optdict(
         return frozendict(self._data)
 
     @data.setter  # type: ignore[override]
+    @no_change_setter
     def data(
         self: Self,
         value: SupportsKeysAndGetitem | Iterable[tuple[Hashable, object]],

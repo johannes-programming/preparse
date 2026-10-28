@@ -4,6 +4,7 @@ from typing import Any, Self
 
 import setdoc
 
+from preparse._core.no_change_setter import no_change_setter
 from preparse._items.Item import Item
 
 
@@ -34,5 +35,6 @@ class Positional(Item):
         return self._value
 
     @value.setter
+    @no_change_setter
     def value(self: Self, x: object) -> None:
         self._value = str(x)

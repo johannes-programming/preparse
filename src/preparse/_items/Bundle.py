@@ -4,6 +4,7 @@ from typing import Any, Self
 
 import setdoc
 
+from preparse._core.no_change_setter import no_change_setter
 from preparse._items.Option import Option
 from preparse.enums.Nargs import Nargs
 
@@ -66,6 +67,7 @@ class Bundle(Option):
         return self._chars
 
     @chars.setter
+    @no_change_setter
     def chars(self: Self, x: Any) -> None:
         self._chars = str(x)
 

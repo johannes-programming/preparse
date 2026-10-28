@@ -5,6 +5,7 @@ from typing import Any, Self, SupportsIndex
 
 import setdoc
 
+from preparse._core.no_change_setter import no_change_setter
 from preparse._items.Option import Option
 
 
@@ -41,6 +42,7 @@ class Long(Option):
         return self._abbrlen
 
     @abbrlen.setter
+    @no_change_setter
     def abbrlen(self: Self, x: SupportsIndex | None) -> None:
         if x is None:
             self._abbrlen = None
@@ -60,6 +62,7 @@ class Long(Option):
         return self._fullkey
 
     @fullkey.setter
+    @no_change_setter
     def fullkey(self: Self, x: object) -> None:
         self._fullkey = str(x)
 

@@ -7,6 +7,8 @@ import setdoc
 from copyable import Copyable
 from datarepr import datarepr
 
+from preparse._core.no_change_setter import no_change_setter
+
 
 class PreparseWarning(Warning, Copyable):
 
@@ -42,6 +44,7 @@ class PreparseWarning(Warning, Copyable):
         return cast(str, self._data["option"])
 
     @option.setter
+    @no_change_setter
     def option(self: Self, value: object, /) -> None:
         self._data["option"] = str(value)
 
@@ -50,6 +53,7 @@ class PreparseWarning(Warning, Copyable):
         return cast(str, self._data["prog"])
 
     @prog.setter
+    @no_change_setter
     def prog(self: Self, value: object, /) -> None:
         self._data["prog"] = str(value)
 

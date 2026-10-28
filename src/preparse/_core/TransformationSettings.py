@@ -12,6 +12,7 @@ from copyable import Copyable
 from datarepr import datarepr
 from tofunc import tofunc
 
+from preparse._core.no_change_setter import no_change_setter
 from preparse.core.Click import Click
 from preparse.enums.Nargs import Nargs
 from preparse.enums.Tuning import Tuning
@@ -66,6 +67,7 @@ class TransformationSettings(Copyable):
         return self._bundling
 
     @bundling.setter
+    @no_change_setter
     def bundling(self: Self, value: int, /) -> None:
         "This property decides how to approach the bundling of short options."
         self._bundling = Tuning(value)
@@ -79,6 +81,7 @@ class TransformationSettings(Copyable):
         return self._expandsabbr
 
     @expandsabbr.setter
+    @no_change_setter
     def expandsabbr(self: Self, value: SupportsBool, /) -> None:
         self._expandsabbr = bool(value)
 
@@ -88,6 +91,7 @@ class TransformationSettings(Copyable):
         return self._prog
 
     @prog.setter
+    @no_change_setter
     def prog(self: Self, value: object, /) -> None:
         "This property represents the name of the program."
         if value is None:
@@ -100,6 +104,7 @@ class TransformationSettings(Copyable):
         return self._reconcilesorders
 
     @reconcilesorders.setter
+    @no_change_setter
     def reconcilesorders(self: Self, value: SupportsBool, /) -> None:
         self._reconcilesorders = bool(value)
 
@@ -109,6 +114,7 @@ class TransformationSettings(Copyable):
         return self._special
 
     @special.setter
+    @no_change_setter
     def special(self: Self, value: int, /) -> None:
         "This Tuning property determines the approach towards the special argument."
         self._special = Tuning(value)
@@ -130,6 +136,7 @@ class TransformationSettings(Copyable):
         return self._warn
 
     @warn.setter
+    @no_change_setter
     def warn(
         self: Self,
         value: Callable[[PreparseWarning], object],

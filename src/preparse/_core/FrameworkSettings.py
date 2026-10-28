@@ -11,6 +11,7 @@ from copyable import Copyable
 from datarepr import datarepr
 from tofunc import tofunc
 
+from preparse._core.no_change_setter import no_change_setter
 from preparse.enums.Nargs import Nargs
 from preparse.enums.Tuning import Tuning
 from preparse.typing.SupportsBool import SupportsBool
@@ -63,6 +64,7 @@ class FrameworkSettings(Copyable):
         return self._allowslong
 
     @allowslong.setter
+    @no_change_setter
     def allowslong(self: Self, value: SupportsBool | None, /) -> None:
         if value is not None:
             self._allowslong = bool(value)
@@ -72,6 +74,7 @@ class FrameworkSettings(Copyable):
         return self._allowsshort
 
     @allowsshort.setter
+    @no_change_setter
     def allowsshort(self: Self, value: SupportsBool | None, /) -> None:
         if value is not None:
             self._allowsshort = bool(value)
@@ -85,6 +88,7 @@ class FrameworkSettings(Copyable):
         return self._expectsabbr
 
     @expectsabbr.setter
+    @no_change_setter
     def expectsabbr(self: Self, value: SupportsBool | None, /) -> None:
         if value is not None:
             self._expectsabbr = bool(value)
@@ -94,6 +98,7 @@ class FrameworkSettings(Copyable):
         return self._expectsposix
 
     @expectsposix.setter
+    @no_change_setter
     def expectsposix(self: Self, value: SupportsBool | None, /) -> None:
         if value is None:
             return

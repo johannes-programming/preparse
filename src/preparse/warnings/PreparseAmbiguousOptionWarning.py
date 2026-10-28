@@ -5,6 +5,7 @@ from typing import Any, Self, cast
 
 import setdoc
 
+from preparse._core.no_change_setter import no_change_setter
 from preparse.warnings.PreparseLongonlyWarning import PreparseLongonlyWarning
 
 
@@ -36,5 +37,6 @@ class PreparseAmbiguousOptionWarning(PreparseLongonlyWarning):
         return cast(tuple[str, ...], self._data["possibilities"])
 
     @possibilities.setter
+    @no_change_setter
     def possibilities(self: Self, value: Iterable[object], /) -> None:
         self._data["possibilities"] = tuple(map(str, value))
