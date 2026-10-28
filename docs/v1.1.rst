@@ -171,8 +171,8 @@ Unknown short options are assumed to take no argument.
 Unknown long options are assumed to take an optional argument.
 This behaviour reflects ``getopt``.
 
-``parse_args(args: Optional[Iterable[object]] = None) -> list[str]``
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+``parse_args(args: Iterable[object] | None = None) -> list[str]``
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 This method is at the core of the class.
 It returns a preparsed list of arguments.

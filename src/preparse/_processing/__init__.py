@@ -2,7 +2,7 @@ __all__: list[str] = ["process"]
 
 from collections.abc import Iterable
 from types import FunctionType
-from typing import Any, Optional
+from typing import Any
 
 from preparse._items.Item import Item
 from preparse._processing.deparsing import deparse
@@ -13,7 +13,7 @@ from preparse.enums.Tuning import Tuning
 
 
 def process(
-    args: Optional[Iterable[object]] = None,
+    args: Iterable[object] | None = None,
     *,
     allowslong: bool,
     allowsshort: bool,

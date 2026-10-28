@@ -1,7 +1,7 @@
 __all__: list[str] = ["Optdict"]
 
 from collections.abc import Hashable, Iterable
-from typing import Any, Optional, Self, cast
+from typing import Any, Self, cast
 
 import cmp3
 import datahold
@@ -28,15 +28,15 @@ class Optdict(
     _data: frozendict[str, Nargs]
 
     @setdoc.basic
-    def __cmp__(self: Self, other: Any, /) -> Optional[int]:
+    def __cmp__(self: Self, other: Any, /) -> int | None:
         if type(self) is type(other):
             return cast(
-                Optional[int],
+                int | None,
                 cmp3.cmp(self._data, other._data, mode="eq_strict"),
             )
         else:
             return cast(
-                Optional[int], cmp3.cmp(self._data, other, mode="eq_strict")
+                int | None, cmp3.cmp(self._data, other, mode="eq_strict")
             )
 
     __init__ = datahold.HoldDict[Hashable, object].__init__
