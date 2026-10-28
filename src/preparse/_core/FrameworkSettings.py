@@ -40,43 +40,43 @@ class FrameworkSettings(Copyable):
         self.expectsposix = expectsposix
 
     @setdoc.basic
-    def __repr__(self: Self) -> str:
+    def __repr__(self: Self, /) -> str:
         return datarepr(type(self).__name__, **self.todict())
 
     @property
-    def allowslong(self: Self) -> bool:
+    def allowslong(self: Self, /) -> bool:
         return self._allowslong
 
     @allowslong.setter
-    def allowslong(self: Self, value: SupportsBool) -> None:
+    def allowslong(self: Self, value: SupportsBool, /) -> None:
         self._allowslong = bool(value)
 
     @property
-    def allowsshort(self: Self) -> bool:
+    def allowsshort(self: Self, /) -> bool:
         return self._allowsshort
 
     @allowsshort.setter
-    def allowsshort(self: Self, value: SupportsBool) -> None:
+    def allowsshort(self: Self, value: SupportsBool, /) -> None:
         self._allowsshort = bool(value)
 
     @setdoc.basic
-    def copy(self: Self) -> Self:
+    def copy(self: Self, /) -> Self:
         return type(self)(**self.todict())
 
     @property
-    def expectsabbr(self: Self) -> bool:
+    def expectsabbr(self: Self, /) -> bool:
         return self._expectsabbr
 
     @expectsabbr.setter
-    def expectsabbr(self: Self, value: SupportsBool) -> None:
+    def expectsabbr(self: Self, value: SupportsBool, /) -> None:
         self._expectsabbr = bool(value)
 
     @property
-    def expectsposix(self: Self) -> bool:
+    def expectsposix(self: Self, /) -> bool:
         return self._expectsposix
 
     @expectsposix.setter
-    def expectsposix(self: Self, value: SupportsBool) -> None:
+    def expectsposix(self: Self, value: SupportsBool, /) -> None:
         value_: Any
         if value == "infer":
             value_ = os.environ.get("POSIXLY_CORRECT")
@@ -84,7 +84,7 @@ class FrameworkSettings(Copyable):
             value_ = value
         self._expectsposix = bool(value_)
 
-    def todict(self: Self) -> dict[str, Any]:
+    def todict(self: Self, /) -> dict[str, Any]:
         "This method returns a dict representing the current instance."
         return dict(
             allowslong=self.allowslong,
