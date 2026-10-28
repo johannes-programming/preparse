@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-__all__: list[str] = ["TransformationSettings"]
+__all__: list[str] = ["Transformation"]
 
 import os
 import sys
@@ -22,7 +22,7 @@ from preparse.typing.SupportsKeysAndGetitem import SupportsKeysAndGetitem
 from preparse.warnings.PreparseWarning import PreparseWarning
 
 
-class TransformationSettings(Copyable):
+class Transformation(Copyable):
 
     __slots__ = (
         "_bundling",
@@ -43,7 +43,7 @@ class TransformationSettings(Copyable):
     @setdoc.basic
     def __init__(
         self: Self,
-        other: TransformationSettings | NoChange = NoChange.NO_CHANGE,
+        other: Transformation | NoChange = NoChange.NO_CHANGE,
         /,
         *,
         bundling: int | NoChange = NoChange.NO_CHANGE,
@@ -74,7 +74,7 @@ class TransformationSettings(Copyable):
         return datarepr(type(self).__name__, **self.todict())
 
     @no_change_setter
-    def _init_other(self: Self, other: TransformationSettings, /) -> None:
+    def _init_other(self: Self, other: Transformation, /) -> None:
         self.bundling = other.bundling
         self.expandsabbr = other.expandsabbr
         self.prog = other.prog

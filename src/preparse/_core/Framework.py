@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-__all__: list[str] = ["FrameworkSettings"]
+__all__: list[str] = ["Framework"]
 
 import os
 import sys
@@ -18,7 +18,7 @@ from preparse.enums.Tuning import Tuning
 from preparse.typing.SupportsBool import SupportsBool
 
 
-class FrameworkSettings(Copyable):
+class Framework(Copyable):
 
     __slots__ = (
         "_allowslong",
@@ -35,7 +35,7 @@ class FrameworkSettings(Copyable):
     @setdoc.basic
     def __init__(
         self: Self,
-        other: FrameworkSettings | NoChange = NoChange.NO_CHANGE,
+        other: Framework | NoChange = NoChange.NO_CHANGE,
         /,
         *,
         allowslong: SupportsBool | NoChange = NoChange.NO_CHANGE,
@@ -60,7 +60,7 @@ class FrameworkSettings(Copyable):
     @no_change_setter
     def _init_other(
         self: Self,
-        other: FrameworkSettings,
+        other: Framework,
     ) -> None:
         self._allowslong = other._allowslong
         self._allowsshort = other._allowsshort
