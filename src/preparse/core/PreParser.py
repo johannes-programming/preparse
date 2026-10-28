@@ -14,6 +14,7 @@ from datarepr import datarepr
 from tofunc import tofunc
 
 from preparse._core.FrameworkSettings import FrameworkSettings
+from preparse._core.no_change_setter import no_change_setter
 from preparse._core.TransformationSettings import TransformationSettings
 from preparse._processing import process
 from preparse.core.Click import Click
@@ -76,6 +77,7 @@ class PreParser(Copyable):
         return self._frameworkSettings.allowslong
 
     @allowslong.setter
+    @no_change_setter
     def allowslong(self: Self, value: SupportsBool, /) -> None:
         self._frameworkSettings.allowslong = value
 
@@ -84,6 +86,7 @@ class PreParser(Copyable):
         return self._frameworkSettings.allowsshort
 
     @allowsshort.setter
+    @no_change_setter
     def allowsshort(self: Self, value: SupportsBool, /) -> None:
         self._frameworkSettings.allowsshort = value
 
@@ -93,6 +96,7 @@ class PreParser(Copyable):
         return self._transformationSettings.bundling
 
     @bundling.setter
+    @no_change_setter
     def bundling(self: Self, value: int, /) -> None:
         "This property decides how to approach the bundling of short options."
         self._transformationSettings.bundling = Tuning(value)
@@ -112,6 +116,7 @@ class PreParser(Copyable):
         return self._transformationSettings.expandsabbr
 
     @expandsabbr.setter
+    @no_change_setter
     def expandsabbr(self: Self, value: SupportsBool, /) -> None:
         self._transformationSettings.expandsabbr = value
 
@@ -120,6 +125,7 @@ class PreParser(Copyable):
         return self._frameworkSettings.expectsabbr
 
     @expectsabbr.setter
+    @no_change_setter
     def expectsabbr(self: Self, value: SupportsBool, /) -> None:
         self._frameworkSettings.expectsabbr = value
 
@@ -128,6 +134,7 @@ class PreParser(Copyable):
         return self._frameworkSettings.expectsposix
 
     @expectsposix.setter
+    @no_change_setter
     def expectsposix(self: Self, value: SupportsBool, /) -> None:
         self._frameworkSettings.expectsposix = value
 
@@ -137,6 +144,7 @@ class PreParser(Copyable):
         return self._optdict
 
     @optdict.setter
+    @no_change_setter
     def optdict(self: Self, value: Any, /) -> None:
         "This property gives a dictionary of options."
         self._optdict.data = value
@@ -155,6 +163,7 @@ class PreParser(Copyable):
         return self._transformationSettings.prog
 
     @prog.setter
+    @no_change_setter
     def prog(self: Self, value: object, /) -> None:
         "This property represents the name of the program."
         self._transformationSettings.prog = value
@@ -164,6 +173,7 @@ class PreParser(Copyable):
         return self._transformationSettings.reconcilesorders
 
     @reconcilesorders.setter
+    @no_change_setter
     def reconcilesorders(self: Self, value: SupportsBool, /) -> None:
         self._transformationSettings.reconcilesorders = value
 
@@ -202,6 +212,7 @@ class PreParser(Copyable):
         return self._transformationSettings.special
 
     @special.setter
+    @no_change_setter
     def special(self: Self, value: int, /) -> None:
         "This Tuning property determines the approach towards the special argument."
         self._transformationSettings.special = value
@@ -223,6 +234,7 @@ class PreParser(Copyable):
         return self._transformationSettings.warn
 
     @warn.setter
+    @no_change_setter
     def warn(
         self: Self,
         value: Callable[[PreparseWarning], Any],

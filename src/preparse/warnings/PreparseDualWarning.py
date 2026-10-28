@@ -5,6 +5,7 @@ from typing import Self, cast
 
 import setdoc
 
+from preparse._core.no_change_setter import no_change_setter
 from preparse.warnings.PreparseWarning import PreparseWarning
 
 
@@ -42,5 +43,6 @@ class PreparseDualWarning(PreparseWarning):
         return cast(bool, self._data["islong"])
 
     @islong.setter
+    @no_change_setter
     def islong(self: Self, value: object, /) -> None:
         self._data["islong"] = bool(value)
