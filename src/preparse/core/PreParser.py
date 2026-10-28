@@ -35,67 +35,35 @@ class PreParser(Copyable):
     @setdoc.basic
     def __init__(
         self: Self,
+        other: PreParser | None = None,
         /,
         *,
-        allowslong: SupportsBool = True,
-        allowsshort: SupportsBool = True,
-        bundling: int = Tuning.MAINTAIN,
-        expandsabbr: SupportsBool = True,
-        expectsabbr: SupportsBool = True,
-        expectsposix: SupportsBool = False,
-        optdict: (
-            SupportsKeysAndGetitem | Iterable[tuple[Hashable, object]]
-        ) = (),
-        prog: object = None,
-        reconcilesorders: SupportsBool = True,
-        special: int = Tuning.MAINTAIN,
-        warn: Callable[[PreparseWarning], Any] = str,
+        frameworkSettings: FrameworkSettings|None = None,
+        optdict: Optdict | None = None,
+        transformationSettings: TransformationSettings|None =None,
     ) -> None:
-        self._frameworkSettings = FrameworkSettings(
-            allowslong=allowslong,
-            allowsshort=allowsshort,
-            expectsabbr=expectsabbr,
-            expectsposix=expectsposix,
-        )
-        self._optdict = Optdict(optdict)
-        self._transformationSettings = TransformationSettings(
-            bundling=bundling,
-            expandsabbr=expandsabbr,
-            prog=prog,
-            reconcilesorders=reconcilesorders,
-            special=special,
-            warn=warn,
-        )
-
+        self._frameworkSettings = FrameworkSettings()
+        self._optdict = Optdict()
+        self._transformationSettings = TransformationSettings()
+        if other is not None:
+            self.frameworkSettings = other.frameworkSettings
+            self.optdict = other.optdict
+            self.transformationSettings = other.transformationSettings
+        self.frameworkSettings = frameworkSettings
+        self.optdict = optdict
+        self.transformationSettings = transformationSettings
+        
     @setdoc.basic
     def __repr__(self: Self, /) -> str:
         return datarepr(type(self).__name__, **self.todict())
 
     @property
-    def allowslong(self: Self, /) -> bool:
-        return self._frameworkSettings.allowslong
+    def frameworkSettings(self: Self, /) -> bool:
+        return self._frameworkSettings
 
-    @allowslong.setter
-    def allowslong(self: Self, value: SupportsBool, /) -> None:
-        self._frameworkSettings.allowslong = value
-
-    @property
-    def allowsshort(self: Self, /) -> bool:
-        return self._frameworkSettings.allowsshort
-
-    @allowsshort.setter
-    def allowsshort(self: Self, value: SupportsBool, /) -> None:
-        self._frameworkSettings.allowsshort = value
-
-    @property
-    def bundling(self: Self, /) -> Tuning:
-        "This property decides how to approach the bundling of short options."
-        return self._transformationSettings.bundling
-
-    @bundling.setter
-    def bundling(self: Self, value: int, /) -> None:
-        "This property decides how to approach the bundling of short options."
-        self._transformationSettings.bundling = Tuning(value)
+    @frameworkSettings.setter
+    def frameworkSettings(self: Self, value: SupportsBool, /) -> None:
+        self.frameworkSettings.__init__(value)
 
     def click(
         self: Self, /, cmd: SupportsBool = True, ctx: SupportsBool = True
@@ -105,31 +73,7 @@ class PreParser(Copyable):
 
     @setdoc.basic
     def copy(self: Self, /) -> Self:
-        return type(self)(**self.todict())
-
-    @property
-    def expandsabbr(self: Self, /) -> bool:
-        return self._transformationSettings.expandsabbr
-
-    @expandsabbr.setter
-    def expandsabbr(self: Self, value: SupportsBool, /) -> None:
-        self._transformationSettings.expandsabbr = value
-
-    @property
-    def expectsabbr(self: Self, /) -> bool:
-        return self._frameworkSettings.expectsabbr
-
-    @expectsabbr.setter
-    def expectsabbr(self: Self, value: SupportsBool, /) -> None:
-        self._frameworkSettings.expectsabbr = value
-
-    @property
-    def expectsposix(self: Self, /) -> bool:
-        return self._frameworkSettings.expectsposix
-
-    @expectsposix.setter
-    def expectsposix(self: Self, value: SupportsBool, /) -> None:
-        self._frameworkSettings.expectsposix = value
+        return type(self)(self)
 
     @property
     def optdict(self: Self, /) -> Optdict:

@@ -44,6 +44,28 @@ class FrameworkSettings(Copyable):
         self._allowsshort = True
         self._expectsabbr = True
         self._expectsposix = False
+        self._update(
+            other,
+            allowslong=allowslong,
+            allowsshort=allowsshort,
+            expectsabbr=expectsabbr,
+            expectsposix=expectsposix,
+        )
+
+    @setdoc.basic
+    def __repr__(self: Self, /) -> str:
+        return datarepr(type(self).__name__, **self.todict())
+
+    @setdoc.basic
+    def _update(
+        self: Self,
+        other: FrameworkSettings | None = None,
+        *,
+        allowslong: SupportsBool | None = None,
+        allowsshort: SupportsBool | None = None,
+        expectsabbr: SupportsBool | None = None,
+        expectsposix: SupportsBool | None = None,
+    ) -> None:
         if other is not None:
             self._allowslong = other._allowslong
             self._allowsshort = other._allowsshort
@@ -53,10 +75,6 @@ class FrameworkSettings(Copyable):
         self.allowsshort = allowsshort
         self.expectsabbr = expectsabbr
         self.expectsposix = expectsposix
-
-    @setdoc.basic
-    def __repr__(self: Self, /) -> str:
-        return datarepr(type(self).__name__, **self.todict())
 
     @property
     def allowslong(self: Self, /) -> bool:

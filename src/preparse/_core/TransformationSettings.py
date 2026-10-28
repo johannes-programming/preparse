@@ -5,7 +5,7 @@ __all__: list[str] = ["TransformationSettings"]
 import os
 import sys
 from collections.abc import Callable
-from typing import Any, Never, Self, cast
+from typing import Any, Never, Self, cast, SupportsIndex
 
 import setdoc
 from copyable import Copyable
@@ -41,14 +41,29 @@ class TransformationSettings(Copyable):
     @setdoc.basic
     def __init__(
         self: Self,
+        other: TransformationSettings | None = None,
+        /,
         *,
-        bundling: int = Tuning.MAINTAIN,
-        expandsabbr: SupportsBool = True,
-        prog: object = None,
-        reconcilesorders: SupportsBool = True,
-        special: int = Tuning.MAINTAIN,
-        warn: Callable[[PreparseWarning], object] = str,
+        bundling: int | None = None,
+        expandsabbr: SupportsBool | None = None,
+        prog: object | None = None,
+        reconcilesorders: SupportsBool | None = None,
+        special: int | None = None,
+        warn: Callable[[PreparseWarning], object] | None = None,
     ) -> None:
+        self.bundling = Tuning.MAINTAIN
+        self.expandsabbr = True
+        self.prog = 0
+        self.reconcilesorders = True
+        self.special = Tuning.MAINTAIN
+        self.warn = str
+        if other is not None:
+            self.bundling = other.bundling
+            self.expandsabbr = other.expandsabbr
+            self.prog = other.prog
+            self.reconcilesorders = other.reconcilesorders
+            self.special = other.special
+            self.warn = other.warn
         self.bundling = bundling
         self.expandsabbr = expandsabbr
         self.prog = prog
@@ -59,6 +74,32 @@ class TransformationSettings(Copyable):
     @setdoc.basic
     def __repr__(self: Self, /) -> str:
         return datarepr(type(self).__name__, **self.todict())
+        
+    def _update(
+        self: Self,
+        other: TransformationSettings | None = None,
+        /,
+        *,
+        bundling: int | None = None,
+        expandsabbr: SupportsBool | None = None,
+        prog: object | None = None,
+        reconcilesorders: SupportsBool | None = None,
+        special: int | None = None,
+        warn: Callable[[PreparseWarning], object] | None = None,
+    ) -> None:
+        if other is not None:
+            self.bundling = other.bundling
+            self.expandsabbr = other.expandsabbr
+            self.prog = other.prog
+            self.reconcilesorders = other.reconcilesorders
+            self.special = other.special
+            self.warn = other.warn
+        self.bundling = bundling
+        self.expandsabbr = expandsabbr
+        self.prog = prog
+        self.reconcilesorders = reconcilesorders
+        self.special = special
+        self.warn = warn
 
     @property
     def bundling(self: Self, /) -> Tuning:
@@ -66,9 +107,10 @@ class TransformationSettings(Copyable):
         return self._bundling
 
     @bundling.setter
-    def bundling(self: Self, value: int, /) -> None:
+    def bundling(self: Self, value: int | None, /) -> None:
         "This property decides how to approach the bundling of short options."
-        self._bundling = Tuning(value)
+        if value is not None:
+            self._bundling = Tuning(value)
 
     @setdoc.basic
     def copy(self: Self, /) -> Self:
@@ -79,8 +121,9 @@ class TransformationSettings(Copyable):
         return self._expandsabbr
 
     @expandsabbr.setter
-    def expandsabbr(self: Self, value: SupportsBool, /) -> None:
-        self._expandsabbr = bool(value)
+    def expandsabbr(self: Self, value: SupportsBool | None, /) -> None:
+        if value is not None:
+            self._expandsabbr = bool(value)
 
     @property
     def prog(self: Self, /) -> str:
@@ -90,8 +133,10 @@ class TransformationSettings(Copyable):
     @prog.setter
     def prog(self: Self, value: object, /) -> None:
         "This property represents the name of the program."
-        if value is None:
-            self._prog = str(os.path.basename(sys.argv[0]))
+        if value is not None:
+            return
+        elif isinstance(value, SupportsIndex):
+            self._prog = str(os.path.basename(sys.argv[value]))
         else:
             self._prog = str(value)
 
@@ -100,8 +145,9 @@ class TransformationSettings(Copyable):
         return self._reconcilesorders
 
     @reconcilesorders.setter
-    def reconcilesorders(self: Self, value: SupportsBool, /) -> None:
-        self._reconcilesorders = bool(value)
+    def reconcilesorders(self: Self, value: SupportsBool | None, /) -> None:
+        if value is not None:
+            self._reconcilesorders = bool(value)
 
     @property
     def special(self: Self, /) -> Tuning:
@@ -109,9 +155,10 @@ class TransformationSettings(Copyable):
         return self._special
 
     @special.setter
-    def special(self: Self, value: int, /) -> None:
+    def special(self: Self, value: int | None, /) -> None:
         "This Tuning property determines the approach towards the special argument."
-        self._special = Tuning(value)
+        if value is not None:
+            self._special = Tuning(value)
 
     def todict(self: Self, /) -> dict[str, Any]:
         "This method returns a dict representing the current instance."
@@ -132,8 +179,9 @@ class TransformationSettings(Copyable):
     @warn.setter
     def warn(
         self: Self,
-        value: Callable[[PreparseWarning], object],
+        value: Callable[[PreparseWarning], object] | None,
         /,
     ) -> None:
         "This property gives a function that takes in the warnings."
-        self._warn = tofunc(value)
+        if value is not None:
+            self._warn = tofunc(value)
