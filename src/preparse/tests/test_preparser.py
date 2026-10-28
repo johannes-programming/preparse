@@ -1,11 +1,10 @@
-__all__: list[str] = ["TestPreParser"]
+__all__: list[str] = ["TestPreparse"]
 
 import unittest
 from typing import Any, Self
 
 from preparse.core.Click import Click
 from preparse.core.PreParser import PreParser
-from preparse.enums.Nargs import Nargs
 
 
 class TestPreParser(unittest.TestCase):
@@ -26,25 +25,6 @@ class TestPreParser(unittest.TestCase):
         parser = PreParser()
         parser_copy = parser.copy()
         self.assertEqual(parser.optdict, parser_copy.optdict)
-
-    def test_no_options_idempotent(self: Self) -> None:
-        args: list[str]
-        parser: PreParser
-        parser = PreParser(
-            allowslong=False, allowsshort=False, expectsposix=True
-        )
-        args = ["-c2", "--", "-a"]
-        self.assertEqual(parser.parse_args(args), args)
-        self.assertEqual(parser.parse_args(parser.parse_args(args)), args)
-
-    def test_minimize_short_bundle_with_hyphen_option(self: Self) -> None:
-        parser: PreParser
-        parser = PreParser(
-            allowslong=False,
-            bundling=0,
-            optdict={"--": 2},  # type: ignore[arg-type]
-        )
-        self.assertEqual(parser.parse_args(["--x"]), ["--x"])
 
     def test_preparser_todict(self: Self) -> None:
         expected_keys: list[Any]

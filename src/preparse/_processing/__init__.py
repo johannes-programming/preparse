@@ -43,7 +43,6 @@ def process(
     items = digest(
         items,
         allowslong=allowslong,
-        allowsshort=allowsshort,
         bundling=bundling,
         expandsabbr=expandsabbr,
         expectsposix=expectsposix,
