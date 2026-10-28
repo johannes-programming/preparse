@@ -107,7 +107,8 @@ class FrameworkSettings(Copyable):
     def expectsposix(self: Self, value: SupportsBool, /) -> None:
         if value == "infer":
             self._expectsposix = bool(os.environ.get("POSIXLY_CORRECT"))
-        self._expectsposix = bool(value)
+        else:
+            self._expectsposix = bool(value)
 
     def todict(self: Self, /) -> dict[str, Any]:
         "This method returns a dict representing the current instance."
