@@ -7,6 +7,7 @@ import functools
 from collections.abc import Callable
 from types import FunctionType, MethodType
 from typing import TYPE_CHECKING, Any, Self, cast, overload
+from preparse.typing.SupportsBool import SupportsBool
 
 import setdoc
 from copyable import Copyable
@@ -19,8 +20,8 @@ if TYPE_CHECKING:
 class Click(Copyable):
 
     parser: PreParser
-    cmd: object = True
-    ctx: object = True
+    cmd: SupportsBool = True
+    ctx: SupportsBool = True
 
     @overload
     def __call__(self: Self, target: FunctionType) -> FunctionType:
