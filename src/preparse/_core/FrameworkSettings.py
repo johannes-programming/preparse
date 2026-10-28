@@ -11,6 +11,7 @@ from copyable import Copyable
 from datarepr import datarepr
 from tofunc import tofunc
 
+from preparse.enums.Empty import Empty
 from preparse.enums.Nargs import Nargs
 from preparse.enums.Tuning import Tuning
 from preparse.typing.SupportsBool import SupportsBool
@@ -28,11 +29,12 @@ class FrameworkSettings(Copyable):
     @setdoc.basic
     def __init__(
         self: Self,
+        /,
         *,
-        allowslong: SupportsBool = True,
-        allowsshort: SupportsBool = True,
-        expectsabbr: SupportsBool = True,
-        expectsposix: SupportsBool = False,
+        allowslong: SupportsBool | Empty = Empty.EMPTY,
+        allowsshort: SupportsBool | Empty = Empty.EMPTY,
+        expectsabbr: SupportsBool | Empty = Empty.EMPTY,
+        expectsposix: SupportsBool | Empty = Empty.EMPTY,
     ) -> None:
         self.allowslong = allowslong
         self.allowsshort = allowsshort
@@ -48,16 +50,22 @@ class FrameworkSettings(Copyable):
         return self._allowslong
 
     @allowslong.setter
-    def allowslong(self: Self, value: SupportsBool, /) -> None:
-        self._allowslong = bool(value)
+    def allowslong(self: Self, value: SupportsBool | Empty, /) -> None:
+        if isinstance(value, Empty):
+            self._allowslong = True
+        else:
+            self._allowslong = bool(value)
 
     @property
     def allowsshort(self: Self, /) -> bool:
         return self._allowsshort
 
     @allowsshort.setter
-    def allowsshort(self: Self, value: SupportsBool, /) -> None:
-        self._allowsshort = bool(value)
+    def allowsshort(self: Self, value: SupportsBool | Empty, /) -> None:
+        if isinstance(value, Empty):
+            self._allowsshort = True
+        else:
+            self._allowsshort = bool(value)
 
     @setdoc.basic
     def copy(self: Self, /) -> Self:
@@ -68,21 +76,24 @@ class FrameworkSettings(Copyable):
         return self._expectsabbr
 
     @expectsabbr.setter
-    def expectsabbr(self: Self, value: SupportsBool, /) -> None:
-        self._expectsabbr = bool(value)
+    def expectsabbr(self: Self, value: SupportsBool | Empty, /) -> None:
+        if isinstance(value, Empty):
+            self._expectsabbr = True
+        else:
+            self._expectsabbr = bool(value)
 
     @property
     def expectsposix(self: Self, /) -> bool:
         return self._expectsposix
 
     @expectsposix.setter
-    def expectsposix(self: Self, value: SupportsBool, /) -> None:
-        value_: Any
-        if value == "infer":
-            value_ = os.environ.get("POSIXLY_CORRECT")
+    def expectsposix(self: Self, value: SupportsBool | Empty, /) -> None:
+        if isinstance(value, Empty):
+            self._expectsposix = False
+        elif value == "infer":
+            self._expectsposix = bool(os.environ.get("POSIXLY_CORRECT"))
         else:
-            value_ = value
-        self._expectsposix = bool(value_)
+            self._expectsposix = bool(value)
 
     def todict(self: Self, /) -> dict[str, Any]:
         "This method returns a dict representing the current instance."

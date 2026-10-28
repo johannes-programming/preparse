@@ -18,6 +18,7 @@ from preparse._core.TransformationSettings import TransformationSettings
 from preparse._processing import process
 from preparse.core.Click import Click
 from preparse.core.Optdict import Optdict
+from preparse.enums.Empty import Empty
 from preparse.enums.Nargs import Nargs
 from preparse.enums.Tuning import Tuning
 from preparse.typing.SupportsBool import SupportsBool
@@ -37,19 +38,19 @@ class PreParser(Copyable):
         self: Self,
         /,
         *,
-        allowslong: SupportsBool = True,
-        allowsshort: SupportsBool = True,
-        bundling: int = Tuning.MAINTAIN,
-        expandsabbr: SupportsBool = True,
-        expectsabbr: SupportsBool = True,
-        expectsposix: SupportsBool = False,
+        allowslong: SupportsBool | Empty = Empty.EMPTY,
+        allowsshort: SupportsBool | Empty = Empty.EMPTY,
+        bundling: int | Empty = Empty.EMPTY,
+        expandsabbr: SupportsBool | Empty = Empty.EMPTY,
+        expectsabbr: SupportsBool | Empty = Empty.EMPTY,
+        expectsposix: SupportsBool | Empty = Empty.EMPTY,
         optdict: (
-            SupportsKeysAndGetitem | Iterable[tuple[Hashable, object]]
-        ) = (),
-        prog: object = None,
-        reconcilesorders: SupportsBool = True,
-        special: int = Tuning.MAINTAIN,
-        warn: Callable[[PreparseWarning], Any] = str,
+            SupportsKeysAndGetitem | Iterable[tuple[Hashable, object]] | Empty
+        ) = Empty.EMPTY,
+        prog: object | Empty = Empty.EMPTY,
+        reconcilesorders: SupportsBool | Empty = Empty.EMPTY,
+        special: int | Empty = Empty.EMPTY,
+        warn: Callable[[PreparseWarning], Any] | Empty = Empty.EMPTY,
     ) -> None:
         self._frameworkSettings = FrameworkSettings(
             allowslong=allowslong,
@@ -57,7 +58,10 @@ class PreParser(Copyable):
             expectsabbr=expectsabbr,
             expectsposix=expectsposix,
         )
-        self._optdict = Optdict(optdict)
+        if isinstance(optdict, Empty):
+            self._optdict = Optdict()
+        else:
+            self._optdict = Optdict(optdict)
         self._transformationSettings = TransformationSettings(
             bundling=bundling,
             expandsabbr=expandsabbr,
@@ -76,7 +80,7 @@ class PreParser(Copyable):
         return self._frameworkSettings.allowslong
 
     @allowslong.setter
-    def allowslong(self: Self, value: SupportsBool, /) -> None:
+    def allowslong(self: Self, value: SupportsBool | Empty, /) -> None:
         self._frameworkSettings.allowslong = value
 
     @property
@@ -84,7 +88,7 @@ class PreParser(Copyable):
         return self._frameworkSettings.allowsshort
 
     @allowsshort.setter
-    def allowsshort(self: Self, value: SupportsBool, /) -> None:
+    def allowsshort(self: Self, value: SupportsBool | Empty, /) -> None:
         self._frameworkSettings.allowsshort = value
 
     @property
@@ -98,7 +102,10 @@ class PreParser(Copyable):
         self._transformationSettings.bundling = Tuning(value)
 
     def click(
-        self: Self, /, cmd: SupportsBool = True, ctx: SupportsBool = True
+        self: Self,
+        /,
+        cmd: SupportsBool = True,
+        ctx: SupportsBool = True,
     ) -> Click:
         "This method returns a decorator that infuses the current instance into parse_args."
         return Click(parser=self, cmd=cmd, ctx=ctx)
@@ -112,7 +119,7 @@ class PreParser(Copyable):
         return self._transformationSettings.expandsabbr
 
     @expandsabbr.setter
-    def expandsabbr(self: Self, value: SupportsBool, /) -> None:
+    def expandsabbr(self: Self, value: SupportsBool | Empty, /) -> None:
         self._transformationSettings.expandsabbr = value
 
     @property
@@ -120,7 +127,7 @@ class PreParser(Copyable):
         return self._frameworkSettings.expectsabbr
 
     @expectsabbr.setter
-    def expectsabbr(self: Self, value: SupportsBool, /) -> None:
+    def expectsabbr(self: Self, value: SupportsBool | Empty, /) -> None:
         self._frameworkSettings.expectsabbr = value
 
     @property
@@ -128,7 +135,7 @@ class PreParser(Copyable):
         return self._frameworkSettings.expectsposix
 
     @expectsposix.setter
-    def expectsposix(self: Self, value: SupportsBool, /) -> None:
+    def expectsposix(self: Self, value: SupportsBool | Empty, /) -> None:
         self._frameworkSettings.expectsposix = value
 
     @property
@@ -139,7 +146,10 @@ class PreParser(Copyable):
     @optdict.setter
     def optdict(self: Self, value: Any, /) -> None:
         "This property gives a dictionary of options."
-        self._optdict.data = value
+        if isinstance(value, Empty):
+            self._optdict.clear()
+        else:
+            self._optdict.data = value
 
     def parse_args(
         self: Self,
@@ -164,7 +174,7 @@ class PreParser(Copyable):
         return self._transformationSettings.reconcilesorders
 
     @reconcilesorders.setter
-    def reconcilesorders(self: Self, value: SupportsBool, /) -> None:
+    def reconcilesorders(self: Self, value: SupportsBool | Empty, /) -> None:
         self._transformationSettings.reconcilesorders = value
 
     def reflectClickCommand(self: Self, /, cmd: cl.Command) -> None:
@@ -202,7 +212,7 @@ class PreParser(Copyable):
         return self._transformationSettings.special
 
     @special.setter
-    def special(self: Self, value: int, /) -> None:
+    def special(self: Self, value: int | Empty, /) -> None:
         "This Tuning property determines the approach towards the special argument."
         self._transformationSettings.special = value
 
@@ -225,8 +235,8 @@ class PreParser(Copyable):
     @warn.setter
     def warn(
         self: Self,
-        value: Callable[[PreparseWarning], Any],
+        value: Callable[[PreparseWarning], Any] | Empty,
         /,
     ) -> None:
         "This property gives a function that takes in the warnings."
-        self._transformationSettings.warn = tofunc(value)
+        self._transformationSettings.warn = value
