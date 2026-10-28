@@ -6,30 +6,34 @@ from typing import Any, Optional, Self, SupportsIndex
 import setdoc
 
 from preparse._items.Option import Option
+from preparse.enums.Nargs import Nargs
 
 
 class Long(Option):
 
     __slots__ = (
-        "_nargs",
-        "_joined",
-        "_right",
         "_abbrlen",
         "_fullkey",
+        "_joined",
+        "_nargs",
+        "_right",
     )
 
     @setdoc.basic
     def __init__(
         self: Self,
+        /,
         *,
         abbrlen: Optional[int] = None,
         fullkey: str,
         joined: bool = False,
+        nargs: Nargs = Nargs.NO_ARGUMENT,
         right: Optional[str] = None,
     ) -> None:
-        self.fullkey = fullkey
         self.abbrlen = abbrlen
+        self.fullkey = fullkey
         self.joined = joined
+        self.nargs = nargs
         self.right = right
 
     @property
@@ -62,13 +66,3 @@ class Long(Option):
     @fullkey.setter
     def fullkey(self: Self, x: object) -> None:
         self._fullkey = str(x)
-
-    @classmethod
-    def getslotnames(cls: type[Self]) -> tuple[str, ...]:
-        return (
-            "_nargs",
-            "_joined",
-            "_right",
-            "_abbrlen",
-            "_fullkey",
-        )

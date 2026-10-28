@@ -1286057,3 +1286057,34 @@ warnings = [
 
 [run35319go.optdict]
 --verbose = 0
+
+[test_minimize_short_bundle_with_hyphen_option]
+allowslong = false
+bundling = 0
+query = [
+    "--x",
+]
+solution = [
+    "--x",
+]
+warnings = nan
+
+[test_minimize_short_bundle_with_hyphen_option.optdict]
+-- = 2
+
+[test_no_options_idempotent]
+allowslong = false
+allowsshort = false
+expectsposix = true
+prog = "test_no_options_idempotent"
+query = [
+    "-c2",
+    "--",
+    "-a",
+]
+solution = [
+    "-c2",
+    "--",
+    "-a",
+]
+warnings = []

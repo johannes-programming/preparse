@@ -42,10 +42,10 @@ class Optdict(
     __init__ = datahold.HoldDict[Hashable, object].__init__
 
     @property
-    def data(self: Self) -> frozendict[str, Nargs]:
+    def data(self: Self, /) -> frozendict[str, Nargs]:
         return frozendict(self._data)
 
-    @data.setter  # type: ignore[override]
+    @data.setter
     def data(
         self: Self,
         value: SupportsKeysAndGetitem | Iterable[tuple[Hashable, object]],

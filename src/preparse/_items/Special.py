@@ -19,9 +19,5 @@ class Special(Item):
         return ["--"]
 
     @classmethod
-    def getslotnames(cls: type[Self]) -> tuple[str, ...]:
-        return ()
-
-    @classmethod
-    def sortkey(cls: type) -> int:
+    def sortkey(cls: type[Self]) -> int:
         return 1

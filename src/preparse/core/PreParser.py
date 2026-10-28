@@ -118,12 +118,10 @@ class PreParser(Copyable):
 
     @expectsposix.setter
     def expectsposix(self: Self, value: object) -> None:
-        value_: Any
         if value == "infer":
-            value_ = os.environ.get("POSIXLY_CORRECT")
+            self._data["expectsposix"] = "POSIXLY_CORRECT" in os.environ
         else:
-            value_ = value
-        self._data["expectsposix"] = bool(value_)
+            self._data["expectsposix"] = bool(value)
 
     @property
     def optdict(self: Self) -> Optdict:
