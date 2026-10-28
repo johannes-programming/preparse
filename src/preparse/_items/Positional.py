@@ -18,6 +18,10 @@ class Positional(Item):
     def deparse(self: Self) -> list[str]:
         return [self.value]
 
+    @classmethod
+    def getslotnames(cls: type[Self]) -> tuple[str, ...]:
+        return ("_value",)
+
     def isobvious(self: Self) -> bool:
         return self.value == "-" or not self.value.startswith("-")
 

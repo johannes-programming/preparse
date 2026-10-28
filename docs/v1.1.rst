@@ -48,7 +48,7 @@ how ``preparse`` can be used to modify ``click``.
 
 
     def function(x: float) -> float:
-        "This function is the logistic sigmoid, i.e. the expit function."
+        "This function is the logistical sigmoid, i.e. the expit function."
         try:
             p = math.exp(-x)
         except OverflowError:
@@ -114,7 +114,6 @@ It is designed for ``preparse.PreParser.optdict``.
 
 This ``class`` is the centerpiece of the ``preparse``.
 Its behaviour follows the principles of ``getopt`` from ``C``.
-It is intended only for parsers compatible with traditional ``getopt`` logic.
 
 ``allowslong: bool``
 """"""""""""""""""""
@@ -198,7 +197,8 @@ and interleaving options with positional arguments should be enforced.
 
 This method alters the current instance to reflect a ``click.Command`` object.
 Concretely the ``optdict`` property is changed.
-Entries in each Click option's ``opts`` and ``secondary_opts`` are reflected.
+Only entries in each Click option's ``opts`` are reflected; secondary option names
+are not added.
 
 ``reflectClickContext(ctx: click.Context) -> None``
 """""""""""""""""""""""""""""""""""""""""""""""""""
@@ -281,8 +281,8 @@ This protocol is included in the project for type annotation.
 ``__getitem__(key: Hashable, /) -> object``
 """""""""""""""""""""""""""""""""""""""""""
 
-``keys() -> Iterable[Hashable]``
-""""""""""""""""""""""""""""""""
+``keys() -> tuple[Hashable, ...]``
+""""""""""""""""""""""""""""""""""
 
 ``preparse.warnings``
 ~~~~~~~~~~~~~~~~~~~~~

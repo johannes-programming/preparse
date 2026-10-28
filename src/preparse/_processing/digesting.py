@@ -15,7 +15,6 @@ def digest(
     items: list[Item],
     *,
     allowslong: bool,
-    allowsshort: bool,
     bundling: Tuning,
     expandsabbr: bool,
     expectsposix: bool,
@@ -30,16 +29,12 @@ def digest(
     )
     ans = digest_special(
         ans,
-        allowslong=allowslong,
-        allowsshort=allowsshort,
         expectsposix=expectsposix,
         reconcilesorders=reconcilesorders,
         special=special,
     )
     ans = digest_order(
         ans,
-        allowslong=allowslong,
-        allowsshort=allowsshort,
         expectsposix=expectsposix,
         reconcilesorders=reconcilesorders,
     )
@@ -121,8 +116,6 @@ def digest_bundling_max(items: list[Item]) -> list[Item]:
 def digest_order(
     items: list[Item],
     *,
-    allowslong: bool,
-    allowsshort: bool,
     expectsposix: bool,
     reconcilesorders: bool,
 ) -> list[Item]:
@@ -130,8 +123,6 @@ def digest_order(
     comp: bool
     index: int
     ans = list(items)
-    if not (allowslong or allowsshort):
-        return ans
     if not reconcilesorders:
         return ans
     if not expectsposix:
@@ -196,8 +187,6 @@ def digest_special_max(items: list[Item]) -> list[Item]:
 def digest_special_min(
     items: list[Item],
     *,
-    allowslong: bool,
-    allowsshort: bool,
     expectsposix: bool,
     reconcilesorders: bool,
 ) -> list[Item]:
@@ -207,9 +196,7 @@ def digest_special_min(
     isposix: bool
     ans = list(items)
     isdel = True
-    isposix = expectsposix and not (
-        reconcilesorders and (allowslong or allowsshort)
-    )
+    isposix = expectsposix and not reconcilesorders
     index = len(items)
     while True:
         index -= 1

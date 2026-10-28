@@ -1,6 +1,6 @@
 __all__: list[str] = ["Bundle"]
 
-from typing import Any, Optional, Self
+from typing import Any, Self
 
 import setdoc
 
@@ -24,7 +24,7 @@ class Bundle(Option):
         chars: str,
         joined: bool = False,
         nargs: Any,
-        right: Optional[str] = None,
+        right: str | None = None,
     ) -> None:
         self.chars = chars
         self.joined = joined
@@ -51,10 +51,7 @@ class Bundle(Option):
         x = chars
         while x:
             if x == "-":
-                if ans:
-                    ans[0] = "-" + ans[0]
-                else:
-                    ans.append("-")
+                ans[0] = "-" + ans[0]
                 x = ""
             elif x.endswith("-"):
                 ans.insert(0, x[-2:])
@@ -79,6 +76,15 @@ class Bundle(Option):
             return ["-" + self.chars + self.right]
         else:
             return ["-" + self.chars, self.right]
+
+    @classmethod
+    def getslotnames(cls: type[Self]) -> tuple[str, ...]:
+        return (
+            "_chars",
+            "_joined",
+            "_nargs",
+            "_right",
+        )
 
     def split(self: Self, *, allowslong: bool) -> list[Self]:
         ans: list[Self]

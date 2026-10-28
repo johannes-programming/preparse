@@ -1,39 +1,35 @@
 __all__: list[str] = ["Long"]
 
 import operator
-from typing import Any, Optional, Self, SupportsIndex
+from typing import Any, Self, SupportsIndex
 
 import setdoc
 
 from preparse._items.Option import Option
-from preparse.enums.Nargs import Nargs
 
 
 class Long(Option):
 
     __slots__ = (
+        "_nargs",
+        "_joined",
+        "_right",
         "_abbrlen",
         "_fullkey",
-        "_joined",
-        "_nargs",
-        "_right",
     )
 
     @setdoc.basic
     def __init__(
         self: Self,
-        /,
         *,
-        abbrlen: Optional[int] = None,
+        abbrlen: int | None = None,
         fullkey: str,
         joined: bool = False,
-        nargs: Nargs = Nargs.NO_ARGUMENT,
-        right: Optional[str] = None,
+        right: str | None = None,
     ) -> None:
-        self.abbrlen = abbrlen
         self.fullkey = fullkey
+        self.abbrlen = abbrlen
         self.joined = joined
-        self.nargs = nargs
         self.right = right
 
     @property
@@ -41,11 +37,11 @@ class Long(Option):
         return self.fullkey[: self.abbrlen]
 
     @property
-    def abbrlen(self: Self) -> Optional[int]:
+    def abbrlen(self: Self) -> int | None:
         return self._abbrlen
 
     @abbrlen.setter
-    def abbrlen(self: Self, x: Optional[SupportsIndex]) -> None:
+    def abbrlen(self: Self, x: SupportsIndex | None) -> None:
         if x is None:
             self._abbrlen = None
         else:
@@ -66,3 +62,13 @@ class Long(Option):
     @fullkey.setter
     def fullkey(self: Self, x: object) -> None:
         self._fullkey = str(x)
+
+    @classmethod
+    def getslotnames(cls: type[Self]) -> tuple[str, ...]:
+        return (
+            "_nargs",
+            "_joined",
+            "_right",
+            "_abbrlen",
+            "_fullkey",
+        )

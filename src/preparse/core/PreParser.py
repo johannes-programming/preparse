@@ -5,7 +5,7 @@ __all__: list[str] = ["PreParser"]
 import os
 import sys
 from collections.abc import Callable, Hashable, Iterable
-from typing import Any, Optional, Self, cast
+from typing import Any, Self, cast
 
 import click as cl
 import setdoc
@@ -118,10 +118,12 @@ class PreParser(Copyable):
 
     @expectsposix.setter
     def expectsposix(self: Self, value: object) -> None:
+        value_: Any
         if value == "infer":
-            self._data["expectsposix"] = "POSIXLY_CORRECT" in os.environ
+            value_ = os.environ.get("POSIXLY_CORRECT")
         else:
-            self._data["expectsposix"] = bool(value)
+            value_ = value
+        self._data["expectsposix"] = bool(value_)
 
     @property
     def optdict(self: Self) -> Optdict:
@@ -140,7 +142,7 @@ class PreParser(Copyable):
 
     def parse_args(
         self: Self,
-        args: Optional[Iterable[object]] = None,
+        args: Iterable[object] | None = None,
     ) -> list[str]:
         "This method parses args."
         return process(args, **self.todict())
