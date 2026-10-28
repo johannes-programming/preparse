@@ -5,7 +5,7 @@ __all__: list[str] = ["TransformationSettings"]
 import os
 import sys
 from collections.abc import Callable
-from typing import Any, Never, Self, cast
+from typing import Any, Never, Self, SupportsIndex, cast
 
 import setdoc
 from copyable import Copyable
@@ -44,7 +44,7 @@ class TransformationSettings(Copyable):
         *,
         bundling: int = Tuning.MAINTAIN,
         expandsabbr: SupportsBool = True,
-        prog: object = None,
+        prog: object = 0,
         reconcilesorders: SupportsBool = True,
         special: int = Tuning.MAINTAIN,
         warn: Callable[[PreparseWarning], object] = str,
@@ -90,8 +90,8 @@ class TransformationSettings(Copyable):
     @prog.setter
     def prog(self: Self, value: object, /) -> None:
         "This property represents the name of the program."
-        if value is None:
-            self._prog = str(os.path.basename(sys.argv[0]))
+        if isinstance(value, SupportsIndex):
+            self._prog = str(os.path.basename(sys.argv[value]))
         else:
             self._prog = str(value)
 
