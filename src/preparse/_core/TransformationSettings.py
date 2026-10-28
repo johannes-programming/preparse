@@ -57,25 +57,25 @@ class TransformationSettings(Copyable):
         self.warn = warn
 
     @setdoc.basic
-    def __repr__(self: Self) -> str:
+    def __repr__(self: Self, /) -> str:
         return datarepr(type(self).__name__, **self.todict())
 
     @property
-    def bundling(self: Self) -> Tuning:
+    def bundling(self: Self, /) -> Tuning:
         "This property decides how to approach the bundling of short options."
         return self._bundling
 
     @bundling.setter
-    def bundling(self: Self, value: int) -> None:
+    def bundling(self: Self, value: int, /) -> None:
         "This property decides how to approach the bundling of short options."
         self._bundling = Tuning(value)
 
     @setdoc.basic
-    def copy(self: Self) -> Self:
+    def copy(self: Self, /) -> Self:
         return type(self)(**self.todict())
 
     @property
-    def expandsabbr(self: Self) -> bool:
+    def expandsabbr(self: Self, /) -> bool:
         return self._expandsabbr
 
     @expandsabbr.setter
@@ -83,7 +83,7 @@ class TransformationSettings(Copyable):
         self._expandsabbr = bool(value)
 
     @property
-    def prog(self: Self) -> str:
+    def prog(self: Self, /) -> str:
         "This property represents the name of the program."
         return self._prog
 
@@ -96,7 +96,7 @@ class TransformationSettings(Copyable):
             self._prog = str(value)
 
     @property
-    def reconcilesorders(self: Self) -> bool:
+    def reconcilesorders(self: Self, /) -> bool:
         return self._reconcilesorders
 
     @reconcilesorders.setter
@@ -104,7 +104,7 @@ class TransformationSettings(Copyable):
         self._reconcilesorders = bool(value)
 
     @property
-    def special(self: Self) -> Tuning:
+    def special(self: Self, /) -> Tuning:
         "This Tuning property determines the approach towards the special argument."
         return self._special
 
@@ -113,7 +113,7 @@ class TransformationSettings(Copyable):
         "This Tuning property determines the approach towards the special argument."
         self._special = Tuning(value)
 
-    def todict(self: Self) -> dict[str, Any]:
+    def todict(self: Self, /) -> dict[str, Any]:
         "This method returns a dict representing the current instance."
         return dict(
             bundling=self.bundling,
@@ -135,6 +135,7 @@ class TransformationSettings(Copyable):
     def warn(
         self: Self,
         value: Callable[[PreparseWarning], Any],
+        /,
     ) -> None:
         "This property gives a function that takes in the warnings."
         self._warn = tofunc(value)
