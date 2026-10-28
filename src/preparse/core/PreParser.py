@@ -18,6 +18,7 @@ from preparse._core.TransformationSettings import TransformationSettings
 from preparse._processing import process
 from preparse.core.Click import Click
 from preparse.core.Optdict import Optdict
+from preparse.enums.Empty import Empty
 from preparse.enums.Nargs import Nargs
 from preparse.enums.Tuning import Tuning
 from preparse.typing.SupportsBool import SupportsBool
@@ -37,19 +38,19 @@ class PreParser(Copyable):
         self: Self,
         /,
         *,
-        allowslong: SupportsBool = True,
-        allowsshort: SupportsBool = True,
-        bundling: int = Tuning.MAINTAIN,
-        expandsabbr: SupportsBool = True,
-        expectsabbr: SupportsBool = True,
-        expectsposix: SupportsBool = False,
+        allowslong: SupportsBool | Empty = Empty.EMPTY,
+        allowsshort: SupportsBool | Empty = Empty.EMPTY,
+        bundling: int | Empty = Empty.EMPTY,
+        expandsabbr: SupportsBool | Empty = Empty.EMPTY,
+        expectsabbr: SupportsBool | Empty = Empty.EMPTY,
+        expectsposix: SupportsBool | Empty = Empty.EMPTY,
         optdict: (
-            SupportsKeysAndGetitem | Iterable[tuple[Hashable, object]]
-        ) = (),
-        prog: object = None,
-        reconcilesorders: SupportsBool = True,
-        special: int = Tuning.MAINTAIN,
-        warn: Callable[[PreparseWarning], Any] = str,
+            SupportsKeysAndGetitem | Iterable[tuple[Hashable, object]] | Empty
+        ) = Empty.EMPTY,
+        prog: object | Empty = Empty.EMPTY,
+        reconcilesorders: SupportsBool | Empty = Empty.EMPTY,
+        special: int | Empty = Empty.EMPTY,
+        warn: Callable[[PreparseWarning], Any] | Empty = Empty.EMPTY,
     ) -> None:
         self._frameworkSettings = FrameworkSettings(
             allowslong=allowslong,
@@ -68,15 +69,15 @@ class PreParser(Copyable):
         )
 
     @setdoc.basic
-    def __repr__(self: Self) -> str:
+    def __repr__(self: Self, /) -> str:
         return datarepr(type(self).__name__, **self.todict())
 
     @property
-    def allowslong(self: Self) -> bool:
+    def allowslong(self: Self, /) -> bool:
         return self._frameworkSettings.allowslong
 
     @allowslong.setter
-    def allowslong(self: Self, value: SupportsBool) -> None:
+    def allowslong(self: Self, value: SupportsBool | Empty, /) -> None:
         self._frameworkSettings.allowslong = value
 
     @property
@@ -84,100 +85,96 @@ class PreParser(Copyable):
         return self._frameworkSettings.allowsshort
 
     @allowsshort.setter
-    def allowsshort(self: Self, value: SupportsBool) -> None:
+    def allowsshort(self: Self, value: SupportsBool | Empty, /) -> None:
         self._frameworkSettings.allowsshort = value
 
     @property
-    def bundling(self: Self) -> Tuning:
+    def bundling(self: Self, /) -> Tuning:
         "This property decides how to approach the bundling of short options."
         return self._transformationSettings.bundling
 
     @bundling.setter
-    def bundling(self: Self, value: int) -> None:
+    def bundling(self: Self, value: int, /) -> None:
         "This property decides how to approach the bundling of short options."
         self._transformationSettings.bundling = Tuning(value)
 
     def click(
-        self: Self, cmd: SupportsBool = True, ctx: SupportsBool = True
+        self: Self,
+        cmd: SupportsBool = True,
+        ctx: SupportsBool = True,
     ) -> Click:
         "This method returns a decorator that infuses the current instance into parse_args."
         return Click(parser=self, cmd=cmd, ctx=ctx)
 
     @setdoc.basic
-    def copy(self: Self) -> Self:
+    def copy(self: Self, /) -> Self:
         return type(self)(**self.todict())
 
     @property
-    def expandsabbr(self: Self) -> bool:
+    def expandsabbr(self: Self, /) -> bool:
         return self._transformationSettings.expandsabbr
 
     @expandsabbr.setter
-    def expandsabbr(self: Self, value: SupportsBool, /) -> None:
+    def expandsabbr(self: Self, value: SupportsBool | Empty, /) -> None:
         self._transformationSettings.expandsabbr = value
 
     @property
-    def expectsabbr(self: Self) -> bool:
+    def expectsabbr(self: Self, /) -> bool:
         return self._frameworkSettings.expectsabbr
 
     @expectsabbr.setter
-    def expectsabbr(self: Self, value: SupportsBool) -> None:
+    def expectsabbr(self: Self, value: SupportsBool | Empty, /) -> None:
         self._frameworkSettings.expectsabbr = value
 
     @property
-    def expectsposix(self: Self) -> bool:
+    def expectsposix(self: Self, /) -> bool:
         return self._frameworkSettings.expectsposix
 
     @expectsposix.setter
-    def expectsposix(self: Self, value: SupportsBool) -> None:
-        value_: Any
-        if value == "infer":
-            value_ = os.environ.get("POSIXLY_CORRECT")
-        else:
-            value_ = value
-        self._frameworkSettings.expectsposix = value_
+    def expectsposix(self: Self, value: SupportsBool | Empty, /) -> None:
+        self._frameworkSettings.expectsposix = value
 
     @property
-    def optdict(self: Self) -> Optdict:
+    def optdict(self: Self, /) -> Optdict:
         "This property gives a dictionary of options."
         return self._optdict
 
     @optdict.setter
-    def optdict(self: Self, value: Any) -> None:
+    def optdict(self: Self, value: Any, /) -> None:
         "This property gives a dictionary of options."
         value_: Optdict
-        value_ = Optdict(value)
-        self._optdict.clear()
-        self._optdict.update(value_)
+        if isinstance(value, Empty):
+            self._optdict.clear()
+        else:
+            self._optdict.data = value
 
     def parse_args(
         self: Self,
         args: Iterable[object] | None = None,
+        /,
     ) -> list[str]:
         "This method parses args."
         return process(args, **self.todict())
 
     @property
-    def prog(self: Self) -> str:
+    def prog(self: Self, /) -> str:
         "This property represents the name of the program."
         return self._transformationSettings.prog
 
     @prog.setter
     def prog(self: Self, value: object, /) -> None:
         "This property represents the name of the program."
-        if value is None:
-            self._transformationSettings.prog = os.path.basename(sys.argv[0])
-        else:
-            self._transformationSettings.prog = value
+        self._transformationSettings.prog = value
 
     @property
-    def reconcilesorders(self: Self) -> bool:
+    def reconcilesorders(self: Self, /) -> bool:
         return self._transformationSettings.reconcilesorders
 
     @reconcilesorders.setter
-    def reconcilesorders(self: Self, value: SupportsBool, /) -> None:
+    def reconcilesorders(self: Self, value: SupportsBool | Empty, /) -> None:
         self._transformationSettings.reconcilesorders = value
 
-    def reflectClickCommand(self: Self, cmd: cl.Command) -> None:
+    def reflectClickCommand(self: Self, /, cmd: cl.Command) -> None:
         "This method causes the current instance to reflect a click.Command object."
         nargs: Nargs
         opt: Any
@@ -202,31 +199,32 @@ class PreParser(Copyable):
         self.optdict.clear()
         self.optdict.update(optdict)
 
-    def reflectClickContext(self: Self, ctx: cl.Context) -> None:
+    def reflectClickContext(self: Self, /, ctx: cl.Context) -> None:
         "This method causes the current instance to reflect a click.Context object."
         self.prog = ctx.info_name
 
     @property
-    def special(self: Self) -> Tuning:
+    def special(self: Self, /) -> Tuning:
         "This Tuning property determines the approach towards the special argument."
         return self._transformationSettings.special
 
     @special.setter
-    def special(self: Self, value: int, /) -> None:
+    def special(self: Self, value: int | Empty, /) -> None:
         "This Tuning property determines the approach towards the special argument."
         self._transformationSettings.special = value
 
-    def todict(self: Self) -> dict[str, Any]:
+    def todict(self: Self, /) -> dict[str, Any]:
         "This method returns a dict representing the current instance."
         ans: dict[str, Any]
         ans = self._frameworkSettings.todict()
         ans |= dict(optdict=self.optdict)
         ans |= self._transformationSettings.todict()
-        return dict(tuple(ans.items()))
+        return dict(sorted(ans.items()))
 
     @property
     def warn(
         self: Self,
+        /,
     ) -> Callable[[PreparseWarning], Any]:
         "This property gives a function that takes in the warnings."
         return self._transformationSettings.warn
@@ -234,7 +232,8 @@ class PreParser(Copyable):
     @warn.setter
     def warn(
         self: Self,
-        value: Callable[[PreparseWarning], Any],
+        value: Callable[[PreparseWarning], Any] | Empty,
+        /,
     ) -> None:
         "This property gives a function that takes in the warnings."
-        self._transformationSettings.warn = tofunc(value)
+        self._transformationSettings.warn = value

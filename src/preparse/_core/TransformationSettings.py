@@ -5,7 +5,7 @@ __all__: list[str] = ["TransformationSettings"]
 import os
 import sys
 from collections.abc import Callable
-from typing import Any, Self, cast
+from typing import Any, Never, Self, cast
 
 import setdoc
 from copyable import Copyable
@@ -13,6 +13,7 @@ from datarepr import datarepr
 from tofunc import tofunc
 
 from preparse.core.Click import Click
+from preparse.enums.Empty import Empty
 from preparse.enums.Nargs import Nargs
 from preparse.enums.Tuning import Tuning
 from preparse.typing.SupportsBool import SupportsBool
@@ -41,13 +42,14 @@ class TransformationSettings(Copyable):
     @setdoc.basic
     def __init__(
         self: Self,
+        /,
         *,
         bundling: int = Tuning.MAINTAIN,
-        expandsabbr: SupportsBool = True,
-        prog: object = None,
-        reconcilesorders: SupportsBool = True,
-        special: int = Tuning.MAINTAIN,
-        warn: Callable[[PreparseWarning], Any] = str,
+        expandsabbr: SupportsBool | Empty = Empty.EMPTY,
+        prog: object = Empty.EMPTY,
+        reconcilesorders: SupportsBool | Empty = Empty.EMPTY,
+        special: int | Empty = Empty.EMPTY,
+        warn: Callable[[PreparseWarning], Any] | Empty = Empty.EMPTY,
     ) -> None:
         self.bundling = bundling
         self.expandsabbr = expandsabbr
@@ -57,40 +59,46 @@ class TransformationSettings(Copyable):
         self.warn = warn
 
     @setdoc.basic
-    def __repr__(self: Self) -> str:
+    def __repr__(self: Self, /) -> str:
         return datarepr(type(self).__name__, **self.todict())
 
     @property
-    def bundling(self: Self) -> Tuning:
+    def bundling(self: Self, /) -> Tuning:
         "This property decides how to approach the bundling of short options."
         return self._bundling
 
     @bundling.setter
-    def bundling(self: Self, value: int) -> None:
+    def bundling(self: Self, value: int | Empty, /) -> None:
         "This property decides how to approach the bundling of short options."
-        self._bundling = Tuning(value)
+        if isinstance(value, Empty):
+            self._bundling = Tuning.MAINTAIN
+        else:
+            self._bundling = Tuning(value)
 
     @setdoc.basic
-    def copy(self: Self) -> Self:
+    def copy(self: Self, /) -> Self:
         return type(self)(**self.todict())
 
     @property
-    def expandsabbr(self: Self) -> bool:
+    def expandsabbr(self: Self, /) -> bool:
         return self._expandsabbr
 
     @expandsabbr.setter
-    def expandsabbr(self: Self, value: SupportsBool, /) -> None:
-        self._expandsabbr = bool(value)
+    def expandsabbr(self: Self, value: SupportsBool | Empty, /) -> None:
+        if isinstance(value, Empty):
+            self._expandsabbr = True
+        else:
+            self._expandsabbr = bool(value)
 
     @property
-    def prog(self: Self) -> str:
+    def prog(self: Self, /) -> str:
         "This property represents the name of the program."
         return self._prog
 
     @prog.setter
     def prog(self: Self, value: object, /) -> None:
         "This property represents the name of the program."
-        if value is None:
+        if isinstance(value, Empty) or value is None:
             self._prog = str(os.path.basename(sys.argv[0]))
         else:
             self._prog = str(value)
@@ -100,20 +108,26 @@ class TransformationSettings(Copyable):
         return self._reconcilesorders
 
     @reconcilesorders.setter
-    def reconcilesorders(self: Self, value: SupportsBool, /) -> None:
-        self._reconcilesorders = bool(value)
+    def reconcilesorders(self: Self, value: SupportsBool | Empty, /) -> None:
+        if isinstance(value, Empty):
+            self._reconcilesorders = True
+        else:
+            self._reconcilesorders = bool(value)
 
     @property
-    def special(self: Self) -> Tuning:
+    def special(self: Self, /) -> Tuning:
         "This Tuning property determines the approach towards the special argument."
         return self._special
 
     @special.setter
-    def special(self: Self, value: int, /) -> None:
+    def special(self: Self, value: int | Empty, /) -> None:
         "This Tuning property determines the approach towards the special argument."
-        self._special = Tuning(value)
+        if isinstance(value, Empty):
+            self._special = Tuning.MAINTAIN
+        else:
+            self._special = Tuning(value)
 
-    def todict(self: Self) -> dict[str, Any]:
+    def todict(self: Self, /) -> dict[str, Any]:
         "This method returns a dict representing the current instance."
         return dict(
             bundling=self.bundling,
@@ -127,14 +141,19 @@ class TransformationSettings(Copyable):
     @property
     def warn(
         self: Self,
-    ) -> Callable[[PreparseWarning], Any]:
+        /,
+    ) -> Callable[[PreparseWarning], object]:
         "This property gives a function that takes in the warnings."
         return self._warn
 
     @warn.setter
     def warn(
         self: Self,
-        value: Callable[[PreparseWarning], Any],
+        value: Callable[[PreparseWarning], Never] | Empty,
+        /,
     ) -> None:
         "This property gives a function that takes in the warnings."
-        self._warn = tofunc(value)
+        if isinstance(value, Empty):
+            self._warn = tofunc(str)
+        else:
+            self._warn = tofunc(value)
