@@ -212,7 +212,7 @@ class PreParser(Copyable):
         ans = self._frameworkSettings.todict()
         ans |= dict(optdict=self.optdict)
         ans |= self._transformationSettings.todict()
-        return dict(tuple(ans.items()))
+        return dict(sorted(ans.items()))
 
     @property
     def warn(
