@@ -4,6 +4,7 @@ __all__: list[str] = ["FrameworkSettings"]
 
 import os
 import sys
+from enum import StrEnum
 from typing import Any, Self
 
 import setdoc
@@ -14,6 +15,10 @@ from tofunc import tofunc
 from preparse.enums.Nargs import Nargs
 from preparse.enums.Tuning import Tuning
 from preparse.typing.SupportsBool import SupportsBool
+
+
+class Infer(StrEnum):
+    INFER = "infer"
 
 
 class FrameworkSettings(Copyable):
@@ -28,38 +33,30 @@ class FrameworkSettings(Copyable):
     @setdoc.basic
     def __init__(
         self: Self,
-        other: FrameworkSettings | None = None,
+        other: FrameworkSettings | Infer = Infer.INFER,
         /,
         *,
-        allowslong: SupportsBool | None = None,
-        allowsshort: SupportsBool | None = None,
-        expectsabbr: SupportsBool | None = None,
-        expectsposix: SupportsBool | None = None,
+        allowslong: SupportsBool | Infer = Infer.INFER,
+        allowsshort: SupportsBool | Infer = Infer.INFER,
+        expectsabbr: SupportsBool | Infer = Infer.INFER,
+        expectsposix: SupportsBool | Infer = Infer.INFER,
     ) -> None:
-        if allowslong is not None:
+        if isinstance(other, Infer) or not isinstance(allowslong, Infer):
             self.allowslong = allowslong
-        elif other is not None:
+        else:
             self.allowslong = other.allowslong
-        else:
-            self.allowslong = True
-        if allowsshort is not None:
+        if isinstance(other, Infer) or not isinstance(allowsshort, Infer):
             self.allowsshort = allowsshort
-        elif other is not None:
+        else:
             self.allowsshort = other.allowsshort
-        else:
-            self.allowsshort = True
-        if expectsabbr is not None:
+        if isinstance(other, Infer) or not isinstance(expectsabbr, Infer):
             self.expectsabbr = expectsabbr
-        elif other is not None:
+        else:
             self.expectsabbr = other.expectsabbr
-        else:
-            self.expectsabbr = True
-        if expectsposix is not None:
+        if isinstance(other, Infer) or not isinstance(expectsposix, Infer):
             self.expectsposix = expectsposix
-        elif other is not None:
-            self.expectsposix = other.expectsposix
         else:
-            self.expectsposix = False
+            self.expectsposix = other.expectsposix
 
     @setdoc.basic
     def __repr__(self: Self, /) -> str:
@@ -70,16 +67,22 @@ class FrameworkSettings(Copyable):
         return self._allowslong
 
     @allowslong.setter
-    def allowslong(self: Self, value: SupportsBool, /) -> None:
-        self._allowslong = bool(value)
+    def allowslong(self: Self, value: SupportsBool | Infer, /) -> None:
+        if isinstance(value, Infer):
+            self._allowslong = True
+        else:
+            self._allowslong = bool(value)
 
     @property
     def allowsshort(self: Self, /) -> bool:
         return self._allowsshort
 
     @allowsshort.setter
-    def allowsshort(self: Self, value: SupportsBool, /) -> None:
-        self._allowsshort = bool(value)
+    def allowsshort(self: Self, value: SupportsBool | Infer, /) -> None:
+        if isinstance(value, Infer):
+            self._allowsshort = True
+        else:
+            self._allowsshort = bool(value)
 
     @setdoc.basic
     def copy(self: Self, /) -> Self:
@@ -91,20 +94,21 @@ class FrameworkSettings(Copyable):
 
     @expectsabbr.setter
     def expectsabbr(self: Self, value: SupportsBool, /) -> None:
-        self._expectsabbr = bool(value)
+        if isinstance(value, Infer):
+            self._expectsabbr = True
+        else:
+            self._expectsabbr = bool(value)
 
     @property
     def expectsposix(self: Self, /) -> bool:
         return self._expectsposix
 
     @expectsposix.setter
-    def expectsposix(self: Self, value: SupportsBool, /) -> None:
-        value_: Any
-        if value == "infer":
-            value_ = os.environ.get("POSIXLY_CORRECT")
+    def expectsposix(self: Self, value: SupportsBool | Infer, /) -> None:
+        if isinstance(value, Infer) or value == "infer":
+            self._expectsposix = bool(os.environ.get("POSIXLY_CORRECT"))
         else:
-            value_ = value
-        self._expectsposix = bool(value_)
+            self._expectsposix = bool(value)
 
     def todict(self: Self, /) -> dict[str, Any]:
         "This method returns a dict representing the current instance."

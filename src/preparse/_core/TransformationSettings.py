@@ -42,11 +42,11 @@ class TransformationSettings(Copyable):
     def __init__(
         self: Self,
         *,
-        bundling: object = Tuning.MAINTAIN,
+        bundling: int = Tuning.MAINTAIN,
         expandsabbr: SupportsBool = True,
         prog: object = None,
         reconcilesorders: SupportsBool = True,
-        special: object = Tuning.MAINTAIN,
+        special: int = Tuning.MAINTAIN,
         warn: Callable[[PreparseWarning], Any] = str,
     ) -> None:
         self.bundling = bundling
@@ -66,7 +66,7 @@ class TransformationSettings(Copyable):
         return self._bundling
 
     @bundling.setter
-    def bundling(self: Self, value: object) -> None:
+    def bundling(self: Self, value: int) -> None:
         "This property decides how to approach the bundling of short options."
         self._bundling = Tuning(value)
 
@@ -109,7 +109,7 @@ class TransformationSettings(Copyable):
         return self._special
 
     @special.setter
-    def special(self: Self, value: object, /) -> None:
+    def special(self: Self, value: int, /) -> None:
         "This Tuning property determines the approach towards the special argument."
         self._special = Tuning(value)
 
