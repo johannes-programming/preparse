@@ -48,7 +48,7 @@ how ``preparse`` can be used to modify ``click``.
 
 
     def function(x: float) -> float:
-        "This function is the logistical sigmoid, i.e. the expit function."
+        "This function is the logistic sigmoid, i.e. the expit function."
         try:
             p = math.exp(-x)
         except OverflowError:
@@ -109,11 +109,13 @@ This class is a subclass of ``datahold.HoldDict[str, preparse.Nargs]``
 with strings as keys and with ``preparse.Nargs`` as values.
 It is designed for ``preparse.PreParser.optdict``.
 
-``class preparse.core.PreParser.PreParser(*, allowslong: object = True, allowsshort: object = True, bundling: int = Tuning.MAINTAIN, expandsabbr: object = True, expectsabbr: object = True, expectsposix: object = False, optdict: preparse.typing.SupportsKeysAndGetitem.SupportsKeysAndGetitem | Iterable[tuple[Hashable, object]] = (), prog: object = None, reconcilesorders: object = True, special: int = preparse.Tuning.MAINTAIN, warn: Callable[[PreparseWarning], Any] = str)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.core.PreParser.PreParser(other: PreParser | NoChange = NoChange.NO_CHANGE, /, *, allowslong: SupportsBool | NoChange = NoChange.NO_CHANGE, allowsshort: SupportsBool | NoChange = NoChange.NO_CHANGE, bundling: int | NoChange = NoChange.NO_CHANGE, expandsabbr: SupportsBool | NoChange = NoChange.NO_CHANGE, expectsabbr: SupportsBool | NoChange = NoChange.NO_CHANGE, expectsposix: SupportsBool | NoChange = NoChange.NO_CHANGE, optdict: SupportsKeysAndGetitem | Iterable[tuple[Hashable, object]] | NoChange = NoChange.NO_CHANGE, prog: object | NoChange = NoChange.NO_CHANGE, reconcilesorders: SupportsBool | NoChange = NoChange.NO_CHANGE, special: int | NoChange = NoChange.NO_CHANGE, warn: Callable[[PreparseWarning], Any] | NoChange = NoChange.NO_CHANGE)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This ``class`` is the centerpiece of the ``preparse``.
 Its behaviour follows the principles of ``getopt`` from ``C``.
+The optional ``other`` argument copies the settings of another ``PreParser``.
+``NoChange.NO_CHANGE`` preserves an existing setting or uses its default.
 
 ``allowslong: bool``
 """"""""""""""""""""
@@ -130,8 +132,8 @@ This boolean ``property`` determines whether short options are allowed.
 
 This ``property`` determines the approach to bundling of short options.
 
-``click(cmd: object = True, ctx: object = True) -> preparse.Click``
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+``click(cmd: SupportsBool = True, ctx: SupportsBool = True) -> preparse.Click``
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 This method returns a decorator that infuses the current instance into ``parse_args``.
 
@@ -197,8 +199,7 @@ and interleaving options with positional arguments should be enforced.
 
 This method alters the current instance to reflect a ``click.Command`` object.
 Concretely the ``optdict`` property is changed.
-Only entries in each Click option's ``opts`` are reflected; secondary option names
-are not added.
+Entries in each Click option's ``opts`` and ``secondary_opts`` are reflected.
 
 ``reflectClickContext(ctx: click.Context) -> None``
 """""""""""""""""""""""""""""""""""""""""""""""""""
@@ -272,6 +273,11 @@ This project can be tested through its ``test`` function.
 
 ``preparse.typing``
 ~~~~~~~~~~~~~~~~~~~
+
+``preparse.typing.SupportsBool.SupportsBool``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This type alias represents ``collections.abc.Sized | int``.
 
 ``class preparse.typing.SupportsKeysAndGetitem.SupportsKeysAndGetitem``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
