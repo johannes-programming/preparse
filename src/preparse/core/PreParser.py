@@ -5,7 +5,7 @@ __all__: list[str] = ["PreParser"]
 import os
 import sys
 from collections.abc import Callable, Hashable, Iterable
-from typing import Any, Optional, Self, cast
+from typing import Any, Self, cast
 
 import click as cl
 import setdoc
@@ -142,7 +142,7 @@ class PreParser(Copyable):
 
     def parse_args(
         self: Self,
-        args: Optional[Iterable[object]] = None,
+        args: Iterable[object] | None = None,
     ) -> list[str]:
         "This method parses args."
         return process(args, **self.todict())
