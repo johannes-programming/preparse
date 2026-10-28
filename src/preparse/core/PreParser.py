@@ -39,7 +39,7 @@ class PreParser(Copyable):
         *,
         allowslong: SupportsBool = True,
         allowsshort: SupportsBool = True,
-        bundling: int = Tuning.MAINTAIN,
+        bundling: object = Tuning.MAINTAIN,
         expandsabbr: SupportsBool = True,
         expectsabbr: SupportsBool = True,
         expectsposix: SupportsBool = False,
@@ -48,7 +48,7 @@ class PreParser(Copyable):
         ) = (),
         prog: object = None,
         reconcilesorders: SupportsBool = True,
-        special: int = Tuning.MAINTAIN,
+        special: object = Tuning.MAINTAIN,
         warn: Callable[[PreparseWarning], Any] = str,
     ) -> None:
         self._frameworkSettings = FrameworkSettings(
@@ -93,7 +93,7 @@ class PreParser(Copyable):
         return self._transformationSettings.bundling
 
     @bundling.setter
-    def bundling(self: Self, value: int) -> None:
+    def bundling(self: Self, value: object, /) -> None:
         "This property decides how to approach the bundling of short options."
         self._transformationSettings.bundling = Tuning(value)
 
@@ -207,12 +207,12 @@ class PreParser(Copyable):
         self.prog = ctx.info_name
 
     @property
-    def special(self: Self) -> Tuning:
+    def special(self: Self, /) -> Tuning:
         "This Tuning property determines the approach towards the special argument."
         return self._transformationSettings.special
 
     @special.setter
-    def special(self: Self, value: int, /) -> None:
+    def special(self: Self, value: object, /) -> None:
         "This Tuning property determines the approach towards the special argument."
         self._transformationSettings.special = value
 
