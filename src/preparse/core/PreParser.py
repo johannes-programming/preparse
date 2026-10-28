@@ -13,9 +13,9 @@ from copyable import Copyable
 from datarepr import datarepr
 from tofunc import tofunc
 
-from preparse._core.FrameworkSettings import FrameworkSettings
+from preparse._core.Framework import Framework
 from preparse._core.no_change_setter import no_change_setter
-from preparse._core.TransformationSettings import TransformationSettings
+from preparse._core.Transformation import Transformation
 from preparse._processing import process
 from preparse.core.Click import Click
 from preparse.core.Optdict import Optdict
@@ -28,11 +28,11 @@ from preparse.warnings.PreparseWarning import PreparseWarning
 
 
 class PreParser(Copyable):
-    _frameworkSettings: FrameworkSettings
+    _framework: Framework
     _optdict: Optdict
-    _transformationSettings: TransformationSettings
+    _transformation: Transformation
 
-    __slots__ = ("_frameworkSettings", "_optdict", "_transformationSettings")
+    __slots__ = ("_framework", "_optdict", "_transformation")
 
     @setdoc.basic
     def __init__(
@@ -56,21 +56,21 @@ class PreParser(Copyable):
         special: int | NoChange = NoChange.NO_CHANGE,
         warn: Callable[[PreparseWarning], Any] | NoChange = NoChange.NO_CHANGE,
     ) -> None:
-        self._frameworkSettings = FrameworkSettings()
+        self._framework = Framework()
         self._optdict = Optdict()
-        self._transformationSettings = TransformationSettings()
+        self._transformation = Transformation()
         self._init_other(other)
-        self._frameworkSettings.allowslong = allowslong
-        self._frameworkSettings.allowsshort = allowsshort
-        self._frameworkSettings.expectsabbr = expectsabbr
-        self._frameworkSettings.expectsposix = expectsposix
+        self._framework.allowslong = allowslong
+        self._framework.allowsshort = allowsshort
+        self._framework.expectsabbr = expectsabbr
+        self._framework.expectsposix = expectsposix
         self.optdict.data = optdict
-        self._transformationSettings.bundling = bundling
-        self._transformationSettings.expandsabbr = expandsabbr
-        self._transformationSettings.prog = prog
-        self._transformationSettings.reconcilesorders = reconcilesorders
-        self._transformationSettings.special = special
-        self._transformationSettings.warn = warn
+        self._transformation.bundling = bundling
+        self._transformation.expandsabbr = expandsabbr
+        self._transformation.prog = prog
+        self._transformation.reconcilesorders = reconcilesorders
+        self._transformation.special = special
+        self._transformation.warn = warn
 
     @setdoc.basic
     def __repr__(self: Self, /) -> str:
@@ -78,38 +78,38 @@ class PreParser(Copyable):
 
     @no_change_setter
     def _init_other(self: Self, other: PreParser, /) -> None:
-        self._frameworkSettings._init_other(other._frameworkSettings)
+        self._framework._init_other(other._framework)
         self.optdict.data = other.optdict
-        self._transformationSettings._init_other(other._transformationSettings)
+        self._transformation._init_other(other._transformation)
 
     @property
     def allowslong(self: Self, /) -> bool:
-        return self._frameworkSettings.allowslong
+        return self._framework.allowslong
 
     @allowslong.setter
     @no_change_setter
     def allowslong(self: Self, value: SupportsBool, /) -> None:
-        self._frameworkSettings.allowslong = value
+        self._framework.allowslong = value
 
     @property
     def allowsshort(self: Self, /) -> bool:
-        return self._frameworkSettings.allowsshort
+        return self._framework.allowsshort
 
     @allowsshort.setter
     @no_change_setter
     def allowsshort(self: Self, value: SupportsBool, /) -> None:
-        self._frameworkSettings.allowsshort = value
+        self._framework.allowsshort = value
 
     @property
     def bundling(self: Self, /) -> Tuning:
         "This property decides how to approach the bundling of short options."
-        return self._transformationSettings.bundling
+        return self._transformation.bundling
 
     @bundling.setter
     @no_change_setter
     def bundling(self: Self, value: int, /) -> None:
         "This property decides how to approach the bundling of short options."
-        self._transformationSettings.bundling = Tuning(value)
+        self._transformation.bundling = Tuning(value)
 
     def click(
         self: Self, /, cmd: SupportsBool = True, ctx: SupportsBool = True
@@ -123,30 +123,30 @@ class PreParser(Copyable):
 
     @property
     def expandsabbr(self: Self, /) -> bool:
-        return self._transformationSettings.expandsabbr
+        return self._transformation.expandsabbr
 
     @expandsabbr.setter
     @no_change_setter
     def expandsabbr(self: Self, value: SupportsBool, /) -> None:
-        self._transformationSettings.expandsabbr = value
+        self._transformation.expandsabbr = value
 
     @property
     def expectsabbr(self: Self, /) -> bool:
-        return self._frameworkSettings.expectsabbr
+        return self._framework.expectsabbr
 
     @expectsabbr.setter
     @no_change_setter
     def expectsabbr(self: Self, value: SupportsBool, /) -> None:
-        self._frameworkSettings.expectsabbr = value
+        self._framework.expectsabbr = value
 
     @property
     def expectsposix(self: Self, /) -> bool:
-        return self._frameworkSettings.expectsposix
+        return self._framework.expectsposix
 
     @expectsposix.setter
     @no_change_setter
     def expectsposix(self: Self, value: SupportsBool, /) -> None:
-        self._frameworkSettings.expectsposix = value
+        self._framework.expectsposix = value
 
     @property
     def optdict(self: Self, /) -> Optdict:
@@ -170,22 +170,22 @@ class PreParser(Copyable):
     @property
     def prog(self: Self, /) -> str:
         "This property represents the name of the program."
-        return self._transformationSettings.prog
+        return self._transformation.prog
 
     @prog.setter
     @no_change_setter
     def prog(self: Self, value: object, /) -> None:
         "This property represents the name of the program."
-        self._transformationSettings.prog = value
+        self._transformation.prog = value
 
     @property
     def reconcilesorders(self: Self, /) -> bool:
-        return self._transformationSettings.reconcilesorders
+        return self._transformation.reconcilesorders
 
     @reconcilesorders.setter
     @no_change_setter
     def reconcilesorders(self: Self, value: SupportsBool, /) -> None:
-        self._transformationSettings.reconcilesorders = value
+        self._transformation.reconcilesorders = value
 
     def reflectClickCommand(self: Self, /, cmd: cl.Command) -> None:
         "This method causes the current instance to reflect a click.Command object."
@@ -219,20 +219,20 @@ class PreParser(Copyable):
     @property
     def special(self: Self, /) -> Tuning:
         "This Tuning property determines the approach towards the special argument."
-        return self._transformationSettings.special
+        return self._transformation.special
 
     @special.setter
     @no_change_setter
     def special(self: Self, value: int, /) -> None:
         "This Tuning property determines the approach towards the special argument."
-        self._transformationSettings.special = value
+        self._transformation.special = value
 
     def todict(self: Self, /) -> dict[str, Any]:
         "This method returns a dict representing the current instance."
         ans: dict[str, Any]
-        ans = self._frameworkSettings.todict()
+        ans = self._framework.todict()
         ans |= dict(optdict=self.optdict)
-        ans |= self._transformationSettings.todict()
+        ans |= self._transformation.todict()
         return dict(sorted(ans.items()))
 
     @property
@@ -241,7 +241,7 @@ class PreParser(Copyable):
         /,
     ) -> Callable[[PreparseWarning], Any]:
         "This property gives a function that takes in the warnings."
-        return self._transformationSettings.warn
+        return self._transformation.warn
 
     @warn.setter
     @no_change_setter
@@ -251,4 +251,4 @@ class PreParser(Copyable):
         /,
     ) -> None:
         "This property gives a function that takes in the warnings."
-        self._transformationSettings.warn = tofunc(value)
+        self._transformation.warn = tofunc(value)
