@@ -71,8 +71,8 @@ Features
 ``preparse.core``
 ~~~~~~~~~~~~~~~~~
 
-``class preparse.core.Click.Click(parser: preparse.PreParser, cmd: object = True, ctx: object = True)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.core.Click.Click(parser: preparse.PreParser, cmd: SupportsBool = True, ctx: SupportsBool = True)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This dataclass provides decorators for embedding a ``PreParser`` object.
 
@@ -82,8 +82,8 @@ This dataclass provides decorators for embedding a ``PreParser`` object.
 This magic method implements ``self(target)``.
 It works as a decorator that embeds its parser into a given target from the library ``click``.
 
-``cmd: object``
-"""""""""""""""
+``cmd: SupportsBool``
+"""""""""""""""""""""
 
 This dataclass field determines if the ``reflectClickCommand`` method of parser is to be called.
 
@@ -92,8 +92,8 @@ This dataclass field determines if the ``reflectClickCommand`` method of parser 
 
 This method returns a shallow copy of the current decorator.
 
-``ctx: object``
-"""""""""""""""
+``ctx: SupportsBool``
+"""""""""""""""""""""
 
 This dataclass field determines if the ``reflectClickContext`` method of parser is to be called.
 
