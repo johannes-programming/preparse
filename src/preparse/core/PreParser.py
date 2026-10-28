@@ -20,6 +20,7 @@ from preparse._processing import process
 from preparse.core.Click import Click
 from preparse.core.Optdict import Optdict
 from preparse.enums.Nargs import Nargs
+from preparse.enums.NoChange import NoChange
 from preparse.enums.Tuning import Tuning
 from preparse.typing.SupportsBool import SupportsBool
 from preparse.typing.SupportsKeysAndGetitem import SupportsKeysAndGetitem
@@ -36,41 +37,50 @@ class PreParser(Copyable):
     @setdoc.basic
     def __init__(
         self: Self,
+        other: PreParser | NoChange = NoChange.NO_CHANGE,
         /,
         *,
-        allowslong: SupportsBool = True,
-        allowsshort: SupportsBool = True,
-        bundling: int = Tuning.MAINTAIN,
-        expandsabbr: SupportsBool = True,
-        expectsabbr: SupportsBool = True,
-        expectsposix: SupportsBool = False,
+        allowslong: SupportsBool | NoChange = NoChange.NO_CHANGE,
+        allowsshort: SupportsBool | NoChange = NoChange.NO_CHANGE,
+        bundling: int | NoChange = NoChange.NO_CHANGE,
+        expandsabbr: SupportsBool | NoChange = NoChange.NO_CHANGE,
+        expectsabbr: SupportsBool | NoChange = NoChange.NO_CHANGE,
+        expectsposix: SupportsBool | NoChange = NoChange.NO_CHANGE,
         optdict: (
-            SupportsKeysAndGetitem | Iterable[tuple[Hashable, object]]
-        ) = (),
-        prog: object = None,
-        reconcilesorders: SupportsBool = True,
-        special: int = Tuning.MAINTAIN,
-        warn: Callable[[PreparseWarning], Any] = str,
+            SupportsKeysAndGetitem
+            | Iterable[tuple[Hashable, object]]
+            | NoChange
+        ) = NoChange.NO_CHANGE,
+        prog: object | NoChange = NoChange.NO_CHANGE,
+        reconcilesorders: SupportsBool | NoChange = NoChange.NO_CHANGE,
+        special: int | NoChange = NoChange.NO_CHANGE,
+        warn: Callable[[PreparseWarning], Any] | NoChange = NoChange.NO_CHANGE,
     ) -> None:
-        self._frameworkSettings = FrameworkSettings(
-            allowslong=allowslong,
-            allowsshort=allowsshort,
-            expectsabbr=expectsabbr,
-            expectsposix=expectsposix,
-        )
-        self._optdict = Optdict(optdict)
-        self._transformationSettings = TransformationSettings(
-            bundling=bundling,
-            expandsabbr=expandsabbr,
-            prog=prog,
-            reconcilesorders=reconcilesorders,
-            special=special,
-            warn=warn,
-        )
+        self._frameworkSettings = FrameworkSettings()
+        self._optdict = Optdict()
+        self._transformationSettings = TransformationSettings()
+        self._init_other(other)
+        self._frameworkSettings.allowslong = allowslong
+        self._frameworkSettings.allowsshort = allowsshort
+        self._frameworkSettings.expectsabbr = expectsabbr
+        self._frameworkSettings.expectsposix = expectsposix
+        self.optdict.data = optdict
+        self._transformationSettings.bundling = bundling
+        self._transformationSettings.expandsabbr = expandsabbr
+        self._transformationSettings.prog = prog
+        self._transformationSettings.reconcilesorders = reconcilesorders
+        self._transformationSettings.special = special
+        self._transformationSettings.warn = warn
 
     @setdoc.basic
     def __repr__(self: Self, /) -> str:
         return datarepr(type(self).__name__, **self.todict())
+
+    @no_change_setter
+    def _init_other(self: Self, other: PreParser, /) -> None:
+        self._frameworkSettings._init_other(other._frameworkSettings)
+        self.optdict.data = other.optdict
+        self._transformationSettings._init_other(other._transformationSettings)
 
     @property
     def allowslong(self: Self, /) -> bool:

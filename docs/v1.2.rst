@@ -281,8 +281,8 @@ This protocol is included in the project for type annotation.
 ``__getitem__(key: Hashable, /) -> object``
 """""""""""""""""""""""""""""""""""""""""""
 
-``keys() -> tuple[Hashable, ...]``
-""""""""""""""""""""""""""""""""""
+``keys() -> Iterable[Hashable]``
+""""""""""""""""""""""""""""""""
 
 ``preparse.warnings``
 ~~~~~~~~~~~~~~~~~~~~~

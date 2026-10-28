@@ -15,6 +15,7 @@ from tofunc import tofunc
 from preparse._core.no_change_setter import no_change_setter
 from preparse.core.Click import Click
 from preparse.enums.Nargs import Nargs
+from preparse.enums.NoChange import NoChange
 from preparse.enums.Tuning import Tuning
 from preparse.typing.SupportsBool import SupportsBool
 from preparse.typing.SupportsKeysAndGetitem import SupportsKeysAndGetitem
@@ -42,14 +43,25 @@ class TransformationSettings(Copyable):
     @setdoc.basic
     def __init__(
         self: Self,
+        other: TransformationSettings | NoChange = NoChange.NO_CHANGE,
+        /,
         *,
-        bundling: int = Tuning.MAINTAIN,
-        expandsabbr: SupportsBool = True,
-        prog: object = None,
-        reconcilesorders: SupportsBool = True,
-        special: int = Tuning.MAINTAIN,
-        warn: Callable[[PreparseWarning], object] = str,
+        bundling: int | NoChange = NoChange.NO_CHANGE,
+        expandsabbr: SupportsBool | NoChange = NoChange.NO_CHANGE,
+        prog: object | NoChange = NoChange.NO_CHANGE,
+        reconcilesorders: SupportsBool | NoChange = NoChange.NO_CHANGE,
+        special: int | NoChange = NoChange.NO_CHANGE,
+        warn: (
+            Callable[[PreparseWarning], object] | NoChange
+        ) = NoChange.NO_CHANGE,
     ) -> None:
+        self._bundling = Tuning.MAINTAIN
+        self._expandsabbr = True
+        self.prog = None
+        self._reconcilesorders = True
+        self._special = Tuning.MAINTAIN
+        self.warn = str
+        self._init_other(other)
         self.bundling = bundling
         self.expandsabbr = expandsabbr
         self.prog = prog
@@ -60,6 +72,15 @@ class TransformationSettings(Copyable):
     @setdoc.basic
     def __repr__(self: Self, /) -> str:
         return datarepr(type(self).__name__, **self.todict())
+
+    @no_change_setter
+    def _init_other(self: Self, other: TransformationSettings, /) -> None:
+        self.bundling = other.bundling
+        self.expandsabbr = other.expandsabbr
+        self.prog = other.prog
+        self.reconcilesorders = other.reconcilesorders
+        self.special = other.special
+        self.warn = other.warn
 
     @property
     def bundling(self: Self, /) -> Tuning:
