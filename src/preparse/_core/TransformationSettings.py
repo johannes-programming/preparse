@@ -36,7 +36,7 @@ class TransformationSettings(Copyable):
     _prog: str
     _reconcilesorders: bool
     _special: Tuning
-    _warn: Callable[[PreparseWarning], Any]
+    _warn: Callable[[PreparseWarning], object]
 
     @setdoc.basic
     def __init__(
@@ -47,7 +47,7 @@ class TransformationSettings(Copyable):
         prog: object = None,
         reconcilesorders: SupportsBool = True,
         special: int = Tuning.MAINTAIN,
-        warn: Callable[[PreparseWarning], Any] = str,
+        warn: Callable[[PreparseWarning], object] = str,
     ) -> None:
         self.bundling = bundling
         self.expandsabbr = expandsabbr
@@ -132,7 +132,7 @@ class TransformationSettings(Copyable):
     @warn.setter
     def warn(
         self: Self,
-        value: Callable[[PreparseWarning], Never],
+        value: Callable[[PreparseWarning], object],
         /,
     ) -> None:
         "This property gives a function that takes in the warnings."
