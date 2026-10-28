@@ -5,7 +5,7 @@ __all__: list[str] = ["TransformationSettings"]
 import os
 import sys
 from collections.abc import Callable
-from typing import Any, Self, cast
+from typing import Any, Never, Self, cast
 
 import setdoc
 from copyable import Copyable
@@ -125,16 +125,14 @@ class TransformationSettings(Copyable):
         )
 
     @property
-    def warn(
-        self: Self,
-    ) -> Callable[[PreparseWarning], Any]:
+    def warn(self: Self, /) -> Callable[[PreparseWarning], object]:
         "This property gives a function that takes in the warnings."
         return self._warn
 
     @warn.setter
     def warn(
         self: Self,
-        value: Callable[[PreparseWarning], Any],
+        value: Callable[[PreparseWarning], Never],
         /,
     ) -> None:
         "This property gives a function that takes in the warnings."
