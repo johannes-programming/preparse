@@ -9,7 +9,7 @@ import unittest
 from pathlib import Path
 from typing import Any, Self
 
-from preparse import Framework, PreParser, Transformation
+from preparse import PreParser
 
 
 class Utils(enum.Enum):
@@ -66,9 +66,9 @@ class TestDataToml(unittest.TestCase):
         self.assertEqual(len(testing), 3)
 
         parser = PreParser()
-        parser.framework = Framework(**framework)
+        parser.framework = PreParser.Framework(**framework)
         parser.optDict = optDict
-        parser.transformation = Transformation(**transformation)
+        parser.transformation = PreParser.Transformation(**transformation)
         answer, messages = parser.parse_args(query)
         erranswer = [(legacy["prog"] + ": " + x.oneliner()) for x in messages]
         superanswer = parser.parse_args(answer)[0]
