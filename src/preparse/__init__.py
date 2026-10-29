@@ -328,6 +328,9 @@ class PreParser:
         if transformation is not None:
             self.transformation = transformation
 
+    def copy(self: Self, /) -> Self:
+        return type(self)(self)
+
     @property
     def framework(self) -> Framework:
         return self._framework

@@ -4,7 +4,6 @@ import unittest
 from typing import Any, Self
 
 from preparse import PreParser
-from preparse.enums.Nargs import Nargs
 
 
 class TestPreParser(unittest.TestCase):
@@ -19,12 +18,14 @@ class TestPreParser(unittest.TestCase):
     def test_no_options_idempotent(self: Self) -> None:
         args: list[str]
         parser: PreParser
-        parser = PreParser(
-            allowslong=False, allowsshort=False, expectsposix=True
-        )
+        parser = PreParser()
+        parser.framework.allows_long = False
+        parser.framework.allows_short = False
+        parser.framework.is_posix = True
         args = ["-c2", "--", "-a"]
-        self.assertEqual(parser.parse_args(args), args)
-        self.assertEqual(parser.parse_args(parser.parse_args(args)), args)
+        preparsed = parser.parse_args(args)[0]
+        self.assertEqual(preparsed, args)
+        self.assertEqual(parser.parse_args(preparsed), args)
 
     def test_minimize_short_bundle_with_hyphen_option(self: Self) -> None:
         parser: PreParser
