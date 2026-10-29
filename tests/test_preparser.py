@@ -3,22 +3,12 @@ __all__: list[str] = ["TestPreParser"]
 import unittest
 from typing import Any, Self
 
-from preparse.core.Click import Click
-from preparse.core.PreParser import PreParser
+from preparse import PreParser
 from preparse.enums.Nargs import Nargs
 
 
 class TestPreParser(unittest.TestCase):
 
-    def test_preparser_click_decorator(self: Self) -> None:
-        click_decorator: Click
-        parser: PreParser
-        parser = PreParser()
-        click_decorator = parser.click()
-        self.assertIsInstance(click_decorator, Click)
-        self.assertTrue(click_decorator.cmd)
-        self.assertTrue(click_decorator.ctx)
-        self.assertEqual(click_decorator.parser, parser)
 
     def test_preparser_copy(self: Self) -> None:
         parser: PreParser

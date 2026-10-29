@@ -19,7 +19,8 @@ import sys
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, replace
 from enum import Enum, IntEnum
-from typing import Iterable, Mapping
+from typing import Self
+from collections.abc import Iterable, Mapping
 
 
 class Message(ABC):
@@ -116,6 +117,9 @@ class PreParser:
                 allows_short=allows_short,
                 is_posix=is_posix,
             )
+
+        def copy(self: Self, /) -> Self:
+            return type(self)(self)
 
         def update(self, other: PreParser.Framework | None) -> None:
             if other is not None:
@@ -217,7 +221,7 @@ class PreParser:
             result.update(self)
             return result
 
-        def copy(self) -> PreParser.OptDict:
+        def copy(self:Self, /) -> PreParser.OptDict:
             return type(self)(self)
 
         @classmethod
@@ -240,7 +244,7 @@ class PreParser:
             DEFER = "DEFER"
 
         def __init__(
-            self,
+            self:Self,
             other: PreParser.Transformation | None = None,
             /,
             *,
@@ -263,6 +267,9 @@ class PreParser:
                 equal=equal,
                 depletion=depletion,
             )
+
+        def copy(self:Self, /) -> PreParser.Transformation:
+            return type(self)(self)
 
         def update(self, other: PreParser.Transformation | None) -> None:
             if other is not None:
