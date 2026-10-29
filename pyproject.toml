@@ -17,8 +17,7 @@ classifiers = [
     "Programming Language :: Python :: 3 :: Only",
     "Typing :: Typed",
 ]
-dependencies = [
-]
+dependencies = []
 description = "This project preparses args for further parsing later on."
 keywords = []
 license = "MIT"
