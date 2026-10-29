@@ -25,7 +25,7 @@ class TestPreParser(unittest.TestCase):
         args = ["-c2", "--", "-a"]
         preparsed = parser.parse_args(args)[0]
         self.assertEqual(preparsed, args)
-        self.assertEqual(parser.parse_args(preparsed), args)
+        self.assertEqual(parser.parse_args(preparsed)[0], args)
 
     def test_minimize_short_bundle_with_hyphen_option(self: Self) -> None:
         parser: PreParser
