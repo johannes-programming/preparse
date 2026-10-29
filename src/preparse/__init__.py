@@ -6,9 +6,13 @@ No third-party modules or platform-specific getopt calls are required.
 
 from __future__ import annotations
 
-__all__:list[str] = [
-    "PreParser", "Message", "AmbiguousOptionMessage", "InvalidOptionMessage",
-    "RequiredArgumentMessage", "UnallowedArgumentMessage",
+__all__: list[str] = [
+    "PreParser",
+    "Message",
+    "AmbiguousOptionMessage",
+    "InvalidOptionMessage",
+    "RequiredArgumentMessage",
+    "UnallowedArgumentMessage",
 ]
 
 import sys
@@ -183,7 +187,9 @@ class PreParser:
 
         def update(self, *args: object, **kwargs: object) -> None:
             if len(args) > 1:
-                raise TypeError("update expected at most 1 positional argument")
+                raise TypeError(
+                    "update expected at most 1 positional argument"
+                )
             if args:
                 source = args[0]
                 if source is not None:
@@ -215,7 +221,9 @@ class PreParser:
             return type(self)(self)
 
         @classmethod
-        def fromkeys(cls, keys: Iterable[object], value: object = None) -> PreParser.OptDict:
+        def fromkeys(
+            cls, keys: Iterable[object], value: object = None
+        ) -> PreParser.OptDict:
             result = cls()
             for key in keys:
                 result[key] = value
@@ -285,7 +293,9 @@ class PreParser:
                     setattr(self, field, self.Tuning(value))
             if depletion is not None:
                 if not isinstance(depletion, (self.Depletion, str)):
-                    raise TypeError("depletion must be a Depletion enum or a string")
+                    raise TypeError(
+                        "depletion must be a Depletion enum or a string"
+                    )
                 self.depletion = depletion
 
     def __init__(
@@ -338,7 +348,9 @@ class PreParser:
     def transformation(self, other: Transformation | None) -> None:
         self._transformation.update(other)
 
-    def _definitions(self) -> tuple[dict[str, OptDict.Nargs], dict[str, OptDict.Nargs]]:
+    def _definitions(
+        self,
+    ) -> tuple[dict[str, OptDict.Nargs], dict[str, OptDict.Nargs]]:
         """Return effective short and long options, in dictionary order."""
         shorts: dict[str, PreParser.OptDict.Nargs] = {}
         longs: dict[str, PreParser.OptDict.Nargs] = {}
@@ -374,9 +386,9 @@ class PreParser:
         # An abbreviation retains the spelling's leading-dash convention.
         n_dashes = len(name) - len(name.lstrip("-"))
         candidates = [
-            k for k in longs
-            if k.startswith(name)
-            and (len(k) - len(k.lstrip("-"))) == n_dashes
+            k
+            for k in longs
+            if k.startswith(name) and (len(k) - len(k.lstrip("-"))) == n_dashes
         ]
         if len(candidates) == 1:
             return candidates[0], []
@@ -422,15 +434,34 @@ class PreParser:
                 matched, ambiguous = self._long_match(name, longs)
                 if ambiguous:
                     if report:
-                        messages.append(AmbiguousOptionMessage(token, ambiguous))
-                    items.append(_Item("long", name, value=value if separator else None,
-                                       attached=bool(separator), group=group, locked=True))
+                        messages.append(
+                            AmbiguousOptionMessage(token, ambiguous)
+                        )
+                    items.append(
+                        _Item(
+                            "long",
+                            name,
+                            value=value if separator else None,
+                            attached=bool(separator),
+                            group=group,
+                            locked=True,
+                        )
+                    )
                     continue
                 if matched is None:
                     if report:
                         messages.append(InvalidOptionMessage(token, True))
-                    items.append(_Item("long", name, nargs=2, value=value if separator else None,
-                                       attached=bool(separator), group=group, locked=True))
+                    items.append(
+                        _Item(
+                            "long",
+                            name,
+                            nargs=2,
+                            value=value if separator else None,
+                            attached=bool(separator),
+                            group=group,
+                            locked=True,
+                        )
+                    )
                     continue
                 nargs = int(longs[matched])
                 locked = False
@@ -447,13 +478,22 @@ class PreParser:
                         value = None
                         starved = True
                         if report:
-                            messages.append(RequiredArgumentMessage(name, True))
-                items.append(_Item(
-                    "long", name, key=matched, nargs=nargs,
-                    value=value if separator or nargs == 1 else None,
-                    attached=bool(separator), group=group,
-                    locked=locked, starved=starved,
-                ))
+                            messages.append(
+                                RequiredArgumentMessage(name, True)
+                            )
+                items.append(
+                    _Item(
+                        "long",
+                        name,
+                        key=matched,
+                        nargs=nargs,
+                        value=value if separator or nargs == 1 else None,
+                        attached=bool(separator),
+                        group=group,
+                        locked=locked,
+                        starved=starved,
+                    )
+                )
                 continue
 
             # The remainder of this token is a cluster of short characters.
@@ -482,13 +522,24 @@ class PreParser:
                         else:
                             starved = True
                             if report:
-                                messages.append(RequiredArgumentMessage(char, False))
+                                messages.append(
+                                    RequiredArgumentMessage(char, False)
+                                )
                     p = len(rest)
-                items.append(_Item(
-                    "short", "-" + char, key="-" + char if not unknown else None,
-                    nargs=nargs, value=value, attached=attached,
-                    group=group, locked=unknown, character=char, starved=starved,
-                ))
+                items.append(
+                    _Item(
+                        "short",
+                        "-" + char,
+                        key="-" + char if not unknown else None,
+                        nargs=nargs,
+                        value=value,
+                        attached=attached,
+                        group=group,
+                        locked=unknown,
+                        character=char,
+                        starved=starved,
+                    )
+                )
         return items, messages
 
     def _compatible(self, arglist: list[str]) -> bool:
@@ -499,7 +550,8 @@ class PreParser:
         def signature(items: list[_Item]) -> tuple:
             return tuple(
                 (x.kind, x.key or x.text, x.value)
-                for x in items if x.kind != "delimiter"
+                for x in items
+                if x.kind != "delimiter"
             )
 
         return signature(first) == signature(second)
@@ -514,17 +566,27 @@ class PreParser:
                 return items
             # Move an existing positional before an option, preserving the
             # relative order of all options and of all positionals.
-            opt_indices = [i for i, x in enumerate(items) if x.kind in ("short", "long")]
-            pos_indices = [i for i, x in enumerate(items) if x.kind == "pos"
-                           and (not x.text.startswith("-") or x.text == "-")]
+            opt_indices = [
+                i for i, x in enumerate(items) if x.kind in ("short", "long")
+            ]
+            pos_indices = [
+                i
+                for i, x in enumerate(items)
+                if x.kind == "pos"
+                and (not x.text.startswith("-") or x.text == "-")
+            ]
             if not opt_indices:
                 # An existing delimiter can also distinguish the two order
                 # disciplines: once POSIX has seen a positional, it treats
                 # a subsequent '--' as an ordinary positional token.
-                boundary = next((i for i, x in enumerate(items)
-                                 if x.kind == "delimiter"), None)
+                boundary = next(
+                    (i for i, x in enumerate(items) if x.kind == "delimiter"),
+                    None,
+                )
                 if boundary is not None:
-                    later = next((i for i in pos_indices if i > boundary), None)
+                    later = next(
+                        (i for i in pos_indices if i > boundary), None
+                    )
                     if later is not None:
                         moved = list(items)
                         positional = moved.pop(later)
@@ -539,8 +601,11 @@ class PreParser:
             # standalone delimiter '--'.
             if items[option_index].kind == "short":
                 group = items[option_index].group
-                while (option_index > 0 and items[option_index - 1].kind == "short"
-                       and items[option_index - 1].group == group):
+                while (
+                    option_index > 0
+                    and items[option_index - 1].kind == "short"
+                    and items[option_index - 1].group == group
+                ):
                     option_index -= 1
             candidates = [j for j in pos_indices if j > opt_indices[-1]]
             if not candidates:
@@ -558,17 +623,30 @@ class PreParser:
         if self.framework.is_posix:
             # POSIX may already have treated later option-looking strings as
             # positional. Introduce an end marker so non-POSIX does likewise.
-            before = next((i for i, x in enumerate(items) if x.kind == "pos"), None)
+            before = next(
+                (i for i, x in enumerate(items) if x.kind == "pos"), None
+            )
             if before is not None:
-                return items[:before] + [_Item("delimiter", "--")] + items[before:]
+                return (
+                    items[:before]
+                    + [_Item("delimiter", "--")]
+                    + items[before:]
+                )
             return items
         # Non-POSIX recognizes all options preceding an explicit delimiter.
-        first_delim = next((i for i, x in enumerate(items) if x.kind == "delimiter"), len(items))
+        first_delim = next(
+            (i for i, x in enumerate(items) if x.kind == "delimiter"),
+            len(items),
+        )
         leading, trailing = items[:first_delim], items[first_delim:]
         options = [x for x in leading if x.kind in ("short", "long")]
         positions = [x for x in leading if x.kind == "pos"]
-        if (options and options[-1].starved
-                and self.transformation.depletion is self.Transformation.Depletion.DEFER):
+        if (
+            options
+            and options[-1].starved
+            and self.transformation.depletion
+            is self.Transformation.Depletion.DEFER
+        ):
             # DEFER expressly keeps an unfulfilled required option at the
             # end. Moving it in front of a positional would *consume* that
             # positional and cease to defer the option.
@@ -579,7 +657,9 @@ class PreParser:
             return options + trailing[:1] + positions + trailing[1:]
         return options + positions + trailing
 
-    def _abbreviation(self, item: _Item, longs: Mapping[str, OptDict.Nargs]) -> str:
+    def _abbreviation(
+        self, item: _Item, longs: Mapping[str, OptDict.Nargs]
+    ) -> str:
         if item.key is None or item.locked:
             return item.text
         tuning = self.transformation.abbr
@@ -612,7 +692,9 @@ class PreParser:
             result.append(x)
         return result
 
-    def _long_tokens(self, item: _Item, longs: Mapping[str, OptDict.Nargs]) -> list[str]:
+    def _long_tokens(
+        self, item: _Item, longs: Mapping[str, OptDict.Nargs]
+    ) -> list[str]:
         name = self._abbreviation(item, longs)
         if item.locked:
             return [name + ("=" + item.value if item.attached else "")]
@@ -658,7 +740,9 @@ class PreParser:
             runs = []
             current = []
             for x in items:
-                if current and (current[-1].group != x.group or current[-1].nargs != 0):
+                if current and (
+                    current[-1].group != x.group or current[-1].nargs != 0
+                ):
                     runs.append(current)
                     current = []
                 current.append(x)
@@ -698,7 +782,9 @@ class PreParser:
                     groups.setdefault(x.group, []).append(x)
                 if len(groups) > 1:
                     for group_items in groups.values():
-                        result.extend(self._emit_shorts_unmodified(group_items))
+                        result.extend(
+                            self._emit_shorts_unmodified(group_items)
+                        )
                     continue
                 result.extend(self._emit_shorts_unmodified(run))
                 continue
@@ -719,7 +805,9 @@ class PreParser:
         token = "-" + "".join(x.character for x in items)
         last = items[-1]
         if last.nargs != 0 and last.value is not None:
-            return [token + last.value] if last.attached else [token, last.value]
+            return (
+                [token + last.value] if last.attached else [token, last.value]
+            )
         return [token]
 
     def _pack_for_bundling(self, items: list[_Item]) -> list[_Item]:
@@ -730,9 +818,12 @@ class PreParser:
         was otherwise set to MAINTAIN. In MINIMIZE compatibility mode, do not
         undo the deliberate positional/option separation.
         """
-        if (self.transformation.bundling != self.Transformation.Tuning.MAXIMIZE
-                or self.framework.is_posix
-                or self.transformation.order_compatibility == self.Transformation.Tuning.MINIMIZE):
+        if (
+            self.transformation.bundling != self.Transformation.Tuning.MAXIMIZE
+            or self.framework.is_posix
+            or self.transformation.order_compatibility
+            == self.Transformation.Tuning.MINIMIZE
+        ):
             return items
         result: list[_Item] = []
         block: list[_Item] = []
@@ -815,11 +906,12 @@ class PreParser:
                 break
             seen.add(state)
             if current is not arglist:
-                items, _ = self._scan(current, posix=self.framework.is_posix, report=False)
+                items, _ = self._scan(
+                    current, posix=self.framework.is_posix, report=False
+                )
             processed = self._order(self._apply_depletion(items), current)
             transformed = self._serialize(self._pack_for_bundling(processed))
             if transformed == current:
                 return transformed, messages
             current = transformed
         return current, messages
-

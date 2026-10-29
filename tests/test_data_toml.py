@@ -1,16 +1,15 @@
 __all__: list[str] = ["TestDataToml"]
 
 import enum
+import functools
+import io
 import math
 import tomllib
 import unittest
-import functools 
 from pathlib import Path
-import io
 from typing import Any, Self
 
-from preparse import PreParser, Framework, Transformation
-
+from preparse import Framework, PreParser, Transformation
 
 
 class Utils(enum.Enum):
@@ -48,7 +47,7 @@ class TestDataToml(unittest.TestCase):
         *,
         testing: dict[str, Any],
         legacy: dict[str, Any],
-        optDict:dict[str, Any],
+        optDict: dict[str, Any],
         transformation: dict[str, Any],
         framework: dict[str, Any],
     ) -> None:
@@ -66,7 +65,6 @@ class TestDataToml(unittest.TestCase):
         warnings = testing["warnings"]
         self.assertEqual(len(testing), 3)
 
-
         parser = PreParser()
         parser.framework = Framework(**framework)
         parser.optDict = optDict
@@ -75,7 +73,9 @@ class TestDataToml(unittest.TestCase):
         erranswer = [(legacy["prog"] + ": " + x.oneliner()) for x in messages]
         superanswer = parser.parse_args(answer)[0]
         self.assertEqual(answer, superanswer, msg="idempotency failed!")
-        self.assertEqual(answer, solution, msg="answer does not match solution!")
+        self.assertEqual(
+            answer, solution, msg="answer does not match solution!"
+        )
         if not Utils.utils.istestable(warnings):
             return
         self.assertEqual(erranswer, warnings, msg="warnings faulty!")
