@@ -9,7 +9,7 @@ from pathlib import Path
 import io
 from typing import Any, Self
 
-from preparse import PreParser
+from preparse import PreParser, Framework, Transformation
 
 
 
@@ -46,53 +46,39 @@ class TestDataToml(unittest.TestCase):
     def parse(
         self: Self,
         *,
-        query: Any,
-        solution: Any,
-        warnings: Any,
-        **kwargs: Any,
+        testing: dict[str, Any],
+        legacy: dict[str, Any],
+        optDict:dict[str, Any],
+        transformation: dict[str, Any],
+        framework: dict[str, Any],
     ) -> None:
         answer: list[Any]
-        capture: list[Any]
-        data: dict[str, Any]
         erranswer: list[Any]
-        msg: str
         parser: PreParser
         superanswer: list[Any]
-        capture = list()
 
-        def warn(value: Any) -> None:
-            capture.append(str(value))
+        query: Any
+        solution: Any
+        warnings: Any
 
-        parser = PreParser(warn=warn, **kwargs)
-        data = dict(
-            query=query,
-            solution=solution,
-            warnings=warnings,
-            **kwargs,
-        )
-        answer = parser.parse_args(query)
-        erranswer = list(capture)
-        superanswer = parser.parse_args(answer)
-        msg = "\n\ndata=%s,\nanswer=%s,\nsuperanswer=%s,\n\n" % (
-            data,
-            answer,
-            superanswer,
-        )
-        self.assertEqual(answer, superanswer, msg=msg)
-        msg = "\n\ndata=%s,\nanswer=%s,\nsolution=%s,\n\n" % (
-            data,
-            answer,
-            solution,
-        )
-        self.assertEqual(answer, solution, msg=msg)
+        query = testing["query"]
+        solution = testing["solution"]
+        warnings = testing["warnings"]
+        self.assertEqual(len(testing), 3)
+
+
+        parser = PreParser()
+        parser.framework = Framework(**framework)
+        parser.optDict = optDict
+        parser.transformation = Transformation(**transformation)
+        answer, messages = parser.parse_args(query)
+        erranswer = [(legacy["prog"] + ": " + x.oneliner()) for x in messages]
+        superanswer = parser.parse_args(answer)[0]
+        self.assertEqual(answer, superanswer, msg="idempotency failed!")
+        self.assertEqual(answer, solution, msg="answer does not match solution!")
         if not Utils.utils.istestable(warnings):
             return
-        msg = "\n\ndata=%s,\nerranswer=%s,\nwarnings=%s,\n\n" % (
-            data,
-            erranswer,
-            warnings,
-        )
-        self.assertEqual(erranswer, warnings, msg=msg)
+        self.assertEqual(erranswer, warnings, msg="warnings faulty!")
 
 
 if __name__ == "__main__":
