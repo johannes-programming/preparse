@@ -33,7 +33,7 @@ class TestPreParser(unittest.TestCase):
         parser.framework.allows_long = False
         parser.transformation.bundling = PreParser.Transformation.Tuning(0)
         parser.optdict = {"--": 2}  # type: ignore[arg-type]
-        self.assertEqual(parser.parse_args(["--x"]), ["--x"])
+        self.assertEqual(parser.parse_args(["--x"])[0], ["--x"])
 
 
 if __name__ == "__main__":

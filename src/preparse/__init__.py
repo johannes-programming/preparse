@@ -221,6 +221,9 @@ class PreParser:
             result.update(self)
             return result
 
+        def __repr__(self: Self, /) -> str:
+            return f"{type(self).__qualname__}({dict(self)})"
+
         def copy(self: Self, /) -> PreParser.OptDict:
             return type(self)(self)
 
