@@ -9,7 +9,6 @@ from preparse.enums.Nargs import Nargs
 
 class TestPreParser(unittest.TestCase):
 
-
     def test_preparser_copy(self: Self) -> None:
         parser: PreParser
         parser_copy: PreParser

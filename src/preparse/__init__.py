@@ -17,10 +17,10 @@ __all__: list[str] = [
 
 import sys
 from abc import ABC, abstractmethod
+from collections.abc import Iterable, Mapping
 from dataclasses import dataclass, replace
 from enum import Enum, IntEnum
 from typing import Self
-from collections.abc import Iterable, Mapping
 
 
 class Message(ABC):
@@ -221,7 +221,7 @@ class PreParser:
             result.update(self)
             return result
 
-        def copy(self:Self, /) -> PreParser.OptDict:
+        def copy(self: Self, /) -> PreParser.OptDict:
             return type(self)(self)
 
         @classmethod
@@ -244,7 +244,7 @@ class PreParser:
             DEFER = "DEFER"
 
         def __init__(
-            self:Self,
+            self: Self,
             other: PreParser.Transformation | None = None,
             /,
             *,
@@ -268,7 +268,7 @@ class PreParser:
                 depletion=depletion,
             )
 
-        def copy(self:Self, /) -> PreParser.Transformation:
+        def copy(self: Self, /) -> PreParser.Transformation:
             return type(self)(self)
 
         def update(self, other: PreParser.Transformation | None) -> None:
