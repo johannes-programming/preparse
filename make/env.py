@@ -3,10 +3,10 @@ __all__: list[str] = ["main", "run"]
 import argparse
 import json
 import subprocess
-from typing import Any
+from typing import Any, Optional
 
 
-def env_create(env: str, python: str | None) -> subprocess.CompletedProcess:  # type: ignore[type-arg]
+def env_create(env: str, python: Optional[str]) -> subprocess.CompletedProcess:  # type: ignore[type-arg]
     args: list[str]
     args = [
         "conda",
@@ -55,7 +55,7 @@ def env_remove(env: str) -> subprocess.CompletedProcess:  # type: ignore[type-ar
     return subprocess.run(args, check=True)
 
 
-def main(args: list[str] | None = None, /) -> None:
+def main(args: Optional[list[str]] = None, /) -> None:
     kwargs: dict[str, Any]
     parser: argparse.ArgumentParser
     parser = argparse.ArgumentParser(fromfile_prefix_chars="@")
@@ -68,7 +68,9 @@ def main(args: list[str] | None = None, /) -> None:
     run(*kwargs.pop("envs"), **kwargs)
 
 
-def run(*envs: str, python: str | None = None, recreate: bool = False) -> None:
+def run(
+    *envs: str, python: Optional[str] = None, recreate: bool = False
+) -> None:
     env: str
     envs_: list[str]
     envs_ = env_list()
