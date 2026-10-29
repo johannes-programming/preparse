@@ -37,7 +37,7 @@ class TestPreparse(unittest.TestCase):
             "-bar": PreParser.OptDict.Nargs.REQUIRED_ARGUMENT,
         }
         original = PreParser.OptDict(data)
-        self.assertEqual(repr(original), f"Optdict({data})")
+        self.assertEqual(repr(original), f"PreParser.OptDict({data})")
         self.assertEqual(repr(original), str(original))
         self.assertEqual(repr(original), format(original))
 
