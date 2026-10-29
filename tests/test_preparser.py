@@ -1,7 +1,7 @@
 __all__: list[str] = ["TestPreParser"]
 
 import unittest
-from typing import Any, Self
+from typing import Self
 
 from preparse import PreParser
 
@@ -13,7 +13,7 @@ class TestPreParser(unittest.TestCase):
         parser_copy: PreParser
         parser = PreParser()
         parser_copy = parser.copy()
-        self.assertEqual(parser.optdict, parser_copy.optdict)
+        self.assertEqual(parser.optDict, parser_copy.optDict)
 
     def test_no_options_idempotent(self: Self) -> None:
         args: list[str]
@@ -29,24 +29,11 @@ class TestPreParser(unittest.TestCase):
 
     def test_minimize_short_bundle_with_hyphen_option(self: Self) -> None:
         parser: PreParser
-        parser = PreParser(
-            allowslong=False,
-            bundling=0,
-            optdict={"--": 2},  # type: ignore[arg-type]
-        )
-        self.assertEqual(parser.parse_args(["--x"]), ["--x"])
-
-    def test_preparser_todict(self: Self) -> None:
-        expected_keys: list[Any]
-        parser: PreParser
-        result: Any
         parser = PreParser()
-        result = parser.todict()
-        expected_keys = [
-            "optdict",
-            "prog",
-        ]
-        self.assertTrue(all(key in result for key in expected_keys))
+        parser.framework.allows_long = False
+        parser.transformation.bundling = PreParser.Transformation.Tuning(0)
+        parser.optdict = {"--": 2}  # type: ignore[arg-type]
+        self.assertEqual(parser.parse_args(["--x"]), ["--x"])
 
 
 if __name__ == "__main__":
