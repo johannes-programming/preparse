@@ -48,11 +48,38 @@ class OptDict(dict):
         super().__init__()
         self.update(other, **kwargs)
 
+    def __ior__(self: Self, other: object) -> OptDict:
+        self.update(other)
+        return self
+
+    def __or__(self: Self, other: object) -> OptDict:
+        result = self.copy()
+        result.update(other)
+        return result
+
+    def __repr__(self: Self, /) -> str:
+        return f"{type(self).__name__}({dict(self)})"
+
     def __setitem__(self: Self, key: object, value: object) -> None:
         key = str(key)
         if value is None and dict.__contains__(self, key):
             return
         dict.__setitem__(self, key, self.Nargs(value))
+
+    def copy(self: Self, /) -> Self:
+        return type(self)(self)
+
+    @classmethod
+    def fromkeys(
+        cls: type[Self], keys: Iterable[object], value: object = None
+    ) -> Self:
+        ans: Self
+        ans = cls()
+        if value is None:
+            return cls()
+        for key in keys:
+            ans[key] = value
+        return ans
 
     def get(self: Self, key: object, default: object = None) -> object:
         return dict.get(self, str(key), default)
@@ -82,30 +109,3 @@ class OptDict(dict):
                     self[key] = value
         for key, value in kwargs.items():
             self[key] = value
-
-    def __ior__(self: Self, other: object) -> OptDict:
-        self.update(other)
-        return self
-
-    def __or__(self: Self, other: object) -> OptDict:
-        result = self.copy()
-        result.update(other)
-        return result
-
-    def __repr__(self: Self, /) -> str:
-        return f"{type(self).__name__}({dict(self)})"
-
-    def copy(self: Self, /) -> Self:
-        return type(self)(self)
-
-    @classmethod
-    def fromkeys(
-        cls: type[Self], keys: Iterable[object], value: object = None
-    ) -> Self:
-        ans: Self
-        ans = cls()
-        if value is None:
-            return cls()
-        for key in keys:
-            ans[key] = value
-        return ans
