@@ -3,14 +3,13 @@
 import enum
 import math
 import tomllib
-import unittest
 import functools
 import io
 from pathlib import Path
 from typing import Any, Self
 
 import tomli_w
-
+import sys
 
 class Utils(enum.Enum):
     utils = None
@@ -33,15 +32,15 @@ class Utils(enum.Enum):
         return False
 
 
-class Main(unittest.TestCase):
+class Main():
 
     def main(self: Self) -> None:
         kwargs: dict[str, Any]
         name: str
         ans=dict()
         for name, kwargs in Utils.utils.data.items():
-            with self.subTest(msg=name, **kwargs):
-                ans[name]=self.parse(**kwargs)
+            print(name, file=sys.stderr)
+            ans[name]=self.parse(**kwargs)
         text = tomli_w.dumps(ans)
         print(text)
 

@@ -12,6 +12,7 @@ from typing import Any, Self
 from preparse import PreParser
 
 
+
 class Utils(enum.Enum):
     utils = None
 
