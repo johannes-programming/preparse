@@ -11,10 +11,11 @@ __all__: list[str] = ["PreParser"]
 import sys
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass, replace
-from enum import Enum, IntEnum
 from typing import ClassVar, Self
 
 from preparse.core.Framework import Framework
+from preparse.core.OptDict import OptDict
+from preparse.core.Transformation import Transformation
 from preparse.messaging.AmbiguousOptionMessage import AmbiguousOptionMessage
 from preparse.messaging.InvalidOptionMessage import InvalidOptionMessage
 from preparse.messaging.Message import Message
@@ -46,171 +47,8 @@ class PreParser:
     """Preparser and its three in-place mutable configuration objects."""
 
     Framework: ClassVar[type[Framework]] = Framework
-
-    class OptDict(dict):
-        """A dictionary which normalizes keys and argument-count values."""
-
-        class Nargs(IntEnum):
-            NO_ARGUMENT = 0
-            REQUIRED_ARGUMENT = 1
-            OPTIONAL_ARGUMENT = 2
-
-            @classmethod
-            def _missing_(cls, value: object) -> PreParser.OptDict.Nargs:
-                if value is None:
-                    return cls.NO_ARGUMENT
-                return cls.OPTIONAL_ARGUMENT
-
-        def __init__(self, *args: object, **kwargs: object) -> None:
-            super().__init__()
-            self.update(*args, **kwargs)
-
-        def __setitem__(self, key: object, value: object) -> None:
-            key = str(key)
-            if value is None and dict.__contains__(self, key):
-                return
-            dict.__setitem__(self, key, self.Nargs(value))
-
-        def __getitem__(self, key: object) -> Nargs:
-            return dict.__getitem__(self, str(key))
-
-        def __contains__(self, key: object) -> bool:
-            return dict.__contains__(self, str(key))
-
-        def __delitem__(self, key: object) -> None:
-            dict.__delitem__(self, str(key))
-
-        def get(self, key: object, default: object = None) -> object:
-            return dict.get(self, str(key), default)
-
-        def pop(self, key: object, *default: object) -> object:
-            return dict.pop(self, str(key), *default)
-
-        def setdefault(self, key: object, default: object = None) -> Nargs:
-            key = str(key)
-            if dict.__contains__(self, key):
-                return dict.__getitem__(self, key)
-            self[key] = default
-            return dict.__getitem__(self, key)
-
-        def update(self, *args: object, **kwargs: object) -> None:
-            if len(args) > 1:
-                raise TypeError(
-                    "update expected at most 1 positional argument"
-                )
-            if args:
-                source = args[0]
-                if source is not None:
-                    # Snapshot to make even self.update(self) well-defined.
-                    if hasattr(source, "keys"):
-                        entries = [(key, source[key]) for key in source.keys()]
-                    else:
-                        entries = list(source)
-                    for key, value in entries:
-                        self[key] = value
-            for key, value in kwargs.items():
-                self[key] = value
-
-        def __ior__(self, other: object) -> PreParser.OptDict:
-            self.update(other)
-            return self
-
-        def __or__(self, other: object) -> PreParser.OptDict:
-            result = self.copy()
-            result.update(other)
-            return result
-
-        def __ror__(self, other: object) -> PreParser.OptDict:
-            result = type(self)(other)
-            result.update(self)
-            return result
-
-        def __repr__(self: Self, /) -> str:
-            return f"{type(self).__qualname__}({dict(self)})"
-
-        def copy(self: Self, /) -> PreParser.OptDict:
-            return type(self)(self)
-
-        @classmethod
-        def fromkeys(
-            cls, keys: Iterable[object], value: object = None
-        ) -> PreParser.OptDict:
-            result = cls()
-            for key in keys:
-                result[key] = value
-            return result
-
-    class Transformation:
-        class Tuning(IntEnum):
-            MINIMIZE = 0
-            MAXIMIZE = 1
-            MAINTAIN = 2
-
-        class Depletion(Enum):
-            DROP_OPT = "DROP_OPT"
-            DEFER = "DEFER"
-
-        def __init__(
-            self: Self,
-            other: PreParser.Transformation | None = None,
-            /,
-            *,
-            order_compatibility: PreParser.Transformation.Tuning | None = None,
-            bundling: PreParser.Transformation.Tuning | None = None,
-            abbr: PreParser.Transformation.Tuning | None = None,
-            equal: PreParser.Transformation.Tuning | None = None,
-            depletion: PreParser.Transformation.Depletion | str | None = None,
-        ) -> None:
-            self.order_compatibility = self.Tuning.MAXIMIZE
-            self.bundling = self.Tuning.MAINTAIN
-            self.abbr = self.Tuning.MINIMIZE
-            self.equal = self.Tuning.MAINTAIN
-            self.depletion = self.Depletion.DROP_OPT
-            self.update(other)
-            self.update_fields(
-                order_compatibility=order_compatibility,
-                bundling=bundling,
-                abbr=abbr,
-                equal=equal,
-                depletion=depletion,
-            )
-
-        def copy(self: Self, /) -> PreParser.Transformation:
-            return type(self)(self)
-
-        def update(self, other: PreParser.Transformation | None) -> None:
-            if other is not None:
-                self.update_fields(
-                    order_compatibility=other.order_compatibility,
-                    bundling=other.bundling,
-                    abbr=other.abbr,
-                    equal=other.equal,
-                    depletion=other.depletion,
-                )
-
-        def update_fields(
-            self,
-            *,
-            order_compatibility: PreParser.Transformation.Tuning | None = None,
-            bundling: PreParser.Transformation.Tuning | None = None,
-            abbr: PreParser.Transformation.Tuning | None = None,
-            equal: PreParser.Transformation.Tuning | None = None,
-            depletion: PreParser.Transformation.Depletion | str | None = None,
-        ) -> None:
-            for field, value in (
-                ("order_compatibility", order_compatibility),
-                ("bundling", bundling),
-                ("abbr", abbr),
-                ("equal", equal),
-            ):
-                if value is not None:
-                    setattr(self, field, self.Tuning(value))
-            if depletion is not None:
-                if not isinstance(depletion, (self.Depletion, str)):
-                    raise TypeError(
-                        "depletion must be a Depletion enum or a string"
-                    )
-                self.depletion = depletion
+    OptDict: ClassVar[type[OptDict]] = OptDict
+    Transformation: ClassVar[type[Transformation]] = Transformation
 
     def __init__(
         self,
@@ -218,12 +56,12 @@ class PreParser:
         /,
         *,
         framework: Framework | None = None,
-        optDict: PreParser.OptDict | None = None,
-        transformation: PreParser.Transformation | None = None,
+        optDict: OptDict | None = None,
+        transformation: Transformation | None = None,
     ) -> None:
-        self._framework = self.Framework()
-        self._optDict = self.OptDict()
-        self._transformation = self.Transformation()
+        self._framework = Framework()
+        self._optDict = OptDict()
+        self._transformation = Transformation()
         if other is not None:
             self.framework = other.framework
             self.optDict = other.optDict
@@ -269,8 +107,8 @@ class PreParser:
         self,
     ) -> tuple[dict[str, OptDict.Nargs], dict[str, OptDict.Nargs]]:
         """Return effective short and long options, in dictionary order."""
-        shorts: dict[str, PreParser.OptDict.Nargs] = {}
-        longs: dict[str, PreParser.OptDict.Nargs] = {}
+        shorts: dict[str, OptDict.Nargs] = {}
+        longs: dict[str, OptDict.Nargs] = {}
         f = self.framework
         for key, value in self.optDict.items():
             if not key.startswith("-"):
@@ -475,10 +313,10 @@ class PreParser:
 
     def _order(self, items: list[_Item], original: list[str]) -> list[_Item]:
         tuning = self.transformation.order_compatibility
-        if tuning == self.Transformation.Tuning.MAINTAIN:
+        if tuning == Transformation.Tuning.MAINTAIN:
             return items
         compatible = self._compatible(original)
-        if tuning == self.Transformation.Tuning.MINIMIZE:
+        if tuning == Transformation.Tuning.MINIMIZE:
             if not compatible:
                 return items
             # Move an existing positional before an option, preserving the
@@ -561,8 +399,7 @@ class PreParser:
         if (
             options
             and options[-1].starved
-            and self.transformation.depletion
-            is self.Transformation.Depletion.DEFER
+            and self.transformation.depletion is Transformation.Depletion.DEFER
         ):
             # DEFER expressly keeps an unfulfilled required option at the
             # end. Moving it in front of a positional would *consume* that
@@ -580,9 +417,9 @@ class PreParser:
         if item.key is None or item.locked:
             return item.text
         tuning = self.transformation.abbr
-        if tuning == self.Transformation.Tuning.MAINTAIN:
+        if tuning == Transformation.Tuning.MAINTAIN:
             return item.text
-        if tuning == self.Transformation.Tuning.MAXIMIZE:
+        if tuning == Transformation.Tuning.MAXIMIZE:
             return item.key
         # Find the shortest abbreviation *resolving to this same definition*.
         # Prefixes '-' and '--' are reserved as positional/delimiter tokens.
@@ -600,9 +437,9 @@ class PreParser:
         for x in items:
             if x.starved:
                 depletion = self.transformation.depletion
-                if depletion is self.Transformation.Depletion.DROP_OPT:
+                if depletion is Transformation.Depletion.DROP_OPT:
                     continue
-                if depletion is self.Transformation.Depletion.DEFER:
+                if depletion is Transformation.Depletion.DEFER:
                     result.append(x)
                     continue
                 x = replace(x, value=depletion, starved=False, attached=False)
@@ -623,9 +460,9 @@ class PreParser:
         if item.nargs == 0:
             return [name + "=" + item.value] if item.attached else [name]
         equal = self.transformation.equal
-        if equal == self.Transformation.Tuning.MAXIMIZE:
+        if equal == Transformation.Tuning.MAXIMIZE:
             attach = True
-        elif equal == self.Transformation.Tuning.MINIMIZE:
+        elif equal == Transformation.Tuning.MINIMIZE:
             attach = False
         else:
             attach = item.attached
@@ -640,7 +477,7 @@ class PreParser:
         if not items:
             return []
         tuning = self.transformation.bundling
-        if tuning == self.Transformation.Tuning.MAXIMIZE:
+        if tuning == Transformation.Tuning.MAXIMIZE:
             runs: list[list[_Item]] = []
             current: list[_Item] = []
             for x in items:
@@ -653,7 +490,7 @@ class PreParser:
                     current = []
             if current:
                 runs.append(current)
-        elif tuning == self.Transformation.Tuning.MAINTAIN:
+        elif tuning == Transformation.Tuning.MAINTAIN:
             runs = []
             current = []
             for x in items:
@@ -736,10 +573,10 @@ class PreParser:
         undo the deliberate positional/option separation.
         """
         if (
-            self.transformation.bundling != self.Transformation.Tuning.MAXIMIZE
+            self.transformation.bundling != Transformation.Tuning.MAXIMIZE
             or self.framework.is_posix
             or self.transformation.order_compatibility
-            == self.Transformation.Tuning.MINIMIZE
+            == Transformation.Tuning.MINIMIZE
         ):
             return items
         result: list[_Item] = []
