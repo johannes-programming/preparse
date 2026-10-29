@@ -70,7 +70,7 @@ class TestDataToml(unittest.TestCase):
         parser.optDict = optDict
         parser.transformation = PreParser.Transformation(**transformation)
         answer, messages = parser.parse_args(query)
-        erranswer = [(legacy["prog"] + ": " + x.oneliner()) for x in messages]
+        erranswer = [x.oneliner() for x in messages]
         superanswer = parser.parse_args(answer)[0]
         self.assertEqual(answer, superanswer, msg="idempotency failed!")
         self.assertEqual(
