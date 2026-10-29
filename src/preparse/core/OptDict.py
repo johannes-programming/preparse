@@ -2,9 +2,15 @@ from __future__ import annotations
 
 __all__: list[str] = ["OptDict"]
 
-from collections.abc import Iterable
+from collections.abc import Hashable, Iterable
 from enum import IntEnum
-from typing import Self
+from typing import Protocol, Self, runtime_checkable
+
+
+@runtime_checkable
+class SupportsKeysAndGetitem(Protocol):
+    def __getitem__(self: Self, key: Hashable, /) -> object: ...
+    def keys(self: Self, /) -> Iterable[Hashable]: ...
 
 
 class OptDict(dict):
@@ -22,24 +28,31 @@ class OptDict(dict):
             else:
                 return cls.OPTIONAL_ARGUMENT
 
-    def __init__(self: Self, *args: object, **kwargs: object) -> None:
+    def __contains__(self: Self, key: object) -> bool:
+        return dict.__contains__(self, str(key))
+
+    def __delitem__(self: Self, key: object) -> None:
+        dict.__delitem__(self, str(key))
+
+    def __getitem__(self: Self, key: object) -> Nargs:
+        return dict.__getitem__(self, str(key))
+
+    def __init__(
+        self: Self,
+        other: (
+            SupportsKeysAndGetitem | Iterable[tuple[object, object]] | None
+        ) = None,
+        /,
+        **kwargs: object,
+    ) -> None:
         super().__init__()
-        self.update(*args, **kwargs)
+        self.update(other, **kwargs)
 
     def __setitem__(self: Self, key: object, value: object) -> None:
         key = str(key)
         if value is None and dict.__contains__(self, key):
             return
         dict.__setitem__(self, key, self.Nargs(value))
-
-    def __getitem__(self: Self, key: object) -> Nargs:
-        return dict.__getitem__(self, str(key))
-
-    def __contains__(self: Self, key: object) -> bool:
-        return dict.__contains__(self, str(key))
-
-    def __delitem__(self: Self, key: object) -> None:
-        dict.__delitem__(self, str(key))
 
     def get(self: Self, key: object, default: object = None) -> object:
         return dict.get(self, str(key), default)
