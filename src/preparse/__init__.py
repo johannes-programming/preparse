@@ -1,13 +1,6 @@
 from __future__ import annotations
 
-__all__: list[str] = [
-    "AmbiguousOptionMessage",
-    "InvalidOptionMessage",
-    "Message",
-    "PreParser",
-    "RequiredArgumentMessage",
-    "UnallowedArgumentMessage",
-]
+__all__: list[str] = ["PreParser"]
 
 import sys
 from abc import ABC, abstractmethod
@@ -26,61 +19,6 @@ class SupportsKeysAndGetitem[Key, Value](Protocol):
 type OptDictOther[Key] = (
     SupportsKeysAndGetitem[Key, object] | Iterable[tuple[Key, object]] | None
 )
-
-
-class Message(ABC):
-    """Abstract base of structured preparsing diagnostics."""
-
-    @abstractmethod
-    def oneliner(self: Self, /) -> str:
-        """Return a one-line getopt-style description."""
-
-
-@dataclass(eq=True)
-class AmbiguousOptionMessage(Message):
-    option: str
-    possibilities: list[str]
-
-    def oneliner(self: Self, /) -> str:
-        ans: str
-        ans = "option '%s' is ambiguous; possibilities:" % self.option
-        for x in self.possibilities:
-            ans += " '%s'" % x
-        return ans
-
-
-@dataclass(eq=True)
-class InvalidOptionMessage(Message):
-    option: str
-    is_long: bool
-
-    def oneliner(self: Self, /) -> str:
-        return (
-            "unrecognized option '%s'"
-            if self.is_long
-            else "invalid option -- '%s'"
-        ) % self.option
-
-
-@dataclass(eq=True)
-class RequiredArgumentMessage(Message):
-    option: str
-    is_long: bool
-
-    def oneliner(self: Self, /) -> str:
-        return (
-            "option '%s' requires an argument"
-            if self.is_long
-            else "option requires an argument -- '%s'"
-        ) % self.option
-
-
-@dataclass(eq=True)
-class UnallowedArgumentMessage(Message):
-    option: str
-
-    def oneliner(self: Self, /) -> str:
-        return "option '%s' doesn't allow an argument" % self.option
 
 
 @dataclass
@@ -103,6 +41,56 @@ class _Item:
 
 class PreParser:
     """Preparser and its three in-place mutable configuration objects."""
+
+    class Message(ABC):
+        """Abstract base of structured preparsing diagnostics."""
+
+        @abstractmethod
+        def oneliner(self: Self, /) -> str:
+            """Return a one-line getopt-style description."""
+
+    @dataclass(eq=True)
+    class AmbiguousOptionMessage(Message):
+        option: str
+        possibilities: list[str]
+
+        def oneliner(self: Self, /) -> str:
+            ans: str
+            ans = "option '%s' is ambiguous; possibilities:" % self.option
+            for x in self.possibilities:
+                ans += " '%s'" % x
+            return ans
+
+    @dataclass(eq=True)
+    class InvalidOptionMessage(Message):
+        option: str
+        is_long: bool
+
+        def oneliner(self: Self, /) -> str:
+            return (
+                "unrecognized option '%s'"
+                if self.is_long
+                else "invalid option -- '%s'"
+            ) % self.option
+
+    @dataclass(eq=True)
+    class RequiredArgumentMessage(Message):
+        option: str
+        is_long: bool
+
+        def oneliner(self: Self, /) -> str:
+            return (
+                "option '%s' requires an argument"
+                if self.is_long
+                else "option requires an argument -- '%s'"
+            ) % self.option
+
+    @dataclass(eq=True)
+    class UnallowedArgumentMessage(Message):
+        option: str
+
+        def oneliner(self: Self, /) -> str:
+            return "option '%s' doesn't allow an argument" % self.option
 
     class Framework:
         def __init__(
@@ -441,7 +429,7 @@ class PreParser:
         return shorts, longs
 
     def _long_match(
-        self, name: str, longs: Mapping[str, Nargs]
+        self, name: str, longs: Mapping[str, PreParser.OptDict.Nargs]
     ) -> tuple[str | None, list[str]]:
         # Exact spelling always takes precedence over any abbreviation.
         if name in longs:
@@ -478,7 +466,7 @@ class PreParser:
         """Perform getopt-like recognition without any goal-based rewrites."""
         shorts, longs = self._definitions()
         items: list[_Item] = []
-        messages: list[Message] = []
+        messages: list[PreParser.Message] = []
         i = 0
         stopped = False
         while i < len(arglist):
@@ -507,7 +495,7 @@ class PreParser:
                 if ambiguous:
                     if report:
                         messages.append(
-                            AmbiguousOptionMessage(token, ambiguous)
+                            PreParser.AmbiguousOptionMessage(token, ambiguous)
                         )
                     items.append(
                         _Item(
@@ -522,7 +510,9 @@ class PreParser:
                     continue
                 if matched is None:
                     if report:
-                        messages.append(InvalidOptionMessage(token, True))
+                        messages.append(
+                            PreParser.InvalidOptionMessage(token, True)
+                        )
                     items.append(
                         _Item(
                             "long",
@@ -540,7 +530,9 @@ class PreParser:
                 starved = False
                 if separator and nargs == 0:
                     if report:
-                        messages.append(UnallowedArgumentMessage(name))
+                        messages.append(
+                            PreParser.UnallowedArgumentMessage(name)
+                        )
                     locked = True
                 elif not separator and nargs == 1:
                     if i < len(arglist):
@@ -551,7 +543,7 @@ class PreParser:
                         starved = True
                         if report:
                             messages.append(
-                                RequiredArgumentMessage(name, True)
+                                PreParser.RequiredArgumentMessage(name, True)
                             )
                 items.append(
                     _Item(
@@ -578,7 +570,9 @@ class PreParser:
                 nargs = int(shorts[char]) if char in shorts else 0
                 unknown = char not in shorts
                 if unknown and report:
-                    messages.append(InvalidOptionMessage(char, False))
+                    messages.append(
+                        PreParser.InvalidOptionMessage(char, False)
+                    )
                 tail = rest[p:]
                 value: str | None = None
                 attached = False
@@ -595,7 +589,9 @@ class PreParser:
                             starved = True
                             if report:
                                 messages.append(
-                                    RequiredArgumentMessage(char, False)
+                                    PreParser.RequiredArgumentMessage(
+                                        char, False
+                                    )
                                 )
                     p = len(rest)
                 items.append(
