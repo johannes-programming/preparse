@@ -149,7 +149,7 @@ class PreParser:
             if is_posix is not None:
                 self.is_posix = is_posix
 
-    class OptDict(dict[str, PreParser.OptDict.Nargs]):
+    class OptDict(dict[str, Any]):
         """A dictionary which normalizes keys and argument-count values."""
 
         class Nargs(IntEnum):
@@ -262,12 +262,12 @@ class PreParser:
         ) -> None:
             if other is not None and isinstance(other, SupportsKeysAndGetitem):
                 for x in other.keys():
-                    self[str(x)] = Nargs(other[x])
+                    self[str(x)] = PreParser.OptDict.Nargs(other[x])
             elif other is not None:
                 for x, y in other:
-                    self[str(x)] = Nargs(y)
+                    self[str(x)] = PreParser.OptDict.Nargs(y)
             for x, y in kwargs.items():
-                self[str(x)] = Nargs(y)
+                self[str(x)] = PreParser.OptDict.Nargs(y)
 
     class Transformation:
 
@@ -314,7 +314,9 @@ class PreParser:
         def copy(self: Self, /) -> Self:
             return type(self)(self)
 
-        def update(self: Self, other: Transformation | None = None, /) -> None:
+        def update(
+            self: Self, other: PreParser.Transformation | None = None, /
+        ) -> None:
             if other is not None:
                 self.update_fields(
                     order_compatibility=other.order_compatibility,
@@ -340,9 +342,13 @@ class PreParser:
                 ("equal", equal),
             ):
                 if value is not None:
-                    setattr(self, field, Tuning(value))
+                    setattr(
+                        self, field, PreParser.Transformation.Tuning(value)
+                    )
             if depletion is not None:
-                if not isinstance(depletion, (Depletion, str)):
+                if not isinstance(
+                    depletion, (PreParser.Transformation.Depletion, str)
+                ):
                     raise TypeError(
                         "depletion must be a Depletion enum or a string"
                     )
@@ -359,11 +365,11 @@ class PreParser:
             | Iterable[tuple[Key, object]]
             | None
         ) = None,
-        transformation: Transformation | None = None,
+        transformation: PreParser.Transformation | None = None,
     ) -> None:
-        self._framework = Framework()
-        self._optDict = OptDict()
-        self._transformation = Transformation()
+        self._framework = PreParser.Framework()
+        self._optDict = PreParser.OptDict()
+        self._transformation = PreParser.Transformation()
         if other is not None:
             self.framework = other.framework
             self.optDict = other.optDict
@@ -400,9 +406,9 @@ class PreParser:
         ),
         /,
     ) -> None:
-        data: OptDict
+        data: PreParser.OptDict
         if other is not None:
-            data = OptDict(other)
+            data = PreParser.OptDict(other)
             self.optDict.clear()
             self.optDict.update(data)
 
@@ -624,10 +630,10 @@ class PreParser:
 
     def _order(self, items: list[_Item], original: list[str]) -> list[_Item]:
         tuning = self.transformation.order_compatibility
-        if tuning == Transformation.Tuning.MAINTAIN:
+        if tuning == PreParser.Transformation.Tuning.MAINTAIN:
             return items
         compatible = self._compatible(original)
-        if tuning == Transformation.Tuning.MINIMIZE:
+        if tuning == PreParser.Transformation.Tuning.MINIMIZE:
             if not compatible:
                 return items
             # Move an existing positional before an option, preserving the
@@ -710,7 +716,8 @@ class PreParser:
         if (
             options
             and options[-1].starved
-            and self.transformation.depletion is Transformation.Depletion.DEFER
+            and self.transformation.depletion
+            is PreParser.Transformation.Depletion.DEFER
         ):
             # DEFER expressly keeps an unfulfilled required option at the
             # end. Moving it in front of a positional would *consume* that
@@ -722,13 +729,15 @@ class PreParser:
             return options + trailing[:1] + positions + trailing[1:]
         return options + positions + trailing
 
-    def _abbreviation(self, item: _Item, longs: Mapping[str, Nargs]) -> str:
+    def _abbreviation(
+        self, item: _Item, longs: Mapping[str, PreParser.OptDict.Nargs]
+    ) -> str:
         if item.key is None or item.locked:
             return item.text
         tuning = self.transformation.abbr
-        if tuning == Transformation.Tuning.MAINTAIN:
+        if tuning == PreParser.Transformation.Tuning.MAINTAIN:
             return item.text
-        if tuning == Transformation.Tuning.MAXIMIZE:
+        if tuning == PreParser.Transformation.Tuning.MAXIMIZE:
             return item.key
         # Find the shortest abbreviation *resolving to this same definition*.
         # Prefixes '-' and '--' are reserved as positional/delimiter tokens.
@@ -746,9 +755,9 @@ class PreParser:
         for x in items:
             if x.starved:
                 depletion = self.transformation.depletion
-                if depletion is Depletion.DROP_OPT:
+                if depletion is PreParser.Transformation.Depletion.DROP_OPT:
                     continue
-                if depletion is Depletion.DEFER:
+                if depletion is PreParser.Transformation.Depletion.DEFER:
                     result.append(x)
                     continue
                 x = replace(x, value=depletion, starved=False, attached=False)
@@ -756,7 +765,7 @@ class PreParser:
         return result
 
     def _long_tokens(
-        self, item: _Item, longs: Mapping[str, Nargs]
+        self, item: _Item, longs: Mapping[str, PreParser.OptDict.Nargs]
     ) -> list[str]:
         name = self._abbreviation(item, longs)
         if item.locked:
@@ -769,9 +778,9 @@ class PreParser:
         if item.nargs == 0:
             return [name + "=" + item.value] if item.attached else [name]
         equal = self.transformation.equal
-        if equal == Transformation.Tuning.MAXIMIZE:
+        if equal == PreParser.Transformation.Tuning.MAXIMIZE:
             attach = True
-        elif equal == Transformation.Tuning.MINIMIZE:
+        elif equal == PreParser.Transformation.Tuning.MINIMIZE:
             attach = False
         else:
             attach = item.attached
@@ -786,7 +795,7 @@ class PreParser:
         if not items:
             return []
         tuning = self.transformation.bundling
-        if tuning == Transformation.Tuning.MAXIMIZE:
+        if tuning == PreParser.Transformation.Tuning.MAXIMIZE:
             runs: list[list[_Item]] = []
             current: list[_Item] = []
             for x in items:
@@ -799,7 +808,7 @@ class PreParser:
                     current = []
             if current:
                 runs.append(current)
-        elif tuning == Transformation.Tuning.MAINTAIN:
+        elif tuning == PreParser.Transformation.Tuning.MAINTAIN:
             runs = []
             current = []
             for x in items:
@@ -882,10 +891,11 @@ class PreParser:
         undo the deliberate positional/option separation.
         """
         if (
-            self.transformation.bundling != Transformation.Tuning.MAXIMIZE
+            self.transformation.bundling
+            != PreParser.Transformation.Tuning.MAXIMIZE
             or self.framework.is_posix
             or self.transformation.order_compatibility
-            == Transformation.Tuning.MINIMIZE
+            == PreParser.Transformation.Tuning.MINIMIZE
         ):
             return items
         result: list[_Item] = []

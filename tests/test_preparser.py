@@ -3,7 +3,7 @@ __all__: list[str] = ["TestPreParser"]
 import unittest
 from typing import Self
 
-from preparse import PreParser, Tuning
+from preparse import PreParser
 
 
 class TestPreParser(unittest.TestCase):
@@ -31,7 +31,7 @@ class TestPreParser(unittest.TestCase):
         parser: PreParser
         parser = PreParser()
         parser.framework.allows_long = False
-        parser.transformation.bundling = Tuning(0)
+        parser.transformation.bundling = PreParser.Transformation.Tuning(0)
         parser.optdict = {"--": 2}  # type: ignore[arg-type]
         self.assertEqual(parser.parse_args(["--x"])[0], ["--x"])
 

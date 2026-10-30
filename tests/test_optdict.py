@@ -4,7 +4,7 @@ import unittest
 from collections.abc import Iterable
 from typing import Iterator, Self, TypeVar
 
-from preparse import OptDict
+from preparse import PreParser
 
 Item = TypeVar("Item")
 
@@ -22,27 +22,27 @@ class Foo:
 class TestPreparse(unittest.TestCase):
 
     def test_optdict_copy(self: Self, /) -> None:
-        dublicate: OptDict
-        original: OptDict
-        original = OptDict({"--foo": 0, "-bar": 1})
+        dublicate: PreParser.OptDict
+        original: PreParser.OptDict
+        original = PreParser.OptDict({"--foo": 0, "-bar": 1})
         dublicate = original.copy()
         self.assertEqual(original, dublicate)
 
     def test_optdict_repr(self: Self, /) -> None:
-        data: dict[str, OptDict.Nargs]
-        original: OptDict
+        data: dict[str, PreParser.OptDict.Nargs]
+        original: PreParser.OptDict
         data = {
-            "--foo": OptDict.Nargs.NO_ARGUMENT,
-            "-bar": OptDict.Nargs.REQUIRED_ARGUMENT,
+            "--foo": PreParser.OptDict.Nargs.NO_ARGUMENT,
+            "-bar": PreParser.OptDict.Nargs.REQUIRED_ARGUMENT,
         }
-        original = OptDict(data)
+        original = PreParser.OptDict(data)
         self.assertEqual(repr(original), f"OptDict({data})")
         self.assertEqual(repr(original), str(original))
         self.assertEqual(repr(original), format(original))
 
     def test_optdict_SupportsKeys(self: Self) -> None:
-        original: OptDict
-        original = OptDict(Foo())
+        original: PreParser.OptDict
+        original = PreParser.OptDict(Foo())
 
 
 if __name__ == "__main__":
