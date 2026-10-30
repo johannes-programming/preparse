@@ -193,7 +193,7 @@ class PreParser:
         def __setitem__(self: Self, key: object, value: object, /) -> None:
             if value is None:
                 return
-            dict.__setitem__(self, str(key), self.Nargs(value))
+            dict.__setitem__(self, str(key), PreParser.OptDict.Nargs(value))
 
         def copy(self: Self, /) -> Self:
             return type(self)(self)
@@ -216,26 +216,26 @@ class PreParser:
         @overload
         def get(
             self: Self, key: object, default: None = None, /
-        ) -> Nargs | None: ...
+        ) -> PreParser.OptDict.Nargs | None: ...
         @overload
         def get[Value](
             self: Self, key: object, default: Value, /
-        ) -> Nargs | Value: ...
+        ) -> PreParser.OptDict.Nargs | Value: ...
         def get(self: Self, key: object, default: Any = None, /) -> Any:
             return dict.get(self, str(key), default)
 
         @overload
-        def pop(self: Self, key: object, /) -> Nargs: ...
+        def pop(self: Self, key: object, /) -> PreParser.OptDict.Nargs: ...
         @overload
         def pop[Value](
             self: Self, key: object, default: Value, /
-        ) -> Nargs | Value: ...
+        ) -> PreParser.OptDict.Nargs | Value: ...
         def pop(self: Self, key: object, /, *args: Any) -> Any:
             return dict.pop(self, str(key), *args)
 
         def setdefault(
             self: Self, key: object, default: object = None
-        ) -> Nargs:
+        ) -> PreParser.OptDict.Nargs:
             key = str(key)
             if dict.__contains__(self, key):
                 return dict.__getitem__(self, key)
@@ -410,10 +410,12 @@ class PreParser:
 
     def _definitions(
         self,
-    ) -> tuple[dict[str, Nargs], dict[str, Nargs]]:
+    ) -> tuple[
+        dict[str, PreParser.OptDict.Nargs], dict[str, PreParser.OptDict.Nargs]
+    ]:
         """Return effective short and long options, in dictionary order."""
-        shorts: dict[str, Nargs] = {}
-        longs: dict[str, Nargs] = {}
+        shorts: dict[str, PreParser.OptDict.Nargs] = {}
+        longs: dict[str, PreParser.OptDict.Nargs] = {}
         f = self.framework
         for key, value in self.optDict.items():
             if not key.startswith("-"):
