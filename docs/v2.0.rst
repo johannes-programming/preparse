@@ -2,7 +2,6 @@ Overview
 --------
 
 The ``preparse`` project allows to preparse arguments before the main parsing.
-Its ability to deabbreviate options is especially useful for use with ``click``.
 
 Installation
 ------------
@@ -19,9 +18,9 @@ Typing
 
 The typing conforms strictly to ``mypy``.
 
-.. container:: versionadded
+.. container:: versionchanged
 
-    **Added in version 1.1.**
+    **Changed in version 2.0.**
 
 Introduction
 ------------
@@ -29,290 +28,362 @@ Introduction
 The ``preparse`` project allows for preprocessing a ``list`` of arguments
 so that they can be parsed definitively in a later step.
 This way, the functionality of another parsing system can be modified.
-The project is especially adapted to work with the ``click`` project.
+The project is inspired by the ``getopt`` and ``getopt_long`` libraries within ``C``.
+Version 2.0 exposes a standalone preparser; integration with a downstream parser
+is performed by passing the resulting arguments to that parser.
 
-The project ``preparse`` is strongly inspired
-by the ``getopt`` and ``getopt_long`` libraries within ``C``.
-
-Here is the implementation of the ``expit`` project (Version ``1.0.13``) to illustrate
-how ``preparse`` can be used to modify ``click``.
+The following example expands an abbreviated long option and attaches
+a required argument to its option:
 
 .. code-block:: python
 
-    import math
+    from preparse import PreParser
 
-    import click
-    import preparse
+    parser = PreParser(
+        optDict={
+            "-v": PreParser.OptDict.Nargs.NO_ARGUMENT,
+            "--verbose": PreParser.OptDict.Nargs.NO_ARGUMENT,
+            "--output": PreParser.OptDict.Nargs.REQUIRED_ARGUMENT,
+        }
+    )
+    parser.transformation.abbr = PreParser.Transformation.Tuning.MAXIMIZE
+    parser.transformation.equal = PreParser.Transformation.Tuning.MAXIMIZE
 
-    __all__ = ["function", "main"]
+    args, messages = parser.parse_args(["--verb", "--output", "result.txt"])
+    # args == ["--verbose", "--output=result.txt"]
+    # messages == []
 
+    for message in messages:
+        print(message.oneliner())
 
-    def function(x: float) -> float:
-        "This function is the logistic sigmoid, i.e. the expit function."
-        try:
-            p = math.exp(-x)
-        except OverflowError:
-            p = float("+inf")
-        return 1 / (1 + p)
-
-
-    @preparse.PreParser().click()
-    @click.command(add_help_option=False)
-    @click.help_option("-h", "--help")
-    @click.version_option(None, "-V", "--version")
-    @click.argument("x", type=float)
-    def main(x: float) -> None:
-        "This command applies the expit function to x."
-        click.echo(function(x))
+The ``parse_args`` method returns both the transformed argument ``list``
+and a ``list`` of structured diagnostic messages.
+The caller decides how to present or handle these messages.
 
 Features
 --------
 
-``preparse.core``
-~~~~~~~~~~~~~~~~~
+``preparse.PreParser``
+~~~~~~~~~~~~~~~~~~~~~~
 
-``class preparse.core.Click.Click(parser: preparse.PreParser, cmd: object = True, ctx: object = True)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.PreParser(other=None, /, *, framework=None, optDict=None, transformation=None)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This dataclass provides decorators for embedding a ``PreParser`` object.
-
-``__call__(target: types.FunctionType) -> types.FunctionType`` ``__call__(target: types.MethodType) -> types.MethodType`` ``__call__(target: typing.Any) -> typing.Any``
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-This magic method implements ``self(target)``.
-It works as a decorator that embeds its parser into a given target from the library ``click``.
-
-``cmd: object``
-"""""""""""""""
-
-This dataclass field determines if the ``reflectClickCommand`` method of parser is to be called.
-
-``copy() -> Self``
-""""""""""""""""""
-
-This method returns a shallow copy of the current decorator.
-
-``ctx: object``
-"""""""""""""""
-
-This dataclass field determines if the ``reflectClickContext`` method of parser is to be called.
-
-``parser: preparse.core.PreParser.PreParser``
-"""""""""""""""""""""""""""""""""""""""""""""
-
-This dataclass field holds the parser to be embedded.
-
-``class preparse.core.Optdict.Optdict(data: preparse.typing.SupportsKeysAndGetitem.SupportsKeysAndGetitem | Iterable[tuple[Hashable, object]] = (), /)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-This class is a subclass of ``datahold.HoldDict[str, preparse.Nargs]``
-with strings as keys and with ``preparse.Nargs`` as values.
-It is designed for ``preparse.PreParser.optdict``.
-
-``class preparse.core.PreParser.PreParser(*, allowslong: object = True, allowsshort: object = True, bundling: int = Tuning.MAINTAIN, expandsabbr: object = True, expectsabbr: object = True, expectsposix: object = False, optdict: preparse.typing.SupportsKeysAndGetitem.SupportsKeysAndGetitem | Iterable[tuple[Hashable, object]] = (), prog: object = None, reconcilesorders: object = True, special: int = preparse.Tuning.MAINTAIN, warn: Callable[[PreparseWarning], Any] = str)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-This ``class`` is the centerpiece of the ``preparse``.
+This ``class`` is the centerpiece of ``preparse``.
 Its behaviour follows the principles of ``getopt`` from ``C``.
-It is intended only for parsers compatible with traditional ``getopt`` logic.
-
-``allowslong: bool``
-""""""""""""""""""""
-
-This boolean ``property`` determines whether long options are allowed.
-
-``allowsshort: bool``
-"""""""""""""""""""""
-
-This boolean ``property`` determines whether short options are allowed.
-
-``bundling: preparse.Tuning``
-"""""""""""""""""""""""""""""
-
-This ``property`` determines the approach to bundling of short options.
-
-``click(cmd: object = True, ctx: object = True) -> preparse.Click``
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-This method returns a decorator that infuses the current instance into ``parse_args``.
+It is intended for argument parsers compatible with traditional ``getopt`` logic.
+The optional ``other`` argument copies the configuration of another ``PreParser``.
+The remaining keyword arguments set the three configuration objects.
 
 ``copy() -> Self``
 """"""""""""""""""
 
-This method returns a copy of the current instance.
+This method returns a copy of the current instance,
+with independently mutable configuration objects.
 
-``expandsabbr: bool``
-"""""""""""""""""""""
-
-This boolean ``property`` determines whether recognized abbreviations of long options
-are to be expanded to their full length.
-
-``expectsabbr: bool``
-"""""""""""""""""""""
-
-This boolean ``property`` determines whether abbreviations of long options are expected.
-
-``expectsposix: bool``
-""""""""""""""""""""""
-
-This boolean ``property`` determines whether the order of arguments conforms to the POSIX standard,
-i.e. all arguments after the first positional argument are also positional.
-If the value passed to the property is ``"infer"``, the value is inferred from
-the ``POSIXLY_CORRECT`` environment variable.
-
-``optdict: preparse.Optdict``
-"""""""""""""""""""""""""""""
-
-This ``property`` holds a dict-like object.
-Its keys are the options.
-Its values specify ``preparse.Nargs``.
-Options not found within the dictionary
-cause a ``preparse.PreparseInvalidOptionWarning``.
-Unknown short options are assumed to take no argument.
-Unknown long options are assumed to take an optional argument.
-This behaviour reflects ``getopt``.
-
-``parse_args(args: Optional[Iterable[object]] = None) -> list[str]``
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-This method is at the core of the class.
-It returns a preparsed list of arguments.
-If ``None`` is passed as args then ``sys.argv[1:]`` is used.
-If the method is applied repeatedly to a ``list``
-there will be no changes after the first run.
-
-``prog: str``
-"""""""""""""
-
-This ``str`` property represents the name of the program.
-If the value passed to the property is ``None`` then ``str(os.path.basename(sys.argv[0]))`` is saved.
-
-``reconcilesorders: bool``
-""""""""""""""""""""""""""
-
-This boolean ``property`` determines whether compatibility with both POSIX ordering
-and interleaving options with positional arguments should be enforced.
-
-``reflectClickCommand(cmd: click.Command) -> None``
-"""""""""""""""""""""""""""""""""""""""""""""""""""
-
-This method alters the current instance to reflect a ``click.Command`` object.
-Concretely the ``optdict`` property is changed.
-Entries in each Click option's ``opts`` and ``secondary_opts`` are reflected.
-
-``reflectClickContext(ctx: click.Context) -> None``
-"""""""""""""""""""""""""""""""""""""""""""""""""""
-
-This method alters the current instance to reflect a ``click.Context`` object.
-Concretely the ``prog`` property is changed.
-
-``special: preparse.Tuning``
-""""""""""""""""""""""""""""
-
-This ``property`` determines the approach to the special argument ``'--'``.
-
-``todict() -> dict[str, Any]``
-""""""""""""""""""""""""""""""
-
-This method returns a ``dict`` representing the current instance.
-
-``warn: Callable[[PreparseWarning], Any]``
-""""""""""""""""""""""""""""""""""""""""""
-
-This property holds a function that is called whenever ``parse_args`` encounters a warning.
-The warning is given as the only positional argument.
-No keyword arguments are given.
-Its return value is discarded.
-Therefore, ``str`` is used to discard the warnings.
-
-``preparse.enums``
-~~~~~~~~~~~~~~~~~~
-
-These classes are subclasses of ``enum.IntEnum``.
-Any value different from ``0`` (meaning no) and ``1`` (meaning yes) is interpreted as ``2`` (meaning intermediate).
-
-``class preparse.enums.Tuning.Tuning``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-+--------------+-------+-----------------------------------------------------------------------------+
-| Name         | Value | Explanation                                                                 |
-+==============+=======+=============================================================================+
-| ``MINIMIZE`` | ``0`` | The PreParser minimizes the aspect in question.                             |
-+--------------+-------+-----------------------------------------------------------------------------+
-| ``MAXIMIZE`` | ``1`` | The PreParser maximizes the aspect in question.                             |
-+--------------+-------+-----------------------------------------------------------------------------+
-| ``MAINTAIN`` | ``2`` | The PreParser does not make any unforced changes to the aspect in question. |
-+--------------+-------+-----------------------------------------------------------------------------+
-
-``class preparse.enums.Nargs.Nargs``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-+-------------------+-------+----------------------------------------------+
-| Name              | Value | Explanation                                  |
-+===================+=======+==============================================+
-| NO_ARGUMENT       | ``0`` | The option does not take an argument.        |
-+-------------------+-------+----------------------------------------------+
-| REQUIRED_ARGUMENT | ``1`` | The option requires an argument.             |
-+-------------------+-------+----------------------------------------------+
-| OPTIONAL_ARGUMENT | ``2`` | The option may take an argument.             |
-+-------------------+-------+----------------------------------------------+
-
-``preparse.tests``
-~~~~~~~~~~~~~~~~~~
-
-``preparse.tests.test() -> unittest.TextTestResult``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-This project can be tested through its ``test`` function.
-
-.. code-block:: python
-
-    import preparse.tests
-    preparse.tests.test()
-
-``preparse.typing``
-~~~~~~~~~~~~~~~~~~~
-
-``class preparse.typing.SupportsKeysAndGetitem.SupportsKeysAndGetitem``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-This protocol is included in the project for type annotation.
-
-``__getitem__(key: Hashable, /) -> object``
+``framework: preparse.PreParser.Framework``
 """""""""""""""""""""""""""""""""""""""""""
 
-``keys() -> Iterable[Hashable]``
-""""""""""""""""""""""""""""""""
+This ``property`` holds the rules used to recognize options.
+Its fields can be modified in place. Assigning another ``Framework`` updates
+the existing object rather than replacing it.
 
-``preparse.warnings``
-~~~~~~~~~~~~~~~~~~~~~
+``optDict: preparse.PreParser.OptDict``
+"""""""""""""""""""""""""""""""""""""""
 
-These classes are subclasses of ``Warning`` that are specifically designed to communicate issues with parsing.
+This ``property`` holds the definitions of accepted options.
+The keys are option spellings and the values describe how many arguments
+the option takes. Assigning a mapping or an iterable of key-value pairs
+replaces the dictionary contents.
 
-``class preparse.warnings.PreparseWarning.PreparseWarning(**kwargs: Any)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``parse_args(args: Iterable[str] | None = None) -> tuple[list[str], list[preparse.Message]]``
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-This abstract base ``class`` is the base for all other warning types.
+This method is at the core of the ``class``.
+It returns a ``tuple`` containing the preparsed argument ``list`` and a ``list``
+of diagnostic message objects. If ``None`` is passed as ``args``,
+then ``sys.argv[1:]`` is used. Diagnostics describe the supplied input,
+even when the corresponding option is modified or dropped.
+The transformation is designed to reach a stable result, so preparsing
+the resulting argument ``list`` again does not change it.
 
-``class preparse.warnings.PreparseAmbiguousOptionWarning.PreparseAmbiguousOptionWarning(*, prog: object, option: object, possibilities: Iterable[object])``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``transformation: preparse.PreParser.Transformation``
+"""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-This ``class`` warns about ambiguous options. This can only happen for long options.
+This ``property`` holds the transformations applied after options
+have been recognized. Its fields can be modified in place.
+Assigning another ``Transformation`` updates the existing object.
 
-``class preparse.warnings.PreparseInvalidOptionWarning.PreparseInvalidOptionWarning(*, prog: object, option: object, islong: object)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``preparse.PreParser.Framework``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This ``class`` warns about invalid options.
+``class preparse.PreParser.Framework(other=None, /, *, allows_long=None, allows_short=None, is_posix=None)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-``class preparse.warnings.PreparseRequiredArgumentWarning.PreparseRequiredArgumentWarning(*, prog: object, option: object, islong: object)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+This ``class`` controls the conventions under which options are recognized.
+The optional ``other`` argument copies another ``Framework``.
+A keyword argument of ``None`` leaves the corresponding field unchanged.
 
-This ``class`` warns about missing required arguments.
+``allows_long: bool``
+"""""""""""""""""""""
 
-``class preparse.warnings.PreparseUnallowedArgumentWarning.PreparseUnallowedArgumentWarning(*, prog: object, option: object)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+This boolean field determines whether long options are recognized.
+The default is ``True``. When only long options are allowed,
+single-dash long-option spellings are also supported.
 
-This ``class`` warns about unallowed arguments. This can only happen for long options.
+``allows_short: bool``
+""""""""""""""""""""""
+
+This boolean field determines whether short options are recognized.
+The default is ``True``.
+
+``copy() -> Self``
+""""""""""""""""""
+
+This method returns a copy of the current ``Framework``.
+
+``is_posix: bool``
+""""""""""""""""""
+
+This boolean field selects POSIX option ordering.
+If ``True``, option recognition stops at the first positional argument.
+If ``False``, options and positional arguments may be interleaved.
+The default is ``False``.
+
+``update(other: preparse.PreParser.Framework | None) -> None``
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+This method copies the non-``None`` fields of another ``Framework``
+into the current instance. Passing ``None`` leaves it unchanged.
+
+``update_fields(*, allows_long=None, allows_short=None, is_posix=None) -> None``
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+This method updates individual fields.
+For each field, ``None`` means that no change is made.
+
+``preparse.PreParser.OptDict``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``class preparse.PreParser.OptDict(other=None, /, **kwargs)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This ``class`` is a subclass of ``dict[str, preparse.PreParser.OptDict.Nargs]``.
+It normalizes option keys to ``str`` and values to the ``Nargs`` enum.
+The constructor accepts an object with ``keys`` and ``__getitem__``,
+an iterable of key-value pairs, and keyword arguments.
+The usual dictionary operations are available, including ``copy``,
+``get``, ``pop``, ``update``, and the union operators.
+
+Option names normally have the form ``-x`` for a short option
+or ``--name`` for a long option. The ``Framework`` settings determine
+which dictionary entries are considered valid options.
+Options absent from the dictionary produce diagnostic messages.
+
+``copy() -> Self``
+""""""""""""""""""
+
+This method returns a copy of the current dictionary.
+
+``fromkeys(keys: Iterable[object], value: object = None, /) -> Self``
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+This ``classmethod`` creates a dictionary with the supplied keys
+and argument-count value. If ``value`` is ``None``, it returns an empty dictionary.
+
+``update(other=None, /, **kwargs) -> None``
+"""""""""""""""""""""""""""""""""""""""""""
+
+This method adds or replaces entries from a mapping, an iterable
+of pairs, or keyword arguments. Keys and values are normalized.
+
+``class preparse.PreParser.OptDict.Nargs``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This ``enum.IntEnum`` class describes the argument count of an option.
+
++-----------------------+-------+---------------------------------------+
+| Name                  | Value | Explanation                           |
++=======================+=======+=======================================+
+| ``NO_ARGUMENT``       | ``0`` | The option does not take an argument. |
++-----------------------+-------+---------------------------------------+
+| ``REQUIRED_ARGUMENT`` | ``1`` | The option requires an argument.      |
++-----------------------+-------+---------------------------------------+
+| ``OPTIONAL_ARGUMENT`` | ``2`` | The option may take an argument.      |
++-----------------------+-------+---------------------------------------+
+
+When converting values to ``Nargs``, ``None`` becomes ``NO_ARGUMENT``;
+values other than ``0`` and ``1`` become ``OPTIONAL_ARGUMENT``.
+Direct assignment of ``None`` to an ``OptDict`` entry is ignored.
+
+``preparse.PreParser.Transformation``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``class preparse.PreParser.Transformation(other=None, /, *, abbr=None, bundling=None, depletion=None, equal=None, order_compatibility=None)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This ``class`` configures how recognized arguments are transformed.
+The optional ``other`` argument copies another ``Transformation``.
+The fields use ``Tuning`` for three-way behaviour, except for ``depletion``.
+
+``abbr: preparse.PreParser.Transformation.Tuning``
+""""""""""""""""""""""""""""""""""""""""""""""""""
+
+This field determines whether recognized long-option abbreviations
+are minimized, expanded to their full spelling, or maintained.
+The default is ``Tuning.MINIMIZE``. An exact option name takes precedence
+over an abbreviation, and ambiguous or invalid options are not rewritten.
+
+``bundling: preparse.PreParser.Transformation.Tuning``
+""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+This field determines whether short options are separated,
+bundled together when possible, or maintained in their current bundles.
+The default is ``Tuning.MAINTAIN``. A short option taking an argument
+limits which options may share its bundle.
+
+``copy() -> Self``
+""""""""""""""""""
+
+This method returns a copy of the current ``Transformation``.
+
+``depletion: preparse.PreParser.Transformation.Depletion | str``
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+This field determines the handling of a recognized option whose
+required argument is missing. ``Depletion.DROP_OPT`` removes that option;
+``Depletion.DEFER`` keeps it without a value.
+A ``str`` instead supplies that string as the missing argument.
+The default is ``Depletion.DROP_OPT``.
+
+``equal: preparse.PreParser.Transformation.Tuning``
+"""""""""""""""""""""""""""""""""""""""""""""""""""
+
+This field determines whether required arguments of long options
+are separated from the option, joined with ``=``, or maintained in their
+existing form. The default is ``Tuning.MAINTAIN``.
+Optional arguments of long options are only taken when attached with ``=``.
+
+``order_compatibility: preparse.PreParser.Transformation.Tuning``
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+This field determines whether to minimize, maximize, or maintain
+compatibility between POSIX option ordering and interleaved option ordering.
+The default is ``Tuning.MAXIMIZE``. Maximization may reorder options
+and positional arguments or insert ``--`` to preserve their interpretation.
+
+``update(other: preparse.PreParser.Transformation | None = None, /) -> None``
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+This method copies the fields of another ``Transformation``
+into the current instance. Passing ``None`` leaves it unchanged.
+
+``update_fields(*, abbr=None, bundling=None, depletion=None, equal=None, order_compatibility=None) -> None``
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+This method updates individual fields.
+For each field, ``None`` means that no change is made.
+
+``class preparse.PreParser.Transformation.Tuning``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This ``enum.IntEnum`` class determines the goal of a transformation.
+A transformation may be constrained when the requested change would alter
+the recognized meaning of an argument.
+
++--------------+-------+-------------------------------------------------+
+| Name         | Value | Explanation                                     |
++==============+=======+=================================================+
+| ``MINIMIZE`` | ``0`` | The PreParser minimizes the aspect in question. |
++--------------+-------+-------------------------------------------------+
+| ``MAXIMIZE`` | ``1`` | The PreParser maximizes the aspect in question. |
++--------------+-------+-------------------------------------------------+
+| ``MAINTAIN`` | ``2`` | The PreParser does not make unforced changes.   |
++--------------+-------+-------------------------------------------------+
+
+When converting values to ``Tuning``, ``None`` becomes ``MINIMIZE``;
+values other than ``0`` and ``1`` become ``MAINTAIN``.
+
+``class preparse.PreParser.Transformation.Depletion``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This ``enum.Enum`` class determines what happens to an option
+whose required argument cannot be found.
+
++--------------+----------------+----------------------------------------+
+| Name         | Value          | Explanation                            |
++==============+================+========================================+
+| ``DROP_OPT`` | ``"DROP_OPT"`` | Discard the option.                    |
++--------------+----------------+----------------------------------------+
+| ``DEFER``    | ``"DEFER"``    | Retain the option without an argument. |
++--------------+----------------+----------------------------------------+
+
+``preparse.Message``
+~~~~~~~~~~~~~~~~~~~~
+
+``class preparse.Message``
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This abstract base ``class`` is the base for the preparsing diagnostics.
+Messages are returned by ``PreParser.parse_args`` rather than being emitted
+as Python warnings.
+
+``oneliner() -> str``
+"""""""""""""""""""""
+
+This abstract method returns a one-line, ``getopt``-style
+description of the diagnostic.
+
+``preparse`` message classes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following ``dataclass`` types implement ``Message``.
+Their fields carry the diagnostic details; ``oneliner`` formats the details
+as a human-readable string.
+
+``class preparse.AmbiguousOptionMessage(option: str, possibilities: list[str])``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This ``class`` reports an ambiguous abbreviation of a long option.
+Its ``option`` field contains the supplied spelling and ``possibilities``
+lists the matching long options.
+
+``class preparse.InvalidOptionMessage(option: str, is_long: bool)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This ``class`` reports an unrecognized long option or an invalid
+short option. The ``is_long`` field distinguishes the two cases.
+
+``class preparse.RequiredArgumentMessage(option: str, is_long: bool)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This ``class`` reports a recognized option whose required argument
+is missing. The ``is_long`` field distinguishes long and short options.
+
+``class preparse.UnallowedArgumentMessage(option: str)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This ``class`` reports a long option that does not allow an argument
+but was supplied with a value using ``=``.
+
+``preparse.SupportsKeysAndGetitem``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``class preparse.SupportsKeysAndGetitem[Key, Value]``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This runtime-checkable ``typing.Protocol`` is used to annotate
+mapping-like inputs to ``OptDict``. It requires the following methods:
+
+``__getitem__(key: Key, /) -> Value``
+"""""""""""""""""""""""""""""""""""""
+
+This method retrieves the value corresponding to a key.
+
+``keys() -> Iterable[Key]``
+"""""""""""""""""""""""""""
+
+This method returns the keys of the mapping-like object.
 
 License
 -------
