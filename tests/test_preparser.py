@@ -3,8 +3,7 @@ __all__: list[str] = ["TestPreParser"]
 import unittest
 from typing import Self
 
-from preparse import PreParser
-from preparse.enum.Tuning import Tuning
+from preparse import PreParser, Tuning
 
 
 class TestPreParser(unittest.TestCase):

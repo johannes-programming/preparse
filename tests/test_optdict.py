@@ -4,7 +4,7 @@ import unittest
 from collections.abc import Iterable
 from typing import Iterator, Self, TypeVar
 
-from preparse.core.OptDict import OptDict
+from preparse import OptDict
 
 Item = TypeVar("Item")
 
