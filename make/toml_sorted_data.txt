@@ -1,4 +1,7 @@
 --sort
 --sort
 --all-keys
-src/preparse/tests/data.toml
+--sort
+--all-keys
+--all-keys
+tests/data.toml
