@@ -1457196,6 +1457196,7 @@ warnings = nan
 bundling = 2
 order_compatibility = 2
 abbr = 0
+depletion = ["DEFER"]
 
 [run34396go.framework]
 allows_long = true

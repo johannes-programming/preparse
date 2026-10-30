@@ -68,7 +68,12 @@ class TestDataToml(unittest.TestCase):
         parser = PreParser()
         parser.framework = PreParser.Framework(**framework)
         parser.optDict = optDict
-        parser.transformation = PreParser.Transformation(**transformation)
+        transformation_ = dict(transformation)
+        if isinstance(transformation.get("depletion"), list):
+            transformation_["depletion"] = PreParser.Transformation.Depletion[
+                transformation["depletion"][0]
+            ]
+        parser.transformation = PreParser.Transformation(**transformation_)
         answer, messages = parser.parse_args(query)
         erranswer = [x.oneliner() for x in messages]
         superanswer = parser.parse_args(answer)[0]

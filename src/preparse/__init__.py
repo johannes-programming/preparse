@@ -533,7 +533,7 @@ class PreParser:
                 if separator and nargs == 0:
                     if report:
                         messages.append(
-                            PreParser.UnallowedArgumentMessage(name)
+                            PreParser.UnallowedArgumentMessage(matched)
                         )
                     locked = True
                 elif not separator and nargs == 1:
@@ -730,12 +730,21 @@ class PreParser:
     def _abbreviation(
         self, item: _Item, longs: Mapping[str, PreParser.OptDict.Nargs]
     ) -> str:
-        if item.key is None or item.locked:
+        # A recognized option retains its identity even if an attached value
+        # is invalid (e.g. --verbo=3 for the no-argument --verbose).  A
+        # locked item must preserve that value, but may still normalize the
+        # option's spelling.  Only unknown/ambiguous options lack a key.
+        if item.key is None:
             return item.text
-        tuning = self.transformation.abbr
-        if tuning == PreParser.Transformation.Tuning.MAINTAIN:
+        if (
+            self.transformation.abbr
+            == PreParser.Transformation.Tuning.MAINTAIN
+        ):
             return item.text
-        if tuning == PreParser.Transformation.Tuning.MAXIMIZE:
+        if (
+            self.transformation.abbr
+            == PreParser.Transformation.Tuning.MINIMIZE
+        ):
             return item.key
         # Find the shortest abbreviation *resolving to this same definition*.
         # Prefixes '-' and '--' are reserved as positional/delimiter tokens.
