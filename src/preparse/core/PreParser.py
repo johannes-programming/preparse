@@ -16,6 +16,8 @@ from typing import ClassVar, Self
 from preparse.core.Framework import Framework
 from preparse.core.OptDict import OptDict
 from preparse.core.Transformation import Transformation
+from preparse.enum.Depletion import Depletion
+from preparse.enum.Nargs import Nargs
 from preparse.messaging.AmbiguousOptionMessage import AmbiguousOptionMessage
 from preparse.messaging.InvalidOptionMessage import InvalidOptionMessage
 from preparse.messaging.Message import Message
@@ -23,6 +25,7 @@ from preparse.messaging.RequiredArgumentMessage import RequiredArgumentMessage
 from preparse.messaging.UnallowedArgumentMessage import (
     UnallowedArgumentMessage,
 )
+from preparse.typing.SupportsKeysAndGetitem import SupportsKeysAndGetitem
 
 
 @dataclass
@@ -50,13 +53,17 @@ class PreParser:
     OptDict: ClassVar[type[OptDict]] = OptDict
     Transformation: ClassVar[type[Transformation]] = Transformation
 
-    def __init__(
+    def __init__[Key](
         self,
         other: PreParser | None = None,
         /,
         *,
         framework: Framework | None = None,
-        optDict: OptDict | None = None,
+        optDict: (
+            SupportsKeysAndGetitem[Key, object]
+            | Iterable[tuple[Key, object]]
+            | None
+        ) = None,
         transformation: Transformation | None = None,
     ) -> None:
         self._framework = Framework()
@@ -77,38 +84,47 @@ class PreParser:
         return type(self)(self)
 
     @property
-    def framework(self) -> Framework:
+    def framework(self: Self, /) -> Framework:
         return self._framework
 
     @framework.setter
-    def framework(self, other: Framework | None) -> None:
+    def framework(self: Self, other: Framework | None, /) -> None:
         self._framework.update(other)
 
     @property
-    def optDict(self) -> OptDict:
+    def optDict(self: Self, /) -> OptDict:
         return self._optDict
 
     @optDict.setter
-    def optDict(self, other: Mapping | None) -> None:
+    def optDict[Key](
+        self: Self,
+        other: (
+            SupportsKeysAndGetitem[Key, object]
+            | Iterable[tuple[Key, object]]
+            | None
+        ),
+        /,
+    ) -> None:
+        data: OptDict
         if other is not None:
-            snapshot = list(other.items())
-            self._optDict.clear()
-            self._optDict.update(snapshot)
+            data = OptDict(other)
+            self.optDict.clear()
+            self.optDict.update(data)
 
     @property
-    def transformation(self) -> Transformation:
+    def transformation(self: Self, /) -> Transformation:
         return self._transformation
 
     @transformation.setter
-    def transformation(self, other: Transformation | None) -> None:
+    def transformation(self: Self, other: Transformation | None, /) -> None:
         self._transformation.update(other)
 
     def _definitions(
         self,
-    ) -> tuple[dict[str, OptDict.Nargs], dict[str, OptDict.Nargs]]:
+    ) -> tuple[dict[str, Nargs], dict[str, Nargs]]:
         """Return effective short and long options, in dictionary order."""
-        shorts: dict[str, OptDict.Nargs] = {}
-        longs: dict[str, OptDict.Nargs] = {}
+        shorts: dict[str, Nargs] = {}
+        longs: dict[str, Nargs] = {}
         f = self.framework
         for key, value in self.optDict.items():
             if not key.startswith("-"):
@@ -124,7 +140,7 @@ class PreParser:
         return shorts, longs
 
     def _long_match(
-        self, name: str, longs: Mapping[str, OptDict.Nargs]
+        self, name: str, longs: Mapping[str, Nargs]
     ) -> tuple[str | None, list[str]]:
         # Exact spelling always takes precedence over any abbreviation.
         if name in longs:
@@ -411,9 +427,7 @@ class PreParser:
             return options + trailing[:1] + positions + trailing[1:]
         return options + positions + trailing
 
-    def _abbreviation(
-        self, item: _Item, longs: Mapping[str, OptDict.Nargs]
-    ) -> str:
+    def _abbreviation(self, item: _Item, longs: Mapping[str, Nargs]) -> str:
         if item.key is None or item.locked:
             return item.text
         tuning = self.transformation.abbr
@@ -437,9 +451,9 @@ class PreParser:
         for x in items:
             if x.starved:
                 depletion = self.transformation.depletion
-                if depletion is Transformation.Depletion.DROP_OPT:
+                if depletion is Depletion.DROP_OPT:
                     continue
-                if depletion is Transformation.Depletion.DEFER:
+                if depletion is Depletion.DEFER:
                     result.append(x)
                     continue
                 x = replace(x, value=depletion, starved=False, attached=False)
@@ -447,7 +461,7 @@ class PreParser:
         return result
 
     def _long_tokens(
-        self, item: _Item, longs: Mapping[str, OptDict.Nargs]
+        self, item: _Item, longs: Mapping[str, Nargs]
     ) -> list[str]:
         name = self._abbreviation(item, longs)
         if item.locked:

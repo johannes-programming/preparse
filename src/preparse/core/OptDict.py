@@ -3,26 +3,11 @@ from __future__ import annotations
 __all__: list[str] = ["OptDict"]
 
 from collections.abc import Iterable
-from typing import (
-    Any,
-    Final,
-    Protocol,
-    Self,
-    TypeVar,
-    overload,
-    runtime_checkable,
-)
+from typing import Any, Final, Self, overload
 
 from preparse.enum.Nargs import Nargs
-
-Key = TypeVar("Key")
-Value = TypeVar("Value")
-
-
-@runtime_checkable
-class SupportsKeysAndGetitem(Protocol[Key]):
-    def __getitem__(self: Self, key: Key, /) -> object: ...
-    def keys(self: Self, /) -> Iterable[Key]: ...
+from preparse.typing.OptDictOther import OptDictOther
+from preparse.typing.SupportsKeysAndGetitem import SupportsKeysAndGetitem
 
 
 class OptDict(dict[str, Nargs]):
@@ -39,36 +24,26 @@ class OptDict(dict[str, Nargs]):
     def __getitem__(self: Self, key: object, /) -> Nargs:
         return dict.__getitem__(self, str(key))
 
-    def __init__(
+    def __init__[Key](
         self: Self,
-        other: (
-            SupportsKeysAndGetitem | Iterable[tuple[object, object]] | None
-        ) = None,
+        other: OptDictOther[Key] = None,
         /,
         **kwargs: object,
     ) -> None:
         super().__init__()
         self.update(other, **kwargs)
 
-    def __ior__(
+    def __ior__[Key](
         self: Self,
-        other: (
-            SupportsKeysAndGetitem[Key]
-            | Iterable[tuple[object, object]]
-            | None
-        ),
+        other: OptDictOther[Key],
         /,
     ) -> Self:
         self.update(other)
         return self
 
-    def __or__(
+    def __or__[Key](
         self: Self,
-        other: (
-            SupportsKeysAndGetitem[Key]
-            | Iterable[tuple[object, object]]
-            | None
-        ),
+        other: OptDictOther[Key],
         /,
     ) -> Self:
         ans: Self
@@ -107,14 +82,18 @@ class OptDict(dict[str, Nargs]):
         self: Self, key: object, default: None = None, /
     ) -> Nargs | None: ...
     @overload
-    def get(self: Self, key: object, default: Value, /) -> Nargs | Value: ...
+    def get[Value](
+        self: Self, key: object, default: Value, /
+    ) -> Nargs | Value: ...
     def get(self: Self, key: object, default: Any = None, /) -> Any:
         return dict.get(self, str(key), default)
 
     @overload
     def pop(self: Self, key: object, /) -> Nargs: ...
     @overload
-    def pop(self: Self, key: object, default: Value, /) -> Nargs | Value: ...
+    def pop[Value](
+        self: Self, key: object, default: Value, /
+    ) -> Nargs | Value: ...
     def pop(self: Self, key: object, /, *args: Any) -> Any:
         return dict.pop(self, str(key), *args)
 
@@ -125,13 +104,9 @@ class OptDict(dict[str, Nargs]):
         self[key] = default
         return dict.__getitem__(self, key)
 
-    def update(
+    def update[Key](
         self: Self,
-        other: (
-            SupportsKeysAndGetitem[Key]
-            | Iterable[tuple[object, object]]
-            | None
-        ) = None,
+        other: OptDictOther[Key] = None,
         /,
         **kwargs: object,
     ) -> None:
