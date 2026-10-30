@@ -58,7 +58,7 @@ class OptDict(dict[str, Nargs]):
             | None
         ),
         /,
-    ) -> OptDict:
+    ) -> Self:
         self.update(other)
         return self
 
@@ -70,10 +70,11 @@ class OptDict(dict[str, Nargs]):
             | None
         ),
         /,
-    ) -> OptDict:
-        result = self.copy()
-        result.update(other)
-        return result
+    ) -> Self:
+        ans: Self
+        ans = self.copy()
+        ans.update(other)
+        return ans
 
     def __repr__(self: Self, /) -> str:
         return f"{type(self).__name__}({dict(self)})"
@@ -88,7 +89,10 @@ class OptDict(dict[str, Nargs]):
 
     @classmethod
     def fromkeys(
-        cls: type[Self], /, keys: Iterable[object], value: object = None
+        cls: type[Self],
+        keys: Iterable[object],
+        value: object = None,
+        /,
     ) -> Self:
         ans: Self
         ans = cls()
@@ -133,9 +137,9 @@ class OptDict(dict[str, Nargs]):
     ) -> None:
         if other is not None and isinstance(other, SupportsKeysAndGetitem):
             for x in other.keys():
-                self[str(x)] = OptDict.Nargs(other[x])
+                self[str(x)] = Nargs(other[x])
         elif other is not None:
             for x, y in other:
-                self[str(x)] = OptDict.Nargs(y)
+                self[str(x)] = Nargs(y)
         for x, y in kwargs.items():
-            self[str(x)] = OptDict.Nargs(y)
+            self[str(x)] = Nargs(y)

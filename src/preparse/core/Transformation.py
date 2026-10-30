@@ -2,13 +2,15 @@ from __future__ import annotations
 
 __all__: list[str] = ["Transformation"]
 
-from typing import Self
+from typing import Final, Self
 
 from preparse.enum.Depletion import Depletion
 from preparse.enum.Tuning import Tuning
 
 
 class Transformation:
+
+    Tuning: Final[type[Tuning]] = Tuning
 
     def __init__(
         self: Self,
