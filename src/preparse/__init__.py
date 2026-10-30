@@ -614,19 +614,19 @@ class PreParser:
                 )
         return items, messages
 
+    @staticmethod
+    def _signature(items: list[_Item]) -> tuple:
+        return tuple(
+            (x.kind, x.key or x.text, x.value)
+            for x in items
+            if x.kind != "delimiter"
+        )
+
     def _compatible(self, arglist: list[str]) -> bool:
         """Compare interpretations, ignoring only the delimiter's own token."""
         first, _ = self._scan(arglist, posix=True, report=False)
         second, _ = self._scan(arglist, posix=False, report=False)
-
-        def signature(items: list[_Item]) -> tuple:
-            return tuple(
-                (x.kind, x.key or x.text, x.value)
-                for x in items
-                if x.kind != "delimiter"
-            )
-
-        return signature(first) == signature(second)
+        return self._signature(first) == self._signature(second)
 
     def _order(self, items: list[_Item], original: list[str]) -> list[_Item]:
         tuning = self.transformation.order_compatibility
@@ -882,6 +882,27 @@ class PreParser:
             )
         return [token]
 
+    def _finish_bundling_block(
+        self, block: list[_Item], result: list[_Item]
+    ) -> None:
+        if not block:
+            return
+        shorts = [x for x in block if x.kind == "short"]
+        positions = [x for x in block if x.kind == "pos"]
+        if len(shorts) >= 2 and positions:
+            # More than one short character can safely form a cluster.
+            token = "-" + "".join(x.character for x in shorts)
+            if token != "--" and not (
+                self.framework.allows_long and token.startswith("--")
+            ):
+                result.extend(shorts)
+                result.extend(positions)
+            else:
+                result.extend(block)
+        else:
+            result.extend(block)
+        block.clear()
+
     def _pack_for_bundling(self, items: list[_Item]) -> list[_Item]:
         """Bring combinable shorts together across insignificant positionals.
 
@@ -901,34 +922,15 @@ class PreParser:
         result: list[_Item] = []
         block: list[_Item] = []
 
-        def finish() -> None:
-            if not block:
-                return
-            shorts = [x for x in block if x.kind == "short"]
-            positions = [x for x in block if x.kind == "pos"]
-            if len(shorts) >= 2 and positions:
-                # More than one short character can safely form a cluster.
-                token = "-" + "".join(x.character for x in shorts)
-                if token != "--" and not (
-                    self.framework.allows_long and token.startswith("--")
-                ):
-                    result.extend(shorts)
-                    result.extend(positions)
-                else:
-                    result.extend(block)
-            else:
-                result.extend(block)
-            block.clear()
-
         for x in items:
             if x.kind in ("long", "delimiter"):
-                finish()
+                self._finish_bundling_block(block, result)
                 result.append(x)
             else:
                 block.append(x)
                 if x.kind == "short" and x.nargs != 0:
-                    finish()
-        finish()
+                    self._finish_bundling_block(block, result)
+        self._finish_bundling_block(block, result)
         return result
 
     def _serialize(self, items: list[_Item]) -> list[str]:
