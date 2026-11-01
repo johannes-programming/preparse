@@ -28,6 +28,12 @@ class RequiredArgumentMessage(Message):
         self.is_long = is_long
         self.option = option
 
+    def __str__(self: Self, /) -> str:
+        if self.is_long:
+            return f"option '{self.option}' requires an argument"
+        else:
+            return f"option requires an argument -- '{self.option}'"
+
     def _dict(self: Self, /) -> dict[str, Any]:
         return dict(
             is_long=self.is_long,

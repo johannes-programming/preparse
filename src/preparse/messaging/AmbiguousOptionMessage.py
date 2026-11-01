@@ -12,7 +12,7 @@ class AmbiguousOptionMessage(Message):
     __slots__ = ("_option", "_possibilities")
 
     def __init__(
-        self,
+        self: Self,
         other: AmbiguousOptionMessage | None = None,
         /,
         *,
@@ -26,16 +26,11 @@ class AmbiguousOptionMessage(Message):
         self.possibilities = possibilities
 
     def __str__(self: Self, /) -> str:
-        ans = "option '%s' is ambiguous; possibilities:" % self.option
+        ans: str
+        ans = f"option '{self.option}' is ambiguous; possibilities:"
         for x in self.possibilities:
-            ans += " '%s'" % x
+            ans += f" '{x}'"
         return ans
-
-    def __eq__(self, other: object) -> bool:
-        return isinstance(other, AmbiguousOptionMessage) and (
-            self.option,
-            self.possibilities,
-        ) == (other.option, other.possibilities)
 
     def _dict(self: Self, /) -> dict[str, Any]:
         return dict(

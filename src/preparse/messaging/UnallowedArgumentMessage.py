@@ -22,7 +22,7 @@ class UnallowedArgumentMessage(Message):
         self.option = str(option)
 
     def __str__(self: Self, /) -> str:
-        return "option '%s' doesn't allow an argument" % self.option
+        return f"option '{self.option}' doesn't allow an argument"
 
     def _dict(self: Self, /) -> dict[str, str]:
         return dict(option=self.option)

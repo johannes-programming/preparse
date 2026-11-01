@@ -30,11 +30,10 @@ class InvalidOptionMessage(Message):
         self.is_long = is_long
 
     def __str__(self: Self, /) -> str:
-        return (
-            "unrecognized option '%s'"
-            if self.is_long
-            else "invalid option -- '%s'"
-        ) % self.option
+        if self.is_long:
+            return f"unrecognized option '{self.option}'"
+        else:
+            return f"invalid option -- '{self.option}'"
 
     def _dict(self: Self, /) -> dict[str, Any]:
         return dict(
