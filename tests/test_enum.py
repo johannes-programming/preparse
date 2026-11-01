@@ -3,7 +3,7 @@ __all__: list[str] = ["TestEnums"]
 import unittest
 from typing import Self
 
-from preparse.enums.Nargs import Nargs
+from preparse.enum.Nargs import Nargs
 
 
 class TestEnums(unittest.TestCase):
