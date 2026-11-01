@@ -1,4 +1,16 @@
 --sort
 --sort
 --all-keys
+--sort
+--all-keys
+--key=framework
+--sort
+--all-keys
+--key=legacy
+--sort
+--all-keys
+--key=testing
+--sort
+--all-keys
+--key=transformation
 src/preparse/tests/data.toml
