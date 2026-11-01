@@ -64,7 +64,7 @@ class PreParser(Copyable):
         /,
         *,
         framework: Framework | None = None,
-        optList: OptList | None = None,
+        optList: Iterable[tuple[object, object]] | None = None,
         transformation: Transformation | None = None,
     ) -> None:
         from .Framework import Framework
