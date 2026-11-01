@@ -1497979,4 +1497979,3 @@ is_posix = true
 [test_no_options_idempotent.transformation]
 
 [test_no_options_idempotent.optList]
-
