@@ -12,6 +12,7 @@ from typing import Any, Self
 from preparse.core.Framework import Framework
 from preparse.core.PreParser import PreParser
 from preparse.core.Transformation import Transformation
+from preparse.enum.Depletion import Depletion
 
 
 class Utils(enum.Enum):
@@ -58,10 +59,18 @@ class TestDataToml(unittest.TestCase):
         parser: PreParser
         superanswer: list[Any]
 
+        transformation_ = dict(transformation)
+        if isinstance(transformation["depletion"], str):
+            transformation_["depletion"] = Depletion[
+                transformation["depletion"]
+            ]
+        else:
+            transformation_["depletion"] = tuple(transformation["depletion"])
+
         parser = PreParser(
-            transformation=Transformation(**transformation),
             framework=Framework(**framework),
             optList=optList.items(),
+            transformation=Transformation(**transformation_),
         )
         answer, messages = parser.parse_args(testing["query"])
         erranswer = [str(m) for m in messages]
