@@ -1,1 +1,3 @@
-__all__: list[str] = []
+from .SupportsBool import SupportsBool
+
+__all__ = ["SupportsBool"]
