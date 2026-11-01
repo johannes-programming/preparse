@@ -9,7 +9,9 @@ import unittest
 from pathlib import Path
 from typing import Any, Self
 
+from preparse.core.Framework import Framework
 from preparse.core.PreParser import PreParser
+from preparse.core.Transformation import Transformation
 
 
 class Utils(enum.Enum):
@@ -45,53 +47,29 @@ class TestDataToml(unittest.TestCase):
     def parse(
         self: Self,
         *,
-        query: Any,
-        solution: Any,
-        warnings: Any,
-        **kwargs: Any,
+        testing: dict[str, Any],
+        legacy: dict[str, Any],
+        framework: dict[str, Any],
+        transformation: dict[str, Any],
+        optList: dict[str, Any],
     ) -> None:
         answer: list[Any]
-        capture: list[Any]
-        data: dict[str, Any]
         erranswer: list[Any]
-        msg: str
         parser: PreParser
         superanswer: list[Any]
-        capture = list()
 
-        def warn(value: Any) -> None:
-            capture.append(str(value))
-
-        parser = PreParser(warn=warn, **kwargs)
-        data = dict(
-            query=query,
-            solution=solution,
-            warnings=warnings,
-            **kwargs,
+        parser = PreParser(
+            transformation=Transformation(**transformation),
+            framework=Framework(**framework),
+            optList=optList.items(),
         )
-        answer = parser.parse_args(query)
-        erranswer = list(capture)
-        superanswer = parser.parse_args(answer)
-        msg = "\n\ndata=%s,\nanswer=%s,\nsuperanswer=%s,\n\n" % (
-            data,
-            answer,
-            superanswer,
-        )
-        self.assertEqual(answer, superanswer, msg=msg)
-        msg = "\n\ndata=%s,\nanswer=%s,\nsolution=%s,\n\n" % (
-            data,
-            answer,
-            solution,
-        )
-        self.assertEqual(answer, solution, msg=msg)
-        if not Utils.utils.istestable(warnings):
-            return
-        msg = "\n\ndata=%s,\nerranswer=%s,\nwarnings=%s,\n\n" % (
-            data,
-            erranswer,
-            warnings,
-        )
-        self.assertEqual(erranswer, warnings, msg=msg)
+        answer, messages = parser.parse_args(testing["query"])
+        erranswer = [str(m) for m in messages]
+        superanswer = parser.parse_args(answer)[0]
+        self.assertEqual(answer, superanswer)
+        self.assertEqual(answer, testing["solution"])
+        if Utils.utils.istestable(testing["messages"]):
+            self.assertEqual(erranswer, testing["messages"])
 
 
 if __name__ == "__main__":

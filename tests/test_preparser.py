@@ -3,59 +3,37 @@ __all__: list[str] = ["TestPreParser"]
 import unittest
 from typing import Any, Self
 
-from preparse.core.Click import Click
 from preparse.core.PreParser import PreParser
 
 
 class TestPreParser(unittest.TestCase):
-
-    def test_preparser_click_decorator(self: Self) -> None:
-        click_decorator: Click
-        parser: PreParser
-        parser = PreParser()
-        click_decorator = parser.click()
-        self.assertIsInstance(click_decorator, Click)
-        self.assertTrue(click_decorator.cmd)
-        self.assertTrue(click_decorator.ctx)
-        self.assertEqual(click_decorator.parser, parser)
 
     def test_preparser_copy(self: Self) -> None:
         parser: PreParser
         parser_copy: PreParser
         parser = PreParser()
         parser_copy = parser.copy()
-        self.assertEqual(parser.optdict, parser_copy.optdict)
+        self.assertEqual(parser.optList, parser_copy.optList)
 
     def test_no_options_idempotent(self: Self) -> None:
         args: list[str]
         parser: PreParser
-        parser = PreParser(
-            allowslong=False, allowsshort=False, expectsposix=True
-        )
+        parser = PreParser()
+        parser.framework.allows_long = False
+        parser.framework.allows_short = False
+        parser.framework.is_posix = True
         args = ["-c2", "--", "-a"]
-        self.assertEqual(parser.parse_args(args), args)
-        self.assertEqual(parser.parse_args(parser.parse_args(args)), args)
+        preparsed, messages = parser.parse_args(args)
+        self.assertEqual(preparsed, args)
+        self.assertEqual(parser.parse_args(preparsed), args)
 
     def test_minimize_short_bundle_with_hyphen_option(self: Self) -> None:
         parser: PreParser
-        parser = PreParser(
-            allowslong=False,
-            bundling=0,
-            optdict={"--": 2},  # type: ignore[arg-type]
-        )
-        self.assertEqual(parser.parse_args(["--x"]), ["--x"])
-
-    def test_preparser_todict(self: Self) -> None:
-        expected_keys: list[Any]
-        parser: PreParser
-        result: Any
         parser = PreParser()
-        result = parser.todict()
-        expected_keys = [
-            "optdict",
-            "prog",
-        ]
-        self.assertTrue(all(key in result for key in expected_keys))
+        parser.framework.allows_long = False
+        parser.transformation.bundling = 0
+        parser.optList = {"--": 2}.items()
+        self.assertEqual(parser.parse_args(["--x"]), ["--x"])
 
 
 if __name__ == "__main__":
