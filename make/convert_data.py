@@ -56,6 +56,7 @@ def main() -> None:
         data[x]["transformation"]["reconciles_orders"] = z.pop(
             "reconcilesorders", None
         )
+        data[x]["transformation"]["depletion"] = "DEFER"
         data[x]["legacy"]["prog"] = z.pop("prog", None)
         data[x]["legacy"]["expects_abbr"] = z.pop("expectsabbr", None)
         data[x]["testing"]["query"] = z.pop("query", None)
@@ -67,7 +68,9 @@ def main() -> None:
             prefix = data[x]["legacy"]["prog"] + ": "
             for warning in warnings:
                 if warning.startswith(prefix):
-                    warning = warning[len(prefix) :]
+                    data[x]["testing"]["messages"].append(
+                        warning[len(prefix) :]
+                    )
                 else:
                     raise ValueError(
                         f"Unexpected warning prefix in {x}: {warning}"

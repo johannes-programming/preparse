@@ -13,4 +13,4 @@
 --sort
 --all-keys
 --key=transformation
-src/preparse/tests/data.toml
+tests/data.toml
