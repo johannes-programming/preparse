@@ -20,8 +20,9 @@ from preparse.enum.Tuning import Tuning
 from preparse.messaging.AmbiguousOptionMessage import AmbiguousOptionMessage
 from preparse.messaging.InvalidOptionMessage import InvalidOptionMessage
 from preparse.messaging.RequiredArgumentMessage import RequiredArgumentMessage
-from preparse.messaging.UnallowedArgumentMessage import \
-    UnallowedArgumentMessage
+from preparse.messaging.UnallowedArgumentMessage import (
+    UnallowedArgumentMessage,
+)
 
 if TYPE_CHECKING:
     from preparse.core.Framework import Framework
