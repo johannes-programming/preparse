@@ -5,7 +5,6 @@ from typing import Any, Self
 
 from preparse.core.Click import Click
 from preparse.core.PreParser import PreParser
-from preparse.enums.Nargs import Nargs
 
 
 class TestPreParser(unittest.TestCase):
