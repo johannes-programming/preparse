@@ -4,7 +4,7 @@ __all__: list[str] = [
     "Transformation",
 ]
 
-from typing import Self
+from typing import Any, Self
 
 from preparse.abc.Copyable import Copyable
 from preparse.enum.Depletion import Depletion
@@ -12,8 +12,14 @@ from preparse.enum.Tuning import Tuning
 
 
 class Transformation(Copyable):
-    Depletion = Depletion
-    Tuning = Tuning
+    __slots__ = (
+        "_abbr",
+        "_bundling",
+        "_depletion",
+        "_reconciles_orders",
+        "_separate",
+        "_special",
+    )
 
     def __init__(
         self,
@@ -29,7 +35,7 @@ class Transformation(Copyable):
     ) -> None:
         self._abbr = Tuning.MINIMIZE
         self._bundling = Tuning.MAINTAIN
-        self._depletion: Depletion | tuple[bool, str] = Depletion.DROP_OPT
+        self._depletion = Depletion.DROP_OPT
         self._reconciles_orders = True
         self._separate = Tuning.MAINTAIN
         self._special = Tuning.MAINTAIN
@@ -46,6 +52,16 @@ class Transformation(Copyable):
         self.reconciles_orders = reconciles_orders
         self.separate = separate
         self.special = special
+
+    def _dict(self: Self, /) -> dict[str, Any]:
+        return dict(
+            abbr=self.abbr,
+            bundling=self.bundling,
+            depletion=self.depletion,
+            reconciles_orders=self.reconciles_orders,
+            separate=self.separate,
+            special=self.special,
+        )
 
     @property
     def abbr(self) -> Tuning:
@@ -105,37 +121,3 @@ class Transformation(Copyable):
     def special(self, value: object) -> None:
         if value is not None:
             self._special = Tuning(value)
-
-    def __eq__(self, other: object) -> bool:
-        return isinstance(other, Transformation) and (
-            self.abbr,
-            self.bundling,
-            self.depletion,
-            self.reconciles_orders,
-            self.separate,
-            self.special,
-        ) == (
-            other.abbr,
-            other.bundling,
-            other.depletion,
-            other.reconciles_orders,
-            other.separate,
-            other.special,
-        )
-
-    def __repr__(self) -> str:
-        return (
-            "Transformation("
-            + ", ".join(
-                f"{key}={getattr(self, key)!r}"
-                for key in (
-                    "abbr",
-                    "bundling",
-                    "depletion",
-                    "reconciles_orders",
-                    "separate",
-                    "special",
-                )
-            )
-            + ")"
-        )

@@ -5,6 +5,8 @@ from typing import Self
 
 
 class Copyable(ABC):
+    __slots__ = ()
+
     @abstractmethod
     def __init__(self, other: Self | None = None, /) -> None: ...
 

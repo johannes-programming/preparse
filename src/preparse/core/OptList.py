@@ -11,13 +11,16 @@ from preparse.abc.Copyable import Copyable
 from preparse.enum.Nargs import Nargs
 
 
-class OptList(list[tuple[str, Nargs]], Copyable):
+class OptList(Copyable, list[tuple[str, Nargs]]):
     def __init__(
         self, other: Iterable[tuple[object, object]] | None = None, /
     ) -> None:
-        super().__init__()
+        list.__init__(self)
         if other is not None:
             self.extend(other)
+
+    def __repr__(self: Self, /) -> str:
+        return f"{type(self).__name__}({list(self)})"
 
     @staticmethod
     def _coerce(item: tuple[object, object]) -> tuple[str, Nargs]:
@@ -34,18 +37,18 @@ class OptList(list[tuple[str, Nargs]], Copyable):
                 unique.append((key, value))
         list.__setitem__(self, slice(None), reversed(unique))
 
-    def append(self, item: tuple[object, object]) -> None:
+    def append(self, item: tuple[object, object], /) -> None:
         self._replace([*self, self._coerce(item)])
 
-    def extend(self, iterable: Iterable[tuple[object, object]]) -> None:
+    def extend(self, iterable: Iterable[tuple[object, object]], /) -> None:
         self._replace([*self, *(self._coerce(item) for item in iterable)])
 
-    def insert(self, index: int, item: tuple[object, object]) -> None:
+    def insert(self, index: int, item: tuple[object, object], /) -> None:
         items = list(self)
         items.insert(index, self._coerce(item))
         self._replace(items)
 
-    def __setitem__(self, index: int | slice, item: Any) -> None:
+    def __setitem__(self, index: int | slice, item: Any, /) -> None:
         items = list(self)
         if isinstance(index, slice):
             items[index] = [self._coerce(x) for x in item]
@@ -53,7 +56,7 @@ class OptList(list[tuple[str, Nargs]], Copyable):
             items[index] = self._coerce(item)
         self._replace(items)
 
-    def __iadd__(self, iterable: Iterable[tuple[object, object]]) -> Self:
+    def __iadd__(self, iterable: Iterable[tuple[object, object]], /) -> Self:
         self.extend(iterable)
         return self
 

@@ -10,7 +10,7 @@ from __future__ import annotations
 __all__: list[str] = ["PreParser"]
 import sys
 from dataclasses import dataclass
-from typing import Iterable, Self
+from typing import TYPE_CHECKING, Any, Iterable, Self
 
 from preparse.abc.Copyable import Copyable
 from preparse.abc.Message import Message
@@ -24,9 +24,10 @@ from preparse.messaging.UnallowedArgumentMessage import (
     UnallowedArgumentMessage,
 )
 
-from .Framework import Framework
-from .OptList import OptList
-from .Transformation import Transformation
+if TYPE_CHECKING:
+    from preparse.core.Framework import Framework
+    from preparse.core.OptList import OptList
+    from preparse.core.Transformation import Transformation
 
 
 @dataclass
@@ -55,9 +56,7 @@ _Event = _Option | _Positional | _Delimiter
 
 
 class PreParser(Copyable):
-    Framework = Framework
-    OptList = OptList
-    Transformation = Transformation
+    __slots__ = ("_framework", "_optList", "_transformation")
 
     def __init__(
         self,
@@ -68,6 +67,10 @@ class PreParser(Copyable):
         optList: OptList | None = None,
         transformation: Transformation | None = None,
     ) -> None:
+        from .Framework import Framework
+        from .OptList import OptList
+        from .Transformation import Transformation
+
         self._framework = Framework()
         self._optList = OptList()
         self._transformation = Transformation()
@@ -80,18 +83,18 @@ class PreParser(Copyable):
         self.transformation = transformation
 
     @property
-    def framework(self) -> Framework:
+    def framework(self: Self, /) -> Framework:
         return self._framework
 
     @framework.setter
-    def framework(self, value: Framework | None) -> None:
+    def framework(self: Self, value: Framework | None, /) -> None:
         if value is self._framework:
             return
         if value is not None:
             self._framework.__init__(value)
 
     @property
-    def optList(self) -> OptList:
+    def optList(self: Self, /) -> OptList:
         return self._optList
 
     @optList.setter
@@ -125,6 +128,13 @@ class PreParser(Copyable):
         return (
             f"PreParser(framework={self.framework!r}, "
             f"optList={self.optList!r}, transformation={self.transformation!r})"
+        )
+
+    def _dict(self: Self, /) -> dict[str, Any]:
+        return dict(
+            framework=self.framework,
+            optList=self.optList,
+            transformation=self.transformation,
         )
 
     def _long_definitions(self) -> list[tuple[int, str, str, Nargs]]:
@@ -211,7 +221,8 @@ class PreParser(Copyable):
                 if ambiguous:
                     messages.append(
                         AmbiguousOptionMessage(
-                            spelling, [entry[1] for entry in ambiguous]
+                            option=spelling,
+                            possibilities=[entry[1] for entry in ambiguous],
                         )
                     )
                     events.append(
@@ -226,7 +237,9 @@ class PreParser(Copyable):
                     )
                     continue
                 if index is None:
-                    messages.append(InvalidOptionMessage(word, True))
+                    messages.append(
+                        InvalidOptionMessage(option=word, is_long=True)
+                    )
                     events.append(
                         _Option(
                             "long",
@@ -246,7 +259,9 @@ class PreParser(Copyable):
                     option.arg = attached_value
                     option.attached = True
                     if nargs == Nargs.NO_ARGUMENT:
-                        messages.append(UnallowedArgumentMessage(spelling))
+                        messages.append(
+                            UnallowedArgumentMessage(option=spelling)
+                        )
                 elif nargs == Nargs.REQUIRED_ARGUMENT:
                     if i < len(arglist):
                         option.arg = arglist[i]
@@ -254,7 +269,9 @@ class PreParser(Copyable):
                     else:
                         option.starved = True
                         messages.append(
-                            RequiredArgumentMessage(spelling, True)
+                            RequiredArgumentMessage(
+                                option=spelling, is_long=True
+                            )
                         )
                 events.append(option)
                 continue
@@ -270,7 +287,9 @@ class PreParser(Copyable):
                     nargs = short_definitions.get(char)
                     if nargs is None:
                         nargs = Nargs.NO_ARGUMENT
-                        messages.append(InvalidOptionMessage(char, False))
+                        messages.append(
+                            InvalidOptionMessage(option=char, is_long=False)
+                        )
                     option = _Option("short", char, nargs, group)
                     if j < len(chars) and nargs != Nargs.NO_ARGUMENT:
                         option.arg = chars[j:]
@@ -283,7 +302,9 @@ class PreParser(Copyable):
                         else:
                             option.starved = True
                             messages.append(
-                                RequiredArgumentMessage(char, False)
+                                RequiredArgumentMessage(
+                                    option=char, is_long=False
+                                )
                             )
                     events.append(option)
                 continue

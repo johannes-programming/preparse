@@ -1,22 +1,36 @@
+from __future__ import annotations
+
+__all__: list[str] = ["UnallowedArgumentMessage"]
+
 from typing import Self
 
 from preparse.abc.Message import Message
 
 
 class UnallowedArgumentMessage(Message):
-    def __init__(self, option: object = "") -> None:
-        if isinstance(option, UnallowedArgumentMessage):
-            option = option.option
+    __slots__ = ("_option",)
+
+    def __init__(
+        self: Self,
+        other: UnallowedArgumentMessage | None = None,
+        /,
+        *,
+        option: object = "",
+    ) -> None:
+        if isinstance(other, UnallowedArgumentMessage):
+            self.option = other.option
         self.option = str(option)
 
     def __str__(self: Self, /) -> str:
         return "option '%s' doesn't allow an argument" % self.option
 
-    def __eq__(self, other: object) -> bool:
-        return (
-            isinstance(other, UnallowedArgumentMessage)
-            and self.option == other.option
-        )
+    def _dict(self: Self, /) -> dict[str, str]:
+        return dict(option=self.option)
 
-    def __repr__(self) -> str:
-        return f"UnallowedArgumentMessage({self.option!r})"
+    @property
+    def option(self: Self, /) -> str:
+        return self._option
+
+    @option.setter
+    def option(self: Self, value: object, /) -> None:
+        self._option = str(value)

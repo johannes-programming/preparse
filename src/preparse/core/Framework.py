@@ -5,10 +5,12 @@ __all__: list[str] = [
 ]
 from typing import Self
 
-from preparse.abc.Copyable import Copyable
+from preparse.abc.Representable import Representable
 
 
-class Framework(Copyable):
+class Framework(Representable):
+    __slots__ = ("_allows_long", "_allows_short", "_is_posix")
+
     def __init__(
         self,
         other: Self | None = None,
@@ -28,6 +30,13 @@ class Framework(Copyable):
         self.allows_long = allows_long
         self.allows_short = allows_short
         self.is_posix = is_posix
+
+    def _dict(self: Self, /) -> dict[str, bool]:
+        return dict(
+            allows_long=self.allows_long,
+            allows_short=self.allows_short,
+            is_posix=self.is_posix,
+        )
 
     @property
     def allows_long(self) -> bool:
