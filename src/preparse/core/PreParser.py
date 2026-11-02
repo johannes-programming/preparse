@@ -4,16 +4,16 @@ __all__: list[str] = ["PreParser"]
 
 import os
 import sys
-from collections.abc import Callable, Hashable, Iterable
+from collections.abc import Hashable, Iterable
 from types import NotImplementedType
 from typing import Any, Optional, Self, TypeVar
 
 import setdoc
-from copyable import Copyable
 from datarepr import datarepr
 from tofunc import tofunc
 
 from preparse._processing import process
+from preparse.abc.Copyable import Copyable
 from preparse.abc.Message import Message
 from preparse.core.Optdict import Optdict
 from preparse.enums.Tuning import Tuning
