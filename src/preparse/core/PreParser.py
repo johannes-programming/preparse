@@ -8,16 +8,13 @@ from collections.abc import Callable, Hashable, Iterable
 from types import NotImplementedType
 from typing import Any, Optional, Self, TypeVar
 
-import click as cl
 import setdoc
 from copyable import Copyable
 from datarepr import datarepr
 from tofunc import tofunc
 
 from preparse._processing import process
-from preparse.core.Click import Click
 from preparse.core.Optdict import Optdict
-from preparse.enums.Nargs import Nargs
 from preparse.enums.Tuning import Tuning
 from preparse.typing.SupportsBool import SupportsBool
 from preparse.typing.SupportsKeysAndGetitem import SupportsKeysAndGetitem
@@ -152,12 +149,6 @@ class PreParser(Copyable):
             return
         self._bundling = Tuning(value)
 
-    def click(
-        self: Self, cmd: SupportsBool = True, ctx: SupportsBool = True
-    ) -> Click:
-        "This method returns a decorator that infuses the current instance into parse_args."
-        return Click(parser=self, cmd=cmd, ctx=ctx)
-
     @setdoc.basic
     def copy(self: Self, /) -> Self:
         return type(self)(self)
@@ -249,35 +240,6 @@ class PreParser(Copyable):
         if isinstance(value, NotImplementedType):
             return
         self._reconcilesorders = bool(value)
-
-    def reflectClickCommand(self: Self, cmd: cl.Command) -> None:
-        "This method causes the current instance to reflect a click.Command object."
-        nargs: Nargs
-        opt: Any
-        optdict: dict[str, Nargs]
-        param: Any
-        optdict = dict()
-        for param in cmd.params:
-            if not isinstance(param, cl.Option):
-                continue
-            if param.is_flag:
-                nargs = Nargs.NO_ARGUMENT
-            elif not param.nargs:
-                nargs = Nargs.NO_ARGUMENT
-            elif param.flag_value is not None:
-                nargs = Nargs.OPTIONAL_ARGUMENT
-            elif param.prompt and not param.prompt_required:
-                nargs = Nargs.OPTIONAL_ARGUMENT
-            else:
-                nargs = Nargs.REQUIRED_ARGUMENT
-            for opt in param.opts + param.secondary_opts:
-                optdict[opt] = nargs
-        self.optdict.clear()
-        self.optdict.update(optdict)
-
-    def reflectClickContext(self: Self, ctx: cl.Context) -> None:
-        "This method causes the current instance to reflect a click.Context object."
-        self.prog = ctx.info_name
 
     @property
     def special(self: Self, /) -> Tuning:

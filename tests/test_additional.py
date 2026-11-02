@@ -2,7 +2,6 @@ from __future__ import annotations
 
 __all__: list[str] = [
     "ArgumentInputTests",
-    "ClickIntegrationTests",
     "ConfigurationTests",
     "OptdictAndCopyTests",
     "WarningTests",
@@ -15,19 +14,23 @@ from collections.abc import Iterator
 from typing import Any, Self
 from unittest.mock import patch
 
-import click
-
-from preparse import (
-    Nargs,
-    Optdict,
+from preparse.core.Optdict import Optdict
+from preparse.core.PreParser import PreParser
+from preparse.enums.Nargs import Nargs
+from preparse.enums.Tuning import Tuning
+from preparse.warnings.PreparseAmbiguousOptionWarning import (
     PreparseAmbiguousOptionWarning,
-    PreparseInvalidOptionWarning,
-    PreParser,
-    PreparseRequiredArgumentWarning,
-    PreparseUnallowedArgumentWarning,
-    PreparseWarning,
-    Tuning,
 )
+from preparse.warnings.PreparseInvalidOptionWarning import (
+    PreparseInvalidOptionWarning,
+)
+from preparse.warnings.PreparseRequiredArgumentWarning import (
+    PreparseRequiredArgumentWarning,
+)
+from preparse.warnings.PreparseUnallowedArgumentWarning import (
+    PreparseUnallowedArgumentWarning,
+)
+from preparse.warnings.PreparseWarning import PreparseWarning
 
 
 class WarningTests(unittest.TestCase):
@@ -566,202 +569,6 @@ class OptdictAndCopyTests(unittest.TestCase):
         parser = PreParser(bundling=999, special=-1)
         self.assertIs(parser.bundling, Tuning.MAINTAIN)
         self.assertIs(parser.special, Tuning.MAINTAIN)
-
-
-class ClickIntegrationTests(unittest.TestCase):
-    def test_reflection_handles_flags_arguments_prompt_and_secondary_opts(
-        self: Self, /
-    ) -> None:
-        command: click.Command
-        expected: Any
-        no_arguments: click.Option
-        parser: PreParser
-        prompted: click.Option
-        required: click.Option
-        required = click.Option(["--required", "-r"], nargs=1)
-        prompted = click.Option(
-            ["--prompt"], prompt="Enter value", prompt_required=False
-        )
-        no_arguments = click.Option(["--zero"])
-        # Explicitly set these values to exercise all reflection branches,
-        # regardless of Click's version-specific flag_value defaults.
-        required.flag_value = None
-        prompted.flag_value = None
-        no_arguments.flag_value = None
-        no_arguments.nargs = 0
-        command = click.Command(
-            "demo",
-            params=[
-                click.Option(["--flag", "-f"], is_flag=True),
-                required,
-                click.Option(
-                    ["--optional"], is_flag=False, flag_value="default"
-                ),
-                prompted,
-                no_arguments,
-                click.Option(["--enabled/--disabled"]),
-                click.Argument(["file"]),
-            ],
-        )
-        parser = PreParser(optdict={"--stale": 0})
-        parser.reflectClickCommand(command)
-        expected = {
-            "--flag": Nargs.NO_ARGUMENT,
-            "-f": Nargs.NO_ARGUMENT,
-            "--required": Nargs.REQUIRED_ARGUMENT,
-            "-r": Nargs.REQUIRED_ARGUMENT,
-            "--optional": Nargs.OPTIONAL_ARGUMENT,
-            "--prompt": Nargs.OPTIONAL_ARGUMENT,
-            "--zero": Nargs.NO_ARGUMENT,
-            "--enabled": Nargs.NO_ARGUMENT,
-            "--disabled": Nargs.NO_ARGUMENT,
-        }
-        self.assertEqual(dict(parser.optdict.items()), expected)
-        self.assertNotIn("file", parser.optdict)
-        self.assertNotIn("--stale", parser.optdict)
-
-    def test_standalone_function_decorator_parses_and_preserves_metadata(
-        self: Self, /
-    ) -> None:
-        command: click.Command
-        context: click.Context
-        parser: PreParser
-        seen: list[Any]
-        parser = PreParser(optdict={"--old": 0}, prog="original")
-        command = click.Command("demo", params=[click.Option(["--value"])])
-        context = click.Context(command, info_name="subcommand")
-        seen = []
-
-        @parser.click()
-        def callback(cmd: Any, ctx: Any, args: Any) -> Any:
-            """Function documentation."""
-            seen.append((cmd, ctx, args))
-            return args
-
-        self.assertEqual(callback.__name__, "callback")
-        self.assertEqual(callback.__doc__, "Function documentation.")
-        self.assertEqual(
-            callback(command, context, ["--value", "7"]), ["--value", "7"]
-        )
-        self.assertEqual(seen, [(command, context, ["--value", "7"])])
-        self.assertEqual(parser.prog, "original")
-        self.assertEqual(
-            dict(parser.optdict.items()), {"--old": Nargs.NO_ARGUMENT}
-        )
-
-    def test_cmd_and_ctx_toggles_act_independently(self: Self, /) -> None:
-        command: click.Command
-        context: click.Context
-        observed: list[Any]
-        parser: PreParser
-        real_parse: Any
-        use_cmd: bool
-        use_ctx: bool
-        wrapped: Any
-        command = click.Command(
-            "demo", params=[click.Option(["--reflected"], is_flag=True)]
-        )
-        context = click.Context(command, info_name="from-context")
-        for use_cmd in (False, True):
-            for use_ctx in (False, True):
-                with self.subTest(cmd=use_cmd, ctx=use_ctx):
-                    parser = PreParser(
-                        optdict={"--seed": 0}, prog="from-parser"
-                    )
-                    observed = []
-                    real_parse = PreParser.parse_args
-
-                    def snapshot(self: Any, args: Any = None) -> Any:
-                        observed.append(
-                            (dict(self.optdict.items()), self.prog)
-                        )
-                        return real_parse(self, args)
-
-                    def callback(cmd: Any, ctx: Any, args: Any) -> Any:
-                        return args
-
-                    wrapped = parser.click(cmd=use_cmd, ctx=use_ctx)(callback)
-                    with patch.object(PreParser, "parse_args", snapshot):
-                        self.assertEqual(
-                            wrapped(command, context, ["tail"]), ["tail"]
-                        )
-                    self.assertEqual(len(observed), 1)
-                    self.assertEqual(
-                        observed[0][0],
-                        (
-                            {"--reflected": Nargs.NO_ARGUMENT}
-                            if use_cmd
-                            else {"--seed": Nargs.NO_ARGUMENT}
-                        ),
-                    )
-                    self.assertEqual(
-                        observed[0][1],
-                        "from-context" if use_ctx else "from-parser",
-                    )
-                    self.assertEqual(parser.prog, "from-parser")
-                    self.assertEqual(
-                        dict(parser.optdict.items()),
-                        {"--seed": Nargs.NO_ARGUMENT},
-                    )
-
-    def test_bound_method_decorator(self: Self, /) -> None:
-        command: click.Command
-        context: click.Context
-        decorated_method: Any
-        parser: PreParser
-        received: list[Any]
-        parser = PreParser()
-        received = []
-
-        class Recorder(click.Command):
-            def parse_args(self: Self, ctx: Any, args: Any) -> Any:
-                received.append((self, ctx, list(args)))
-                return list(args)
-
-        command = Recorder(
-            "demo", params=[click.Option(["--flag"], is_flag=True)]
-        )
-        context = click.Context(command, info_name="demo")
-        decorated_method = parser.click()(command.parse_args)
-        self.assertEqual(
-            decorated_method(context, ["--flag", "file"]), ["--flag", "file"]
-        )
-        self.assertEqual(received, [(command, context, ["--flag", "file"])])
-
-    def test_click_command_object_decorator(self: Self, /) -> None:
-        command: click.Command
-        context: click.Context
-        decorated_object: Any
-        parser: PreParser
-        received: list[Any]
-        parser = PreParser()
-        received = []
-
-        class Recorder(click.Command):
-            def parse_args(self: Self, ctx: Any, args: Any) -> Any:
-                received.append((self, ctx, list(args)))
-                return list(args)
-
-        command = Recorder(
-            "demo", params=[click.Option(["--flag"], is_flag=True)]
-        )
-        decorated_object = parser.click()(command)
-        self.assertIs(decorated_object, command)
-        context = click.Context(command, info_name="demo")
-        self.assertEqual(
-            command.parse_args(context, ["--flag", "file"]), ["--flag", "file"]
-        )
-        self.assertEqual(received, [(command, context, ["--flag", "file"])])
-
-    def test_context_reflection_updates_program_name(self: Self, /) -> None:
-        command: click.Command
-        context: click.Context
-        parser: PreParser
-        parser = PreParser(prog="before")
-        command = click.Command("demo")
-        context = click.Context(command, info_name="nested-name")
-        parser.reflectClickContext(context)
-        self.assertEqual(parser.prog, "nested-name")
 
 
 if __name__ == "__main__":
