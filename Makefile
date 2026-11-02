@@ -1,5 +1,5 @@
 .ONESHELL:
-.PHONY: all add amend beautiful black build clean commit commit-version dist echo isort jacobus py311 py312 pypi rebase reset test toml_sorted upload version
+.PHONY: all add amend beautiful black build clean commit commit-version dist echo isort jacobus py311 py312 py313 py314 py315 pypi rebase reset test toml_sorted upload version
 SHELL := /bin/zsh
 
 all: beautiful commit-version
@@ -50,6 +50,15 @@ py311:
 py312:
 	conda run -n base python make/env.py py312 --python=3.12;
 
+py313:
+	conda run -n base python make/env.py py313 --python=3.13;
+
+py314:
+	conda run -n base python make/env.py py314 --python=3.14;
+
+py315:
+	conda run -n base python make/env.py py315 --python=3.15;
+
 pypi: clean build upload
 
 rebase:
@@ -69,8 +78,8 @@ test: dist py311
 	conda run -n test_preparse_mypy python -m mypy --strict -p preparse > dist/out/mypy_pkg_out.txt 2> dist/out/mypy_pkg_err.txt || true;
 	conda run -n base python make/env.py test_preparse_tests --python=3.11 --recreate >/dev/null;
 	conda run -n test_preparse_tests pip install dist/*.tar.gz >/dev/null;
-	conda run -n test_preparse_tests python -c "import preparse.tests; preparse.tests.test();" > dist/out/tests_out.txt 2> dist/out/tests_err.txt || true;
-
+	conda run -n test_preparse_tests python run_tests.py > dist/out/tests_out.txt 2> dist/out/tests_err.txt || true;
+	zip -r dist/out.zip dist/out;
 
 toml_sorted: py311
 	conda run -n py311 pip install 'toml_sorted>=2.1,<3' >/dev/null;
