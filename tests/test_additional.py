@@ -172,7 +172,9 @@ class WarningTests(unittest.TestCase):
         for original in examples:
             with self.subTest(warning=type(original).__name__):
                 self.assertIsInstance(original, Message)
-                self.assertEqual(original.todict()["prog"], "tool")
+                self.assertEqual(
+                    original.todict()["prog"], "tool", msg=str(type(original))
+                )
                 self.assertIn(original.getmsg(), str(original))
                 self.assertIn(type(original).__name__, repr(original))
                 self.assertIn(original.option, repr(original))
