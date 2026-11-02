@@ -9,7 +9,7 @@ from preparse._processing.digesting import digest
 from preparse._processing.parsing import parse
 from preparse._processing.pulling import pull
 from preparse.abc.Message import Message
-from preparse.enums.Tuning import Tuning
+from preparse.enum.Tuning import Tuning
 
 
 def process(

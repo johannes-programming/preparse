@@ -6,7 +6,7 @@ from typing import Any, Optional, Self, SupportsIndex
 import setdoc
 
 from preparse._items.Option import Option
-from preparse.enums.Nargs import Nargs
+from preparse.enum.Nargs import Nargs
 
 
 class Long(Option):
