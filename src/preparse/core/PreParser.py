@@ -210,14 +210,10 @@ class PreParser(Copyable):
         args: Optional[Iterable[object]] = None,
     ) -> tuple[list[str], list[Message]]:
         "This method parses args."
-        messages: list[Message]
-        messages = list()
-        preparsed = process(
+        return process(
             args,
-            warn=tofunc(messages.append),
             **self.todict(),
         )
-        return preparsed, messages
 
     @property
     def prog(self: Self, /) -> str:

@@ -9,6 +9,7 @@ from preparse._items.Item import Item
 from preparse._items.Long import Long
 from preparse._items.Option import Option
 from preparse._items.Special import Special
+from preparse.abc.Message import Message
 from preparse.enums.Nargs import Nargs
 from preparse.messaging.AmbiguousOptionMessage import (
     AmbiguousOptionMessage as PAOW,
@@ -24,8 +25,15 @@ from preparse.messaging.UnallowedArgumentMessage import (
 )
 
 
-def parse(args: list[Item], **kwargs: Any) -> list[Item]:
-    return list(parse_generator(args, **kwargs))
+def parse(args: list[Item], **kwargs: Any) -> tuple[list[Item], list[Message]]:
+    messages: list[Message]
+    messages = list()
+
+    def warn(message: Message, /) -> None:
+        messages.append(message)
+
+    preparsed = list(parse_generator(args, warn=warn, **kwargs))
+    return preparsed, messages
 
 
 def parse_bundling(
