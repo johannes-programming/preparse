@@ -1,7 +1,7 @@
 __all__: list[str] = ["Optdict"]
 
 from collections.abc import Hashable, Iterable
-from typing import Any, Optional, Self, cast
+from typing import Any, Optional, Self, TypeVar, cast
 
 import cmp3
 import datahold
@@ -11,12 +11,7 @@ from frozendict import frozendict
 from preparse.enums.Nargs import Nargs
 from preparse.typing.SupportsKeysAndGetitem import SupportsKeysAndGetitem
 
-
-def nargs(value: Any, /) -> Nargs:
-    if isinstance(value, int):
-        return Nargs(value)
-    else:
-        return Nargs.OPTIONAL_ARGUMENT
+Key = TypeVar("Key", bound=Hashable)
 
 
 class Optdict(
@@ -39,7 +34,27 @@ class Optdict(
                 Optional[int], cmp3.cmp(self._data, other, mode="eq_strict")
             )
 
-    __init__ = datahold.HoldDict[Hashable, int].__init__
+    def __init__(
+        self: Self,
+        other: (
+            SupportsKeysAndGetitem[Key, int | None]
+            | Iterable[tuple[Key, int | None]]
+        ) = (),
+        /,
+        **kwargs: int | None,
+    ) -> None:
+        self._data = frozendict()
+        self.update(other, **kwargs)
+
+    def __or__(
+        self: Self,
+        other: (
+            SupportsKeysAndGetitem[Key, int | None]
+            | Iterable[tuple[Key, int | None]]
+        ),
+        /,
+    ) -> Self:
+        return type(self)(self.data | frozendict(other))
 
     @property
     def data(self: Self, /) -> frozendict[str, Nargs]:
@@ -48,14 +63,17 @@ class Optdict(
     @data.setter
     def data(
         self: Self,
-        value: SupportsKeysAndGetitem | Iterable[tuple[Hashable, int | None]],
+        other: (
+            SupportsKeysAndGetitem[Key, int | None]
+            | Iterable[tuple[Key, int | None]]
+        ),
         /,
     ) -> None:
-        a: frozendict[Hashable, int]
+        a: frozendict[Key, int | None]
         b: list[tuple[str, Nargs]]
-        x: Hashable
+        x: Key
         y: int
-        a = frozendict(value)  # type: ignore[arg-type]
+        a = frozendict(other)
         b = list()
         for x, y in a.items():
             if isinstance(y, int):
@@ -64,3 +82,14 @@ class Optdict(
                 b.append((str(x), Nargs.OPTIONAL_ARGUMENT))
         b.sort()
         self._data = frozendict(b)
+
+    def update(
+        self: Self,
+        other: (
+            SupportsKeysAndGetitem[Key, int | None]
+            | Iterable[tuple[Key, int | None]]
+        ) = (),
+        /,
+        **kwargs: int | None,
+    ) -> None:
+        self.data = self.data | frozendict(other) | kwargs

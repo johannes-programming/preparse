@@ -68,13 +68,22 @@ how ``preparse`` can be used to modify ``click``.
 Features
 --------
 
+Inherited features and import locations for annotations are not explicitly documented.
+
 ``preparse.core``
 ~~~~~~~~~~~~~~~~~
 
-``class preparse.core.Click.Click(parser: preparse.PreParser, cmd: SupportsBool = True, ctx: SupportsBool = True)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+The classes in ``preparse.core`` can also be imported directly from ``preparse``.
+
+``class preparse.core.Click.Click(parser: PreParser, cmd: SupportsBool = True, ctx: SupportsBool = True)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This dataclass provides decorators for embedding a ``PreParser`` object.
+It can also be imported directly from ``preparse``.
+
+.. container:: versionchanged
+
+    **Changed in version 1.2:** The ``cmd`` and ``ctx`` constructor arguments and dataclass fields are now annotated with ``SupportsBool``.
 
 ``__call__(target: types.FunctionType) -> types.FunctionType`` ``__call__(target: types.MethodType) -> types.MethodType`` ``__call__(target: typing.Any) -> typing.Any``
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -102,18 +111,45 @@ This dataclass field determines if the ``reflectClickContext`` method of parser 
 
 This dataclass field holds the parser to be embedded.
 
-``class preparse.core.Optdict.Optdict(data: preparse.typing.SupportsKeysAndGetitem.SupportsKeysAndGetitem | Iterable[tuple[Hashable, int]] = (), /)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.core.Optdict.Optdict[][Key: Hashable](other: SupportsKeysAndGetitem[Key, int | None] | Iterable[tuple[Key, int | None]] = (), /, **kwargs: int | None)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This class is a subclass of ``datahold.HoldDict[str, preparse.Nargs]``
-with strings as keys and with ``preparse.Nargs`` as values.
-It is designed for ``preparse.PreParser.optdict``.
+This class is a subclass of ``datahold.HoldDict[str, Nargs]``
+with strings as keys and with ``Nargs`` as values.
+It is designed for ``PreParser.optdict``.
 
-``class preparse.core.PreParser.PreParser(other: PreParser | NotImplementedType = NotImplemented, /, *, allowslong: SupportsBool | NotImplementedType = NotImplemented, allowsshort: SupportsBool | NotImplementedType = NotImplemented, bundling: int | NotImplementedType = NotImplemented, expandsabbr: SupportsBool | NotImplementedType = NotImplemented, expectsabbr: SupportsBool | NotImplementedType = NotImplemented, expectsposix: SupportsBool | NotImplementedType = NotImplemented, optdict: preparse.typing.SupportsKeysAndGetitem.SupportsKeysAndGetitem | Iterable[tuple[Hashable, int]] | NotImplementedType = NotImplemented, prog: object = NotImplemented, reconcilesorders: SupportsBool | NotImplementedType = NotImplemented, special: int | NotImplementedType = NotImplemented, warn: Callable[[PreparseWarning], Any] | NotImplementedType = NotImplemented)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. container:: versionchanged
 
-Assigning ``NotImplemented`` to any property changes nothing.
-All properties are documented with the values they are preset with.
+    **Changed in version 1.2:** Signature corrected.
+
+``__or__(other: SupportsKeysAndGetitem[Key, int | None] | Iterable[tuple[Key, int | None]], /) -> Self``
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. container:: versionchanged
+
+    **Changed in version 1.2:** Signature corrected.
+
+``update[Key: Hashable](other: SupportsKeysAndGetitem[Key, int | None] | Iterable[tuple[Key, int | None]] = (), /, **kwargs: int | None) -> None``
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. container:: versionchanged
+
+    **Changed in version 1.2:** Signature corrected.
+
+``class preparse.core.PreParser.PreParser(other: PreParser | NotImplementedType = NotImplemented, /, *, allowslong: SupportsBool | NotImplementedType = NotImplemented, allowsshort: SupportsBool | NotImplementedType = NotImplemented, bundling: int | NotImplementedType = NotImplemented, expandsabbr: SupportsBool | NotImplementedType = NotImplemented, expectsabbr: SupportsBool | NotImplementedType = NotImplemented, expectsposix: SupportsBool | NotImplementedType = NotImplemented, optdict: SupportsKeysAndGetitem[Key, int | None] | Iterable[tuple[Key, int | None]] | NotImplementedType = NotImplemented, prog: object = NotImplemented, reconcilesorders: SupportsBool | NotImplementedType = NotImplemented, special: int | NotImplementedType = NotImplemented, warn: Callable[[PreparseWarning], Any] | NotImplementedType = NotImplemented)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. container:: versionchanged
+
+    **Changed in version 1.2:** The constructor now allows copying from another instance of ``PreParser`` through the ``other`` positional argument.
+
+.. container:: versionchanged
+
+    **Changed in version 1.2:** Assigning ``NotImplemented`` to any property changes nothing. All properties are documented with the values they are preset with, i.e. the previous default values in the constructor.
+
+.. container:: versionchanged
+
+    **Changed in version 1.2:** The boolean properties have their keyword-arguments in the constructor and also their setters annotated with ``SupportsBool``.
 
 ``allowslong: bool = True``
 """""""""""""""""""""""""""
@@ -125,15 +161,19 @@ This boolean ``property`` determines whether long options are allowed.
 
 This boolean ``property`` determines whether short options are allowed.
 
-``bundling: preparse.Tuning = preparse.Tuning.MAINTAIN``
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+``bundling: Tuning = Tuning.MAINTAIN``
+""""""""""""""""""""""""""""""""""""""
 
 This ``property`` determines the approach to bundling of short options.
 
-``click(cmd: SupportsBool = True, ctx: SupportsBool = True) -> preparse.Click``
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+``click(cmd: SupportsBool = True, ctx: SupportsBool = True) -> Click``
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 This method returns a decorator that infuses the current instance into ``parse_args``.
+
+.. container:: versionchanged
+
+    **Changed in version 1.2:** The ``cmd`` and ``ctx`` parameters are now annotated with ``SupportsBool``.
 
 ``copy() -> Self``
 """"""""""""""""""
@@ -164,9 +204,9 @@ the ``POSIXLY_CORRECT`` environment variable.
 
 This ``property`` holds a dict-like object.
 Its keys are the options.
-Its values specify ``preparse.Nargs``.
+Its values specify ``Nargs``.
 Options not found within the dictionary
-cause a ``preparse.PreparseInvalidOptionWarning``.
+cause a ``PreparseInvalidOptionWarning``.
 Unknown short options are assumed to take no argument.
 Unknown long options are assumed to take an optional argument.
 This behaviour reflects ``getopt``.
@@ -205,8 +245,8 @@ Entries in each ``Click`` option's ``opts`` and ``secondary_opts`` are reflected
 This method alters the current instance to reflect a ``click.Context`` object.
 Concretely the ``prog`` property is changed.
 
-``special: preparse.Tuning = preparse.Tuning.MAINTAIN``
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""
+``special: Tuning = Tuning.MAINTAIN``
+"""""""""""""""""""""""""""""""""""""
 
 This ``property`` determines the approach to the special argument ``'--'``.
 
@@ -233,6 +273,8 @@ Any value different from ``0`` (meaning no) and ``1`` (meaning yes) is interpret
 ``class preparse.enums.Tuning.Tuning``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+This enum inherits from ``enum.IntEnum``. It can also be imported directly from ``preparse``.
+
 +--------------+-------+-----------------------------------------------------------------------------+
 | Name         | Value | Explanation                                                                 |
 +==============+=======+=============================================================================+
@@ -245,6 +287,8 @@ Any value different from ``0`` (meaning no) and ``1`` (meaning yes) is interpret
 
 ``class preparse.enums.Nargs.Nargs``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This enum inherits from ``enum.IntEnum``. It can also be imported directly from ``preparse``.
 
 +-------------------+-------+----------------------------------------------+
 | Name              | Value | Explanation                                  |
@@ -275,16 +319,24 @@ This project can be tested through its ``test`` function.
 ``preparse.typing.SupportsBool.SupportsBool: TypeAlias = Sized | SupportsIndex | None``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-``class preparse.typing.SupportsKeysAndGetitem.SupportsKeysAndGetitem``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. container:: versionadded
+
+    **Added in version 1.2.**
+
+``class preparse.typing.SupportsKeysAndGetitem.SupportsKeysAndGetitem[Key: Hashable = Hashable, Value = int | None]``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This protocol is included in the project for type annotation.
 
-``__getitem__(key: Hashable, /) -> object``
-"""""""""""""""""""""""""""""""""""""""""""
+.. container:: versionchanged
 
-``keys() -> Iterable[Hashable]``
-""""""""""""""""""""""""""""""""
+    **Changed in version 1.2:** The protocol is now generic.
+
+``__getitem__(key: Key, /) -> Value``
+"""""""""""""""""""""""""""""""""""""
+
+``keys() -> Iterable[Key]``
+"""""""""""""""""""""""""""
 
 ``preparse.warnings``
 ~~~~~~~~~~~~~~~~~~~~~
@@ -295,26 +347,41 @@ These classes are subclasses of ``Warning`` that are specifically designed to co
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This abstract base ``class`` is the base for all other warning types.
+It can also be imported directly from ``preparse``.
 
 ``class preparse.warnings.PreparseAmbiguousOptionWarning.PreparseAmbiguousOptionWarning(*, prog: object, option: object, possibilities: Iterable[object])``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This ``class`` warns about ambiguous options. This can only happen for long options.
+This ``class`` warns about ambiguous options.
+This can only happen for long options.
+The class can also be imported directly from ``preparse``.
 
 ``class preparse.warnings.PreparseInvalidOptionWarning.PreparseInvalidOptionWarning(*, prog: object, option: object, islong: SupportsBool)``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This ``class`` warns about invalid options.
+It can also be imported directly from ``preparse``.
+
+.. container:: versionchanged
+
+    **Changed in version 1.2:** The ``islong`` constructor argument is now annotated with ``SupportsBool``.
 
 ``class preparse.warnings.PreparseRequiredArgumentWarning.PreparseRequiredArgumentWarning(*, prog: object, option: object, islong: SupportsBool)``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This ``class`` warns about missing required arguments.
+It can also be imported directly from ``preparse``.
+
+.. container:: versionchanged
+
+    **Changed in version 1.2:** The ``islong`` constructor argument is now annotated with ``SupportsBool``.
 
 ``class preparse.warnings.PreparseUnallowedArgumentWarning.PreparseUnallowedArgumentWarning(*, prog: object, option: object)``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This ``class`` warns about unallowed arguments. This can only happen for long options.
+This ``class`` warns about unallowed arguments.
+This can only happen for long options.
+The class can also be imported directly from ``preparse``.
 
 License
 -------

@@ -6,7 +6,7 @@ import os
 import sys
 from collections.abc import Callable, Hashable, Iterable
 from types import NotImplementedType
-from typing import Any, Optional, Self, cast
+from typing import Any, Optional, Self, TypeVar
 
 import click as cl
 import setdoc
@@ -22,6 +22,8 @@ from preparse.enums.Tuning import Tuning
 from preparse.typing.SupportsBool import SupportsBool
 from preparse.typing.SupportsKeysAndGetitem import SupportsKeysAndGetitem
 from preparse.warnings.PreparseWarning import PreparseWarning
+
+Key = TypeVar("Key", bound=Hashable)
 
 
 class PreParser(Copyable):
@@ -64,8 +66,8 @@ class PreParser(Copyable):
         expectsabbr: SupportsBool | NotImplementedType = NotImplemented,
         expectsposix: SupportsBool | NotImplementedType = NotImplemented,
         optdict: (
-            SupportsKeysAndGetitem
-            | Iterable[tuple[Hashable, int]]
+            SupportsKeysAndGetitem[Key, int | None]
+            | Iterable[tuple[Key, int | None]]
             | NotImplementedType
         ) = NotImplemented,
         prog: object = NotImplemented,
@@ -224,7 +226,7 @@ class PreParser(Copyable):
     @property
     def prog(self: Self, /) -> str:
         "This property represents the name of the program."
-        return cast(str, self._prog)
+        return self._prog
 
     @prog.setter
     def prog(self: Self, value: object, /) -> None:
