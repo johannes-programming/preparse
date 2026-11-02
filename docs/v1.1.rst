@@ -102,8 +102,8 @@ This dataclass field determines if the ``reflectClickContext`` method of parser 
 
 This dataclass field holds the parser to be embedded.
 
-``class preparse.core.Optdict.Optdict(data: preparse.typing.SupportsKeysAndGetitem.SupportsKeysAndGetitem | Iterable[tuple[Hashable, object]] = (), /, **kwargs: object)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.core.Optdict.Optdict(data: preparse.typing.SupportsKeysAndGetitem.SupportsKeysAndGetitem | Iterable[tuple[Hashable, object]] = (), /)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This class is a subclass of ``datahold.HoldDict[str, preparse.Nargs]``
 with strings as keys and with ``preparse.Nargs`` as values.
