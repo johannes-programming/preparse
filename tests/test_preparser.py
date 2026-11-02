@@ -22,8 +22,9 @@ class TestPreParser(unittest.TestCase):
             allowslong=False, allowsshort=False, expectsposix=True
         )
         args = ["-c2", "--", "-a"]
-        self.assertEqual(parser.parse_args(args), args)
-        self.assertEqual(parser.parse_args(parser.parse_args(args)), args)
+        preparsed, messages = parser.parse_args(args)
+        self.assertEqual(args, preparsed)
+        self.assertEqual(args, parser.parse_args(preparsed)[0])
 
     def test_minimize_short_bundle_with_hyphen_option(self: Self) -> None:
         parser: PreParser
@@ -32,7 +33,8 @@ class TestPreParser(unittest.TestCase):
             bundling=0,
             optdict={"--": 2},
         )
-        self.assertEqual(parser.parse_args(["--x"]), ["--x"])
+        preparsed, messages = parser.parse_args(["--x"])
+        self.assertEqual(preparsed, ["--x"])
 
     def test_preparser_todict(self: Self) -> None:
         expected_keys: list[Any]

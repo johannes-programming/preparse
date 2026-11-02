@@ -36,7 +36,6 @@ class PreParser(Copyable):
         "_prog",
         "_reconcilesorders",
         "_special",
-        "_warn",
     )
     _allowslong: bool
     _allowsshort: bool
@@ -48,7 +47,6 @@ class PreParser(Copyable):
     _prog: str
     _reconcilesorders: bool
     _special: Tuning
-    _warn: Callable[[Message], Any]
 
     @setdoc.basic
     def __init__(
@@ -70,7 +68,6 @@ class PreParser(Copyable):
         prog: object = NotImplemented,
         reconcilesorders: SupportsBool | NotImplementedType = NotImplemented,
         special: int | NotImplementedType = NotImplemented,
-        warn: Callable[[Message], Any] | NotImplementedType = NotImplemented,
     ) -> None:
         self._allowslong = True
         self._allowsshort = True
@@ -82,7 +79,6 @@ class PreParser(Copyable):
         self.prog = None
         self._reconcilesorders = True
         self._special = Tuning.MAINTAIN
-        self.warn = str
         if not isinstance(other, NotImplementedType):
             self.allowslong = other.allowslong
             self.allowsshort = other.allowsshort
@@ -94,7 +90,6 @@ class PreParser(Copyable):
             self.prog = other.prog
             self.reconcilesorders = other.reconcilesorders
             self.special = other.special
-            self.warn = other.warn
         self.allowslong = allowslong
         self.allowsshort = allowsshort
         self.bundling = bundling
@@ -105,7 +100,6 @@ class PreParser(Copyable):
         self.prog = prog
         self.reconcilesorders = reconcilesorders
         self.special = special
-        self.warn = warn
 
     @setdoc.basic
     def __repr__(self: Self, /) -> str:
@@ -208,9 +202,16 @@ class PreParser(Copyable):
     def parse_args(
         self: Self,
         args: Optional[Iterable[object]] = None,
-    ) -> list[str]:
+    ) -> tuple[list[str], list[Message]]:
         "This method parses args."
-        return process(args, **self.todict())
+        messages: list[Message]
+        messages = list()
+        preparsed = process(
+            args,
+            warn=tofunc(messages.append),
+            **self.todict(),
+        )
+        return preparsed, messages
 
     @property
     def prog(self: Self, /) -> str:
@@ -265,22 +266,4 @@ class PreParser(Copyable):
         ans["prog"] = self.prog
         ans["reconcilesorders"] = self.reconcilesorders
         ans["special"] = self.special
-        ans["warn"] = self.warn
         return ans
-
-    @property
-    def warn(
-        self: Self,
-    ) -> Callable[[Message], Any]:
-        "This property gives a function that takes in the warnings."
-        return self._warn
-
-    @warn.setter
-    def warn(
-        self: Self,
-        value: Callable[[Message], Any] | NotImplementedType,
-    ) -> None:
-        "This property gives a function that takes in the warnings."
-        if isinstance(value, NotImplementedType):
-            return
-        self._warn = tofunc(value)

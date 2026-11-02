@@ -57,21 +57,17 @@ class TestDataToml(unittest.TestCase):
         msg: str
         parser: PreParser
         superanswer: list[Any]
-        capture = list()
 
-        def warn(value: Any) -> None:
-            capture.append(str(value))
-
-        parser = PreParser(warn=warn, **kwargs)
+        parser = PreParser(**kwargs)
         data = dict(
             query=query,
             solution=solution,
             warnings=warnings,
             **kwargs,
         )
-        answer = parser.parse_args(query)
-        erranswer = list(capture)
-        superanswer = parser.parse_args(answer)
+        answer, messages = parser.parse_args(query)
+        erranswer = list(map(str, messages))
+        superanswer = parser.parse_args(answer)[0]
         msg = "\n\ndata=%s,\nanswer=%s,\nsuperanswer=%s,\n\n" % (
             data,
             answer,
