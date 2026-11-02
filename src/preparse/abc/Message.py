@@ -8,13 +8,12 @@ from copyable import Copyable
 from datarepr import datarepr
 
 
-class Message(Warning, Copyable):
+class Message(Copyable):
 
     _data: dict[str, Any]
 
     @setdoc.basic
     def __init__(self: Self, **kwargs: Any) -> None:
-        Warning.__init__(self)
         self._data = dict()
         self.__post_init__(**kwargs)
 
