@@ -2,7 +2,6 @@ import enum
 import functools
 import io
 import math
-import sys
 import tomllib
 from pathlib import Path
 from typing import Any, Self
@@ -30,59 +29,54 @@ class Utils(enum.Enum):
             return True
         return False
 
+    @staticmethod
+    def parser(
+        *,
+        allowslong: bool = True,
+        allowsshort: bool = True,
+        optdict: dict[str, int] = (),
+        **kwargs: Any,
+    ) -> dict[str, Any]:
+        optdict = dict(optdict)
+        if allowslong:
+            kwargs["longopts"] = []
+        else:
+            kwargs["longopts"] = float("nan")
+        if allowsshort:
+            kwargs["shortopts"] = ""
+        else:
+            kwargs["shortopts"] = float("nan")
+        if (allowslong, allowsshort) == (False, False):
+            return kwargs
+        for x, y in optdict.items():
+            if not x.startswith("-"):
+                continue
+            if allowsshort:
+                if len(x) == 2:
+                    kwargs["shortopts"] += x[1]
+                    kwargs["shortopts"] += ":" * y
+                    continue
+                if not x.startswith("--"):
+                    continue
+                z = x[2:]
+            else:
+                z = x[1:]
+            if not allowslong:
+                continue
+            if y == 0:
+                kwargs["longopts"].append(z)
+            elif y == 1:
+                kwargs["longopts"].append(z + "=")
+            else:
+                kwargs["longopts"].append(z + "=?")
+        return kwargs
+
 
 def main() -> None:
     data: dict[str, Any]
     data = dict()
     for x, y in Utils.utils.data.items():
-        z = dict(y)
-        data[x] = dict()
-        data[x]["legacy"] = dict()
-        data[x]["testing"] = dict()
-        data[x]["framework"] = dict()
-        data[x]["transformation"] = dict()
-        data[x]["optList"] = z.pop("optdict", {})
-        data[x]["framework"]["allows_long"] = z.pop("allowslong", None)
-        data[x]["framework"]["allows_short"] = z.pop("allowsshort", None)
-        data[x]["framework"]["is_posix"] = z.pop("expectsposix", None)
-        data[x]["transformation"]["bundling"] = z.pop("bundling", None)
-        data[x]["transformation"]["special"] = z.pop("special", None)
-        data[x]["transformation"]["abbr"] = {
-            None: None,
-            True: 0,
-            False: 2,
-        }[z.pop("expandsabbr", None)]
-        data[x]["transformation"]["separate"] = z.pop("equal", None)
-        data[x]["transformation"]["reconciles_orders"] = z.pop(
-            "reconcilesorders", None
-        )
-        data[x]["transformation"]["depletion"] = "DEFER"
-        data[x]["legacy"]["prog"] = z.pop("prog", None)
-        data[x]["legacy"]["expects_abbr"] = z.pop("expectsabbr", None)
-        data[x]["testing"]["query"] = z.pop("query", None)
-        data[x]["testing"]["solution"] = z.pop("solution", None)
-        data[x]["testing"]["messages"] = list()
-        warnings = z.pop("warnings", None)
-        if Utils.istestable(warnings):
-            data[x]["testing"]["messages"] = list()
-            prefix = data[x]["legacy"]["prog"] + ": "
-            for warning in warnings:
-                if warning.startswith(prefix):
-                    data[x]["testing"]["messages"].append(
-                        warning[len(prefix) :]
-                    )
-                else:
-                    raise ValueError(
-                        f"Unexpected warning prefix in {x}: {warning}"
-                    )
-        else:
-            data[x]["testing"]["messages"] = float("nan")
-        if len(z):
-            raise ValueError(f"Unexpected keys in {x}: {list(z.keys())}")
-        for a, b in data[x].items():
-            for c in list(b.keys()):
-                if b[c] is None:
-                    b.pop(c)
+        data[x] = Utils.parser(**y)
     print(tomli_w.dumps(data))
 
 
