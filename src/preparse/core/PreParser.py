@@ -259,9 +259,7 @@ class PreParser(Copyable):
                     option.arg = attached_value
                     option.attached = True
                     if nargs == Nargs.NO_ARGUMENT:
-                        messages.append(
-                            UnallowedArgumentMessage(option=spelling)
-                        )
+                        messages.append(UnallowedArgumentMessage(option=key))
                 elif nargs == Nargs.REQUIRED_ARGUMENT:
                     if i < len(arglist):
                         option.arg = arglist[i]
