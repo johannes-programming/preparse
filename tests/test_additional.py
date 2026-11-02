@@ -28,24 +28,16 @@ from preparse.messaging.UnallowedArgumentMessage import (
 
 
 class WarningTests(unittest.TestCase):
-    def parser_with_warnings(
-        self: Self, **settings: Any
-    ) -> tuple[PreParser, list[Any]]:
-        captured: list[Any]
-        captured = []
+    def parser_with_warnings(self: Self, **settings: Any) -> PreParser:
 
-        def capture(warning: Any) -> None:
-            captured.append(warning)
-
-        return PreParser(prog="example", warn=capture, **settings), captured
+        return PreParser(prog="example", **settings)
 
     def test_long_and_short_invalid_options(self: Self, /) -> None:
         parser: PreParser
         warnings: list[Any]
-        parser, warnings = self.parser_with_warnings(optdict={"--good": 0})
-        self.assertEqual(
-            parser.parse_args(["--unknown", "-z"]), ["--unknown", "-z"]
-        )
+        parser = self.parser_with_warnings(optdict={"--good": 0})
+        preparsed, warnings = parser.parse_args(["--unknown", "-z"])
+        self.assertEqual(preparsed, ["--unknown", "-z"])
         self.assertEqual(len(warnings), 2)
         self.assertTrue(
             all(isinstance(w, InvalidOptionMessage) for w in warnings)
@@ -66,8 +58,9 @@ class WarningTests(unittest.TestCase):
     ) -> None:
         parser: PreParser
         warnings: list[Any]
-        parser, warnings = self.parser_with_warnings()
-        self.assertEqual(parser.parse_args(["-xy"]), ["-xy"])
+        parser = self.parser_with_warnings()
+        preparsed, warnings = parser.parse_args(["-xy"])
+        self.assertEqual(preparsed, ["-xy"])
         self.assertEqual([w.option for w in warnings], ["x", "y"])
         self.assertTrue(all(not w.islong for w in warnings))
 
@@ -75,10 +68,11 @@ class WarningTests(unittest.TestCase):
         parser: PreParser
         warning: AmbiguousOptionMessage
         warnings: list[Any]
-        parser, warnings = self.parser_with_warnings(
+        parser = self.parser_with_warnings(
             optdict={"--alpha": 0, "--alpine": 0}
         )
-        self.assertEqual(parser.parse_args(["--al"]), ["--al"])
+        preparsed, warnings = parser.parse_args(["--al"])
+        self.assertEqual(preparsed, ["--al"])
         self.assertEqual(len(warnings), 1)
         warning = warnings[0]
         self.assertIsInstance(warning, AmbiguousOptionMessage)
@@ -113,10 +107,11 @@ class WarningTests(unittest.TestCase):
             ),
         ):
             with self.subTest(args=args):
-                parser, warnings = self.parser_with_warnings(
+                parser = self.parser_with_warnings(
                     optdict={"--output": 1, "-o": 1}
                 )
-                self.assertEqual(parser.parse_args(args), args)
+                preparsed, warnings = parser.parse_args(args)
+                self.assertEqual(preparsed, args)
                 self.assertEqual(len(warnings), 1)
                 self.assertIsInstance(warnings[0], RequiredArgumentMessage)
                 self.assertEqual(
@@ -127,8 +122,9 @@ class WarningTests(unittest.TestCase):
     def test_value_on_flag_is_not_silently_accepted(self: Self, /) -> None:
         parser: PreParser
         warnings: list[Any]
-        parser, warnings = self.parser_with_warnings(optdict={"--flag": 0})
-        self.assertEqual(parser.parse_args(["--flag=on"]), ["--flag=on"])
+        parser = self.parser_with_warnings(optdict={"--flag": 0})
+        preparsed, warnings = parser.parse_args(["--flag=on"])
+        self.assertEqual(preparsed, ["--flag=on"])
         self.assertEqual(len(warnings), 1)
         self.assertIsInstance(warnings[0], UnallowedArgumentMessage)
         self.assertEqual(warnings[0].option, "--flag")
@@ -141,27 +137,23 @@ class WarningTests(unittest.TestCase):
         args: list[str]
         parser: PreParser
         warnings: list[Any]
-        parser, warnings = self.parser_with_warnings(
+        parser = self.parser_with_warnings(
             optdict={"--flag": 0, "--output": 1, "--maybe": 2}
         )
         args = ["--flag", "--output", "file", "--maybe=auto"]
-        self.assertEqual(parser.parse_args(args), args)
+        preparsed, warnings = parser.parse_args(args)
+        self.assertEqual(preparsed, args)
         self.assertEqual(warnings, [])
 
     def test_callback_can_turn_a_warning_into_an_exception(
         self: Self, /
     ) -> None:
-        caught: Any
         parser: PreParser
-
-        def reject(warning: Any) -> None:
-            raise warning
-
-        parser = PreParser(prog="strict", warn=reject)
-        with self.assertRaises(InvalidOptionMessage) as caught:
-            parser.parse_args(["--unknown"])
-        self.assertEqual(caught.exception.prog, "strict")
-        self.assertEqual(caught.exception.option, "--unknown")
+        parser = PreParser(prog="strict")
+        preparsed, messages = parser.parse_args(["--unknown"])
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(messages[0].prog, "strict")
+        self.assertEqual(messages[0].option, "--unknown")
 
     def test_warning_object_copy_dict_repr_and_mutable_attributes(
         self: Self, /
@@ -211,9 +203,12 @@ class ArgumentInputTests(unittest.TestCase):
     def test_empty_list_and_tuple(self: Self, /) -> None:
         parser: PreParser
         parser = PreParser()
-        self.assertEqual(parser.parse_args([]), [])
-        self.assertEqual(parser.parse_args(()), [])
-        self.assertEqual(parser.parse_args(("text", "more")), ["text", "more"])
+        preparsed, messages = parser.parse_args([])
+        self.assertEqual(preparsed, [])
+        preparsed, messages = parser.parse_args(())
+        self.assertEqual(preparsed, [])
+        preparsed, messages = parser.parse_args(("text", "more"))
+        self.assertEqual(preparsed, ["text", "more"])
 
     def test_generator_is_consumed_once(self: Self, /) -> None:
         consumed: list[Any]
@@ -227,7 +222,8 @@ class ArgumentInputTests(unittest.TestCase):
                 consumed.append(item)
                 yield item
 
-        self.assertEqual(parser.parse_args(generated()), ["--flag", "file"])
+        preparsed, messages = parser.parse_args(generated())
+        self.assertEqual(preparsed, ["--flag", "file"])
         self.assertEqual(consumed, ["--flag", "file"])
 
     def test_none_uses_sys_argv_and_prog_uses_basename(self: Self, /) -> None:
@@ -235,23 +231,26 @@ class ArgumentInputTests(unittest.TestCase):
         with patch.object(sys, "argv", ["/tmp/mytool.py", "--flag", "tail"]):
             parser = PreParser(optdict={"--flag": 0})
             self.assertEqual(parser.prog, "mytool.py")
-            self.assertEqual(parser.parse_args(None), ["--flag", "tail"])
-            self.assertEqual(parser.parse_args(), ["--flag", "tail"])
-            self.assertEqual(parser.parse_args([]), [])
+            preparsed, messages = parser.parse_args(None)
+            self.assertEqual(preparsed, ["--flag", "tail"])
+            preparsed, messages = parser.parse_args()
+            self.assertEqual(preparsed, ["--flag", "tail"])
+            preparsed, messages = parser.parse_args([])
+            self.assertEqual(preparsed, [])
 
     def test_nonstring_arguments_are_converted_to_strings(
         self: Self, /
     ) -> None:
         parser: PreParser
         parser = PreParser(allowslong=False, allowsshort=False)
+        preparsed, messages = parser.parse_args([7, None, True, "-z"])
         self.assertEqual(
-            parser.parse_args([7, None, True, "-z"]),
+            preparsed,
             ["7", "None", "True", "-z"],
         )
         parser = PreParser(optdict={"--number": 1})
-        self.assertEqual(
-            parser.parse_args(["--number", 42]), ["--number", "42"]
-        )
+        preparsed, messages = parser.parse_args(["--number", 42])
+        self.assertEqual(preparsed, ["--number", "42"])
 
 
 class ConfigurationTests(unittest.TestCase):
@@ -288,16 +287,13 @@ class ConfigurationTests(unittest.TestCase):
             with self.subTest(expands=expands, expects=expects):
                 reported = []
 
-                def capture(warning: Any) -> None:
-                    reported.append(warning)
-
                 parser = PreParser(
                     optdict={"--verbose": 0},
                     expandsabbr=expands,
                     expectsabbr=expects,
-                    warn=capture,
                 )
-                self.assertEqual(parser.parse_args(["--ver"]), output)
+                preparsed, reported = parser.parse_args(["--ver"])
+                self.assertEqual(preparsed, output)
                 self.assertEqual(len(reported), int(warning_type is not None))
                 if warning_type is not None:
                     self.assertIsInstance(reported[0], warning_type)
@@ -306,16 +302,15 @@ class ConfigurationTests(unittest.TestCase):
         args: list[str]
         parser: PreParser
         recorded: list[Message]
-        recorded = []
         parser = PreParser(
             allowslong=False,
             allowsshort=False,
             expectsposix=True,
             reconcilesorders=True,
-            warn=recorded.append,
         )
         args = ["--unrecognized", "-x", "--", "file"]
-        self.assertEqual(parser.parse_args(args), args)
+        preparsed, recorded = parser.parse_args(args)
+        self.assertEqual(preparsed, args)
         self.assertEqual(recorded, [])
 
     def test_disabling_long_options_preserves_short_bundle_interpretation(
@@ -324,14 +319,13 @@ class ConfigurationTests(unittest.TestCase):
     ) -> None:
         parser: PreParser
         recorded: list[Any]
-        recorded = []
         parser = PreParser(
             allowslong=False,
             allowsshort=True,
             optdict={"--": 0, "-x": 1},
-            warn=recorded.append,
         )
-        self.assertEqual(parser.parse_args(["--x", "value"]), ["--x", "value"])
+        preparsed, recorded = parser.parse_args(["--x", "value"])
+        self.assertEqual(preparsed, ["--x", "value"])
         self.assertEqual(recorded, [])
 
     def test_posix_ordering_and_reconciliation_combinations(
@@ -354,9 +348,10 @@ class ConfigurationTests(unittest.TestCase):
                     expectsposix=posix,
                     reconcilesorders=reconcile,
                 )
-                self.assertEqual(
-                    parser.parse_args(["file", "--flag", "tail"]), expected
+                preparsed, messages = parser.parse_args(
+                    ["file", "--flag", "tail"]
                 )
+                self.assertEqual(preparsed, expected)
 
     def test_special_minimize_and_maximize_with_long_options(
         self: Self, /
@@ -379,7 +374,8 @@ class ConfigurationTests(unittest.TestCase):
         for tuning, args, expected in cases:
             with self.subTest(tuning=tuning, args=args):
                 parser = PreParser(optdict={"--flag": 0}, special=tuning)
-                self.assertEqual(parser.parse_args(args), expected)
+                preparsed, messages = parser.parse_args(args)
+                self.assertEqual(preparsed, expected)
 
     def test_bundling_modes_with_a_long_option(self: Self, /) -> None:
         args: list[str]
@@ -395,7 +391,8 @@ class ConfigurationTests(unittest.TestCase):
                     optdict={"-a": 0, "-b": 0, "--flag": 0},
                     bundling=tuning,
                 )
-                self.assertEqual(parser.parse_args(args), expected)
+                preparsed, messages = parser.parse_args(args)
+                self.assertEqual(preparsed, expected)
 
 
 class OptdictAndCopyTests(unittest.TestCase):
@@ -452,9 +449,6 @@ class OptdictAndCopyTests(unittest.TestCase):
         copy: PreParser
         original: PreParser
 
-        def capture(_warning: Any) -> None:
-            return
-
         original = PreParser(
             allowslong=False,
             allowsshort=True,
@@ -466,7 +460,6 @@ class OptdictAndCopyTests(unittest.TestCase):
             prog="original",
             reconcilesorders=False,
             special=Tuning.MAXIMIZE,
-            warn=capture,
         )
         copy = original.copy()
         self.assertIsNot(copy, original)
@@ -485,7 +478,6 @@ class OptdictAndCopyTests(unittest.TestCase):
         ):
             with self.subTest(attribute=attr):
                 self.assertEqual(getattr(copy, attr), getattr(original, attr))
-        self.assertTrue(callable(copy.warn))
         copy.allowslong = True
         copy.optdict = {"--new": 1}
         copy.prog = "copy"
@@ -533,7 +525,6 @@ class OptdictAndCopyTests(unittest.TestCase):
             "prog",
             "reconcilesorders",
             "special",
-            "warn",
         }
         exported = parser.todict()
         self.assertEqual(set(exported), expected_keys)
