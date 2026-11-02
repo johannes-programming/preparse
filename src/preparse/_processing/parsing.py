@@ -10,7 +10,7 @@ from preparse._items.Long import Long
 from preparse._items.Option import Option
 from preparse._items.Special import Special
 from preparse.abc.Message import Message
-from preparse.enums.Nargs import Nargs
+from preparse.enum.Nargs import Nargs
 from preparse.messaging.AmbiguousOptionMessage import (
     AmbiguousOptionMessage as PAOW,
 )

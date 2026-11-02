@@ -17,8 +17,8 @@ from unittest.mock import patch
 from preparse.abc.Message import Message
 from preparse.core.Optdict import Optdict
 from preparse.core.PreParser import PreParser
-from preparse.enums.Nargs import Nargs
-from preparse.enums.Tuning import Tuning
+from preparse.enum.Nargs import Nargs
+from preparse.enum.Tuning import Tuning
 from preparse.messaging.AmbiguousOptionMessage import AmbiguousOptionMessage
 from preparse.messaging.InvalidOptionMessage import InvalidOptionMessage
 from preparse.messaging.RequiredArgumentMessage import RequiredArgumentMessage

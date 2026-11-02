@@ -8,7 +8,7 @@ import datahold
 import setdoc
 from frozendict import frozendict
 
-from preparse.enums.Nargs import Nargs
+from preparse.enum.Nargs import Nargs
 from preparse.typing.SupportsKeysAndGetitem import SupportsKeysAndGetitem
 
 Key = TypeVar("Key", bound=Hashable)

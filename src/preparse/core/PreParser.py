@@ -16,7 +16,7 @@ from preparse._processing import process
 from preparse.abc.Copyable import Copyable
 from preparse.abc.Message import Message
 from preparse.core.Optdict import Optdict
-from preparse.enums.Tuning import Tuning
+from preparse.enum.Tuning import Tuning
 from preparse.typing.SupportsBool import SupportsBool
 from preparse.typing.SupportsKeysAndGetitem import SupportsKeysAndGetitem
 

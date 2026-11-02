@@ -4,7 +4,7 @@ import unittest
 from typing import Self
 
 from preparse.core.Optdict import Optdict
-from preparse.enums.Nargs import Nargs
+from preparse.enum.Nargs import Nargs
 
 
 class TestPreparse(unittest.TestCase):
