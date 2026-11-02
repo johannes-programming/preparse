@@ -1,4 +1,4 @@
-__all__: list[str] = ["PreparseWarning"]
+__all__: list[str] = ["Message"]
 
 from abc import abstractmethod
 from typing import Any, Self, cast
@@ -8,7 +8,7 @@ from copyable import Copyable
 from datarepr import datarepr
 
 
-class PreparseWarning(Warning, Copyable):
+class Message(Warning, Copyable):
 
     _data: dict[str, Any]
 

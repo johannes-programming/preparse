@@ -1,13 +1,13 @@
-__all__: list[str] = ["PreparseUnallowedArgumentWarning"]
+__all__: list[str] = ["UnallowedArgumentMessage"]
 
-from typing import Any, Self
+from typing import Self
 
 import setdoc
 
-from preparse.warnings.PreparseLongonlyWarning import PreparseLongonlyWarning
+from preparse.abc.LongonlyMessage import LongonlyMessage
 
 
-class PreparseUnallowedArgumentWarning(PreparseLongonlyWarning):
+class UnallowedArgumentMessage(LongonlyMessage):
 
     # option is always full key without value
 

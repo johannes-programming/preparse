@@ -10,17 +10,17 @@ from preparse._items.Long import Long
 from preparse._items.Option import Option
 from preparse._items.Special import Special
 from preparse.enums.Nargs import Nargs
-from preparse.warnings.PreparseAmbiguousOptionWarning import (
-    PreparseAmbiguousOptionWarning as PAOW,
+from preparse.messaging.AmbiguousOptionMessage import (
+    AmbiguousOptionMessage as PAOW,
 )
-from preparse.warnings.PreparseInvalidOptionWarning import (
-    PreparseInvalidOptionWarning as PIOW,
+from preparse.messaging.InvalidOptionMessage import (
+    InvalidOptionMessage as PIOW,
 )
-from preparse.warnings.PreparseRequiredArgumentWarning import (
-    PreparseRequiredArgumentWarning as PRAW,
+from preparse.messaging.RequiredArgumentMessage import (
+    RequiredArgumentMessage as PRAW,
 )
-from preparse.warnings.PreparseUnallowedArgumentWarning import (
-    PreparseUnallowedArgumentWarning as PUAW,
+from preparse.messaging.UnallowedArgumentMessage import (
+    UnallowedArgumentMessage as PUAW,
 )
 
 
