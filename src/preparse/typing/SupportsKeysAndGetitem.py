@@ -3,7 +3,12 @@ __all__: list[str] = ["SupportsKeysAndGetitem"]
 from collections.abc import Hashable, Iterable
 from typing import Protocol, Self
 
+from typing_extensions import TypeVar
 
-class SupportsKeysAndGetitem(Protocol):
-    def __getitem__(self: Self, key: Hashable, /) -> object: ...
-    def keys(self: Self) -> Iterable[Hashable]: ...
+Key = TypeVar("Key", bound=Hashable, default=Hashable)
+Value = TypeVar("Value", covariant=True, default=int | None)
+
+
+class SupportsKeysAndGetitem(Protocol[Key, Value]):
+    def __getitem__(self: Self, key: Key, /) -> Value: ...
+    def keys(self: Self, /) -> Iterable[Key]: ...

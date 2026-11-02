@@ -42,7 +42,7 @@ class TestPreParser(unittest.TestCase):
         parser = PreParser(
             allowslong=False,
             bundling=0,
-            optdict={"--": 2},  # type: ignore[arg-type]
+            optdict={"--": 2},
         )
         self.assertEqual(parser.parse_args(["--x"]), ["--x"])
 
