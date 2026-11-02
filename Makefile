@@ -1,5 +1,5 @@
 .ONESHELL:
-.PHONY: all add amend beautiful black build clean commit commit-version dist echo isort jacobus py311 py312 pypi rebase reset test toml_sorted upload version
+.PHONY: all add amend beautiful black build clean commit commit-version dist echo isort jacobus py311 py312 py313 py314 py315 pypi rebase reset test toml_sorted upload version
 SHELL := /bin/zsh
 
 all: beautiful commit-version
@@ -49,6 +49,15 @@ py311:
 
 py312:
 	conda run -n base python make/env.py py312 --python=3.12;
+
+py313:
+	conda run -n base python make/env.py py313 --python=3.13;
+
+py314:
+	conda run -n base python make/env.py py314 --python=3.14;
+
+py315:
+	conda run -n base python make/env.py py315 --python=3.15;
 
 pypi: clean build upload
 
