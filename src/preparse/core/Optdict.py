@@ -54,7 +54,9 @@ class Optdict(
         ),
         /,
     ) -> Self:
-        return type(self)(self.data | frozendict(other))
+        return type(self)(
+            self.data | frozendict(other)  # type: ignore[arg-type]
+        )
 
     @property
     def data(self: Self, /) -> frozendict[str, Nargs]:
@@ -72,8 +74,8 @@ class Optdict(
         a: frozendict[Key, int | None]
         b: list[tuple[str, Nargs]]
         x: Key
-        y: int
-        a = frozendict(other)
+        y: int | None
+        a = frozendict(other)  # type: ignore[arg-type]
         b = list()
         for x, y in a.items():
             if isinstance(y, int):
@@ -92,4 +94,4 @@ class Optdict(
         /,
         **kwargs: int | None,
     ) -> None:
-        self.data = self.data | frozendict(other) | kwargs
+        self.data = self.data | frozendict(other) | kwargs  # type: ignore[arg-type]
