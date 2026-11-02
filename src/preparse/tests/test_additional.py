@@ -419,7 +419,7 @@ class OptdictAndCopyTests(unittest.TestCase):
                 "--required": 1,
                 "--unknown": 999,
                 "--none": None,
-                "--string": "1",
+                "--string": None,
             }
         )
         self.assertEqual(options["5"], Nargs.NO_ARGUMENT)

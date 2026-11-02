@@ -313,6 +313,10 @@ This project can be tested through its ``test`` function.
     import preparse.tests
     preparse.tests.test()
 
+.. container:: versionadded
+
+    **Added in version 1.2:** The tests can now also be run with the project's ``run_tests.py`` file.
+
 ``preparse.typing``
 ~~~~~~~~~~~~~~~~~~~
 
