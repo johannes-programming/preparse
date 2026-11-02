@@ -1349845,8 +1349845,8 @@ solution = [
     "-f42",
     "-b=2",
     "-c",
-    "-d",
     "comp.cfg",
+    "-d",
 ]
 
 [run31301go.transformation]
@@ -1358250,10 +1358250,10 @@ solution = [
     "--output=log.txt",
     "--foo=bar",
     "-x",
-    "--fo",
     "input1",
     "input2",
     "input3",
+    "--fo",
 ]
 
 [run31469go.transformation]
