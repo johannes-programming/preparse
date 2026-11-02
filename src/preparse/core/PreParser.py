@@ -48,6 +48,12 @@ class PreParser(Copyable):
     _reconcilesorders: bool
     _special: Tuning
 
+    def __eq__(self: Self, other: object, /) -> bool | NotImplementedType:
+        if isinstance(other, PreParser):
+            return self.todict() == other.todict()
+        else:
+            return NotImplemented
+
     @setdoc.basic
     def __init__(
         self: Self,

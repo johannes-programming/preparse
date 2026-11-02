@@ -1,9 +1,9 @@
 __all__: list[str] = ["Message"]
 
 from abc import abstractmethod
+from types import NotImplementedType
 from typing import Any, Self
 
-import setdoc
 from datarepr import datarepr
 
 from preparse.abc.Copyable import Copyable
@@ -12,6 +12,12 @@ from preparse.abc.Copyable import Copyable
 class Message(Copyable):
 
     __slots__ = ()
+
+    def __eq__(self: Self, other: object, /) -> bool | NotImplementedType:
+        if isinstance(other, Message):
+            return self.todict() == other.todict()
+        else:
+            return NotImplemented
 
     def __repr__(self: Self, /) -> str:
         return datarepr(type(self).__name__, **self.todict())
