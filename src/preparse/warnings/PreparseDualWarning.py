@@ -5,6 +5,7 @@ from typing import Self, cast
 
 import setdoc
 
+from preparse.typing.SupportsBool import SupportsBool
 from preparse.warnings.PreparseWarning import PreparseWarning
 
 
@@ -14,7 +15,7 @@ class PreparseDualWarning(PreparseWarning):
     def __post_init__(
         self: Self,
         *,
-        islong: object,
+        islong: SupportsBool,
         option: object,
         prog: object,
     ) -> None:

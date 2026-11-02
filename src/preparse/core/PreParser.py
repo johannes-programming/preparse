@@ -5,6 +5,7 @@ __all__: list[str] = ["PreParser"]
 import os
 import sys
 from collections.abc import Callable, Hashable, Iterable
+from types import NotImplementedType
 from typing import Any, Optional, Self, cast
 
 import click as cl
@@ -18,34 +19,85 @@ from preparse.core.Click import Click
 from preparse.core.Optdict import Optdict
 from preparse.enums.Nargs import Nargs
 from preparse.enums.Tuning import Tuning
+from preparse.typing.SupportsBool import SupportsBool
 from preparse.typing.SupportsKeysAndGetitem import SupportsKeysAndGetitem
 from preparse.warnings.PreparseWarning import PreparseWarning
 
 
 class PreParser(Copyable):
 
-    __slots__ = ("_data",)
+    __slots__ = (
+        "_allowslong",
+        "_allowsshort",
+        "_bundling",
+        "_expandsabbr",
+        "_expectsabbr",
+        "_expectsposix",
+        "_optdict",
+        "_prog",
+        "_reconcilesorders",
+        "_special",
+        "_warn",
+    )
+    _allowslong: bool
+    _allowsshort: bool
+    _bundling: Tuning
+    _expandsabbr: bool
+    _expectsabbr: bool
+    _expectsposix: bool
+    _optdict: Optdict
+    _prog: str
+    _reconcilesorders: bool
+    _special: Tuning
+    _warn: Callable[[PreparseWarning], Any]
 
     @setdoc.basic
     def __init__(
         self: Self,
+        other: PreParser | NotImplementedType = NotImplemented,
+        /,
         *,
-        allowslong: object = True,
-        allowsshort: object = True,
-        bundling: int = Tuning.MAINTAIN,
-        expandsabbr: object = True,
-        expectsabbr: object = True,
-        expectsposix: object = False,
+        allowslong: SupportsBool | NotImplementedType = NotImplemented,
+        allowsshort: SupportsBool | NotImplementedType = NotImplemented,
+        bundling: int | NotImplementedType = NotImplemented,
+        expandsabbr: SupportsBool | NotImplementedType = NotImplemented,
+        expectsabbr: SupportsBool | NotImplementedType = NotImplemented,
+        expectsposix: SupportsBool | NotImplementedType = NotImplemented,
         optdict: (
-            SupportsKeysAndGetitem | Iterable[tuple[Hashable, object]]
-        ) = (),
-        prog: object = None,
-        reconcilesorders: object = True,
-        special: int = Tuning.MAINTAIN,
-        warn: Callable[[PreparseWarning], Any] = str,
+            SupportsKeysAndGetitem
+            | Iterable[tuple[Hashable, int]]
+            | NotImplementedType
+        ) = NotImplemented,
+        prog: object = NotImplemented,
+        reconcilesorders: SupportsBool | NotImplementedType = NotImplemented,
+        special: int | NotImplementedType = NotImplemented,
+        warn: (
+            Callable[[PreparseWarning], Any] | NotImplementedType
+        ) = NotImplemented,
     ) -> None:
-        self._data: dict[str, Any]
-        self._data = dict()
+        self._allowslong = True
+        self._allowsshort = True
+        self._bundling = Tuning.MAINTAIN
+        self._expandsabbr = True
+        self._expectsabbr = True
+        self._expectsposix = False
+        self._optdict = Optdict()
+        self.prog = None
+        self._reconcilesorders = True
+        self._special = Tuning.MAINTAIN
+        self.warn = str
+        if not isinstance(other, NotImplementedType):
+            self.allowslong = other.allowslong
+            self.allowsshort = other.allowsshort
+            self.bundling = other.bundling
+            self.expandsabbr = other.expandsabbr
+            self.expectsabbr = other.expectsabbr
+            self.expectsposix = other.expectsposix
+            self.optdict = other.optdict
+            self.prog = other.prog
+            self.reconcilesorders = other.reconcilesorders
+            self.special = other.special
+            self.warn = other.warn
         self.allowslong = allowslong
         self.allowsshort = allowsshort
         self.bundling = bundling
@@ -59,84 +111,108 @@ class PreParser(Copyable):
         self.warn = warn
 
     @setdoc.basic
-    def __repr__(self: Self) -> str:
+    def __repr__(self: Self, /) -> str:
         return datarepr(type(self).__name__, **self.todict())
 
     @property
-    def allowslong(self: Self) -> bool:
-        return cast(bool, self._data["allowslong"])
+    def allowslong(self: Self, /) -> bool:
+        return self._allowslong
 
     @allowslong.setter
-    def allowslong(self: Self, value: object) -> None:
-        self._data["allowslong"] = bool(value)
+    def allowslong(
+        self: Self, value: SupportsBool | NotImplementedType, /
+    ) -> None:
+        if isinstance(value, NotImplementedType):
+            return
+        self._allowslong = bool(value)
 
     @property
-    def allowsshort(self: Self) -> bool:
-        return cast(bool, self._data["allowsshort"])
+    def allowsshort(self: Self, /) -> bool:
+        return self._allowsshort
 
     @allowsshort.setter
-    def allowsshort(self: Self, value: object) -> None:
-        self._data["allowsshort"] = bool(value)
+    def allowsshort(
+        self: Self, value: SupportsBool | NotImplementedType, /
+    ) -> None:
+        if isinstance(value, NotImplementedType):
+            return
+        self._allowsshort = bool(value)
 
     @property
-    def bundling(self: Self) -> Tuning:
+    def bundling(self: Self, /) -> Tuning:
         "This property decides how to approach the bundling of short options."
-        return cast(Tuning, self._data["bundling"])
+        return self._bundling
 
     @bundling.setter
-    def bundling(self: Self, value: int) -> None:
+    def bundling(self: Self, value: int | NotImplementedType, /) -> None:
         "This property decides how to approach the bundling of short options."
-        self._data["bundling"] = Tuning(value)
+        if isinstance(value, NotImplementedType):
+            return
+        self._bundling = Tuning(value)
 
-    def click(self: Self, cmd: object = True, ctx: object = True) -> Click:
+    def click(
+        self: Self, cmd: SupportsBool = True, ctx: SupportsBool = True
+    ) -> Click:
         "This method returns a decorator that infuses the current instance into parse_args."
         return Click(parser=self, cmd=cmd, ctx=ctx)
 
     @setdoc.basic
-    def copy(self: Self) -> Self:
-        return type(self)(**self.todict())
+    def copy(self: Self, /) -> Self:
+        return type(self)(self)
 
     @property
-    def expandsabbr(self: Self) -> bool:
-        return cast(bool, self._data["expandsabbr"])
+    def expandsabbr(self: Self, /) -> bool:
+        return self._expandsabbr
 
     @expandsabbr.setter
-    def expandsabbr(self: Self, value: object, /) -> None:
-        self._data["expandsabbr"] = bool(value)
+    def expandsabbr(
+        self: Self, value: SupportsBool | NotImplementedType, /
+    ) -> None:
+        if isinstance(value, NotImplementedType):
+            return
+        self._expandsabbr = bool(value)
 
     @property
-    def expectsabbr(self: Self) -> bool:
-        return cast(bool, self._data["expectsabbr"])
+    def expectsabbr(self: Self, /) -> bool:
+        return self._expectsabbr
 
     @expectsabbr.setter
-    def expectsabbr(self: Self, value: object) -> None:
-        self._data["expectsabbr"] = bool(value)
+    def expectsabbr(
+        self: Self, value: SupportsBool | NotImplementedType, /
+    ) -> None:
+        if isinstance(value, NotImplementedType):
+            return
+        self._expectsabbr = bool(value)
 
     @property
-    def expectsposix(self: Self) -> bool:
-        return cast(bool, self._data["expectsposix"])
+    def expectsposix(self: Self, /) -> bool:
+        return self._expectsposix
 
     @expectsposix.setter
-    def expectsposix(self: Self, value: object) -> None:
+    def expectsposix(
+        self: Self, value: SupportsBool | NotImplementedType, /
+    ) -> None:
+        if isinstance(value, NotImplementedType):
+            return
         if value == "infer":
-            self._data["expectsposix"] = "POSIXLY_CORRECT" in os.environ
+            self._expectsposix = "POSIXLY_CORRECT" in os.environ
         else:
-            self._data["expectsposix"] = bool(value)
+            self._expectsposix = bool(value)
 
     @property
-    def optdict(self: Self) -> Optdict:
+    def optdict(self: Self, /) -> Optdict:
         "This property gives a dictionary of options."
-        return cast(Optdict, self._data["optdict"])
+        return self._optdict
 
     @optdict.setter
-    def optdict(self: Self, value: Any) -> None:
+    def optdict(self: Self, value: Any, /) -> None:
         "This property gives a dictionary of options."
         value_: Optdict
-        if "optdict" not in self._data.keys():
-            self._data["optdict"] = Optdict()
+        if isinstance(value, NotImplementedType):
+            return
         value_ = Optdict(value)
-        self._data["optdict"].clear()
-        self._data["optdict"].update(value_)
+        self._optdict.clear()
+        self._optdict.update(value_)
 
     def parse_args(
         self: Self,
@@ -146,25 +222,31 @@ class PreParser(Copyable):
         return process(args, **self.todict())
 
     @property
-    def prog(self: Self) -> str:
+    def prog(self: Self, /) -> str:
         "This property represents the name of the program."
-        return cast(str, self._data["prog"])
+        return cast(str, self._prog)
 
     @prog.setter
     def prog(self: Self, value: object, /) -> None:
         "This property represents the name of the program."
+        if isinstance(value, NotImplementedType):
+            return
         if value is None:
-            self._data["prog"] = str(os.path.basename(sys.argv[0]))
+            self._prog = str(os.path.basename(sys.argv[0]))
         else:
-            self._data["prog"] = str(value)
+            self._prog = str(value)
 
     @property
-    def reconcilesorders(self: Self) -> bool:
-        return cast(bool, self._data["reconcilesorders"])
+    def reconcilesorders(self: Self, /) -> bool:
+        return self._reconcilesorders
 
     @reconcilesorders.setter
-    def reconcilesorders(self: Self, value: object, /) -> None:
-        self._data["reconcilesorders"] = bool(value)
+    def reconcilesorders(
+        self: Self, value: SupportsBool | NotImplementedType, /
+    ) -> None:
+        if isinstance(value, NotImplementedType):
+            return
+        self._reconcilesorders = bool(value)
 
     def reflectClickCommand(self: Self, cmd: cl.Command) -> None:
         "This method causes the current instance to reflect a click.Command object."
@@ -196,37 +278,47 @@ class PreParser(Copyable):
         self.prog = ctx.info_name
 
     @property
-    def special(self: Self) -> Tuning:
+    def special(self: Self, /) -> Tuning:
         "This Tuning property determines the approach towards the special argument."
-        return cast(Tuning, self._data["special"])
+        return self._special
 
     @special.setter
-    def special(self: Self, value: int, /) -> None:
+    def special(self: Self, value: int | NotImplementedType, /) -> None:
         "This Tuning property determines the approach towards the special argument."
-        self._data["special"] = Tuning(value)
+        if isinstance(value, NotImplementedType):
+            return
+        self._special = Tuning(value)
 
-    def todict(self: Self) -> dict[str, Any]:
+    def todict(self: Self, /) -> dict[str, Any]:
         "This method returns a dict representing the current instance."
         ans: dict[str, Any]
-        try:
-            ans = self._data
-        except AttributeError:
-            self._data = dict()
-            return dict()
-        else:
-            return dict(ans)
+        ans = dict()
+        ans["allowslong"] = self.allowslong
+        ans["allowsshort"] = self.allowsshort
+        ans["bundling"] = self.bundling
+        ans["expandsabbr"] = self.expandsabbr
+        ans["expectsabbr"] = self.expectsabbr
+        ans["expectsposix"] = self.expectsposix
+        ans["optdict"] = self.optdict
+        ans["prog"] = self.prog
+        ans["reconcilesorders"] = self.reconcilesorders
+        ans["special"] = self.special
+        ans["warn"] = self.warn
+        return ans
 
     @property
     def warn(
         self: Self,
     ) -> Callable[[PreparseWarning], Any]:
         "This property gives a function that takes in the warnings."
-        return cast(Callable[[PreparseWarning], Any], self._data["warn"])
+        return self._warn
 
     @warn.setter
     def warn(
         self: Self,
-        value: Callable[[PreparseWarning], Any],
+        value: Callable[[PreparseWarning], Any] | NotImplementedType,
     ) -> None:
         "This property gives a function that takes in the warnings."
-        self._data["warn"] = tofunc(value)
+        if isinstance(value, NotImplementedType):
+            return
+        self._warn = tofunc(value)
