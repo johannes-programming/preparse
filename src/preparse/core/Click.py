@@ -11,6 +11,8 @@ from typing import TYPE_CHECKING, Any, Self, cast, overload
 import setdoc
 from copyable import Copyable
 
+from preparse.typing.SupportsBool import SupportsBool
+
 if TYPE_CHECKING:
     from .PreParser import PreParser
 
@@ -19,8 +21,8 @@ if TYPE_CHECKING:
 class Click(Copyable):
 
     parser: PreParser
-    cmd: object = True
-    ctx: object = True
+    cmd: SupportsBool = True
+    ctx: SupportsBool = True
 
     @overload
     def __call__(self: Self, target: FunctionType) -> FunctionType:

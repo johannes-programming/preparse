@@ -39,7 +39,7 @@ class Optdict(
                 Optional[int], cmp3.cmp(self._data, other, mode="eq_strict")
             )
 
-    __init__ = datahold.HoldDict[Hashable, object].__init__
+    __init__ = datahold.HoldDict[Hashable, int].__init__
 
     @property
     def data(self: Self, /) -> frozendict[str, Nargs]:
@@ -48,13 +48,13 @@ class Optdict(
     @data.setter
     def data(
         self: Self,
-        value: SupportsKeysAndGetitem | Iterable[tuple[Hashable, object]],
+        value: SupportsKeysAndGetitem | Iterable[tuple[Hashable, int | None]],
         /,
     ) -> None:
-        a: frozendict[Hashable, object]
+        a: frozendict[Hashable, int]
         b: list[tuple[str, Nargs]]
         x: Hashable
-        y: object
+        y: int
         a = frozendict(value)  # type: ignore[arg-type]
         b = list()
         for x, y in a.items():
