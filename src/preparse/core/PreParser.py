@@ -14,11 +14,11 @@ from datarepr import datarepr
 from tofunc import tofunc
 
 from preparse._processing import process
+from preparse.abc.Message import Message
 from preparse.core.Optdict import Optdict
 from preparse.enums.Tuning import Tuning
 from preparse.typing.SupportsBool import SupportsBool
 from preparse.typing.SupportsKeysAndGetitem import SupportsKeysAndGetitem
-from preparse.warnings.PreparseWarning import PreparseWarning
 
 Key = TypeVar("Key", bound=Hashable)
 
@@ -48,7 +48,7 @@ class PreParser(Copyable):
     _prog: str
     _reconcilesorders: bool
     _special: Tuning
-    _warn: Callable[[PreparseWarning], Any]
+    _warn: Callable[[Message], Any]
 
     @setdoc.basic
     def __init__(
@@ -70,9 +70,7 @@ class PreParser(Copyable):
         prog: object = NotImplemented,
         reconcilesorders: SupportsBool | NotImplementedType = NotImplemented,
         special: int | NotImplementedType = NotImplemented,
-        warn: (
-            Callable[[PreparseWarning], Any] | NotImplementedType
-        ) = NotImplemented,
+        warn: Callable[[Message], Any] | NotImplementedType = NotImplemented,
     ) -> None:
         self._allowslong = True
         self._allowsshort = True
@@ -273,14 +271,14 @@ class PreParser(Copyable):
     @property
     def warn(
         self: Self,
-    ) -> Callable[[PreparseWarning], Any]:
+    ) -> Callable[[Message], Any]:
         "This property gives a function that takes in the warnings."
         return self._warn
 
     @warn.setter
     def warn(
         self: Self,
-        value: Callable[[PreparseWarning], Any] | NotImplementedType,
+        value: Callable[[Message], Any] | NotImplementedType,
     ) -> None:
         "This property gives a function that takes in the warnings."
         if isinstance(value, NotImplementedType):

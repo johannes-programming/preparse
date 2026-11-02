@@ -1,11 +1,11 @@
-__all__: list[str] = ["PreparseInvalidOptionWarning"]
+__all__: list[str] = ["InvalidOptionMessage"]
 
 from typing import Self
 
-from preparse.warnings.PreparseDualWarning import PreparseDualWarning
+from preparse.abc.DualMessage import DualMessage
 
 
-class PreparseInvalidOptionWarning(PreparseDualWarning):
+class InvalidOptionMessage(DualMessage):
 
     @classmethod
     def _longmsg(cls: type[Self]) -> str:

@@ -1,15 +1,15 @@
-__all__: list[str] = ["PreparseDualWarning"]
+__all__: list[str] = ["DualMessage"]
 
 from abc import abstractmethod
 from typing import Self, cast
 
 import setdoc
 
+from preparse.abc.Message import Message
 from preparse.typing.SupportsBool import SupportsBool
-from preparse.warnings.PreparseWarning import PreparseWarning
 
 
-class PreparseDualWarning(PreparseWarning):
+class DualMessage(Message):
 
     @setdoc.basic
     def __post_init__(

@@ -14,23 +14,17 @@ from collections.abc import Iterator
 from typing import Any, Self
 from unittest.mock import patch
 
+from preparse.abc.Message import Message
 from preparse.core.Optdict import Optdict
 from preparse.core.PreParser import PreParser
 from preparse.enums.Nargs import Nargs
 from preparse.enums.Tuning import Tuning
-from preparse.warnings.PreparseAmbiguousOptionWarning import (
-    PreparseAmbiguousOptionWarning,
+from preparse.messaging.AmbiguousOptionMessage import AmbiguousOptionMessage
+from preparse.messaging.InvalidOptionMessage import InvalidOptionMessage
+from preparse.messaging.RequiredArgumentMessage import RequiredArgumentMessage
+from preparse.messaging.UnallowedArgumentMessage import (
+    UnallowedArgumentMessage,
 )
-from preparse.warnings.PreparseInvalidOptionWarning import (
-    PreparseInvalidOptionWarning,
-)
-from preparse.warnings.PreparseRequiredArgumentWarning import (
-    PreparseRequiredArgumentWarning,
-)
-from preparse.warnings.PreparseUnallowedArgumentWarning import (
-    PreparseUnallowedArgumentWarning,
-)
-from preparse.warnings.PreparseWarning import PreparseWarning
 
 
 class WarningTests(unittest.TestCase):
@@ -54,7 +48,7 @@ class WarningTests(unittest.TestCase):
         )
         self.assertEqual(len(warnings), 2)
         self.assertTrue(
-            all(isinstance(w, PreparseInvalidOptionWarning) for w in warnings)
+            all(isinstance(w, InvalidOptionMessage) for w in warnings)
         )
         self.assertEqual(
             (warnings[0].option, warnings[0].islong), ("--unknown", True)
@@ -79,7 +73,7 @@ class WarningTests(unittest.TestCase):
 
     def test_ambiguous_abbreviation_reports_candidates(self: Self, /) -> None:
         parser: PreParser
-        warning: PreparseAmbiguousOptionWarning
+        warning: AmbiguousOptionMessage
         warnings: list[Any]
         parser, warnings = self.parser_with_warnings(
             optdict={"--alpha": 0, "--alpine": 0}
@@ -87,7 +81,7 @@ class WarningTests(unittest.TestCase):
         self.assertEqual(parser.parse_args(["--al"]), ["--al"])
         self.assertEqual(len(warnings), 1)
         warning = warnings[0]
-        self.assertIsInstance(warning, PreparseAmbiguousOptionWarning)
+        self.assertIsInstance(warning, AmbiguousOptionMessage)
         self.assertEqual(warning.option, "--al")
         self.assertEqual(warning.possibilities, ("--alpha", "--alpine"))
         self.assertEqual(warning.prog, "example")
@@ -124,9 +118,7 @@ class WarningTests(unittest.TestCase):
                 )
                 self.assertEqual(parser.parse_args(args), args)
                 self.assertEqual(len(warnings), 1)
-                self.assertIsInstance(
-                    warnings[0], PreparseRequiredArgumentWarning
-                )
+                self.assertIsInstance(warnings[0], RequiredArgumentMessage)
                 self.assertEqual(
                     (warnings[0].option, warnings[0].islong), (option, islong)
                 )
@@ -138,7 +130,7 @@ class WarningTests(unittest.TestCase):
         parser, warnings = self.parser_with_warnings(optdict={"--flag": 0})
         self.assertEqual(parser.parse_args(["--flag=on"]), ["--flag=on"])
         self.assertEqual(len(warnings), 1)
-        self.assertIsInstance(warnings[0], PreparseUnallowedArgumentWarning)
+        self.assertIsInstance(warnings[0], UnallowedArgumentMessage)
         self.assertEqual(warnings[0].option, "--flag")
         self.assertEqual(
             str(warnings[0]),
@@ -166,7 +158,7 @@ class WarningTests(unittest.TestCase):
             raise warning
 
         parser = PreParser(prog="strict", warn=reject)
-        with self.assertRaises(PreparseInvalidOptionWarning) as caught:
+        with self.assertRaises(InvalidOptionMessage) as caught:
             parser.parse_args(["--unknown"])
         self.assertEqual(caught.exception.prog, "strict")
         self.assertEqual(caught.exception.option, "--unknown")
@@ -174,24 +166,20 @@ class WarningTests(unittest.TestCase):
     def test_warning_object_copy_dict_repr_and_mutable_attributes(
         self: Self, /
     ) -> None:
-        duplicate: PreparseWarning
-        examples: list[PreparseWarning]
-        original: PreparseWarning
+        duplicate: Message
+        examples: list[Message]
+        original: Message
         examples = [
-            PreparseInvalidOptionWarning(
-                prog="tool", option="-x", islong=False
-            ),
-            PreparseRequiredArgumentWarning(
-                prog="tool", option="--out", islong=True
-            ),
-            PreparseUnallowedArgumentWarning(prog="tool", option="--flag"),
-            PreparseAmbiguousOptionWarning(
+            InvalidOptionMessage(prog="tool", option="-x", islong=False),
+            RequiredArgumentMessage(prog="tool", option="--out", islong=True),
+            UnallowedArgumentMessage(prog="tool", option="--flag"),
+            AmbiguousOptionMessage(
                 prog="tool", option="--fo", possibilities=["--foo", "--force"]
             ),
         ]
         for original in examples:
             with self.subTest(warning=type(original).__name__):
-                self.assertIsInstance(original, PreparseWarning)
+                self.assertIsInstance(original, Message)
                 self.assertEqual(original.todict()["prog"], "tool")
                 self.assertIn(original.getmsg(), str(original))
                 self.assertIn(type(original).__name__, repr(original))
@@ -208,8 +196,8 @@ class WarningTests(unittest.TestCase):
 
     def test_warning_data_is_defensively_copied(self: Self, /) -> None:
         exported: dict[str, Any]
-        warning: PreparseAmbiguousOptionWarning
-        warning = PreparseAmbiguousOptionWarning(
+        warning: AmbiguousOptionMessage
+        warning = AmbiguousOptionMessage(
             prog="tool", option="--a", possibilities=["--abc"]
         )
         exported = warning.todict()
@@ -290,12 +278,12 @@ class ConfigurationTests(unittest.TestCase):
         output: list[str]
         parser: PreParser
         reported: list[Any]
-        warning_type: type[PreparseWarning] | None
+        warning_type: type[Message] | None
         for expands, expects, output, warning_type in (
             (True, True, ["--verbose"], None),
             (False, True, ["--ver"], None),
-            (True, False, ["--ver"], PreparseInvalidOptionWarning),
-            (False, False, ["--ver"], PreparseInvalidOptionWarning),
+            (True, False, ["--ver"], InvalidOptionMessage),
+            (False, False, ["--ver"], InvalidOptionMessage),
         ):
             with self.subTest(expands=expands, expects=expects):
                 reported = []
@@ -317,7 +305,7 @@ class ConfigurationTests(unittest.TestCase):
     def test_no_option_syntax_is_truly_positional_only(self: Self, /) -> None:
         args: list[str]
         parser: PreParser
-        recorded: list[PreparseWarning]
+        recorded: list[Message]
         recorded = []
         parser = PreParser(
             allowslong=False,

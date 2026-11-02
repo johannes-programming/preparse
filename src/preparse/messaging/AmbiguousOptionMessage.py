@@ -1,14 +1,14 @@
-__all__: list[str] = ["PreparseAmbiguousOptionWarning"]
+__all__: list[str] = ["AmbiguousOptionMessage"]
 
 from collections.abc import Iterable
 from typing import Any, Self, cast
 
 import setdoc
 
-from preparse.warnings.PreparseLongonlyWarning import PreparseLongonlyWarning
+from preparse.abc.LongonlyMessage import LongonlyMessage
 
 
-class PreparseAmbiguousOptionWarning(PreparseLongonlyWarning):
+class AmbiguousOptionMessage(LongonlyMessage):
 
     @setdoc.basic
     def __post_init__(
