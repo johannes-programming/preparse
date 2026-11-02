@@ -1,23 +1,36 @@
 __all__: list[str] = ["AmbiguousOptionMessage"]
 
 from collections.abc import Iterable
-from typing import Any, Self, cast
+from types import NotImplementedType
+from typing import Any, Self
 
 import setdoc
 
-from preparse.abc.LongonlyMessage import LongonlyMessage
+from preparse.abc.Message import Message
 
 
-class AmbiguousOptionMessage(LongonlyMessage):
+class AmbiguousOptionMessage(Message):
+
+    __slots__ = (
+        "_option",
+        "_possibilities",
+        "_prog",
+    )
 
     @setdoc.basic
-    def __post_init__(
+    def __init__(
         self: Self,
+        other: Self | NotImplementedType = NotImplemented,
+        /,
         *,
-        option: object,
-        possibilities: Iterable[object],
-        prog: object,
+        option: object = NotImplemented,
+        possibilities: Iterable[object] | NotImplementedType = NotImplemented,
+        prog: object = NotImplemented,
     ) -> None:
+        if not isinstance(other, NotImplementedType):
+            self.prog = other.prog
+            self.option = other.option
+            self.possibilities = other.possibilities
         self.prog = prog
         self.option = option
         self.possibilities = possibilities
@@ -32,9 +45,38 @@ class AmbiguousOptionMessage(LongonlyMessage):
         return ans
 
     @property
-    def possibilities(self: Self) -> tuple[str, ...]:
-        return cast(tuple[str, ...], self._data["possibilities"])
+    def option(self: Self, /) -> str:
+        return self._option
+
+    @option.setter
+    def option(self: Self, value: object, /) -> None:
+        if isinstance(value, NotImplementedType):
+            return
+        self._option = str(value)
+
+    @property
+    def possibilities(self: Self, /) -> tuple[str, ...]:
+        return self._possibilities
 
     @possibilities.setter
     def possibilities(self: Self, value: Iterable[object], /) -> None:
-        self._data["possibilities"] = tuple(map(str, value))
+        if isinstance(value, NotImplementedType):
+            return
+        self._possibilities = tuple(map(str, value))
+
+    @property
+    def prog(self: Self, /) -> str:
+        return self._prog
+
+    @prog.setter
+    def prog(self: Self, value: object, /) -> None:
+        if isinstance(value, NotImplementedType):
+            return
+        self._prog = str(value)
+
+    def todict(self: Self, /) -> dict[str, Any]:
+        return dict(
+            option=self.option,
+            possibilities=self.possibilities,
+            prog=self.prog,
+        )

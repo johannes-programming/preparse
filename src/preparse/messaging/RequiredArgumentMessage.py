@@ -1,16 +1,16 @@
 __all__: list[str] = ["RequiredArgumentMessage"]
 
-from typing import Self
 
 from preparse.abc.DualMessage import DualMessage
 
 
 class RequiredArgumentMessage(DualMessage):
+    __slots__ = ()
 
-    @classmethod
-    def _longmsg(cls: type[Self]) -> str:
+    @staticmethod
+    def _longmsg() -> str:
         return "option '%s' requires an argument"
 
-    @classmethod
-    def _shortmsg(cls: type[Self]) -> str:
+    @staticmethod
+    def _shortmsg() -> str:
         return "option requires an argument -- '%s'"

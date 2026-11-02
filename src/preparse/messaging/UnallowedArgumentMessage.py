@@ -1,21 +1,56 @@
 __all__: list[str] = ["UnallowedArgumentMessage"]
 
-from typing import Self
+from types import NotImplementedType
+from typing import Any, Self
 
-import setdoc
-
-from preparse.abc.LongonlyMessage import LongonlyMessage
+from preparse.abc.Message import Message
 
 
-class UnallowedArgumentMessage(LongonlyMessage):
+class UnallowedArgumentMessage(Message):
 
+    __slots__ = ("_option", "_prog")
     # option is always full key without value
 
-    @setdoc.basic
-    def __post_init__(self: Self, *, option: object, prog: object) -> None:
+    def __init__(
+        self: Self,
+        other: Self | NotImplementedType = NotImplemented,
+        /,
+        *,
+        option: object = NotImplemented,
+        prog: object = NotImplemented,
+    ) -> None:
+        if not isinstance(other, NotImplementedType):
+            self.prog = other.prog
+            self.option = other.option
         self.prog = prog
         self.option = option
 
     def getmsg(self: Self) -> str:
         "This method returns the core message."
         return "option '%s' doesn't allow an argument" % self.option
+
+    @property
+    def option(self: Self, /) -> str:
+        return self._option
+
+    @option.setter
+    def option(self: Self, value: object, /) -> None:
+        if isinstance(value, NotImplementedType):
+            return
+        self._option = str(value)
+
+    @property
+    def prog(self: Self, /) -> str:
+        return self._prog
+
+    @prog.setter
+    def prog(self: Self, value: object, /) -> None:
+        if isinstance(value, NotImplementedType):
+            return
+        self._prog = str(value)
+
+    def todict(self: Self) -> dict[str, Any]:
+        return dict(
+            option=self.option,
+            prog=self.prog,
+        )
