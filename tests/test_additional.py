@@ -3,7 +3,7 @@ from __future__ import annotations
 __all__: list[str] = [
     "ArgumentInputTests",
     "ConfigurationTests",
-    "OptdictAndCopyTests",
+    "GetoptConfigurationTests",
     "WarningTests",
 ]
 
@@ -15,9 +15,7 @@ from typing import Any, Self
 from unittest.mock import patch
 
 from preparse.abc.Message import Message
-from preparse.core.Optdict import Optdict
 from preparse.core.PreParser import PreParser
-from preparse.enum.Nargs import Nargs
 from preparse.enum.Tuning import Tuning
 from preparse.messaging.AmbiguousOptionMessage import AmbiguousOptionMessage
 from preparse.messaging.InvalidOptionMessage import InvalidOptionMessage
@@ -35,7 +33,7 @@ class WarningTests(unittest.TestCase):
     def test_long_and_short_invalid_options(self: Self, /) -> None:
         parser: PreParser
         warnings: list[Any]
-        parser = self.parser_with_warnings(optdict={"--good": 0})
+        parser = self.parser_with_warnings(longopts=("good",))
         preparsed, warnings = parser.parse_args(["--unknown", "-z"])
         self.assertEqual(preparsed, ["--unknown", "-z"])
         self.assertEqual(len(warnings), 2)
@@ -68,9 +66,7 @@ class WarningTests(unittest.TestCase):
         parser: PreParser
         warning: AmbiguousOptionMessage
         warnings: list[Any]
-        parser = self.parser_with_warnings(
-            optdict={"--alpha": 0, "--alpine": 0}
-        )
+        parser = self.parser_with_warnings(longopts=("alpha", "alpine"))
         preparsed, warnings = parser.parse_args(["--al"])
         self.assertEqual(preparsed, ["--al"])
         self.assertEqual(len(warnings), 1)
@@ -108,7 +104,7 @@ class WarningTests(unittest.TestCase):
         ):
             with self.subTest(args=args):
                 parser = self.parser_with_warnings(
-                    optdict={"--output": 1, "-o": 1}
+                    shortsopts="o:", longopts=("output=",)
                 )
                 preparsed, warnings = parser.parse_args(args)
                 self.assertEqual(preparsed, args)
@@ -122,7 +118,7 @@ class WarningTests(unittest.TestCase):
     def test_value_on_flag_is_not_silently_accepted(self: Self, /) -> None:
         parser: PreParser
         warnings: list[Any]
-        parser = self.parser_with_warnings(optdict={"--flag": 0})
+        parser = self.parser_with_warnings(longopts=("flag",))
         preparsed, warnings = parser.parse_args(["--flag=on"])
         self.assertEqual(preparsed, ["--flag=on"])
         self.assertEqual(len(warnings), 1)
@@ -138,7 +134,7 @@ class WarningTests(unittest.TestCase):
         parser: PreParser
         warnings: list[Any]
         parser = self.parser_with_warnings(
-            optdict={"--flag": 0, "--output": 1, "--maybe": 2}
+            longopts=("flag", "maybe=?", "output=")
         )
         args = ["--flag", "--output", "file", "--maybe=auto"]
         preparsed, warnings = parser.parse_args(args)
@@ -215,7 +211,7 @@ class ArgumentInputTests(unittest.TestCase):
     def test_generator_is_consumed_once(self: Self, /) -> None:
         consumed: list[Any]
         parser: PreParser
-        parser = PreParser(optdict={"--flag": 0})
+        parser = PreParser(longopts=("flag",))
         consumed = []
 
         def generated() -> Iterator[str]:
@@ -231,7 +227,7 @@ class ArgumentInputTests(unittest.TestCase):
     def test_none_uses_sys_argv_and_prog_uses_basename(self: Self, /) -> None:
         parser: PreParser
         with patch.object(sys, "argv", ["/tmp/mytool.py", "--flag", "tail"]):
-            parser = PreParser(optdict={"--flag": 0})
+            parser = PreParser(longopts=("flag",))
             self.assertEqual(parser.prog, "mytool.py")
             preparsed, messages = parser.parse_args(None)
             self.assertEqual(preparsed, ["--flag", "tail"])
@@ -244,13 +240,13 @@ class ArgumentInputTests(unittest.TestCase):
         self: Self, /
     ) -> None:
         parser: PreParser
-        parser = PreParser(allowslong=False, allowsshort=False)
+        parser = PreParser(longopts=None, shortsopts=None)
         preparsed, messages = parser.parse_args([7, None, True, "-z"])
         self.assertEqual(
             preparsed,
             ["7", "None", "True", "-z"],
         )
-        parser = PreParser(optdict={"--number": 1})
+        parser = PreParser(longopts=("number=",))
         preparsed, messages = parser.parse_args(["--number", 42])
         self.assertEqual(preparsed, ["--number", "42"])
 
@@ -290,7 +286,7 @@ class ConfigurationTests(unittest.TestCase):
                 reported = []
 
                 parser = PreParser(
-                    optdict={"--verbose": 0},
+                    longopts=("verbose",),
                     expandsabbr=expands,
                     expectsabbr=expects,
                 )
@@ -305,8 +301,8 @@ class ConfigurationTests(unittest.TestCase):
         parser: PreParser
         recorded: list[Message]
         parser = PreParser(
-            allowslong=False,
-            allowsshort=False,
+            longopts=None,
+            shortsopts=None,
             expectsposix=True,
             reconcilesorders=True,
         )
@@ -322,9 +318,8 @@ class ConfigurationTests(unittest.TestCase):
         parser: PreParser
         recorded: list[Any]
         parser = PreParser(
-            allowslong=False,
-            allowsshort=True,
-            optdict={"--": 0, "-x": 1},
+            longopts=None,
+            shortsopts="-x:",
         )
         preparsed, recorded = parser.parse_args(["--x", "value"])
         self.assertEqual(preparsed, ["--x", "value"])
@@ -346,7 +341,7 @@ class ConfigurationTests(unittest.TestCase):
         for posix, reconcile, expected in cases:
             with self.subTest(posix=posix, reconcilesorders=reconcile):
                 parser = PreParser(
-                    optdict={"--flag": 0},
+                    longopts=("flag",),
                     expectsposix=posix,
                     reconcilesorders=reconcile,
                 )
@@ -375,7 +370,7 @@ class ConfigurationTests(unittest.TestCase):
         )
         for tuning, args, expected in cases:
             with self.subTest(tuning=tuning, args=args):
-                parser = PreParser(optdict={"--flag": 0}, special=tuning)
+                parser = PreParser(longopts=("flag",), special=tuning)
                 preparsed, messages = parser.parse_args(args)
                 self.assertEqual(preparsed, expected)
 
@@ -390,163 +385,135 @@ class ConfigurationTests(unittest.TestCase):
         ):
             with self.subTest(tuning=tuning):
                 parser = PreParser(
-                    optdict={"-a": 0, "-b": 0, "--flag": 0},
+                    shortsopts="ab",
+                    longopts=("flag",),
                     bundling=tuning,
                 )
                 preparsed, messages = parser.parse_args(args)
                 self.assertEqual(preparsed, expected)
 
 
-class OptdictAndCopyTests(unittest.TestCase):
-    def test_optdict_coerces_keys_and_falls_back_on_noninteger_values(
-        self: Self, /
-    ) -> None:
-        name: str
-        options: Optdict
-        options = Optdict(
-            {
-                5: 0,
-                "--required": 1,
-                "--unknown": 999,
-                "--none": None,
-                "--string": None,
-            }
+class GetoptConfigurationTests(unittest.TestCase):
+    def test_default_and_disabled_option_kinds(self: Self, /) -> None:
+        parser = PreParser()
+        self.assertEqual(parser.shortsopts, "")
+        self.assertEqual(parser.longopts, ())
+        parser.shortsopts = None
+        parser.longopts = None
+        self.assertEqual(
+            parser.parse_args(["-a", "--flag", "--"]),
+            (["-a", "--flag", "--"], []),
         )
-        self.assertEqual(options["5"], Nargs.NO_ARGUMENT)
-        self.assertEqual(options["--required"], Nargs.REQUIRED_ARGUMENT)
-        for name in ("--unknown", "--none", "--string"):
-            self.assertEqual(options[name], Nargs.OPTIONAL_ARGUMENT)
-        self.assertEqual(tuple(options.keys()), tuple(sorted(options.keys())))
 
-    def test_optdict_accepts_iterables_and_its_copy_is_independent(
+    def test_short_and_long_argument_modes(self: Self, /) -> None:
+        parser = PreParser(
+            shortsopts="ab:c::",
+            longopts=("flag", "output=", "maybe=?"),
+            prog="example",
+        )
+        original = [
+            "-a",
+            "-bfile",
+            "-cdata",
+            "--flag",
+            "--output",
+            "path",
+            "--maybe=val",
+        ]
+        output, warnings = parser.parse_args(original)
+        self.assertEqual(output, original)
+        self.assertEqual(warnings, [])
+        output, warnings = parser.parse_args(["-b"])
+        self.assertEqual(output, ["-b"])
+        self.assertEqual(len(warnings), 1)
+        self.assertIsInstance(warnings[0], RequiredArgumentMessage)
+
+    def test_getopt_exact_long_option_takes_precedence(self: Self, /) -> None:
+        parser = PreParser(longopts=("mode=", "mode"), prog="example")
+        result, warnings = parser.parse_args(["--mode"])
+        self.assertEqual(result, ["--mode"])
+        self.assertEqual(warnings, [])
+        result, warnings = parser.parse_args(["--mo"])
+        self.assertEqual(result, ["--mo"])
+        self.assertIsInstance(warnings[0], AmbiguousOptionMessage)
+
+    def test_optional_arguments_do_not_consume_following_token(
         self: Self, /
     ) -> None:
-        copy: Optdict
-        original: Optdict
-        original = Optdict([("--flag", 0), (17, 1)])
-        copy = original.copy()
-        self.assertIsNot(original, copy)
-        self.assertEqual(dict(original.items()), dict(copy.items()))
-        copy.update({"--extra": 2})
-        self.assertNotIn("--extra", original)
-        self.assertEqual(copy["--extra"], Nargs.OPTIONAL_ARGUMENT)
-
-    def test_setting_parser_optdict_replaces_contents_not_reference(
-        self: Self, /
-    ) -> None:
-        options_before: Optdict
-        parser: PreParser
-        parser = PreParser(optdict={"--old": 0})
-        options_before = parser.optdict
-        parser.optdict = {"--new": 1, 99: 0}
-        self.assertIs(parser.optdict, options_before)
-        self.assertNotIn("--old", parser.optdict)
-        self.assertEqual(parser.optdict["--new"], Nargs.REQUIRED_ARGUMENT)
-        self.assertEqual(parser.optdict["99"], Nargs.NO_ARGUMENT)
-        parser.optdict.clear()
-        self.assertEqual(dict(parser.optdict.items()), {})
+        parser = PreParser(shortsopts="x::", longopts=("maybe=?",))
+        result, warnings = parser.parse_args(
+            ["-x", "value", "--maybe", "tail"]
+        )
+        self.assertEqual(result, ["-x", "--maybe", "value", "tail"])
+        self.assertEqual(warnings, [])
 
     def test_copy_carries_all_config_and_is_independent(self: Self, /) -> None:
-        attr: str
-        copy: PreParser
-        original: PreParser
-
         original = PreParser(
-            allowslong=False,
-            allowsshort=True,
+            shortsopts="a",
+            longopts=None,
             bundling=Tuning.MINIMIZE,
             expandsabbr=False,
             expectsabbr=False,
             expectsposix=True,
-            optdict={"-a": 0},
             prog="original",
             reconcilesorders=False,
             special=Tuning.MAXIMIZE,
         )
         copy = original.copy()
         self.assertIsNot(copy, original)
-        self.assertIsNot(copy.optdict, original.optdict)
-        for attr in (
-            "allowslong",
-            "allowsshort",
-            "bundling",
-            "expandsabbr",
-            "expectsabbr",
-            "expectsposix",
-            "optdict",
-            "prog",
-            "reconcilesorders",
-            "special",
-        ):
-            with self.subTest(attribute=attr):
-                self.assertEqual(getattr(copy, attr), getattr(original, attr))
-        copy.allowslong = True
-        copy.optdict = {"--new": 1}
+        self.assertEqual(copy.todict(), original.todict())
+        copy.shortsopts = "b:"
+        copy.longopts = ("new=",)
         copy.prog = "copy"
-        self.assertFalse(original.allowslong)
-        self.assertEqual(
-            dict(original.optdict.items()), {"-a": Nargs.NO_ARGUMENT}
-        )
+        self.assertEqual(original.shortsopts, "a")
+        self.assertIsNone(original.longopts)
         self.assertEqual(original.prog, "original")
 
     def test_construction_from_another_parser_allows_overrides(
         self: Self, /
     ) -> None:
-        derived: PreParser
-        original: PreParser
-        original = PreParser(
-            optdict={"--one": 0}, expandsabbr=True, prog="base"
-        )
+        original = PreParser(longopts=("one",), expandsabbr=True, prog="base")
         derived = PreParser(
-            original, expandsabbr=False, optdict={"--two": 1}, prog=123
+            original, expandsabbr=False, longopts=("two=",), prog=123
         )
         self.assertFalse(derived.expandsabbr)
         self.assertTrue(original.expandsabbr)
         self.assertEqual(derived.prog, "123")
         self.assertEqual(original.prog, "base")
-        self.assertEqual(
-            dict(derived.optdict.items()), {"--two": Nargs.REQUIRED_ARGUMENT}
-        )
-        self.assertEqual(
-            dict(original.optdict.items()), {"--one": Nargs.NO_ARGUMENT}
-        )
+        self.assertEqual(derived.longopts, ("two=",))
+        self.assertEqual(original.longopts, ("one",))
 
     def test_parser_repr_and_todict_are_complete(self: Self, /) -> None:
-        expected_keys: set[str]
-        exported: dict[str, Any]
-        parser: PreParser
-        parser = PreParser(optdict={"--flag": 0}, prog="demo")
-        expected_keys = {
-            "allowslong",
-            "allowsshort",
-            "bundling",
-            "expandsabbr",
-            "expectsabbr",
-            "expectsposix",
-            "optdict",
-            "prog",
-            "reconcilesorders",
-            "special",
-        }
-        exported = parser.todict()
-        self.assertEqual(set(exported), expected_keys)
-        self.assertEqual(exported["prog"], "demo")
+        parser = PreParser(longopts=("flag",), prog="demo")
+        self.assertEqual(
+            set(parser.todict()),
+            {
+                "shortsopts",
+                "longopts",
+                "bundling",
+                "expandsabbr",
+                "expectsabbr",
+                "expectsposix",
+                "prog",
+                "reconcilesorders",
+                "special",
+            },
+        )
+        self.assertEqual(parser.todict()["prog"], "demo")
         self.assertIn("PreParser", repr(parser))
+        exported = parser.todict()
         exported["prog"] = "changed"
         self.assertEqual(parser.prog, "demo")
 
     def test_tuning_enum_valid_values_and_missing_fallback(
         self: Self, /
     ) -> None:
-        parser: PreParser
-        unknown: int
         self.assertEqual(Tuning.MINIMIZE, 0)
         self.assertEqual(Tuning.MAXIMIZE, 1)
         self.assertEqual(Tuning.MAINTAIN, 2)
         for unknown in (-1, 17):
             with self.subTest(value=unknown):
                 self.assertIs(Tuning(unknown), Tuning.MAINTAIN)
-                self.assertIs(Nargs(unknown), Nargs.OPTIONAL_ARGUMENT)
         parser = PreParser(bundling=999, special=-1)
         self.assertIs(parser.bundling, Tuning.MAINTAIN)
         self.assertIs(parser.special, Tuning.MAINTAIN)

@@ -5,7 +5,6 @@ from typing import Any, Optional, Self
 import setdoc
 
 from preparse._items.Option import Option
-from preparse.enum.Nargs import Nargs
 
 
 class Bundle(Option):
@@ -13,7 +12,7 @@ class Bundle(Option):
     __slots__ = (
         "_chars",
         "_joined",
-        "_nargs",
+        "_argmode",
         "_right",
     )
 
@@ -23,16 +22,16 @@ class Bundle(Option):
         *,
         chars: str,
         joined: bool = False,
-        nargs: Any,
+        argmode: str,
         right: Optional[str] = None,
     ) -> None:
         self.chars = chars
         self.joined = joined
-        self.nargs = nargs
+        self.argmode = argmode
         self.right = right
 
     @classmethod
-    def _split_allowslong(cls: type[Self], chars: str) -> list[str]:
+    def _split_long_enabled(cls: type[Self], chars: str) -> list[str]:
         ans: list[str]
         x: str
         ans = list()
@@ -80,17 +79,17 @@ class Bundle(Option):
         else:
             return ["-" + self.chars, self.right]
 
-    def split(self: Self, *, allowslong: bool) -> list[Self]:
+    def split(self: Self, *, long_enabled: bool) -> list[Self]:
         ans: list[Self]
         parts: list[str]
         x: str
-        if allowslong:
-            parts = self._split_allowslong(self.chars)
+        if long_enabled:
+            parts = self._split_long_enabled(self.chars)
         else:
             parts = self._split_shortonly(self.chars)
         ans = list()
         for x in parts:
-            ans.append(type(self)(chars=x, nargs=Nargs.NO_ARGUMENT))
+            ans.append(type(self)(chars=x, argmode=""))
         self.chars = ans[-1].chars
         ans[-1] = self
         return ans

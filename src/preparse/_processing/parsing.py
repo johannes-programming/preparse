@@ -1,6 +1,5 @@
 __all__: list[str] = ["parse"]
 
-from collections.abc import Iterable
 from types import FunctionType
 from typing import Any, Generator
 
@@ -10,7 +9,6 @@ from preparse._items.Long import Long
 from preparse._items.Option import Option
 from preparse._items.Special import Special
 from preparse.abc.Message import Message
-from preparse.enum.Nargs import Nargs
 from preparse.messaging.AmbiguousOptionMessage import (
     AmbiguousOptionMessage as PAOW,
 )
@@ -40,23 +38,24 @@ def parse_bundling(
     arg: str,
     *,
     cause: FunctionType,
-    optdict: dict[Any, Any],
+    shortsopts: str,
 ) -> Bundle:
     ans: Bundle
     x: int
     y: str
-    ans = Bundle(chars="", nargs=Nargs.NO_ARGUMENT)
+    ans = Bundle(chars="", argmode="")
     for x, y in enumerate(arg):
         if x == 0:
             continue
         ans.chars += y
-        try:
-            ans.nargs = optdict["-" + y]
-        except KeyError:
+        mode = short_argmode(y, shortsopts)
+        if mode is None:
             cause(PIOW, option=y, islong=False)
-        if ans.nargs == Nargs.NO_ARGUMENT:
             continue
-        if ans.nargs == Nargs.OPTIONAL_ARGUMENT or x < len(arg) - 1:
+        ans.argmode = mode
+        if mode == "":
+            continue
+        if mode == "::" or x < len(arg) - 1:
             ans.joined = True
             ans.right = arg[x + 1 :]
         return ans
@@ -77,11 +76,10 @@ def parse_cause(
 def parse_generator(
     items: list[Any],
     *,
-    allowslong: bool,
-    allowsshort: bool,
+    shortsopts: str | None,
+    longopts: tuple[str, ...] | None,
     expectsabbr: bool,
     expectsposix: bool,
-    optdict: dict[Any, Any],
     prog: str,
     warn: FunctionType,
 ) -> Generator[Any, Any, Any]:
@@ -89,7 +87,7 @@ def parse_generator(
     cause: FunctionType
     item: Any
     last: Any
-    broken = not (allowslong or allowsshort)
+    broken = shortsopts is None and longopts is None
     cause = parse_cause(prog=prog, warn=warn)
     last = None
     for item in items:
@@ -115,11 +113,10 @@ def parse_generator(
             continue
         last = parse_option(
             item.value,
-            allowslong=allowslong,
-            allowsshort=allowsshort,
+            shortsopts=shortsopts,
+            longopts=longopts,
             cause=cause,
             expectsabbr=expectsabbr,
-            optdict=optdict,
         )
         if not last.ishungry():
             yield last
@@ -137,13 +134,33 @@ def parse_generator(
 def parse_islong(
     arg: str,
     *,
-    allowslong: bool,
-    allowsshort: bool,
+    shortsopts: str | None,
+    longopts: tuple[str, ...] | None,
 ) -> bool:
-    if allowslong and allowsshort:
+    if longopts is not None and shortsopts is not None:
         return arg.startswith("--")
-    else:
-        return not allowsshort
+    return shortsopts is None
+
+
+def short_argmode(option: str, shortsopts: str) -> str | None:
+    """Read a short-option spec: no suffix, :, or :: (optional)."""
+    for index, char in enumerate(shortsopts):
+        if char == option and char != ":":
+            if shortsopts[index + 1 : index + 3] == "::":
+                return "::"
+            if shortsopts[index + 1 : index + 2] == ":":
+                return ":"
+            return ""
+    return None
+
+
+def long_argmode(spec: str) -> tuple[str, str]:
+    """Read a long-option spec: no suffix, =, or =? (optional)."""
+    if spec.endswith("=?"):
+        return spec[:-2], "::"
+    if spec.endswith("="):
+        return spec[:-1], ":"
+    return spec, ""
 
 
 def parse_long(
@@ -151,48 +168,46 @@ def parse_long(
     *,
     cause: FunctionType,
     expectsabbr: bool,
-    optdict: dict[Any, Any],
+    longopts: tuple[str, ...],
 ) -> Long:
-    ans: Long
-    parts: list[str]
     parts = arg.split("=", 1)
     ans = Long(fullkey=parts.pop(0))
-    if len(parts):
+    if parts:
         ans.joined = True
         ans.right = parts.pop()
     ans.abbrlen = len(ans.fullkey)
-    if ans.fullkey in optdict.keys():
-        parts = [ans.fullkey]
+    # Match using the full spelling, preserving legacy single-dash long
+    # names rather than allowing them to match '--' abbreviations.
+    options = [
+        (key if key.startswith("-") else "--" + key, mode)
+        for key, mode in (long_argmode(spec) for spec in longopts)
+    ]
+    matches = [(key, mode) for key, mode in options if key == ans.fullkey]
+    if matches:
+        # getopt prefers an exact bare name over its argument variants.
+        matches = [
+            min(matches, key=lambda match: ("", ":", "::").index(match[1]))
+        ]
     elif expectsabbr:
-        parts = parse_long_startswith(ans.abbr, keys=optdict.keys())
-    else:
-        parts = list()  # can be assumed
-    if len(parts) == 0:
-        ans.nargs = Nargs.OPTIONAL_ARGUMENT
+        matches = [
+            (key, mode) for key, mode in options if key.startswith(ans.fullkey)
+        ]
+    if not matches:
+        ans.argmode = "::"
         cause(PIOW, option=arg, islong=True)
         return ans
-    if len(parts) >= 2:
-        ans.nargs = Nargs.OPTIONAL_ARGUMENT
-        cause(PAOW, option=arg, possibilities=parts)
+    if len(matches) >= 2:
+        ans.argmode = "::"
+        cause(
+            PAOW,
+            option=arg,
+            possibilities=[key for key, _ in matches],
+        )
         return ans
-    (ans.fullkey,) = parts
-    ans.nargs = optdict[ans.fullkey]
-    if (ans.nargs == Nargs.NO_ARGUMENT) and (ans.right is not None):
+    key, ans.argmode = matches[0]
+    ans.fullkey = key
+    if ans.argmode == "" and ans.right is not None:
         cause(PUAW, option=ans.fullkey)
-    return ans
-
-
-def parse_long_startswith(
-    abbr: str,
-    *,
-    keys: Iterable[str],
-) -> list[str]:
-    ans: list[str]
-    x: str
-    ans = list()
-    for x in keys:
-        if x.startswith(abbr):
-            ans.append(x)
     return ans
 
 
@@ -201,19 +216,18 @@ def parse_option(
     *,
     cause: FunctionType,
     expectsabbr: bool,
-    optdict: dict[Any, Any],
-    **kwargs: Any,
+    shortsopts: str | None,
+    longopts: tuple[str, ...] | None,
 ) -> Option:
-    if parse_islong(arg, **kwargs):
+    if parse_islong(arg, shortsopts=shortsopts, longopts=longopts):
         return parse_long(
             arg,
             cause=cause,
             expectsabbr=expectsabbr,
-            optdict=optdict,
+            longopts=longopts if longopts is not None else (),
         )
-    else:
-        return parse_bundling(
-            arg,
-            cause=cause,
-            optdict=optdict,
-        )
+    return parse_bundling(
+        arg,
+        cause=cause,
+        shortsopts=shortsopts if shortsopts is not None else "",
+    )
