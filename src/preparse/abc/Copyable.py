@@ -2,13 +2,13 @@ from __future__ import annotations
 
 __all__: list[str] = ["Copyable"]
 
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from typing import Self
 
 from preparse.enum.NoChange import NoChange
 
 
-class Copyable:
+class Copyable(ABC):
 
     __slots__ = ()
 
