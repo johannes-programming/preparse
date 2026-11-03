@@ -78,7 +78,7 @@ The ``PreParser`` class in ``preparse.core`` can also be imported directly from 
 This class is the centerpiece of ``preparse``.
 It describes the supported options and determines how the arguments are preparsed.
 The first positional argument allows copying the configuration from another instance of ``PreParser``.
-Passing ``NoChange.NO_CHANGE`` for a property leaves its current value unchanged.
+Passing ``NoChange.NO_CHANGE`` for a ``property`` leaves its current value unchanged.
 The properties are documented with the values they are preset with.
 
 ``abbr: Tuning = Tuning.MINIMIZE``
@@ -112,7 +112,7 @@ Both settings produce a ``RequiredArgumentMessage``.
 
 This boolean ``property`` determines whether the order of arguments conforms to the POSIX standard,
 i.e. all arguments after the first positional argument are also positional.
-If ``Infer.INFER`` is assigned to the property, the value is inferred from
+If ``Infer.INFER`` is assigned to the ``property``, the value is inferred from
 the presence of the ``POSIXLY_CORRECT`` environment variable.
 
 ``joined: Tuning = Tuning.MAINTAIN``
@@ -201,7 +201,7 @@ This enum inherits from ``enum.Enum``.
 ``NO_CHANGE = "NO_CHANGE"``
 """""""""""""""""""""""""""
 
-This singleton is used to leave a property unchanged when configuring or copying an instance.
+This singleton is used to leave a ``property`` unchanged when configuring or copying an instance.
 
 ``class preparse.enum.Tuning.Tuning``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -267,15 +267,15 @@ This ``property`` represents the offending option.
 
 This ``class`` reports missing required arguments.
 
-``option: str = ""``
-""""""""""""""""""""
-
-This ``property`` represents the offending option.
-
 ``is_long: bool = False``
 """""""""""""""""""""""""
 
 This ``property`` indicates whether it was interpreted as a long option.
+
+``option: str = ""``
+""""""""""""""""""""
+
+This ``property`` represents the offending option.
 
 ``class preparse.messaging.UnallowedArgumentMessage.UnallowedArgumentMessage(other: UnallowedArgumentMessage | NoChange = NoChange.NO_CHANGE, /, *, option: object = NoChange.NO_CHANGE)``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
