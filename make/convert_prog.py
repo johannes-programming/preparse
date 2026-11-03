@@ -27,9 +27,7 @@ from typing import Any, Self
 import tomli_w
 
 
-def convert_case(
-    *, prog: Any = None, **case: Any
-) -> dict[str, Any]:
+def convert_case(*, prog: Any = None, **case: Any) -> dict[str, Any]:
     if prog is None:
         if isinstance(case["warnings"], list):
             raise ValueError
