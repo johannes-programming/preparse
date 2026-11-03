@@ -21,7 +21,7 @@ from preparse.typing.SupportsBool import SupportsBool
 class PreParser(Copyable):
 
     __slots__ = (
-        "_shortsopts",
+        "_shortopts",
         "_longopts",
         "_bundling",
         "_expandsabbr",
@@ -31,7 +31,7 @@ class PreParser(Copyable):
         "_reconcilesorders",
         "_special",
     )
-    _shortsopts: str | None
+    _shortopts: str | None
     _longopts: tuple[str, ...] | None
     _bundling: Tuning
     _expandsabbr: bool
@@ -53,7 +53,7 @@ class PreParser(Copyable):
         other: PreParser | NotImplementedType = NotImplemented,
         /,
         *,
-        shortsopts: str | None | NotImplementedType = NotImplemented,
+        shortopts: str | None | NotImplementedType = NotImplemented,
         longopts: tuple[str, ...] | None | NotImplementedType = NotImplemented,
         bundling: int | NotImplementedType = NotImplemented,
         expandsabbr: SupportsBool | NotImplementedType = NotImplemented,
@@ -63,7 +63,7 @@ class PreParser(Copyable):
         reconcilesorders: SupportsBool | NotImplementedType = NotImplemented,
         special: int | NotImplementedType = NotImplemented,
     ) -> None:
-        self._shortsopts = ""
+        self._shortopts = ""
         self._longopts = ()
         self._bundling = Tuning.MAINTAIN
         self._expandsabbr = True
@@ -73,7 +73,7 @@ class PreParser(Copyable):
         self._reconcilesorders = True
         self._special = Tuning.MAINTAIN
         if not isinstance(other, NotImplementedType):
-            self.shortsopts = other.shortsopts
+            self.shortopts = other.shortopts
             self.longopts = other.longopts
             self.bundling = other.bundling
             self.expandsabbr = other.expandsabbr
@@ -82,7 +82,7 @@ class PreParser(Copyable):
             self.prog = other.prog
             self.reconcilesorders = other.reconcilesorders
             self.special = other.special
-        self.shortsopts = shortsopts
+        self.shortopts = shortopts
         self.longopts = longopts
         self.bundling = bundling
         self.expandsabbr = expandsabbr
@@ -97,17 +97,17 @@ class PreParser(Copyable):
         return datarepr(type(self).__name__, **self.todict())
 
     @property
-    def shortsopts(self: Self, /) -> str | None:
+    def shortopts(self: Self, /) -> str | None:
         """getopt-style short options; None disables short-option parsing."""
-        return self._shortsopts
+        return self._shortopts
 
-    @shortsopts.setter
-    def shortsopts(
+    @shortopts.setter
+    def shortopts(
         self: Self, value: str | None | NotImplementedType, /
     ) -> None:
         if isinstance(value, NotImplementedType):
             return
-        self._shortsopts = value
+        self._shortopts = value
 
     @property
     def longopts(self: Self, /) -> tuple[str, ...] | None:
@@ -230,7 +230,7 @@ class PreParser(Copyable):
         "This method returns a dict representing the current instance."
         ans: dict[str, Any]
         ans = dict()
-        ans["shortsopts"] = self.shortsopts
+        ans["shortopts"] = self.shortopts
         ans["longopts"] = self.longopts
         ans["bundling"] = self.bundling
         ans["expandsabbr"] = self.expandsabbr

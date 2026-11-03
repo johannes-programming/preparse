@@ -104,7 +104,7 @@ class WarningTests(unittest.TestCase):
         ):
             with self.subTest(args=args):
                 parser = self.parser_with_warnings(
-                    shortsopts="o:", longopts=("output=",)
+                    shortopts="o:", longopts=("output=",)
                 )
                 preparsed, warnings = parser.parse_args(args)
                 self.assertEqual(preparsed, args)
@@ -240,7 +240,7 @@ class ArgumentInputTests(unittest.TestCase):
         self: Self, /
     ) -> None:
         parser: PreParser
-        parser = PreParser(longopts=None, shortsopts=None)
+        parser = PreParser(longopts=None, shortopts=None)
         preparsed, messages = parser.parse_args([7, None, True, "-z"])
         self.assertEqual(
             preparsed,
@@ -302,7 +302,7 @@ class ConfigurationTests(unittest.TestCase):
         recorded: list[Message]
         parser = PreParser(
             longopts=None,
-            shortsopts=None,
+            shortopts=None,
             expectsposix=True,
             reconcilesorders=True,
         )
@@ -319,7 +319,7 @@ class ConfigurationTests(unittest.TestCase):
         recorded: list[Any]
         parser = PreParser(
             longopts=None,
-            shortsopts="-x:",
+            shortopts="-x:",
         )
         preparsed, recorded = parser.parse_args(["--x", "value"])
         self.assertEqual(preparsed, ["--x", "value"])
@@ -385,7 +385,7 @@ class ConfigurationTests(unittest.TestCase):
         ):
             with self.subTest(tuning=tuning):
                 parser = PreParser(
-                    shortsopts="ab",
+                    shortopts="ab",
                     longopts=("flag",),
                     bundling=tuning,
                 )
@@ -396,9 +396,9 @@ class ConfigurationTests(unittest.TestCase):
 class GetoptConfigurationTests(unittest.TestCase):
     def test_default_and_disabled_option_kinds(self: Self, /) -> None:
         parser = PreParser()
-        self.assertEqual(parser.shortsopts, "")
+        self.assertEqual(parser.shortopts, "")
         self.assertEqual(parser.longopts, ())
-        parser.shortsopts = None
+        parser.shortopts = None
         parser.longopts = None
         self.assertEqual(
             parser.parse_args(["-a", "--flag", "--"]),
@@ -407,7 +407,7 @@ class GetoptConfigurationTests(unittest.TestCase):
 
     def test_short_and_long_argument_modes(self: Self, /) -> None:
         parser = PreParser(
-            shortsopts="ab:c::",
+            shortopts="ab:c::",
             longopts=("flag", "output=", "maybe=?"),
             prog="example",
         )
@@ -440,7 +440,7 @@ class GetoptConfigurationTests(unittest.TestCase):
     def test_optional_arguments_do_not_consume_following_token(
         self: Self, /
     ) -> None:
-        parser = PreParser(shortsopts="x::", longopts=("maybe=?",))
+        parser = PreParser(shortopts="x::", longopts=("maybe=?",))
         result, warnings = parser.parse_args(
             ["-x", "value", "--maybe", "tail"]
         )
@@ -449,7 +449,7 @@ class GetoptConfigurationTests(unittest.TestCase):
 
     def test_copy_carries_all_config_and_is_independent(self: Self, /) -> None:
         original = PreParser(
-            shortsopts="a",
+            shortopts="a",
             longopts=None,
             bundling=Tuning.MINIMIZE,
             expandsabbr=False,
@@ -462,10 +462,10 @@ class GetoptConfigurationTests(unittest.TestCase):
         copy = original.copy()
         self.assertIsNot(copy, original)
         self.assertEqual(copy.todict(), original.todict())
-        copy.shortsopts = "b:"
+        copy.shortopts = "b:"
         copy.longopts = ("new=",)
         copy.prog = "copy"
-        self.assertEqual(original.shortsopts, "a")
+        self.assertEqual(original.shortopts, "a")
         self.assertIsNone(original.longopts)
         self.assertEqual(original.prog, "original")
 
@@ -488,7 +488,7 @@ class GetoptConfigurationTests(unittest.TestCase):
         self.assertEqual(
             set(parser.todict()),
             {
-                "shortsopts",
+                "shortopts",
                 "longopts",
                 "bundling",
                 "expandsabbr",
