@@ -254,15 +254,15 @@ class ConfigurationTests(unittest.TestCase):
     ) -> None:
         parser: PreParser
         with patch.dict(os.environ, {}, clear=True):
-            self.assertFalse(PreParser(expectsposix="infer").expectsposix)
+            self.assertFalse(PreParser(is_posix=None).is_posix)
         with patch.dict(os.environ, {"POSIXLY_CORRECT": ""}, clear=True):
-            self.assertTrue(PreParser(expectsposix="infer").expectsposix)
+            self.assertTrue(PreParser(is_posix=None).is_posix)
         with patch.dict(os.environ, {"POSIXLY_CORRECT": "0"}, clear=True):
-            self.assertTrue(PreParser(expectsposix="infer").expectsposix)
-        parser = PreParser(expectsposix=False)
+            self.assertTrue(PreParser(is_posix=None).is_posix)
+        parser = PreParser(is_posix=False)
         with patch.dict(os.environ, {"POSIXLY_CORRECT": "1"}, clear=True):
-            parser.expectsposix = "infer"
-        self.assertTrue(parser.expectsposix)
+            parser.is_posix = None
+        self.assertTrue(parser.is_posix)
 
     def test_abbreviation_expansion_and_recognition_are_independent(
         self: Self, /
@@ -296,7 +296,7 @@ class ConfigurationTests(unittest.TestCase):
         parser = PreParser(
             longopts=None,
             shortopts=None,
-            expectsposix=True,
+            is_posix=True,
             reconcilesorders=True,
         )
         args = ["--unrecognized", "-x", "--", "file"]
@@ -335,7 +335,7 @@ class ConfigurationTests(unittest.TestCase):
             with self.subTest(posix=posix, reconcilesorders=reconcile):
                 parser = PreParser(
                     longopts=("flag",),
-                    expectsposix=posix,
+                    is_posix=posix,
                     reconcilesorders=reconcile,
                 )
                 preparsed, messages = parser.parse_args(
@@ -446,7 +446,7 @@ class GetoptConfigurationTests(unittest.TestCase):
             longopts=None,
             bundling=Tuning.MINIMIZE,
             expandsabbr=False,
-            expectsposix=True,
+            is_posix=True,
             prog="original",
             reconcilesorders=False,
             special=Tuning.MAXIMIZE,

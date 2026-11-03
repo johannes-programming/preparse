@@ -14,7 +14,7 @@ class TestPreParser(unittest.TestCase):
         self.assertEqual(parser.longopts, parser_copy.longopts)
 
     def test_no_options_idempotent(self: Self) -> None:
-        parser = PreParser(shortopts=None, longopts=None, expectsposix=True)
+        parser = PreParser(shortopts=None, longopts=None, is_posix=True)
         args = ["-c2", "--", "-a"]
         preparsed, messages = parser.parse_args(args)
         self.assertEqual(args, preparsed)

@@ -78,7 +78,7 @@ def parse_generator(
     *,
     shortopts: str | None,
     longopts: tuple[str, ...] | None,
-    expectsposix: bool,
+    is_posix: bool,
     prog: str,
     warn: FunctionType,
 ) -> Generator[Any, Any, Any]:
@@ -108,7 +108,7 @@ def parse_generator(
         if item.isobvious():
             # if the item is positional
             yield item
-            broken = expectsposix
+            broken = is_posix
             continue
         last = parse_option(
             item.value,
