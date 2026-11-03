@@ -455,6 +455,53 @@ class GetoptConfigurationTests(unittest.TestCase):
         self.assertEqual(result, ["-x", "--maybe", "value", "tail"])
         self.assertEqual(warnings, [])
 
+    def test_joined_tuning(self: Self, /) -> None:
+        for tuning, args, expected in (
+            (
+                Tuning.MINIMIZE,
+                ["-f42", "--foo=43"],
+                ["-f", "42", "--foo", "43"],
+            ),
+            (
+                Tuning.MAXIMIZE,
+                ["-f", "42", "--foo", "43"],
+                ["-f42", "--foo=43"],
+            ),
+            (
+                Tuning.MAINTAIN,
+                ["-f42", "--foo", "43"],
+                ["-f42", "--foo", "43"],
+            ),
+        ):
+            with self.subTest(tuning=tuning):
+                parser = PreParser(
+                    shortopts="f:", longopts=("foo=",), joined=tuning
+                )
+                self.assertEqual(parser.parse_args(args), (expected, []))
+
+    def test_joined_optional_and_valueless(self: Self, /) -> None:
+        parser = PreParser(
+            shortopts="ab::",
+            longopts=("flag", "maybe=?"),
+            joined=Tuning.MAXIMIZE,
+        )
+        self.assertEqual(
+            parser.parse_args(["-a", "-b", "--flag", "--maybe", "tail"]),
+            (["-a", "-b", "--flag", "--maybe", "tail"], []),
+        )
+        self.assertEqual(
+            parser.parse_args(["-bdata", "--maybe=value"]),
+            (["-bdata", "--maybe=value"], []),
+        )
+
+    def test_joined_copy_and_override(self: Self, /) -> None:
+        original = PreParser(joined=Tuning.MAXIMIZE)
+        self.assertIs(original.copy().joined, Tuning.MAXIMIZE)
+        derived = PreParser(original, joined=Tuning.MINIMIZE)
+        self.assertIs(derived.joined, Tuning.MINIMIZE)
+        self.assertIs(original.joined, Tuning.MAXIMIZE)
+        self.assertIs(PreParser().joined, Tuning.MAINTAIN)
+
     def test_copy_carries_all_config_and_is_independent(self: Self, /) -> None:
         original = PreParser(
             shortopts="a",
