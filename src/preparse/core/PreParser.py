@@ -23,7 +23,7 @@ class PreParser(Copyable):
     __slots__ = (
         "_bundling",
         "_expandsabbr",
-        "_expectsposix",
+        "_is_posix",
         "_longopts",
         "_prog",
         "_reconcilesorders",
@@ -32,7 +32,7 @@ class PreParser(Copyable):
     )
     _bundling: Tuning
     _expandsabbr: bool
-    _expectsposix: bool
+    _is_posix: bool
     _longopts: tuple[str, ...] | None
     _prog: str
     _reconcilesorders: bool
@@ -53,7 +53,7 @@ class PreParser(Copyable):
         *,
         bundling: int | NotImplementedType = NotImplemented,
         expandsabbr: SupportsBool | NotImplementedType = NotImplemented,
-        expectsposix: SupportsBool | NotImplementedType = NotImplemented,
+        is_posix: SupportsBool | NotImplementedType = NotImplemented,
         longopts: (
             tuple[object, ...] | None | NotImplementedType
         ) = NotImplemented,
@@ -64,7 +64,7 @@ class PreParser(Copyable):
     ) -> None:
         self._bundling = Tuning.MAINTAIN
         self._expandsabbr = True
-        self._expectsposix = False
+        self._is_posix = False
         self._longopts = ()
         self.prog = None
         self._reconcilesorders = True
@@ -73,7 +73,7 @@ class PreParser(Copyable):
         if not isinstance(other, NotImplementedType):
             self.bundling = other.bundling
             self.expandsabbr = other.expandsabbr
-            self.expectsposix = other.expectsposix
+            self.is_posix = other.is_posix
             self.longopts = other.longopts
             self.prog = other.prog
             self.reconcilesorders = other.reconcilesorders
@@ -81,7 +81,7 @@ class PreParser(Copyable):
             self.special = other.special
         self.bundling = bundling
         self.expandsabbr = expandsabbr
-        self.expectsposix = expectsposix
+        self.is_posix = is_posix
         self.longopts = longopts
         self.prog = prog
         self.reconcilesorders = reconcilesorders
@@ -98,7 +98,7 @@ class PreParser(Copyable):
         ans = dict()
         ans["bundling"] = self.bundling
         ans["expandsabbr"] = self.expandsabbr
-        ans["expectsposix"] = self.expectsposix
+        ans["is_posix"] = self.is_posix
         ans["longopts"] = self.longopts
         ans["prog"] = self.prog
         ans["reconcilesorders"] = self.reconcilesorders
@@ -135,19 +135,19 @@ class PreParser(Copyable):
         self._expandsabbr = bool(value)
 
     @property
-    def expectsposix(self: Self, /) -> bool:
-        return self._expectsposix
+    def is_posix(self: Self, /) -> bool:
+        return self._is_posix
 
-    @expectsposix.setter
-    def expectsposix(
-        self: Self, value: SupportsBool | NotImplementedType, /
+    @is_posix.setter
+    def is_posix(
+        self: Self, value: SupportsBool | None | NotImplementedType, /
     ) -> None:
         if isinstance(value, NotImplementedType):
             return
-        if value == "infer":
-            self._expectsposix = "POSIXLY_CORRECT" in os.environ
+        if value is None:
+            self._is_posix = "POSIXLY_CORRECT" in os.environ
         else:
-            self._expectsposix = bool(value)
+            self._is_posix = bool(value)
 
     @property
     def longopts(self: Self, /) -> tuple[str, ...] | None:

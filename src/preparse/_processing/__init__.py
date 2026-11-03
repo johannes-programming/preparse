@@ -19,7 +19,7 @@ def process(
     longopts: tuple[str, ...] | None,
     bundling: Tuning,
     expandsabbr: bool,
-    expectsposix: bool,
+    is_posix: bool,
     prog: str,
     reconcilesorders: bool,
     special: Tuning,
@@ -31,7 +31,7 @@ def process(
         items,
         shortopts=shortopts,
         longopts=longopts,
-        expectsposix=expectsposix,
+        is_posix=is_posix,
         prog=prog,
     )
     items = digest(
@@ -40,7 +40,7 @@ def process(
         short_enabled=shortopts is not None,
         bundling=bundling,
         expandsabbr=expandsabbr,
-        expectsposix=expectsposix,
+        is_posix=is_posix,
         reconcilesorders=reconcilesorders,
         special=special,
     )
