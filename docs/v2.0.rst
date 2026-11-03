@@ -72,13 +72,13 @@ If ``Infer.INFER`` is passed, ``sys.argv[0]`` is used.
 
 The ``PreParser`` class in ``preparse.core`` can also be imported directly from ``preparse``.
 
-``class preparse.core.PreParser.PreParser(other: PreParser | NotImplementedType = NotImplemented, /, *, bundling: int | NotImplementedType = NotImplemented, expandsabbr: SupportsBool | NotImplementedType = NotImplemented, is_posix: SupportsBool | Infer | NotImplementedType = NotImplemented, longopts: tuple[object, ...] | None | NotImplementedType = NotImplemented, reconcilesorders: SupportsBool | NotImplementedType = NotImplemented, shortopts: object = NotImplemented, special: int | NotImplementedType = NotImplemented)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.core.PreParser.PreParser(other: PreParser | NoChange = NoChange.NO_CHANGE, /, *, bundling: int | NoChange = NoChange.NO_CHANGE, depletion: Depletion | NoChange = NoChange.NO_CHANGE, expandsabbr: SupportsBool | NoChange = NoChange.NO_CHANGE, is_posix: SupportsBool | Infer | NoChange = NoChange.NO_CHANGE, longopts: tuple[object, ...] | None | NoChange = NoChange.NO_CHANGE, reconcilesorders: SupportsBool | NoChange = NoChange.NO_CHANGE, shortopts: object = NoChange.NO_CHANGE, special: int | NoChange = NoChange.NO_CHANGE)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This class is the centerpiece of ``preparse``.
 It describes the supported options and determines how the arguments are preparsed.
 The first positional argument allows copying the configuration from another instance of ``PreParser``.
-Passing ``NotImplemented`` for a property leaves its current value unchanged.
+Passing ``NoChange.NO_CHANGE`` for a property leaves its current value unchanged.
 The properties are documented with the values they are preset with.
 
 ``bundling: Tuning = Tuning.MAINTAIN``
@@ -92,6 +92,15 @@ and ``Tuning.MAINTAIN`` preserves the bundling unless another rule requires a ch
 """"""""""""""""""
 
 This method returns a copy of the current instance.
+
+``depletion: Depletion = Depletion.REINTERPRET``
+""""""""""""""""""""""""""""""""""""""""""""""""
+
+This ``property`` determines how an option requiring an argument is handled
+if no argument is supplied.
+``Depletion.DROP`` discards the incomplete option from the preparsed arguments,
+while ``Depletion.REINTERPRET`` preserves it.
+Both settings produce a ``RequiredArgumentMessage``.
 
 ``expandsabbr: bool = True``
 """"""""""""""""""""""""""""
@@ -159,12 +168,37 @@ one where appropriate, and ``Tuning.MAINTAIN`` avoids unforced changes.
 ``preparse.enum``
 ~~~~~~~~~~~~~~~~~
 
+``class preparse.enum.Depletion.Depletion``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This enum inherits from ``enum.Enum``.
+It determines what happens to an option missing a required argument.
+
+``DROP = "DROP"``
+"""""""""""""""""
+
+``REINTERPRET = "REINTERPRET"``
+"""""""""""""""""""""""""""""""
+
 ``class preparse.enum.Infer.Infer``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This enum inherits from ``enum.Enum``.
-Its member ``INFER`` has the value ``"INFER"``.
-It is used to infer arguments, the program name, and POSIX ordering.
+
+``INFER = "INFER"``
+"""""""""""""""""""
+
+This singleton is used to infer arguments, the program name, and POSIX ordering.
+
+``class preparse.enum.NoChange.NoChange``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This enum inherits from ``enum.Enum``.
+
+``NO_CHANGE = "NO_CHANGE"``
+"""""""""""""""""""""""""""
+
+This singleton is used to leave a property unchanged when configuring or copying an instance.
 
 ``class preparse.enum.Tuning.Tuning``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -173,15 +207,20 @@ This enum inherits from ``enum.IntEnum``.
 It is used for the ``bundling`` and ``special`` properties of ``PreParser``.
 Any value different from ``0`` (meaning no) and ``1`` (meaning yes) is interpreted as ``2`` (meaning intermediate).
 
-+--------------+-------+-----------------------------------------------------------------------------+
-| Name         | Value | Explanation                                                                 |
-+==============+=======+=============================================================================+
-| ``MINIMIZE`` | ``0`` | The PreParser minimizes the aspect in question.                             |
-+--------------+-------+-----------------------------------------------------------------------------+
-| ``MAXIMIZE`` | ``1`` | The PreParser maximizes the aspect in question.                             |
-+--------------+-------+-----------------------------------------------------------------------------+
-| ``MAINTAIN`` | ``2`` | The PreParser does not make any unforced changes to the aspect in question. |
-+--------------+-------+-----------------------------------------------------------------------------+
+``MINIMIZE = 0``
+""""""""""""""""
+
+The ``PreParser`` minimizes the aspect in question.
+
+``MAXIMIZE = 1``
+""""""""""""""""
+
+The ``PreParser`` maximizes the aspect in question.
+
+``MAINTAIN = 2``
+""""""""""""""""
+
+The ``PreParser`` does not make any unforced changes to the aspect in question.
 
 ``preparse.messaging``
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -189,8 +228,8 @@ Any value different from ``0`` (meaning no) and ``1`` (meaning yes) is interpret
 These classes are subclasses of ``Message`` that are specifically designed to communicate issues with parsing.
 They are returned by ``parse_args`` and can be handled by the caller.
 
-``class preparse.messaging.AmbiguousOptionMessage.AmbiguousOptionMessage(other: Self | NotImplementedType = NotImplemented, /, *, option: object = NotImplemented, possibilities: Iterable[object] | NotImplementedType = NotImplemented)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.messaging.AmbiguousOptionMessage.AmbiguousOptionMessage(other: Self | NoChange = NoChange.NO_CHANGE, /, *, option: object = NoChange.NO_CHANGE, possibilities: Iterable[object] | NoChange = NoChange.NO_CHANGE)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This ``class`` reports ambiguous options.
 This can only happen for long options.
@@ -198,24 +237,24 @@ The ``option`` property holds the original option spelling.
 The ``possibilities`` property holds a tuple of candidate options.
 The constructor can also copy another instance.
 
-``class preparse.messaging.InvalidOptionMessage.InvalidOptionMessage(other: Self | NotImplementedType = NotImplemented, /, *, is_long: SupportsBool | NotImplementedType = NotImplemented, option: object = NotImplemented)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.messaging.InvalidOptionMessage.InvalidOptionMessage(other: Self | NoChange = NoChange.NO_CHANGE, /, *, is_long: SupportsBool | NoChange = NoChange.NO_CHANGE, option: object = NoChange.NO_CHANGE)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This ``class`` reports invalid options.
 The ``option`` property holds the option, and the boolean ``is_long`` property
 indicates whether it was interpreted as a long option.
 The constructor can also copy another instance.
 
-``class preparse.messaging.RequiredArgumentMessage.RequiredArgumentMessage(other: Self | NotImplementedType = NotImplemented, /, *, is_long: SupportsBool | NotImplementedType = NotImplemented, option: object = NotImplemented)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.messaging.RequiredArgumentMessage.RequiredArgumentMessage(other: Self | NoChange = NoChange.NO_CHANGE, /, *, is_long: SupportsBool | NoChange = NoChange.NO_CHANGE, option: object = NoChange.NO_CHANGE)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This ``class`` reports missing required arguments.
 The ``option`` property holds the option, and the boolean ``is_long`` property
 indicates whether it was interpreted as a long option.
 The constructor can also copy another instance.
 
-``class preparse.messaging.UnallowedArgumentMessage.UnallowedArgumentMessage(other: Self | NotImplementedType = NotImplemented, /, *, option: object = NotImplemented)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.messaging.UnallowedArgumentMessage.UnallowedArgumentMessage(other: Self | NoChange = NoChange.NO_CHANGE, /, *, option: object = NoChange.NO_CHANGE)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This ``class`` reports arguments supplied to options that do not allow them.
 This can only happen for long options.
