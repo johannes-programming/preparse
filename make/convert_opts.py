@@ -36,9 +36,8 @@ NEW_FIELDS = frozenset({"shortsopts", "longopts"})
 
 
 def convert_case(*, shortsopts: Any, **case: Any) -> dict[str, Any]:
-    case["shortopts"]=shortsopts
+    case["shortopts"] = shortsopts
     return case
-
 
 
 class Utils(enum.Enum):
@@ -57,8 +56,7 @@ class Utils(enum.Enum):
 def main() -> None:
 
     converted = {
-        name: convert_case(**case)
-        for name, case in Utils.utils.data.items()
+        name: convert_case(**case) for name, case in Utils.utils.data.items()
     }
     result = tomli_w.dumps(converted)
     # Reject malformed output before changing the source file.
