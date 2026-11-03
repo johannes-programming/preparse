@@ -41,7 +41,7 @@ class PreParser(Copyable):
 
     def __eq__(self: Self, other: object, /) -> bool | NotImplementedType:
         if isinstance(other, PreParser):
-            return self.todict() == other.todict()
+            return self._dict() == other._dict()
         else:
             return NotImplemented
 
@@ -90,7 +90,21 @@ class PreParser(Copyable):
 
     @setdoc.basic
     def __repr__(self: Self, /) -> str:
-        return datarepr(type(self).__name__, **self.todict())
+        return datarepr(type(self).__name__, **self._dict())
+
+    def _dict(self: Self, /) -> dict[str, Any]:
+        "This method returns a dict representing the current instance."
+        ans: dict[str, Any]
+        ans = dict()
+        ans["bundling"] = self.bundling
+        ans["expandsabbr"] = self.expandsabbr
+        ans["expectsposix"] = self.expectsposix
+        ans["longopts"] = self.longopts
+        ans["prog"] = self.prog
+        ans["reconcilesorders"] = self.reconcilesorders
+        ans["shortopts"] = self.shortopts
+        ans["special"] = self.special
+        return ans
 
     @property
     def bundling(self: Self, /) -> Tuning:
@@ -158,7 +172,7 @@ class PreParser(Copyable):
         "This method parses args."
         return process(
             args,
-            **self.todict(),
+            **self._dict(),
         )
 
     @property
@@ -213,17 +227,3 @@ class PreParser(Copyable):
         if isinstance(value, NotImplementedType):
             return
         self._special = Tuning(value)
-
-    def todict(self: Self, /) -> dict[str, Any]:
-        "This method returns a dict representing the current instance."
-        ans: dict[str, Any]
-        ans = dict()
-        ans["bundling"] = self.bundling
-        ans["expandsabbr"] = self.expandsabbr
-        ans["expectsposix"] = self.expectsposix
-        ans["longopts"] = self.longopts
-        ans["prog"] = self.prog
-        ans["reconcilesorders"] = self.reconcilesorders
-        ans["shortopts"] = self.shortopts
-        ans["special"] = self.special
-        return ans

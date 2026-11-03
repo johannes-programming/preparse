@@ -168,19 +168,16 @@ class WarningTests(unittest.TestCase):
         for original in examples:
             with self.subTest(warning=type(original).__name__):
                 self.assertIsInstance(original, Message)
-                self.assertEqual(
-                    original.todict()["prog"], "tool", msg=str(type(original))
-                )
                 self.assertIn(original.getmsg(), str(original))
                 self.assertIn(type(original).__name__, repr(original))
                 self.assertIn(original.option, repr(original))
                 duplicate = original.copy()
                 self.assertIs(type(duplicate), type(original))
                 self.assertIsNot(duplicate, original)
-                self.assertEqual(duplicate.todict(), original.todict())
+                self.assertEqual(duplicate, original)
                 duplicate.option = "--changed"
                 duplicate.prog = 100
-                self.assertNotEqual(duplicate.todict(), original.todict())
+                self.assertNotEqual(duplicate, original)
                 self.assertEqual(original.prog, "tool")
                 self.assertEqual(duplicate.prog, "100")
 
@@ -456,7 +453,6 @@ class GetoptConfigurationTests(unittest.TestCase):
         )
         copy = original.copy()
         self.assertIsNot(copy, original)
-        self.assertEqual(copy.todict(), original.todict())
         copy.shortopts = "b:"
         copy.longopts = ("new=",)
         copy.prog = "copy"
@@ -478,25 +474,9 @@ class GetoptConfigurationTests(unittest.TestCase):
         self.assertEqual(derived.longopts, ("two=",))
         self.assertEqual(original.longopts, ("one",))
 
-    def test_parser_repr_and_todict_are_complete(self: Self, /) -> None:
+    def test_parser_repr(self: Self, /) -> None:
         parser = PreParser(longopts=("flag",), prog="demo")
-        self.assertEqual(
-            set(parser.todict()),
-            {
-                "shortopts",
-                "longopts",
-                "bundling",
-                "expandsabbr",
-                "expectsposix",
-                "prog",
-                "reconcilesorders",
-                "special",
-            },
-        )
-        self.assertEqual(parser.todict()["prog"], "demo")
         self.assertIn("PreParser", repr(parser))
-        exported = parser.todict()
-        exported["prog"] = "changed"
         self.assertEqual(parser.prog, "demo")
 
     def test_tuning_enum_valid_values_and_missing_fallback(

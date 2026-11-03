@@ -25,12 +25,6 @@ class TestPreParser(unittest.TestCase):
         preparsed, messages = parser.parse_args(["--x"])
         self.assertEqual(preparsed, ["--x"])
 
-    def test_preparser_todict(self: Self) -> None:
-        parser = PreParser()
-        result = parser.todict()
-        expected_keys = ["shortopts", "longopts", "prog"]
-        self.assertTrue(all(key in result for key in expected_keys))
-
 
 if __name__ == "__main__":
     unittest.main()
