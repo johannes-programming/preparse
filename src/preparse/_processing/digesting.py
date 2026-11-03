@@ -1,6 +1,6 @@
 __all__: list[str] = ["digest"]
 
-from typing import Any, cast
+from typing import Any
 
 from preparse._items.Bundle import Bundle
 from preparse._items.Item import Item
@@ -17,7 +17,8 @@ def digest(
     long_enabled: bool,
     short_enabled: bool,
     bundling: Tuning,
-    expandsabbr: bool,
+    abbr: Tuning,
+    longopts: tuple[str, ...] | None,
     is_posix: bool,
     reconcilesorders: bool,
     special: Tuning,
@@ -26,7 +27,9 @@ def digest(
     ans = list(items)
     ans = digest_abbr(
         ans,
-        expandsabbr=expandsabbr,
+        abbr=abbr,
+        longopts=longopts,
+        short_enabled=short_enabled,
     )
     ans = digest_special(
         ans,
@@ -54,16 +57,33 @@ def digest(
 def digest_abbr(
     items: list[Item],
     *,
-    expandsabbr: bool,
+    abbr: Tuning,
+    longopts: tuple[str, ...] | None,
+    short_enabled: bool,
 ) -> list[Item]:
     ans: list[Item]
     item: Item
     ans = list(items)
-    if not expandsabbr:
+    if abbr == Tuning.MAINTAIN:
         return ans
+    options = list()
+    for spec in longopts or ():
+        options.append(digest_long_fullkey(spec, short_enabled=short_enabled))
     for item in ans:
-        if isinstance(item, Long):
+        if not isinstance(item, Long):
+            continue
+        if abbr == Tuning.MAXIMIZE:
             item.abbrlen = None
+        elif item.fullkey in options:
+            for length in range(2, len(item.fullkey) + 1):
+                candidate = item.fullkey[:length]
+                if candidate == "--":
+                    continue
+                if candidate == item.fullkey or [
+                    key for key in options if key.startswith(candidate)
+                ] == [item.fullkey]:
+                    item.abbrlen = length
+                    break
     return ans
 
 
@@ -226,4 +246,16 @@ def digest_special_min(
             break
     if isdel:
         ans.pop(index)
+    return ans
+
+
+def digest_long_fullkey(spec: str, *, short_enabled: bool) -> str:
+    if short_enabled:
+        ans = "--" + spec
+    else:
+        ans = "-" + spec
+    if ans.endswith("=?"):
+        return ans[:-2]
+    if ans.endswith("="):
+        return ans[:-1]
     return ans

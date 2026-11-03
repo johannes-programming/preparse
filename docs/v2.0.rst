@@ -72,7 +72,7 @@ If ``Infer.INFER`` is passed, ``sys.argv[0]`` is used.
 
 The ``PreParser`` class in ``preparse.core`` can also be imported directly from ``preparse``.
 
-``class preparse.core.PreParser.PreParser(other: PreParser | NoChange = NoChange.NO_CHANGE, /, *, bundling: int | NoChange = NoChange.NO_CHANGE, depletion: Depletion | NoChange = NoChange.NO_CHANGE, expandsabbr: SupportsBool | NoChange = NoChange.NO_CHANGE, is_posix: SupportsBool | Infer | NoChange = NoChange.NO_CHANGE, longopts: tuple[object, ...] | None | NoChange = NoChange.NO_CHANGE, reconcilesorders: SupportsBool | NoChange = NoChange.NO_CHANGE, shortopts: object = NoChange.NO_CHANGE, special: int | NoChange = NoChange.NO_CHANGE)``
+``class preparse.core.PreParser.PreParser(other: PreParser | NoChange = NoChange.NO_CHANGE, /, *, bundling: int | NoChange = NoChange.NO_CHANGE, depletion: Depletion | NoChange = NoChange.NO_CHANGE, abbr: Tuning | NoChange = NoChange.NO_CHANGE, is_posix: SupportsBool | Infer | NoChange = NoChange.NO_CHANGE, longopts: tuple[object, ...] | None | NoChange = NoChange.NO_CHANGE, reconcilesorders: SupportsBool | NoChange = NoChange.NO_CHANGE, shortopts: object = NoChange.NO_CHANGE, special: int | NoChange = NoChange.NO_CHANGE)``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This class is the centerpiece of ``preparse``.
@@ -80,6 +80,11 @@ It describes the supported options and determines how the arguments are preparse
 The first positional argument allows copying the configuration from another instance of ``PreParser``.
 Passing ``NoChange.NO_CHANGE`` for a property leaves its current value unchanged.
 The properties are documented with the values they are preset with.
+
+``abbr: Tuning = Tuning.MAXIMIZE``
+"""""""""""""""""""""""""""""""""""""
+
+This ``property`` determines the approach to abbreviations.
 
 ``bundling: Tuning = Tuning.MAINTAIN``
 """"""""""""""""""""""""""""""""""""""
@@ -101,13 +106,6 @@ if no argument is supplied.
 ``Depletion.DROP`` discards the incomplete option from the preparsed arguments,
 while ``Depletion.REINTERPRET`` preserves it.
 Both settings produce a ``RequiredArgumentMessage``.
-
-``expandsabbr: bool = True``
-""""""""""""""""""""""""""""
-
-This boolean ``property`` determines whether recognized abbreviations of long options
-are to be expanded to their full length.
-A unique abbreviation can be recognized even when expansion is disabled.
 
 ``is_posix: bool = False``
 """"""""""""""""""""""""""
@@ -249,15 +247,15 @@ This ``property`` holds a tuple of candidate options.
 
 This ``class`` reports invalid options.
 
-``option: str = ""``
-""""""""""""""""""""
-
-This ``property`` represents the offending option.
-
 ``is_long: bool = False``
 """""""""""""""""""""""""
 
 This ``property`` indicates whether it was interpreted as a long option.
+
+``option: str = ""``
+""""""""""""""""""""
+
+This ``property`` represents the offending option.
 
 ``class preparse.messaging.RequiredArgumentMessage.RequiredArgumentMessage(other: RequiredArgumentMessage | NoChange = NoChange.NO_CHANGE, /, *, is_long: SupportsBool | NoChange = NoChange.NO_CHANGE, option: object = NoChange.NO_CHANGE)``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
