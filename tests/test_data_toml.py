@@ -25,12 +25,12 @@ class Utils(enum.Enum):
             return tomllib.load(stream)
 
     @staticmethod
-    def istestable(x: Any) -> bool:
+    def testvalue(x: Any) -> Any:
         if not isinstance(x, float):
-            return True
+            return x
         if not math.isnan(x):
-            return True
-        return False
+            return x
+        return None
 
 
 class TestDataToml(unittest.TestCase):
@@ -39,8 +39,11 @@ class TestDataToml(unittest.TestCase):
         kwargs: dict[str, Any]
         name: str
         for name, kwargs in Utils.utils.data.items():
-            with self.subTest(msg=name, **kwargs):
-                self.parse(**kwargs)
+            kwargs_ = dict()
+            for x, y in kwargs.items():
+                kwargs_[x] = Utils.testvalue(y)
+            with self.subTest(msg=name, **kwargs_):
+                self.parse(**kwargs_)
 
     def parse(
         self: Self,
@@ -59,16 +62,7 @@ class TestDataToml(unittest.TestCase):
 
         # TOML arrays become lists; TOML `false` stands for Python None,
         # which disables the corresponding option syntax in PreParser.
-        options = dict(kwargs)
-        options["shortopts"] = (
-            None if options["shortopts"] is False else options["shortopts"]
-        )
-        options["longopts"] = (
-            None
-            if options["longopts"] is False
-            else tuple(options["longopts"])
-        )
-        parser = PreParser(**options)
+        parser = PreParser(**kwargs)
         data = dict(
             query=query,
             solution=solution,
@@ -90,7 +84,7 @@ class TestDataToml(unittest.TestCase):
             solution,
         )
         self.assertEqual(answer, solution, msg=msg)
-        if not Utils.utils.istestable(warnings):
+        if warnings is None:
             return
         msg = "\n\ndata=%s,\nerranswer=%s,\nwarnings=%s,\n\n" % (
             data,
