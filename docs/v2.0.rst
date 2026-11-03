@@ -65,15 +65,15 @@ This method returns a copy of the current message.
 """"""""""""""""""""""""""""""""
 
 This method prefixes the message with the program name.
-If ``None`` is passed, ``sys.argv[0]`` is used.
+If ``Infer.INFER`` is passed, ``sys.argv[0]`` is used.
 
 ``preparse.core``
 ~~~~~~~~~~~~~~~~~
 
 The ``PreParser`` class in ``preparse.core`` can also be imported directly from ``preparse``.
 
-``class preparse.core.PreParser.PreParser(other: PreParser | NotImplementedType = NotImplemented, /, *, bundling: int | NotImplementedType = NotImplemented, expandsabbr: SupportsBool | NotImplementedType = NotImplemented, is_posix: SupportsBool | NotImplementedType = NotImplemented, longopts: tuple[object, ...] | None | NotImplementedType = NotImplemented, reconcilesorders: SupportsBool | NotImplementedType = NotImplemented, shortopts: object = NotImplemented, special: int | NotImplementedType = NotImplemented)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.core.PreParser.PreParser(other: PreParser | NotImplementedType = NotImplemented, /, *, bundling: int | NotImplementedType = NotImplemented, expandsabbr: SupportsBool | NotImplementedType = NotImplemented, is_posix: SupportsBool | Infer | NotImplementedType = NotImplemented, longopts: tuple[object, ...] | None | NotImplementedType = NotImplemented, reconcilesorders: SupportsBool | NotImplementedType = NotImplemented, shortopts: object = NotImplemented, special: int | NotImplementedType = NotImplemented)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This class is the centerpiece of ``preparse``.
 It describes the supported options and determines how the arguments are preparsed.
@@ -105,7 +105,7 @@ A unique abbreviation can be recognized even when expansion is disabled.
 
 This boolean ``property`` determines whether the order of arguments conforms to the POSIX standard,
 i.e. all arguments after the first positional argument are also positional.
-If ``None`` is assigned to the property, the value is inferred from
+If ``Infer.INFER`` is assigned to the property, the value is inferred from
 the presence of the ``POSIXLY_CORRECT`` environment variable.
 
 ``longopts: tuple[str, ...] | None = ()``
@@ -119,12 +119,12 @@ Each entry is converted to ``str``.
 Assigning ``None`` disables long-option parsing.
 If both types of options are enabled, long options are recognized by the prefix ``"--"``.
 
-``parse_args(args: Optional[Iterable[object]] = None) -> tuple[list[str], list[Message]]``
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+``parse_args(args: Iterable[object] | Infer = Infer.INFER) -> tuple[list[str], list[Message]]``
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 This method is at the core of the class.
 It returns a tuple containing the preparsed list of arguments and a list of messages.
-If ``None`` is passed as ``args`` then ``sys.argv[1:]`` is used.
+If ``Infer.INFER`` is passed as ``args`` then ``sys.argv[1:]`` is used.
 The arguments may be any iterable of objects; each argument is converted to ``str``.
 The messages describe ambiguities, invalid options, missing required arguments,
 and arguments supplied to options that do not allow them.
@@ -159,14 +159,19 @@ one where appropriate, and ``Tuning.MAINTAIN`` avoids unforced changes.
 ``preparse.enum``
 ~~~~~~~~~~~~~~~~~
 
-These classes are subclasses of ``enum.IntEnum``.
-Any value different from ``0`` (meaning no) and ``1`` (meaning yes) is interpreted as ``2`` (meaning intermediate).
+``class preparse.enum.Infer.Infer``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This enum inherits from ``enum.Enum``.
+Its member ``INFER`` has the value ``"INFER"``.
+It is used to infer arguments, the program name, and POSIX ordering.
 
 ``class preparse.enum.Tuning.Tuning``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This enum inherits from ``enum.IntEnum``.
 It is used for the ``bundling`` and ``special`` properties of ``PreParser``.
+Any value different from ``0`` (meaning no) and ``1`` (meaning yes) is interpreted as ``2`` (meaning intermediate).
 
 +--------------+-------+-----------------------------------------------------------------------------+
 | Name         | Value | Explanation                                                                 |
@@ -225,23 +230,8 @@ The constructor can also copy another instance.
 
 This type alias is used for values that can be converted to ``bool``.
 
-``class preparse.typing.SupportsKeysAndGetitem.SupportsKeysAndGetitem[Key: Hashable = Hashable, Value = int | None]``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-This protocol is included in the project for type annotation.
-
-``__getitem__(key: Key, /) -> Value``
-"""""""""""""""""""""""""""""""""""""
-
-This method retrieves the value associated with a key.
-
-``keys() -> Iterable[Key]``
-"""""""""""""""""""""""""""
-
-This method returns an iterable of keys.
-
-``Testing``
------------
+Testing
+-------
 
 The ``tests/`` of this project (using ``unittest``) can be run through its ``run_tests.py`` file.
 
