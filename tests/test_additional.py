@@ -26,14 +26,11 @@ from preparse.messaging.UnallowedArgumentMessage import (
 
 
 class WarningTests(unittest.TestCase):
-    def parser_with_warnings(self: Self, **settings: Any) -> PreParser:
-
-        return PreParser(prog="example", **settings)
 
     def test_long_and_short_invalid_options(self: Self, /) -> None:
         parser: PreParser
         warnings: list[Any]
-        parser = self.parser_with_warnings(longopts=("good",))
+        parser = PreParser(longopts=("good",))
         preparsed, warnings = parser.parse_args(["--unknown", "-z"])
         self.assertEqual(preparsed, ["--unknown", "-z"])
         self.assertEqual(len(warnings), 2)
@@ -46,17 +43,15 @@ class WarningTests(unittest.TestCase):
         self.assertEqual(
             (warnings[1].option, warnings[1].islong), ("z", False)
         )
-        self.assertEqual(
-            str(warnings[0]), "example: unrecognized option '--unknown'"
-        )
-        self.assertEqual(str(warnings[1]), "example: invalid option -- 'z'")
+        self.assertEqual(str(warnings[0]), "unrecognized option '--unknown'")
+        self.assertEqual(str(warnings[1]), "invalid option -- 'z'")
 
     def test_each_unknown_short_option_triggers_callback(
         self: Self, /
     ) -> None:
         parser: PreParser
         warnings: list[Any]
-        parser = self.parser_with_warnings()
+        parser = PreParser()
         preparsed, warnings = parser.parse_args(["-xy"])
         self.assertEqual(preparsed, ["-xy"])
         self.assertEqual([w.option for w in warnings], ["x", "y"])
@@ -66,7 +61,7 @@ class WarningTests(unittest.TestCase):
         parser: PreParser
         warning: AmbiguousOptionMessage
         warnings: list[Any]
-        parser = self.parser_with_warnings(longopts=("alpha", "alpine"))
+        parser = PreParser(longopts=("alpha", "alpine"))
         preparsed, warnings = parser.parse_args(["--al"])
         self.assertEqual(preparsed, ["--al"])
         self.assertEqual(len(warnings), 1)
@@ -74,10 +69,9 @@ class WarningTests(unittest.TestCase):
         self.assertIsInstance(warning, AmbiguousOptionMessage)
         self.assertEqual(warning.option, "--al")
         self.assertEqual(warning.possibilities, ("--alpha", "--alpine"))
-        self.assertEqual(warning.prog, "example")
         self.assertEqual(
             str(warning),
-            "example: option '--al' is ambiguous; possibilities:"
+            "option '--al' is ambiguous; possibilities:"
             " '--alpha' '--alpine'",
         )
 
@@ -93,19 +87,17 @@ class WarningTests(unittest.TestCase):
                 ["--output"],
                 "--output",
                 True,
-                "example: option '--output' requires an argument",
+                "option '--output' requires an argument",
             ),
             (
                 ["-o"],
                 "o",
                 False,
-                "example: option requires an argument -- 'o'",
+                "option requires an argument -- 'o'",
             ),
         ):
             with self.subTest(args=args):
-                parser = self.parser_with_warnings(
-                    shortopts="o:", longopts=("output=",)
-                )
+                parser = PreParser(shortopts="o:", longopts=("output=",))
                 preparsed, warnings = parser.parse_args(args)
                 self.assertEqual(preparsed, args)
                 self.assertEqual(len(warnings), 1)
@@ -118,7 +110,7 @@ class WarningTests(unittest.TestCase):
     def test_value_on_flag_is_not_silently_accepted(self: Self, /) -> None:
         parser: PreParser
         warnings: list[Any]
-        parser = self.parser_with_warnings(longopts=("flag",))
+        parser = PreParser(longopts=("flag",))
         preparsed, warnings = parser.parse_args(["--flag=on"])
         self.assertEqual(preparsed, ["--flag=on"])
         self.assertEqual(len(warnings), 1)
@@ -126,16 +118,14 @@ class WarningTests(unittest.TestCase):
         self.assertEqual(warnings[0].option, "--flag")
         self.assertEqual(
             str(warnings[0]),
-            "example: option '--flag' doesn't allow an argument",
+            "option '--flag' doesn't allow an argument",
         )
 
     def test_valid_options_do_not_emit_warnings(self: Self, /) -> None:
         args: list[str]
         parser: PreParser
         warnings: list[Any]
-        parser = self.parser_with_warnings(
-            longopts=("flag", "maybe=?", "output=")
-        )
+        parser = PreParser(longopts=("flag", "maybe=?", "output="))
         args = ["--flag", "--output", "file", "--maybe=auto"]
         preparsed, warnings = parser.parse_args(args)
         self.assertEqual(preparsed, args)
@@ -145,10 +135,9 @@ class WarningTests(unittest.TestCase):
         self: Self, /
     ) -> None:
         parser: PreParser
-        parser = PreParser(prog="strict")
+        parser = PreParser()
         preparsed, messages = parser.parse_args(["--unknown"])
         self.assertEqual(len(messages), 1)
-        self.assertEqual(messages[0].prog, "strict")
         self.assertEqual(messages[0].option, "--unknown")
 
     def test_warning_object_copy_dict_repr_and_mutable_attributes(
@@ -158,17 +147,16 @@ class WarningTests(unittest.TestCase):
         examples: list[Message]
         original: Message
         examples = [
-            InvalidOptionMessage(prog="tool", option="-x", islong=False),
-            RequiredArgumentMessage(prog="tool", option="--out", islong=True),
-            UnallowedArgumentMessage(prog="tool", option="--flag"),
+            InvalidOptionMessage(option="-x", islong=False),
+            RequiredArgumentMessage(option="--out", islong=True),
+            UnallowedArgumentMessage(option="--flag"),
             AmbiguousOptionMessage(
-                prog="tool", option="--fo", possibilities=["--foo", "--force"]
+                option="--fo", possibilities=["--foo", "--force"]
             ),
         ]
         for original in examples:
             with self.subTest(warning=type(original).__name__):
                 self.assertIsInstance(original, Message)
-                self.assertIn(original.getmsg(), str(original))
                 self.assertIn(type(original).__name__, repr(original))
                 self.assertIn(original.option, repr(original))
                 duplicate = original.copy()
@@ -176,17 +164,12 @@ class WarningTests(unittest.TestCase):
                 self.assertIsNot(duplicate, original)
                 self.assertEqual(duplicate, original)
                 duplicate.option = "--changed"
-                duplicate.prog = 100
                 self.assertNotEqual(duplicate, original)
-                self.assertEqual(original.prog, "tool")
-                self.assertEqual(duplicate.prog, "100")
 
     def test_warning_data_is_defensively_copied(self: Self, /) -> None:
         exported: dict[str, Any]
         warning: AmbiguousOptionMessage
-        warning = AmbiguousOptionMessage(
-            prog="tool", option="--a", possibilities=["--abc"]
-        )
+        warning = AmbiguousOptionMessage(option="--a", possibilities=["--abc"])
         exported = warning.todict()
         exported["option"] = "not-the-warning"
         self.assertEqual(warning.option, "--a")
@@ -221,11 +204,10 @@ class ArgumentInputTests(unittest.TestCase):
         self.assertEqual(preparsed, ["--flag", "file"])
         self.assertEqual(consumed, ["--flag", "file"])
 
-    def test_none_uses_sys_argv_and_prog_uses_basename(self: Self, /) -> None:
+    def test_hollow(self: Self, /) -> None:
         parser: PreParser
         with patch.object(sys, "argv", ["/tmp/mytool.py", "--flag", "tail"]):
             parser = PreParser(longopts=("flag",))
-            self.assertEqual(parser.prog, "mytool.py")
             preparsed, messages = parser.parse_args(None)
             self.assertEqual(preparsed, ["--flag", "tail"])
             preparsed, messages = parser.parse_args()
@@ -402,7 +384,6 @@ class GetoptConfigurationTests(unittest.TestCase):
         parser = PreParser(
             shortopts="ab:c::",
             longopts=("flag", "output=", "maybe=?"),
-            prog="example",
         )
         original = [
             "-a",
@@ -422,7 +403,7 @@ class GetoptConfigurationTests(unittest.TestCase):
         self.assertIsInstance(warnings[0], RequiredArgumentMessage)
 
     def test_getopt_exact_long_option_takes_precedence(self: Self, /) -> None:
-        parser = PreParser(longopts=("mode=", "mode"), prog="example")
+        parser = PreParser(longopts=("mode=", "mode"))
         result, warnings = parser.parse_args(["--mode"])
         self.assertEqual(result, ["--mode"])
         self.assertEqual(warnings, [])
@@ -447,7 +428,6 @@ class GetoptConfigurationTests(unittest.TestCase):
             bundling=Tuning.MINIMIZE,
             expandsabbr=False,
             is_posix=True,
-            prog="original",
             reconcilesorders=False,
             special=Tuning.MAXIMIZE,
         )
@@ -455,29 +435,22 @@ class GetoptConfigurationTests(unittest.TestCase):
         self.assertIsNot(copy, original)
         copy.shortopts = "b:"
         copy.longopts = ("new=",)
-        copy.prog = "copy"
         self.assertEqual(original.shortopts, "a")
         self.assertIsNone(original.longopts)
-        self.assertEqual(original.prog, "original")
 
     def test_construction_from_another_parser_allows_overrides(
         self: Self, /
     ) -> None:
-        original = PreParser(longopts=("one",), expandsabbr=True, prog="base")
-        derived = PreParser(
-            original, expandsabbr=False, longopts=("two=",), prog=123
-        )
+        original = PreParser(longopts=("one",), expandsabbr=True)
+        derived = PreParser(original, expandsabbr=False, longopts=("two=",))
         self.assertFalse(derived.expandsabbr)
         self.assertTrue(original.expandsabbr)
-        self.assertEqual(derived.prog, "123")
-        self.assertEqual(original.prog, "base")
         self.assertEqual(derived.longopts, ("two=",))
         self.assertEqual(original.longopts, ("one",))
 
     def test_parser_repr(self: Self, /) -> None:
-        parser = PreParser(longopts=("flag",), prog="demo")
+        parser = PreParser(longopts=("flag",))
         self.assertIn("PreParser", repr(parser))
-        self.assertEqual(parser.prog, "demo")
 
     def test_tuning_enum_valid_values_and_missing_fallback(
         self: Self, /
