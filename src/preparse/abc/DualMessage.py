@@ -13,7 +13,6 @@ class DualMessage(Message):
     __slots__ = (
         "_islong",
         "_option",
-        "_prog",
     )
 
     def __init__(
@@ -23,13 +22,10 @@ class DualMessage(Message):
         *,
         islong: SupportsBool | NotImplementedType = NotImplemented,
         option: object = NotImplemented,
-        prog: object = NotImplemented,
     ) -> None:
         if not isinstance(other, NotImplementedType):
-            self.prog = other.prog
             self.option = other.option
             self.islong = other.islong
-        self.prog = prog
         self.option = option
         self.islong = islong
 
@@ -41,7 +37,7 @@ class DualMessage(Message):
     @abstractmethod
     def _shortmsg() -> str: ...
 
-    def getmsg(self: Self) -> str:
+    def __str__(self: Self, /) -> str:
         "This method returns the core message."
         if self.islong:
             return self._longmsg() % self.option
@@ -64,17 +60,8 @@ class DualMessage(Message):
     def option(self: Self, value: object, /) -> None:
         self._option = str(value)
 
-    @property
-    def prog(self: Self) -> str:
-        return self._prog
-
-    @prog.setter
-    def prog(self: Self, value: object, /) -> None:
-        self._prog = str(value)
-
     def todict(self: Self, /) -> dict[str, Any]:
         return dict(
             islong=self.islong,
             option=self.option,
-            prog=self.prog,
         )

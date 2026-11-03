@@ -20,7 +20,6 @@ def process(
     bundling: Tuning,
     expandsabbr: bool,
     is_posix: bool,
-    prog: str,
     reconcilesorders: bool,
     special: Tuning,
 ) -> tuple[list[str], list[Message]]:
@@ -32,7 +31,6 @@ def process(
         shortopts=shortopts,
         longopts=longopts,
         is_posix=is_posix,
-        prog=prog,
     )
     items = digest(
         items,

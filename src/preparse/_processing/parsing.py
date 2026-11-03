@@ -27,17 +27,14 @@ def parse(args: list[Item], **kwargs: Any) -> tuple[list[Item], list[Message]]:
     messages: list[Message]
     messages = list()
 
-    def warn(message: Message, /) -> None:
-        messages.append(message)
-
-    preparsed = list(parse_generator(args, warn=warn, **kwargs))
+    preparsed = list(parse_generator(args, messages=messages, **kwargs))
     return preparsed, messages
 
 
 def parse_bundling(
     arg: str,
     *,
-    cause: FunctionType,
+    messages: list[Message],
     shortopts: str,
 ) -> Bundle:
     ans: Bundle
@@ -50,7 +47,7 @@ def parse_bundling(
         ans.chars += y
         mode = short_argmode(y, shortopts)
         if mode is None:
-            cause(PIOW, option=y, islong=False)
+            messages.append(PIOW(option=y, islong=False))
             continue
         ans.argmode = mode
         if mode == "":
@@ -62,32 +59,18 @@ def parse_bundling(
     return ans
 
 
-def parse_cause(
-    *,
-    prog: str,
-    warn: FunctionType,
-) -> Any:
-    def ans(cls: type, **kwargs: Any) -> None:
-        warn(cls(prog=prog, **kwargs))
-
-    return ans
-
-
 def parse_generator(
     items: list[Any],
     *,
     shortopts: str | None,
     longopts: tuple[str, ...] | None,
+    messages: list[Message],
     is_posix: bool,
-    prog: str,
-    warn: FunctionType,
 ) -> Generator[Any, Any, Any]:
     broken: bool
-    cause: FunctionType
     item: Any
     last: Any
     broken = shortopts is None and longopts is None
-    cause = parse_cause(prog=prog, warn=warn)
     last = None
     for item in items:
         if broken:
@@ -114,7 +97,7 @@ def parse_generator(
             item.value,
             shortopts=shortopts,
             longopts=longopts,
-            cause=cause,
+            messages=messages,
         )
         if not last.ishungry():
             yield last
@@ -123,9 +106,9 @@ def parse_generator(
         # if the last item is not starved
         return
     if isinstance(last, Long):
-        cause(PRAW, option=last.fullkey, islong=True)
+        messages.append(PRAW(option=last.fullkey, islong=True))
     else:
-        cause(PRAW, option=last.chars[-1], islong=False)
+        messages.append(PRAW(option=last.chars[-1], islong=False))
     yield last
 
 
@@ -164,7 +147,7 @@ def long_argmode(spec: str) -> tuple[str, str]:
 def parse_long(
     arg: str,
     *,
-    cause: FunctionType,
+    messages: list[Message],
     longopts: tuple[str, ...],
 ) -> Long:
     parts = arg.split("=", 1)
@@ -191,38 +174,39 @@ def parse_long(
         ]
     if not matches:
         ans.argmode = "::"
-        cause(PIOW, option=arg, islong=True)
+        messages.append(PIOW(option=arg, islong=True))
         return ans
     if len(matches) >= 2:
         ans.argmode = "::"
-        cause(
-            PAOW,
-            option=arg,
-            possibilities=[key for key, _ in matches],
+        messages.append(
+            PAOW(
+                option=arg,
+                possibilities=[key for key, _ in matches],
+            )
         )
         return ans
     key, ans.argmode = matches[0]
     ans.fullkey = key
     if ans.argmode == "" and ans.right is not None:
-        cause(PUAW, option=ans.fullkey)
+        messages.append(PUAW(option=ans.fullkey))
     return ans
 
 
 def parse_option(
     arg: str,
     *,
-    cause: FunctionType,
+    messages: list[Message],
     shortopts: str | None,
     longopts: tuple[str, ...] | None,
 ) -> Option:
     if parse_islong(arg, shortopts=shortopts, longopts=longopts):
         return parse_long(
             arg,
-            cause=cause,
+            messages=messages,
             longopts=longopts if longopts is not None else (),
         )
     return parse_bundling(
         arg,
-        cause=cause,
+        messages=messages,
         shortopts=shortopts if shortopts is not None else "",
     )
