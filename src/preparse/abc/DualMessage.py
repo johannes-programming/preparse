@@ -55,7 +55,11 @@ class DualMessage(Message):
         return self._is_long
 
     @is_long.setter
-    def is_long(self: Self, value: object, /) -> None:
+    def is_long(
+        self: Self, value: SupportsBool | NotImplementedType, /
+    ) -> None:
+        if isinstance(value, NotImplementedType):
+            return
         self._is_long = bool(value)
 
     @property
@@ -64,4 +68,6 @@ class DualMessage(Message):
 
     @option.setter
     def option(self: Self, value: object, /) -> None:
+        if isinstance(value, NotImplementedType):
+            return
         self._option = str(value)
