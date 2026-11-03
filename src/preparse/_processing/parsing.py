@@ -78,7 +78,6 @@ def parse_generator(
     *,
     shortopts: str | None,
     longopts: tuple[str, ...] | None,
-    expectsabbr: bool,
     expectsposix: bool,
     prog: str,
     warn: FunctionType,
@@ -116,7 +115,6 @@ def parse_generator(
             shortopts=shortopts,
             longopts=longopts,
             cause=cause,
-            expectsabbr=expectsabbr,
         )
         if not last.ishungry():
             yield last
@@ -167,7 +165,6 @@ def parse_long(
     arg: str,
     *,
     cause: FunctionType,
-    expectsabbr: bool,
     longopts: tuple[str, ...],
 ) -> Long:
     parts = arg.split("=", 1)
@@ -188,7 +185,7 @@ def parse_long(
         matches = [
             min(matches, key=lambda match: ("", ":", "::").index(match[1]))
         ]
-    elif expectsabbr:
+    else:
         matches = [
             (key, mode) for key, mode in options if key.startswith(ans.fullkey)
         ]
@@ -215,7 +212,6 @@ def parse_option(
     arg: str,
     *,
     cause: FunctionType,
-    expectsabbr: bool,
     shortopts: str | None,
     longopts: tuple[str, ...] | None,
 ) -> Option:
@@ -223,7 +219,6 @@ def parse_option(
         return parse_long(
             arg,
             cause=cause,
-            expectsabbr=expectsabbr,
             longopts=longopts if longopts is not None else (),
         )
     return parse_bundling(

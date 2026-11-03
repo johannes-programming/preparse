@@ -25,7 +25,6 @@ class PreParser(Copyable):
         "_longopts",
         "_bundling",
         "_expandsabbr",
-        "_expectsabbr",
         "_expectsposix",
         "_prog",
         "_reconcilesorders",
@@ -35,7 +34,6 @@ class PreParser(Copyable):
     _longopts: tuple[str, ...] | None
     _bundling: Tuning
     _expandsabbr: bool
-    _expectsabbr: bool
     _expectsposix: bool
     _prog: str
     _reconcilesorders: bool
@@ -55,7 +53,6 @@ class PreParser(Copyable):
         *,
         bundling: int | NotImplementedType = NotImplemented,
         expandsabbr: SupportsBool | NotImplementedType = NotImplemented,
-        expectsabbr: SupportsBool | NotImplementedType = NotImplemented,
         expectsposix: SupportsBool | NotImplementedType = NotImplemented,
         longopts: tuple[str, ...] | None | NotImplementedType = NotImplemented,
         prog: object = NotImplemented,
@@ -65,7 +62,6 @@ class PreParser(Copyable):
     ) -> None:
         self._bundling = Tuning.MAINTAIN
         self._expandsabbr = True
-        self._expectsabbr = True
         self._expectsposix = False
         self._longopts = ()
         self.prog = None
@@ -75,7 +71,6 @@ class PreParser(Copyable):
         if not isinstance(other, NotImplementedType):
             self.bundling = other.bundling
             self.expandsabbr = other.expandsabbr
-            self.expectsabbr = other.expectsabbr
             self.expectsposix = other.expectsposix
             self.longopts = other.longopts
             self.prog = other.prog
@@ -84,7 +79,6 @@ class PreParser(Copyable):
             self.special = other.special
         self.bundling = bundling
         self.expandsabbr = expandsabbr
-        self.expectsabbr = expectsabbr
         self.expectsposix = expectsposix
         self.longopts = longopts
         self.prog = prog
@@ -123,18 +117,6 @@ class PreParser(Copyable):
         if isinstance(value, NotImplementedType):
             return
         self._expandsabbr = bool(value)
-
-    @property
-    def expectsabbr(self: Self, /) -> bool:
-        return self._expectsabbr
-
-    @expectsabbr.setter
-    def expectsabbr(
-        self: Self, value: SupportsBool | NotImplementedType, /
-    ) -> None:
-        if isinstance(value, NotImplementedType):
-            return
-        self._expectsabbr = bool(value)
 
     @property
     def expectsposix(self: Self, /) -> bool:
@@ -232,7 +214,6 @@ class PreParser(Copyable):
         ans = dict()
         ans["bundling"] = self.bundling
         ans["expandsabbr"] = self.expandsabbr
-        ans["expectsabbr"] = self.expectsabbr
         ans["expectsposix"] = self.expectsposix
         ans["longopts"] = self.longopts
         ans["prog"] = self.prog

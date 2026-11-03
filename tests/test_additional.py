@@ -271,24 +271,20 @@ class ConfigurationTests(unittest.TestCase):
         self: Self, /
     ) -> None:
         expands: bool
-        expects: bool
         output: list[str]
         parser: PreParser
         reported: list[Any]
         warning_type: type[Message] | None
-        for expands, expects, output, warning_type in (
-            (True, True, ["--verbose"], None),
-            (False, True, ["--ver"], None),
-            (True, False, ["--ver"], InvalidOptionMessage),
-            (False, False, ["--ver"], InvalidOptionMessage),
+        for expands, output, warning_type in (
+            (True, ["--verbose"], None),
+            (False, ["--ver"], None),
         ):
-            with self.subTest(expands=expands, expects=expects):
+            with self.subTest(expands=expands):
                 reported = []
 
                 parser = PreParser(
                     longopts=("verbose",),
                     expandsabbr=expands,
-                    expectsabbr=expects,
                 )
                 preparsed, reported = parser.parse_args(["--ver"])
                 self.assertEqual(preparsed, output)
@@ -453,7 +449,6 @@ class GetoptConfigurationTests(unittest.TestCase):
             longopts=None,
             bundling=Tuning.MINIMIZE,
             expandsabbr=False,
-            expectsabbr=False,
             expectsposix=True,
             prog="original",
             reconcilesorders=False,
@@ -492,7 +487,6 @@ class GetoptConfigurationTests(unittest.TestCase):
                 "longopts",
                 "bundling",
                 "expandsabbr",
-                "expectsabbr",
                 "expectsposix",
                 "prog",
                 "reconcilesorders",

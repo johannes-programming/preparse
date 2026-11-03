@@ -1,7 +1,7 @@
 __all__: list[str] = ["process"]
 
 from collections.abc import Iterable
-from typing import Any, Optional
+from typing import Optional
 
 from preparse._items.Item import Item
 from preparse._processing.deparsing import deparse
@@ -19,7 +19,6 @@ def process(
     longopts: tuple[str, ...] | None,
     bundling: Tuning,
     expandsabbr: bool,
-    expectsabbr: bool,
     expectsposix: bool,
     prog: str,
     reconcilesorders: bool,
@@ -32,7 +31,6 @@ def process(
         items,
         shortopts=shortopts,
         longopts=longopts,
-        expectsabbr=expectsabbr,
         expectsposix=expectsposix,
         prog=prog,
     )
