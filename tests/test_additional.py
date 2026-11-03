@@ -16,6 +16,7 @@ from unittest.mock import patch
 
 from preparse.abc.Message import Message
 from preparse.core.PreParser import PreParser
+from preparse.enum.Infer import Infer
 from preparse.enum.Tuning import Tuning
 from preparse.messaging.AmbiguousOptionMessage import AmbiguousOptionMessage
 from preparse.messaging.InvalidOptionMessage import InvalidOptionMessage
@@ -234,14 +235,14 @@ class ConfigurationTests(unittest.TestCase):
     ) -> None:
         parser: PreParser
         with patch.dict(os.environ, {}, clear=True):
-            self.assertFalse(PreParser(is_posix=None).is_posix)
+            self.assertFalse(PreParser(is_posix=Infer.INFER).is_posix)
         with patch.dict(os.environ, {"POSIXLY_CORRECT": ""}, clear=True):
-            self.assertTrue(PreParser(is_posix=None).is_posix)
+            self.assertTrue(PreParser(is_posix=Infer.INFER).is_posix)
         with patch.dict(os.environ, {"POSIXLY_CORRECT": "0"}, clear=True):
-            self.assertTrue(PreParser(is_posix=None).is_posix)
+            self.assertTrue(PreParser(is_posix=Infer.INFER).is_posix)
         parser = PreParser(is_posix=False)
         with patch.dict(os.environ, {"POSIXLY_CORRECT": "1"}, clear=True):
-            parser.is_posix = None
+            parser.is_posix = Infer.INFER
         self.assertTrue(parser.is_posix)
 
     def test_abbreviation_expansion_and_recognition_are_independent(
