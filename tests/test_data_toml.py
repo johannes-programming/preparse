@@ -11,6 +11,7 @@ from typing import Any, Self
 
 from preparse.core.PreParser import PreParser
 from preparse.enum.Depletion import Depletion
+from preparse.enum.Tuning import Tuning
 
 
 class Utils(enum.Enum):
@@ -61,6 +62,11 @@ class TestDataToml(unittest.TestCase):
         superanswer: list[Any]
 
         kwargs_ = dict(kwargs)
+        kwargs_["abbr"] = (
+            Tuning.MAXIMIZE
+            if kwargs_.pop("expandsabbr", True)
+            else Tuning.MAINTAIN
+        )
         kwargs_["depletion"] = Depletion(
             kwargs_.get("depletion", "REINTERPRET")
         )

@@ -25,7 +25,7 @@ class PreParser(Copyable):
     __slots__ = (
         "_bundling",
         "_depletion",
-        "_expandsabbr",
+        "_abbr",
         "_is_posix",
         "_longopts",
         "_reconcilesorders",
@@ -34,7 +34,7 @@ class PreParser(Copyable):
     )
     _bundling: Tuning
     _depletion: Depletion
-    _expandsabbr: bool
+    _abbr: Tuning
     _is_posix: bool
     _longopts: tuple[str, ...] | None
     _reconcilesorders: bool
@@ -55,7 +55,7 @@ class PreParser(Copyable):
         *,
         bundling: int | NoChange = NoChange.NO_CHANGE,
         depletion: Depletion | NoChange = NoChange.NO_CHANGE,
-        expandsabbr: SupportsBool | NoChange = NoChange.NO_CHANGE,
+        abbr: Tuning | NoChange = NoChange.NO_CHANGE,
         is_posix: SupportsBool | Infer | NoChange = NoChange.NO_CHANGE,
         longopts: tuple[object, ...] | None | NoChange = NoChange.NO_CHANGE,
         reconcilesorders: SupportsBool | NoChange = NoChange.NO_CHANGE,
@@ -64,7 +64,7 @@ class PreParser(Copyable):
     ) -> None:
         self._bundling = Tuning.MAINTAIN
         self._depletion = Depletion.REINTERPRET
-        self._expandsabbr = True
+        self._abbr = Tuning.MAXIMIZE
         self._is_posix = False
         self._longopts = ()
         self._reconcilesorders = True
@@ -73,7 +73,7 @@ class PreParser(Copyable):
         if not isinstance(other, NoChange):
             self.bundling = other.bundling
             self.depletion = other.depletion
-            self.expandsabbr = other.expandsabbr
+            self.abbr = other.abbr
             self.is_posix = other.is_posix
             self.longopts = other.longopts
             self.reconcilesorders = other.reconcilesorders
@@ -81,7 +81,7 @@ class PreParser(Copyable):
             self.special = other.special
         self.bundling = bundling
         self.depletion = depletion
-        self.expandsabbr = expandsabbr
+        self.abbr = abbr
         self.is_posix = is_posix
         self.longopts = longopts
         self.reconcilesorders = reconcilesorders
@@ -98,7 +98,7 @@ class PreParser(Copyable):
         ans = dict()
         ans["bundling"] = self.bundling
         ans["depletion"] = self.depletion
-        ans["expandsabbr"] = self.expandsabbr
+        ans["abbr"] = self.abbr
         ans["is_posix"] = self.is_posix
         ans["longopts"] = self.longopts
         ans["reconcilesorders"] = self.reconcilesorders
@@ -133,14 +133,15 @@ class PreParser(Copyable):
         self._depletion = value
 
     @property
-    def expandsabbr(self: Self, /) -> bool:
-        return self._expandsabbr
+    def abbr(self: Self, /) -> Tuning:
+        "This property determines how long options are abbreviated."
+        return self._abbr
 
-    @expandsabbr.setter
-    def expandsabbr(self: Self, value: SupportsBool | NoChange, /) -> None:
+    @abbr.setter
+    def abbr(self: Self, value: Tuning | NoChange, /) -> None:
         if isinstance(value, NoChange):
             return
-        self._expandsabbr = bool(value)
+        self._abbr = Tuning(value)
 
     @property
     def is_posix(self: Self, /) -> bool:

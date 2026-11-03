@@ -262,13 +262,37 @@ class ConfigurationTests(unittest.TestCase):
 
                 parser = PreParser(
                     longopts=("verbose",),
-                    expandsabbr=expands,
+                    abbr=Tuning.MAXIMIZE if expands else Tuning.MAINTAIN,
                 )
                 preparsed, reported = parser.parse_args(["--ver"])
                 self.assertEqual(preparsed, output)
                 self.assertEqual(len(reported), int(warning_type is not None))
                 if warning_type is not None:
                     self.assertIsInstance(reported[0], warning_type)
+
+    def test_abbr_tuning_minimizes_without_ambiguity(self: Self, /) -> None:
+        parser = PreParser(
+            longopts=("verbose", "version", "x", "xml"),
+            abbr=Tuning.MINIMIZE,
+        )
+        output, warnings = parser.parse_args(
+            ["--verbose", "--vers", "--x", "--xml", "--unknown"]
+        )
+        self.assertEqual(
+            output, ["--verb", "--vers", "--x", "--xm", "--unknown"]
+        )
+        self.assertEqual(output, parser.parse_args(output)[0])
+        self.assertEqual(len(warnings), 1)
+        self.assertIsInstance(warnings[0], InvalidOptionMessage)
+
+        parser = PreParser(
+            shortopts=None,
+            longopts=("verbose", "version"),
+            abbr=Tuning.MINIMIZE,
+        )
+        self.assertEqual(parser.parse_args(["-verbose"])[0], ["-verb"])
+        parser = PreParser(longopts=("mode=", "mode"), abbr=Tuning.MINIMIZE)
+        self.assertEqual(parser.parse_args(["--mode"]), (["--mode"], []))
 
     def test_no_option_syntax_is_truly_positional_only(self: Self, /) -> None:
         args: list[str]
@@ -425,7 +449,7 @@ class GetoptConfigurationTests(unittest.TestCase):
             shortopts="a",
             longopts=None,
             bundling=Tuning.MINIMIZE,
-            expandsabbr=False,
+            abbr=Tuning.MAINTAIN,
             is_posix=True,
             reconcilesorders=False,
             special=Tuning.MAXIMIZE,
@@ -440,10 +464,10 @@ class GetoptConfigurationTests(unittest.TestCase):
     def test_construction_from_another_parser_allows_overrides(
         self: Self, /
     ) -> None:
-        original = PreParser(longopts=("one",), expandsabbr=True)
-        derived = PreParser(original, expandsabbr=False, longopts=("two=",))
-        self.assertFalse(derived.expandsabbr)
-        self.assertTrue(original.expandsabbr)
+        original = PreParser(longopts=("one",), abbr=Tuning.MAXIMIZE)
+        derived = PreParser(original, abbr=Tuning.MAINTAIN, longopts=("two=",))
+        self.assertIs(derived.abbr, Tuning.MAINTAIN)
+        self.assertIs(original.abbr, Tuning.MAXIMIZE)
         self.assertEqual(derived.longopts, ("two=",))
         self.assertEqual(original.longopts, ("one",))
 
