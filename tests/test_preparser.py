@@ -13,14 +13,12 @@ class TestPreParser(unittest.TestCase):
         parser_copy: PreParser
         parser = PreParser()
         parser_copy = parser.copy()
-        self.assertEqual(parser.optdict, parser_copy.optdict)
+        self.assertEqual(parser, parser_copy)
 
     def test_no_options_idempotent(self: Self) -> None:
         args: list[str]
         parser: PreParser
-        parser = PreParser(
-            allowslong=False, allowsshort=False, expectsposix=True
-        )
+        parser = PreParser(longopts=None, shortopts=None, expectsposix=True)
         args = ["-c2", "--", "-a"]
         preparsed, messages = parser.parse_args(args)
         self.assertEqual(args, preparsed)
@@ -29,9 +27,9 @@ class TestPreParser(unittest.TestCase):
     def test_minimize_short_bundle_with_hyphen_option(self: Self) -> None:
         parser: PreParser
         parser = PreParser(
-            allowslong=False,
+            longopts=None,
             bundling=0,
-            optdict={"--": 2},
+            shortopts="-::",
         )
         preparsed, messages = parser.parse_args(["--x"])
         self.assertEqual(preparsed, ["--x"])
@@ -43,7 +41,6 @@ class TestPreParser(unittest.TestCase):
         parser = PreParser()
         result = parser.todict()
         expected_keys = [
-            "optdict",
             "prog",
         ]
         self.assertTrue(all(key in result for key in expected_keys))

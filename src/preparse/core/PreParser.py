@@ -15,7 +15,7 @@ from tofunc import tofunc
 from preparse._processing import process
 from preparse.abc.Copyable import Copyable
 from preparse.abc.Message import Message
-from preparse.core.Optdict import Optdict
+from preparse.enum.Nargs import Nargs
 from preparse.enum.Tuning import Tuning
 from preparse.typing.SupportsBool import SupportsBool
 from preparse.typing.SupportsKeysAndGetitem import SupportsKeysAndGetitem
@@ -26,15 +26,14 @@ Key = TypeVar("Key", bound=Hashable)
 class PreParser(Copyable):
 
     __slots__ = (
-        "_allowslong",
-        "_allowsshort",
         "_bundling",
         "_expandsabbr",
         "_expectsabbr",
         "_expectsposix",
-        "_optdict",
+        "_longopts",
         "_prog",
         "_reconcilesorders",
+        "_shortopts",
         "_special",
     )
     _allowslong: bool
@@ -43,9 +42,10 @@ class PreParser(Copyable):
     _expandsabbr: bool
     _expectsabbr: bool
     _expectsposix: bool
-    _optdict: Optdict
+    _longopts: tuple[str, ...] | None
     _prog: str
     _reconcilesorders: bool
+    _shortopts: str | None
     _special: Tuning
 
     def __eq__(self: Self, other: object, /) -> bool | NotImplementedType:
@@ -60,80 +60,50 @@ class PreParser(Copyable):
         other: PreParser | NotImplementedType = NotImplemented,
         /,
         *,
-        allowslong: SupportsBool | NotImplementedType = NotImplemented,
-        allowsshort: SupportsBool | NotImplementedType = NotImplemented,
+        longopts: (
+            Iterable[object] | None | NotImplementedType
+        ) = NotImplemented,
+        shortopts: str | None | NotImplementedType = NotImplemented,
         bundling: int | NotImplementedType = NotImplemented,
         expandsabbr: SupportsBool | NotImplementedType = NotImplemented,
         expectsabbr: SupportsBool | NotImplementedType = NotImplemented,
         expectsposix: SupportsBool | NotImplementedType = NotImplemented,
-        optdict: (
-            SupportsKeysAndGetitem[Key, int | None]
-            | Iterable[tuple[Key, int | None]]
-            | NotImplementedType
-        ) = NotImplemented,
         prog: object = NotImplemented,
         reconcilesorders: SupportsBool | NotImplementedType = NotImplemented,
         special: int | NotImplementedType = NotImplemented,
     ) -> None:
-        self._allowslong = True
-        self._allowsshort = True
         self._bundling = Tuning.MAINTAIN
         self._expandsabbr = True
         self._expectsabbr = True
         self._expectsposix = False
-        self._optdict = Optdict()
+        self._longopts = None
         self.prog = None
         self._reconcilesorders = True
+        self._shortopts = None
         self._special = Tuning.MAINTAIN
         if not isinstance(other, NotImplementedType):
-            self.allowslong = other.allowslong
-            self.allowsshort = other.allowsshort
             self.bundling = other.bundling
             self.expandsabbr = other.expandsabbr
             self.expectsabbr = other.expectsabbr
             self.expectsposix = other.expectsposix
-            self.optdict = other.optdict
+            self.longopts = other.longopts
             self.prog = other.prog
             self.reconcilesorders = other.reconcilesorders
+            self.shortopts = other.shortopts
             self.special = other.special
-        self.allowslong = allowslong
-        self.allowsshort = allowsshort
         self.bundling = bundling
         self.expandsabbr = expandsabbr
         self.expectsabbr = expectsabbr
         self.expectsposix = expectsposix
-        self.optdict = optdict
+        self.longopts = longopts
         self.prog = prog
         self.reconcilesorders = reconcilesorders
+        self.shortopts = shortopts
         self.special = special
 
     @setdoc.basic
     def __repr__(self: Self, /) -> str:
         return datarepr(type(self).__name__, **self.todict())
-
-    @property
-    def allowslong(self: Self, /) -> bool:
-        return self._allowslong
-
-    @allowslong.setter
-    def allowslong(
-        self: Self, value: SupportsBool | NotImplementedType, /
-    ) -> None:
-        if isinstance(value, NotImplementedType):
-            return
-        self._allowslong = bool(value)
-
-    @property
-    def allowsshort(self: Self, /) -> bool:
-        return self._allowsshort
-
-    @allowsshort.setter
-    def allowsshort(
-        self: Self, value: SupportsBool | NotImplementedType, /
-    ) -> None:
-        if isinstance(value, NotImplementedType):
-            return
-        self._allowsshort = bool(value)
 
     @property
     def bundling(self: Self, /) -> Tuning:
@@ -191,19 +161,19 @@ class PreParser(Copyable):
             self._expectsposix = bool(value)
 
     @property
-    def optdict(self: Self, /) -> Optdict:
-        "This property gives a dictionary of options."
-        return self._optdict
+    def longopts(self: Self, /) -> tuple[str, ...] | None:
+        return self._longopts
 
-    @optdict.setter
-    def optdict(self: Self, value: Any, /) -> None:
-        "This property gives a dictionary of options."
-        value_: Optdict
+    @longopts.setter
+    def longopts(
+        self: Self, value: Iterable[object] | None | NotImplementedType, /
+    ) -> None:
         if isinstance(value, NotImplementedType):
             return
-        value_ = Optdict(value)
-        self._optdict.clear()
-        self._optdict.update(value_)
+        if value is None:
+            self._longopts = None
+        else:
+            self._longopts = tuple(map(str, value))
 
     def parse_args(
         self: Self,
@@ -243,6 +213,19 @@ class PreParser(Copyable):
         self._reconcilesorders = bool(value)
 
     @property
+    def shortopts(self: Self, /) -> str | None:
+        return self._shortopts
+
+    @shortopts.setter
+    def shortopts(self: Self, value: object, /) -> None:
+        if isinstance(value, NotImplementedType):
+            return
+        if value is None:
+            self._shortopts = None
+        else:
+            self._shortopts = str(value)
+
+    @property
     def special(self: Self, /) -> Tuning:
         "This Tuning property determines the approach towards the special argument."
         return self._special
@@ -258,14 +241,13 @@ class PreParser(Copyable):
         "This method returns a dict representing the current instance."
         ans: dict[str, Any]
         ans = dict()
-        ans["allowslong"] = self.allowslong
-        ans["allowsshort"] = self.allowsshort
         ans["bundling"] = self.bundling
         ans["expandsabbr"] = self.expandsabbr
         ans["expectsabbr"] = self.expectsabbr
         ans["expectsposix"] = self.expectsposix
-        ans["optdict"] = self.optdict
+        ans["longopts"] = self.longopts
         ans["prog"] = self.prog
         ans["reconcilesorders"] = self.reconcilesorders
+        ans["shortopts"] = self.shortopts
         ans["special"] = self.special
         return ans

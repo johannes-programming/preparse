@@ -32,6 +32,16 @@ class Utils(enum.Enum):
             return True
         return False
 
+    @staticmethod
+    def parser(**kwargs: Any) -> dict[str, Any]:
+        ans = dict()
+        for x, y in kwargs.items():
+            if Utils.istestable(y):
+                ans[x] = y
+            else:
+                ans[x] = None
+        return ans
+
 
 class TestDataToml(unittest.TestCase):
 
@@ -51,20 +61,19 @@ class TestDataToml(unittest.TestCase):
         **kwargs: Any,
     ) -> None:
         answer: list[Any]
-        capture: list[Any]
         data: dict[str, Any]
         erranswer: list[Any]
         msg: str
         parser: PreParser
         superanswer: list[Any]
 
-        parser = PreParser(**kwargs)
         data = dict(
             query=query,
             solution=solution,
             warnings=warnings,
             **kwargs,
         )
+        parser = PreParser(**Utils.parser(**kwargs))
         answer, messages = parser.parse_args(query)
         erranswer = list(map(str, messages))
         superanswer = parser.parse_args(answer)[0]
