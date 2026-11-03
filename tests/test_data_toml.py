@@ -62,10 +62,6 @@ class TestDataToml(unittest.TestCase):
         superanswer: list[Any]
 
         kwargs_ = dict(kwargs)
-        if kwargs_.pop("expandsabbr", True):
-            kwargs_["abbr"] = Tuning.MINIMIZE
-        else:
-            kwargs_["abbr"] = Tuning.MAINTAIN
         kwargs_["depletion"] = Depletion(
             kwargs_.get("depletion", "REINTERPRET")
         )

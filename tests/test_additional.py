@@ -273,7 +273,7 @@ class ConfigurationTests(unittest.TestCase):
             self.assertEqual(preparsed, output)
             self.assertEqual(len(reported), 0)
 
-    def test_abbr_tuning_minimizes_without_ambiguity(self: Self, /) -> None:
+    def test_abbr_tuning_minimizes_without_ambiguity_0(self: Self, /) -> None:
         parser = PreParser(
             longopts=("verbose", "version", "x", "xml"),
             abbr=Tuning.MAXIMIZE,
@@ -287,6 +287,7 @@ class ConfigurationTests(unittest.TestCase):
         self.assertEqual(len(warnings), 1)
         self.assertIsInstance(warnings[0], InvalidOptionMessage)
 
+    def test_abbr_tuning_minimizes_without_ambiguity_1(self: Self, /) -> None:
         parser = PreParser(
             shortopts=None,
             longopts=("verbose", "version"),
@@ -296,6 +297,8 @@ class ConfigurationTests(unittest.TestCase):
         output = parser.parse_args(query)[0]
         solution = ["-verb"]
         self.assertEqual(output, solution)
+
+    def test_abbr_tuning_minimizes_without_ambiguity_2(self: Self, /) -> None:
         parser = PreParser(longopts=("mode=", "mode"), abbr=Tuning.MINIMIZE)
         query = ["--mode"]
         output, warnings = parser.parse_args(query)
