@@ -1,7 +1,6 @@
 __all__: list[str] = ["process"]
 
 from collections.abc import Iterable
-from typing import Optional
 
 from preparse._items.Item import Item
 from preparse._processing.deparsing import deparse
@@ -9,11 +8,12 @@ from preparse._processing.digesting import digest
 from preparse._processing.parsing import parse
 from preparse._processing.pulling import pull
 from preparse.abc.Message import Message
+from preparse.enum.Infer import Infer
 from preparse.enum.Tuning import Tuning
 
 
 def process(
-    args: Optional[Iterable[object]] = None,
+    args: Iterable[object] | Infer = Infer.INFER,
     *,
     shortopts: str | None,
     longopts: tuple[str, ...] | None,

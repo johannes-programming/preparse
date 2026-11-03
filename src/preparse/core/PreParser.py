@@ -5,7 +5,7 @@ __all__: list[str] = ["PreParser"]
 import os
 from collections.abc import Iterable
 from types import NotImplementedType
-from typing import Any, Optional, Self
+from typing import Any, Self
 
 import setdoc
 from datarepr import datarepr
@@ -160,7 +160,7 @@ class PreParser(Copyable):
 
     def parse_args(
         self: Self,
-        args: Optional[Iterable[object]] = None,
+        args: Iterable[object] | Infer = Infer.INFER,
     ) -> tuple[list[str], list[Message]]:
         "This method parses args."
         return process(

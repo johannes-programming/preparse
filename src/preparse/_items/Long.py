@@ -1,7 +1,7 @@
 __all__: list[str] = ["Long"]
 
 import operator
-from typing import Any, Optional, Self, SupportsIndex
+from typing import Self, SupportsIndex
 
 import setdoc
 
@@ -23,11 +23,11 @@ class Long(Option):
         self: Self,
         /,
         *,
-        abbrlen: Optional[int] = None,
+        abbrlen: int | None = None,
         fullkey: str,
         joined: bool = False,
         argmode: str = "",
-        right: Optional[str] = None,
+        right: str | None = None,
     ) -> None:
         self.abbrlen = abbrlen
         self.fullkey = fullkey
@@ -40,11 +40,11 @@ class Long(Option):
         return self.fullkey[: self.abbrlen]
 
     @property
-    def abbrlen(self: Self) -> Optional[int]:
+    def abbrlen(self: Self) -> int | None:
         return self._abbrlen
 
     @abbrlen.setter
-    def abbrlen(self: Self, x: Optional[SupportsIndex]) -> None:
+    def abbrlen(self: Self, x: SupportsIndex | None, /) -> None:
         if x is None:
             self._abbrlen = None
         else:

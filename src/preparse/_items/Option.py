@@ -1,7 +1,7 @@
 __all__: list[str] = ["Option"]
 
 import operator
-from typing import Optional, Self, SupportsIndex
+from typing import Self, SupportsIndex
 
 from preparse._items.Item import Item
 
@@ -12,7 +12,7 @@ class Option(Item):
 
     _joined: bool
     _argmode: str
-    _right: Optional[str]
+    _right: str | None
 
     def ishungry(self: Self) -> bool:
         return (self.right is None) and (self.argmode == ":")
@@ -34,7 +34,7 @@ class Option(Item):
         self._argmode = value
 
     @property
-    def right(self: Self) -> Optional[str]:
+    def right(self: Self) -> str | None:
         return self._right
 
     @right.setter
