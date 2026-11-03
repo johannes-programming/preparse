@@ -8,6 +8,7 @@ from typing import Any, Self
 from datarepr import datarepr
 
 from preparse.abc.Copyable import Copyable
+from preparse.enum.Infer import Infer
 
 
 class Message(Copyable):
@@ -34,5 +35,5 @@ class Message(Copyable):
 
     def prog(self: Self, name: object, /) -> str:
         x: object
-        x = sys.argv[0] if name is None else name
+        x = sys.argv[0] if isinstance(name, Infer) else name
         return f"{x}: {self}"
