@@ -8,6 +8,7 @@ from preparse._processing.digesting import digest
 from preparse._processing.parsing import parse
 from preparse._processing.pulling import pull
 from preparse.abc.Message import Message
+from preparse.enum.Depletion import Depletion
 from preparse.enum.Infer import Infer
 from preparse.enum.Tuning import Tuning
 
@@ -15,12 +16,13 @@ from preparse.enum.Tuning import Tuning
 def process(
     args: Iterable[object] | Infer = Infer.INFER,
     *,
-    shortopts: str | None,
-    longopts: tuple[str, ...] | None,
     bundling: Tuning,
+    depletion: Depletion,
     expandsabbr: bool,
     is_posix: bool,
+    longopts: tuple[str, ...] | None,
     reconcilesorders: bool,
+    shortopts: str | None,
     special: Tuning,
 ) -> tuple[list[str], list[Message]]:
     "This method parses args."
@@ -31,6 +33,7 @@ def process(
         shortopts=shortopts,
         longopts=longopts,
         is_posix=is_posix,
+        depletion=depletion,
     )
     items = digest(
         items,

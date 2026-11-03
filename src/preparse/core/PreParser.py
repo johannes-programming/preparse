@@ -13,6 +13,7 @@ from datarepr import datarepr
 from preparse._processing import process
 from preparse.abc.Copyable import Copyable
 from preparse.abc.Message import Message
+from preparse.enum.Depletion import Depletion
 from preparse.enum.Infer import Infer
 from preparse.enum.NoChange import NoChange
 from preparse.enum.Tuning import Tuning
@@ -23,6 +24,7 @@ class PreParser(Copyable):
 
     __slots__ = (
         "_bundling",
+        "_depletion",
         "_expandsabbr",
         "_is_posix",
         "_longopts",
@@ -31,6 +33,7 @@ class PreParser(Copyable):
         "_special",
     )
     _bundling: Tuning
+    _depletion: Depletion
     _expandsabbr: bool
     _is_posix: bool
     _longopts: tuple[str, ...] | None
@@ -51,6 +54,7 @@ class PreParser(Copyable):
         /,
         *,
         bundling: int | NoChange = NoChange.NO_CHANGE,
+        depletion: Depletion | NoChange = NoChange.NO_CHANGE,
         expandsabbr: SupportsBool | NoChange = NoChange.NO_CHANGE,
         is_posix: SupportsBool | Infer | NoChange = NoChange.NO_CHANGE,
         longopts: tuple[object, ...] | None | NoChange = NoChange.NO_CHANGE,
@@ -59,6 +63,7 @@ class PreParser(Copyable):
         special: int | NoChange = NoChange.NO_CHANGE,
     ) -> None:
         self._bundling = Tuning.MAINTAIN
+        self._depletion = Depletion.REINTERPRET
         self._expandsabbr = True
         self._is_posix = False
         self._longopts = ()
@@ -67,6 +72,7 @@ class PreParser(Copyable):
         self._special = Tuning.MAINTAIN
         if not isinstance(other, NoChange):
             self.bundling = other.bundling
+            self.depletion = other.depletion
             self.expandsabbr = other.expandsabbr
             self.is_posix = other.is_posix
             self.longopts = other.longopts
@@ -74,6 +80,7 @@ class PreParser(Copyable):
             self.shortopts = other.shortopts
             self.special = other.special
         self.bundling = bundling
+        self.depletion = depletion
         self.expandsabbr = expandsabbr
         self.is_posix = is_posix
         self.longopts = longopts
@@ -90,6 +97,7 @@ class PreParser(Copyable):
         ans: dict[str, Any]
         ans = dict()
         ans["bundling"] = self.bundling
+        ans["depletion"] = self.depletion
         ans["expandsabbr"] = self.expandsabbr
         ans["is_posix"] = self.is_posix
         ans["longopts"] = self.longopts
@@ -113,6 +121,16 @@ class PreParser(Copyable):
     @setdoc.basic
     def copy(self: Self, /) -> Self:
         return type(self)(self)
+
+    @property
+    def depletion(self: Self, /) -> Depletion:
+        return self._depletion
+
+    @depletion.setter
+    def depletion(self: Self, value: Depletion | NoChange, /) -> None:
+        if isinstance(value, NoChange):
+            return
+        self._depletion = value
 
     @property
     def expandsabbr(self: Self, /) -> bool:
