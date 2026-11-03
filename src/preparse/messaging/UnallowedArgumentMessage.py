@@ -1,9 +1,9 @@
 __all__: list[str] = ["UnallowedArgumentMessage"]
 
-from types import NotImplementedType
 from typing import Any, Self
 
 from preparse.abc.Message import Message
+from preparse.enum.NoChange import NoChange
 
 
 class UnallowedArgumentMessage(Message):
@@ -13,12 +13,12 @@ class UnallowedArgumentMessage(Message):
 
     def __init__(
         self: Self,
-        other: Self | NotImplementedType = NotImplemented,
+        other: Self | NoChange = NoChange.NO_CHANGE,
         /,
         *,
-        option: object = NotImplemented,
+        option: object = NoChange.NO_CHANGE,
     ) -> None:
-        if not isinstance(other, NotImplementedType):
+        if not isinstance(other, NoChange):
             self.option = other.option
         self.option = option
 
@@ -37,6 +37,6 @@ class UnallowedArgumentMessage(Message):
 
     @option.setter
     def option(self: Self, value: object, /) -> None:
-        if isinstance(value, NotImplementedType):
+        if isinstance(value, NoChange):
             return
         self._option = str(value)

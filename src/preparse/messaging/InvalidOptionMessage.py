@@ -1,10 +1,10 @@
 __all__: list[str] = ["InvalidOptionMessage"]
 
 
-from types import NotImplementedType
 from typing import Any, Self
 
 from preparse.abc.Message import Message
+from preparse.enum.NoChange import NoChange
 from preparse.typing.SupportsBool import SupportsBool
 
 
@@ -17,13 +17,13 @@ class InvalidOptionMessage(Message):
 
     def __init__(
         self: Self,
-        other: Self | NotImplementedType = NotImplemented,
+        other: Self | NoChange = NoChange.NO_CHANGE,
         /,
         *,
-        is_long: SupportsBool | NotImplementedType = NotImplemented,
-        option: object = NotImplemented,
+        is_long: SupportsBool | NoChange = NoChange.NO_CHANGE,
+        option: object = NoChange.NO_CHANGE,
     ) -> None:
-        if not isinstance(other, NotImplementedType):
+        if not isinstance(other, NoChange):
             self.option = other.option
             self.is_long = other.is_long
         self.option = option
@@ -47,10 +47,8 @@ class InvalidOptionMessage(Message):
         return self._is_long
 
     @is_long.setter
-    def is_long(
-        self: Self, value: SupportsBool | NotImplementedType, /
-    ) -> None:
-        if isinstance(value, NotImplementedType):
+    def is_long(self: Self, value: SupportsBool | NoChange, /) -> None:
+        if isinstance(value, NoChange):
             return
         self._is_long = bool(value)
 
@@ -60,6 +58,6 @@ class InvalidOptionMessage(Message):
 
     @option.setter
     def option(self: Self, value: object, /) -> None:
-        if isinstance(value, NotImplementedType):
+        if isinstance(value, NoChange):
             return
         self._option = str(value)
