@@ -1,0 +1,273 @@
+Overview
+--------
+
+The ``preparse`` project allows to preparse arguments before the main parsing.
+Its ability to deabbreviate options is especially useful for use with ``click``.
+
+Installation
+------------
+
+To install ``preparse``, you can use ``pip``.
+Open your terminal and run:
+
+.. code-block:: shell
+
+    pip install preparse
+
+The project requires Python 3.11 or later.
+
+Typing
+------
+
+The typing conforms strictly to ``mypy``.
+
+Introduction
+------------
+
+The ``preparse`` project allows for preprocessing a ``list`` of arguments
+so that they can be parsed definitively in a later step.
+This way, the functionality of another parsing system can be modified.
+
+The project ``preparse`` is strongly inspired
+by the ``getopt`` and ``getopt_long`` libraries within ``C``.
+
+Features
+--------
+
+Inherited features and import locations for annotations are not explicitly documented.
+
+``preparse.abc``
+~~~~~~~~~~~~~~~~
+
+``class preparse.abc.Copyable.Copyable``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This abstract base ``class`` defines the copying interface used by ``PreParser`` and messages.
+
+``copy() -> Self``
+""""""""""""""""""
+
+This method returns a copy of the current instance.
+
+``class preparse.abc.Message.Message``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This abstract base ``class`` is the base for all message types.
+The message itself is produced by ``str(message)``;
+instances support copying, equality comparison and a readable representation.
+
+``copy() -> Self``
+""""""""""""""""""
+
+This method returns a copy of the current message.
+
+``prog(name: object, /) -> str``
+""""""""""""""""""""""""""""""""
+
+This method prefixes the message with the program name.
+If ``None`` is passed, ``sys.argv[0]`` is used.
+
+``preparse.core``
+~~~~~~~~~~~~~~~~~
+
+The ``PreParser`` class in ``preparse.core`` can also be imported directly from ``preparse``.
+
+``class preparse.core.PreParser.PreParser(other: PreParser | NotImplementedType = NotImplemented, /, *, bundling: int | NotImplementedType = NotImplemented, expandsabbr: SupportsBool | NotImplementedType = NotImplemented, is_posix: SupportsBool | NotImplementedType = NotImplemented, longopts: tuple[object, ...] | None | NotImplementedType = NotImplemented, reconcilesorders: SupportsBool | NotImplementedType = NotImplemented, shortopts: object = NotImplemented, special: int | NotImplementedType = NotImplemented)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This class is the centerpiece of ``preparse``.
+It describes the supported options and determines how the arguments are preparsed.
+The first positional argument allows copying the configuration from another instance of ``PreParser``.
+Passing ``NotImplemented`` for a property leaves its current value unchanged.
+The properties are documented with the values they are preset with.
+
+``bundling: Tuning = Tuning.MAINTAIN``
+""""""""""""""""""""""""""""""""""""""
+
+This ``property`` determines the approach to bundling of short options.
+``Tuning.MINIMIZE`` splits bundles, ``Tuning.MAXIMIZE`` combines compatible short options,
+and ``Tuning.MAINTAIN`` preserves the bundling unless another rule requires a change.
+
+``copy() -> Self``
+""""""""""""""""""
+
+This method returns a copy of the current instance.
+
+``expandsabbr: bool = True``
+""""""""""""""""""""""""""""
+
+This boolean ``property`` determines whether recognized abbreviations of long options
+are to be expanded to their full length.
+A unique abbreviation can be recognized even when expansion is disabled.
+
+``is_posix: bool = False``
+""""""""""""""""""""""""""
+
+This boolean ``property`` determines whether the order of arguments conforms to the POSIX standard,
+i.e. all arguments after the first positional argument are also positional.
+If ``None`` is assigned to the property, the value is inferred from
+the presence of the ``POSIXLY_CORRECT`` environment variable.
+
+``longopts: tuple[str, ...] | None = ()``
+"""""""""""""""""""""""""""""""""""""""""
+
+This ``property`` holds the allowed long options in the style of ``getopt_long``.
+An entry such as ``"help"`` takes no argument, ``"output="`` requires an argument,
+and ``"color=?"`` accepts an optional argument.
+Long option names are normally written without the leading ``"--"``.
+Each entry is converted to ``str``.
+Assigning ``None`` disables long-option parsing.
+If both types of options are enabled, long options are recognized by the prefix ``"--"``.
+
+``parse_args(args: Optional[Iterable[object]] = None) -> tuple[list[str], list[Message]]``
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+This method is at the core of the class.
+It returns a tuple containing the preparsed list of arguments and a list of messages.
+If ``None`` is passed as ``args`` then ``sys.argv[1:]`` is used.
+The arguments may be any iterable of objects; each argument is converted to ``str``.
+The messages describe ambiguities, invalid options, missing required arguments,
+and arguments supplied to options that do not allow them.
+No message is emitted as a Python warning or exception automatically.
+
+``reconcilesorders: bool = True``
+"""""""""""""""""""""""""""""""""
+
+This boolean ``property`` determines whether compatibility with both POSIX ordering
+and interleaving options with positional arguments should be enforced.
+The resulting arguments may be reordered or a special ``"--"`` inserted to preserve their interpretation.
+
+``shortopts: str | None = ""``
+""""""""""""""""""""""""""""""
+
+This ``property`` holds the allowed short options in the style of ``getopt``.
+Each option is represented by one character.
+A character without a suffix specifies an option without an argument;
+a single ``":"`` requires an argument and a double ``"::"`` makes it optional.
+For example, ``"ab:c::"`` describes the options ``-a``, ``-b`` and ``-c``.
+Assigning ``None`` disables short-option parsing.
+When ``shortopts`` is ``None`` and long-option parsing is enabled,
+a single dash can introduce a long option.
+
+``special: Tuning = Tuning.MAINTAIN``
+"""""""""""""""""""""""""""""""""""""
+
+This ``property`` determines the approach to the special argument ``"--"``.
+``Tuning.MINIMIZE`` removes an unnecessary separator, ``Tuning.MAXIMIZE`` inserts
+one where appropriate, and ``Tuning.MAINTAIN`` avoids unforced changes.
+
+``preparse.enum``
+~~~~~~~~~~~~~~~~~
+
+These classes are subclasses of ``enum.IntEnum``.
+Any value different from ``0`` (meaning no) and ``1`` (meaning yes) is interpreted as ``2`` (meaning intermediate).
+
+``class preparse.enum.Tuning.Tuning``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This enum inherits from ``enum.IntEnum``.
+It is used for the ``bundling`` and ``special`` properties of ``PreParser``.
+
++--------------+-------+-----------------------------------------------------------------------------+
+| Name         | Value | Explanation                                                                 |
++==============+=======+=============================================================================+
+| ``MINIMIZE`` | ``0`` | The PreParser minimizes the aspect in question.                             |
++--------------+-------+-----------------------------------------------------------------------------+
+| ``MAXIMIZE`` | ``1`` | The PreParser maximizes the aspect in question.                             |
++--------------+-------+-----------------------------------------------------------------------------+
+| ``MAINTAIN`` | ``2`` | The PreParser does not make any unforced changes to the aspect in question. |
++--------------+-------+-----------------------------------------------------------------------------+
+
+``preparse.messaging``
+~~~~~~~~~~~~~~~~~~~~~~
+
+These classes are subclasses of ``Message`` that are specifically designed to communicate issues with parsing.
+They are returned by ``parse_args`` and can be handled by the caller.
+
+``class preparse.messaging.AmbiguousOptionMessage.AmbiguousOptionMessage(other: Self | NotImplementedType = NotImplemented, /, *, option: object = NotImplemented, possibilities: Iterable[object] | NotImplementedType = NotImplemented)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This ``class`` reports ambiguous options.
+This can only happen for long options.
+The ``option`` property holds the original option spelling.
+The ``possibilities`` property holds a tuple of candidate options.
+The constructor can also copy another instance.
+
+``class preparse.messaging.InvalidOptionMessage.InvalidOptionMessage(other: Self | NotImplementedType = NotImplemented, /, *, is_long: SupportsBool | NotImplementedType = NotImplemented, option: object = NotImplemented)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This ``class`` reports invalid options.
+The ``option`` property holds the option, and the boolean ``is_long`` property
+indicates whether it was interpreted as a long option.
+The constructor can also copy another instance.
+
+``class preparse.messaging.RequiredArgumentMessage.RequiredArgumentMessage(other: Self | NotImplementedType = NotImplemented, /, *, is_long: SupportsBool | NotImplementedType = NotImplemented, option: object = NotImplemented)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This ``class`` reports missing required arguments.
+The ``option`` property holds the option, and the boolean ``is_long`` property
+indicates whether it was interpreted as a long option.
+The constructor can also copy another instance.
+
+``class preparse.messaging.UnallowedArgumentMessage.UnallowedArgumentMessage(other: Self | NotImplementedType = NotImplemented, /, *, option: object = NotImplemented)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This ``class`` reports arguments supplied to options that do not allow them.
+This can only happen for long options.
+The ``option`` property holds the full option name.
+The constructor can also copy another instance.
+
+``preparse.typing``
+~~~~~~~~~~~~~~~~~~~
+
+``preparse.typing.SupportsBool.SupportsBool: TypeAlias = Sized | SupportsIndex | None``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This type alias is used for values that can be converted to ``bool``.
+
+``class preparse.typing.SupportsKeysAndGetitem.SupportsKeysAndGetitem[Key: Hashable = Hashable, Value = int | None]``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This protocol is included in the project for type annotation.
+
+``__getitem__(key: Key, /) -> Value``
+"""""""""""""""""""""""""""""""""""""
+
+This method retrieves the value associated with a key.
+
+``keys() -> Iterable[Key]``
+"""""""""""""""""""""""""""
+
+This method returns an iterable of keys.
+
+``Testing``
+-----------
+
+The ``tests/`` of this project (using ``unittest``) can be run through its ``run_tests.py`` file.
+
+.. code-block:: shell
+
+    python run_tests.py
+
+License
+-------
+
+This project is licensed under the MIT License.
+
+Links
+-----
+
+- Download: https://pypi.org/project/preparse/#files
+- Index: https://pypi.org/project/preparse/
+- Source: https://github.com/johannes-programming/preparse/
+- Website: https://preparse.johannes-programming.online/
+
+Impressum
+---------
+
+**Johannes Programming**
+
+- Name: Johannes
+- Email: johannes.programming@gmail.com
+- Homepage: https://www.johannes-programming.online/
+- Gravatar: https://www.johannes-programming.fyi/
