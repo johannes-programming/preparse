@@ -4,7 +4,7 @@ import operator
 from typing import Optional, Self, SupportsIndex
 
 from preparse._items.Item import Item
-from preparse.enum.Nargs import Nargs
+from preparse._option_spec import REQUIRED_ARGUMENT
 
 
 class Option(Item):
@@ -12,11 +12,11 @@ class Option(Item):
     __slots__ = ()
 
     _joined: bool
-    _nargs: Nargs
+    _nargs: int
     _right: Optional[str]
 
     def ishungry(self: Self) -> bool:
-        return (self.right is None) and (self.nargs == Nargs.REQUIRED_ARGUMENT)
+        return (self.right is None) and (self.nargs == REQUIRED_ARGUMENT)
 
     @property
     def joined(self: Self) -> bool:
@@ -27,12 +27,12 @@ class Option(Item):
         self._joined = bool(operator.index(x))  # type: ignore[misc]
 
     @property
-    def nargs(self: Self) -> Nargs:
+    def nargs(self: Self) -> int:
         return self._nargs
 
     @nargs.setter
     def nargs(self: Self, x: int, /) -> None:
-        self._nargs = Nargs(x)  # type: ignore[misc]
+        self._nargs = int(x)  # type: ignore[misc]
 
     @property
     def right(self: Self) -> Optional[str]:

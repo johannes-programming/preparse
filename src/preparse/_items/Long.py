@@ -3,10 +3,9 @@ __all__: list[str] = ["Long"]
 import operator
 from typing import Any, Optional, Self, SupportsIndex
 
-import setdoc
 
 from preparse._items.Option import Option
-from preparse.enum.Nargs import Nargs
+from preparse._option_spec import NO_ARGUMENT
 
 
 class Long(Option):
@@ -19,7 +18,6 @@ class Long(Option):
         "_right",
     )
 
-    @setdoc.basic
     def __init__(
         self: Self,
         /,
@@ -27,7 +25,7 @@ class Long(Option):
         abbrlen: Optional[int] = None,
         fullkey: str,
         joined: bool = False,
-        nargs: Nargs = Nargs.NO_ARGUMENT,
+        nargs: int = NO_ARGUMENT,
         right: Optional[str] = None,
     ) -> None:
         self.abbrlen = abbrlen

@@ -1,52 +1,62 @@
-__all__: list[str] = ["TestPreParser"]
+"""Tests for the public getopt-style PreParser interface."""
 
 import unittest
-from typing import Any, Self
 
-from preparse.core.PreParser import PreParser
+from preparse import PreParser
 
 
 class TestPreParser(unittest.TestCase):
+    def test_copy(self) -> None:
+        parser = PreParser(shortsopts="ab:c::", longopts=("flag", "value=", "maybe=="))
+        duplicate = parser.copy()
+        self.assertEqual(parser, duplicate)
+        self.assertIsNot(parser, duplicate)
+        duplicate.shortsopts = "x"
+        self.assertEqual(parser.shortsopts, "ab:c::")
 
-    def test_preparser_copy(self: Self) -> None:
-        parser: PreParser
-        parser_copy: PreParser
-        parser = PreParser()
-        parser_copy = parser.copy()
-        self.assertEqual(parser.optdict, parser_copy.optdict)
-
-    def test_no_options_idempotent(self: Self) -> None:
-        args: list[str]
-        parser: PreParser
-        parser = PreParser(
-            allowslong=False, allowsshort=False, expectsposix=True
-        )
+    def test_no_options_idempotent(self) -> None:
+        parser = PreParser(shortsopts=None, longopts=None, expectsposix=True)
         args = ["-c2", "--", "-a"]
         preparsed, messages = parser.parse_args(args)
-        self.assertEqual(args, preparsed)
+        self.assertEqual(preparsed, args)
+        self.assertEqual(messages, [])
         self.assertEqual(args, parser.parse_args(preparsed)[0])
 
-    def test_minimize_short_bundle_with_hyphen_option(self: Self) -> None:
-        parser: PreParser
-        parser = PreParser(
-            allowslong=False,
-            bundling=0,
-            optdict={"--": 2},
-        )
-        preparsed, messages = parser.parse_args(["--x"])
-        self.assertEqual(preparsed, ["--x"])
+    def test_minimize_short_bundle_with_hyphen_option(self) -> None:
+        parser = PreParser(longopts=None, bundling=0, shortsopts="-::")
+        self.assertEqual(parser.parse_args(["--x"])[0], ["--x"])
 
-    def test_preparser_todict(self: Self) -> None:
-        expected_keys: list[Any]
-        parser: PreParser
-        result: Any
-        parser = PreParser()
-        result = parser.todict()
-        expected_keys = [
-            "optdict",
-            "prog",
-        ]
-        self.assertTrue(all(key in result for key in expected_keys))
+    def test_todict(self) -> None:
+        result = PreParser().todict()
+        self.assertEqual(result["shortsopts"], "")
+        self.assertEqual(result["longopts"], ())
+        self.assertNotIn("optdict", result)
+        self.assertNotIn("allowslong", result)
+        self.assertNotIn("allowsshort", result)
+
+    def test_getopt_required_and_optional_args(self) -> None:
+        parser = PreParser(shortsopts="ab:c::", longopts=("flag", "required=", "optional=="))
+        args = ["-abvalue", "-c", "--flag", "--required", "value", "--optional=maybe"]
+        self.assertEqual(parser.parse_args(args), (args, []))
+        self.assertEqual(parser.parse_args(["-b"])[1][0].option, "b")
+        self.assertEqual(parser.parse_args(["--required"])[1][0].option, "--required")
+
+    def test_getopt_unique_abbreviation(self) -> None:
+        parser = PreParser(longopts=("verbose", "version"))
+        self.assertEqual(parser.parse_args(["--verb"]), (["--verbose"], []))
+        self.assertEqual(len(parser.parse_args(["--ver"])[1]), 1)
+
+    def test_none_disables_only_one_syntax(self) -> None:
+        short = PreParser(shortsopts="x", longopts=None)
+        long = PreParser(shortsopts=None, longopts=("alpha",))
+        self.assertEqual(short.parse_args(["-x"]), (["-x"], []))
+        self.assertEqual(long.parse_args(["--alpha"]), (["--alpha"], []))
+
+    def test_validation(self) -> None:
+        with self.assertRaises(TypeError):
+            PreParser(shortsopts=123)
+        with self.assertRaises(TypeError):
+            PreParser(longopts=("okay", 123))
 
 
 if __name__ == "__main__":

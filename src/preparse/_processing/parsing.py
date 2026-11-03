@@ -10,7 +10,9 @@ from preparse._items.Long import Long
 from preparse._items.Option import Option
 from preparse._items.Special import Special
 from preparse.abc.Message import Message
-from preparse.enum.Nargs import Nargs
+from preparse._option_spec import (
+    NO_ARGUMENT, OPTIONAL_ARGUMENT, REQUIRED_ARGUMENT
+)
 from preparse.messaging.AmbiguousOptionMessage import (
     AmbiguousOptionMessage as PAOW,
 )
@@ -40,23 +42,22 @@ def parse_bundling(
     arg: str,
     *,
     cause: FunctionType,
-    optdict: dict[Any, Any],
+    modes: dict[Any, Any],
 ) -> Bundle:
     ans: Bundle
     x: int
     y: str
-    ans = Bundle(chars="", nargs=Nargs.NO_ARGUMENT)
+    ans = Bundle(chars="", nargs=NO_ARGUMENT)
     for x, y in enumerate(arg):
         if x == 0:
             continue
         ans.chars += y
-        try:
-            ans.nargs = optdict["-" + y]
-        except KeyError:
+        ans.nargs = modes.get("-" + y, NO_ARGUMENT)
+        if "-" + y not in modes:
             cause(PIOW, option=y, islong=False)
-        if ans.nargs == Nargs.NO_ARGUMENT:
+        if ans.nargs == NO_ARGUMENT:
             continue
-        if ans.nargs == Nargs.OPTIONAL_ARGUMENT or x < len(arg) - 1:
+        if ans.nargs == OPTIONAL_ARGUMENT or x < len(arg) - 1:
             ans.joined = True
             ans.right = arg[x + 1 :]
         return ans
@@ -77,11 +78,11 @@ def parse_cause(
 def parse_generator(
     items: list[Any],
     *,
-    allowslong: bool,
-    allowsshort: bool,
+    has_longopts: bool,
+    has_shortopts: bool,
     expectsabbr: bool,
     expectsposix: bool,
-    optdict: dict[Any, Any],
+    modes: dict[Any, Any],
     prog: str,
     warn: FunctionType,
 ) -> Generator[Any, Any, Any]:
@@ -89,7 +90,7 @@ def parse_generator(
     cause: FunctionType
     item: Any
     last: Any
-    broken = not (allowslong or allowsshort)
+    broken = not (has_longopts or has_shortopts)
     cause = parse_cause(prog=prog, warn=warn)
     last = None
     for item in items:
@@ -115,11 +116,11 @@ def parse_generator(
             continue
         last = parse_option(
             item.value,
-            allowslong=allowslong,
-            allowsshort=allowsshort,
+            has_longopts=has_longopts,
+            has_shortopts=has_shortopts,
             cause=cause,
             expectsabbr=expectsabbr,
-            optdict=optdict,
+            modes=modes,
         )
         if not last.ishungry():
             yield last
@@ -137,13 +138,13 @@ def parse_generator(
 def parse_islong(
     arg: str,
     *,
-    allowslong: bool,
-    allowsshort: bool,
+    has_longopts: bool,
+    has_shortopts: bool,
 ) -> bool:
-    if allowslong and allowsshort:
+    if has_longopts and has_shortopts:
         return arg.startswith("--")
     else:
-        return not allowsshort
+        return not has_shortopts
 
 
 def parse_long(
@@ -151,7 +152,7 @@ def parse_long(
     *,
     cause: FunctionType,
     expectsabbr: bool,
-    optdict: dict[Any, Any],
+    modes: dict[Any, Any],
 ) -> Long:
     ans: Long
     parts: list[str]
@@ -161,23 +162,23 @@ def parse_long(
         ans.joined = True
         ans.right = parts.pop()
     ans.abbrlen = len(ans.fullkey)
-    if ans.fullkey in optdict.keys():
+    if ans.fullkey in modes.keys():
         parts = [ans.fullkey]
     elif expectsabbr:
-        parts = parse_long_startswith(ans.abbr, keys=optdict.keys())
+        parts = parse_long_startswith(ans.abbr, keys=modes.keys())
     else:
         parts = list()  # can be assumed
     if len(parts) == 0:
-        ans.nargs = Nargs.OPTIONAL_ARGUMENT
+        ans.nargs = OPTIONAL_ARGUMENT
         cause(PIOW, option=arg, islong=True)
         return ans
     if len(parts) >= 2:
-        ans.nargs = Nargs.OPTIONAL_ARGUMENT
+        ans.nargs = OPTIONAL_ARGUMENT
         cause(PAOW, option=arg, possibilities=parts)
         return ans
     (ans.fullkey,) = parts
-    ans.nargs = optdict[ans.fullkey]
-    if (ans.nargs == Nargs.NO_ARGUMENT) and (ans.right is not None):
+    ans.nargs = modes[ans.fullkey]
+    if (ans.nargs == NO_ARGUMENT) and (ans.right is not None):
         cause(PUAW, option=ans.fullkey)
     return ans
 
@@ -201,7 +202,7 @@ def parse_option(
     *,
     cause: FunctionType,
     expectsabbr: bool,
-    optdict: dict[Any, Any],
+    modes: dict[Any, Any],
     **kwargs: Any,
 ) -> Option:
     if parse_islong(arg, **kwargs):
@@ -209,11 +210,11 @@ def parse_option(
             arg,
             cause=cause,
             expectsabbr=expectsabbr,
-            optdict=optdict,
+            modes=modes,
         )
     else:
         return parse_bundling(
             arg,
             cause=cause,
-            optdict=optdict,
+            modes=modes,
         )

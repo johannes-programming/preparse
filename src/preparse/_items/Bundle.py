@@ -2,10 +2,9 @@ __all__: list[str] = ["Bundle"]
 
 from typing import Any, Optional, Self
 
-import setdoc
 
 from preparse._items.Option import Option
-from preparse.enum.Nargs import Nargs
+from preparse._option_spec import NO_ARGUMENT
 
 
 class Bundle(Option):
@@ -17,7 +16,6 @@ class Bundle(Option):
         "_right",
     )
 
-    @setdoc.basic
     def __init__(
         self: Self,
         *,
@@ -32,7 +30,7 @@ class Bundle(Option):
         self.right = right
 
     @classmethod
-    def _split_allowslong(cls: type[Self], chars: str) -> list[str]:
+    def _split_has_longopts(cls: type[Self], chars: str) -> list[str]:
         ans: list[str]
         x: str
         ans = list()
@@ -80,17 +78,17 @@ class Bundle(Option):
         else:
             return ["-" + self.chars, self.right]
 
-    def split(self: Self, *, allowslong: bool) -> list[Self]:
+    def split(self: Self, *, has_longopts: bool) -> list[Self]:
         ans: list[Self]
         parts: list[str]
         x: str
-        if allowslong:
-            parts = self._split_allowslong(self.chars)
+        if has_longopts:
+            parts = self._split_has_longopts(self.chars)
         else:
             parts = self._split_shortonly(self.chars)
         ans = list()
         for x in parts:
-            ans.append(type(self)(chars=x, nargs=Nargs.NO_ARGUMENT))
+            ans.append(type(self)(chars=x, nargs=NO_ARGUMENT))
         self.chars = ans[-1].chars
         ans[-1] = self
         return ans

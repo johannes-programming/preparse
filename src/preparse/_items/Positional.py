@@ -2,7 +2,6 @@ __all__: list[str] = ["Positional"]
 
 from typing import Any, Self
 
-import setdoc
 
 from preparse._items.Item import Item
 
@@ -11,7 +10,6 @@ class Positional(Item):
 
     __slots__ = ("_value",)
 
-    @setdoc.basic
     def __init__(self: Self, value: Any) -> None:
         self.value = value
 

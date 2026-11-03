@@ -4,7 +4,6 @@ from collections.abc import Iterable
 from types import NotImplementedType
 from typing import Any, Self
 
-import setdoc
 
 from preparse.abc.Message import Message
 
@@ -17,7 +16,6 @@ class AmbiguousOptionMessage(Message):
         "_prog",
     )
 
-    @setdoc.basic
     def __init__(
         self: Self,
         other: Self | NotImplementedType = NotImplemented,
