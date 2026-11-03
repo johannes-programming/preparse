@@ -32,4 +32,7 @@ class Message(Copyable):
         return type(self)(**self._dict())
 
     def prog(self: Self, name: object, /) -> str:
-        return f"{name}: {self}"
+        if name is None:
+            return str(self)
+        else:
+            return f"{name}: {self}"
