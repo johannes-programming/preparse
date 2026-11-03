@@ -141,11 +141,19 @@ def long_argmode(spec: str) -> tuple[str, str]:
     return spec, ""
 
 
+def long_fullkey(spec: str, *, shortopts_allowed: bool) -> tuple[str, str]:
+    """Apply the long-option prefix literally, after removing its nargs suffix."""
+    key, mode = long_argmode(spec)
+    prefix = "--" if shortopts_allowed else "-"
+    return prefix + key, mode
+
+
 def parse_long(
     arg: str,
     *,
     messages: list[Message],
     longopts: tuple[str, ...],
+    shortopts_allowed: bool,
 ) -> Long:
     parts = arg.split("=", 1)
     ans = Long(fullkey=parts.pop(0))
@@ -153,11 +161,11 @@ def parse_long(
         ans.joined = True
         ans.right = parts.pop()
     ans.abbrlen = len(ans.fullkey)
-    # Match using the full spelling, preserving legacy single-dash long
-    # names rather than allowing them to match '--' abbreviations.
+    # Never normalize or remove leading dashes from the declared name.
+    # Only the nargs suffix is removed; the prefix is always prepended.
     options = [
-        (key if key.startswith("-") else "--" + key, mode)
-        for key, mode in (long_argmode(spec) for spec in longopts)
+        long_fullkey(spec, shortopts_allowed=shortopts_allowed)
+        for spec in longopts
     ]
     matches = [(key, mode) for key, mode in options if key == ans.fullkey]
     if matches:
@@ -201,6 +209,7 @@ def parse_option(
             arg,
             messages=messages,
             longopts=longopts if longopts is not None else (),
+            shortopts_allowed=shortopts is not None,
         )
     return parse_bundling(
         arg,
