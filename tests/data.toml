@@ -16,6 +16,25 @@ solution = [
 special = 2
 warnings = []
 
+[getopt-00000001]
+bundling = 2
+depletion = "DROP"
+expandsabbr = true
+is_posix = false
+longopts = [
+    "foo=",
+]
+query = [
+    "-foo=42",
+]
+reconcilesorders = false
+shortopts = nan
+solution = [
+    "-foo=42",
+]
+special = 2
+warnings = []
+
 [man_longerr_amb]
 bundling = 2
 expandsabbr = true
