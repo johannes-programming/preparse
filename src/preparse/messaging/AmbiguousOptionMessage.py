@@ -14,7 +14,6 @@ class AmbiguousOptionMessage(Message):
     __slots__ = (
         "_option",
         "_possibilities",
-        "_prog",
     )
 
     @setdoc.basic
@@ -25,17 +24,14 @@ class AmbiguousOptionMessage(Message):
         *,
         option: object = NotImplemented,
         possibilities: Iterable[object] | NotImplementedType = NotImplemented,
-        prog: object = NotImplemented,
     ) -> None:
         if not isinstance(other, NotImplementedType):
-            self.prog = other.prog
             self.option = other.option
             self.possibilities = other.possibilities
-        self.prog = prog
         self.option = option
         self.possibilities = possibilities
 
-    def getmsg(self: Self) -> str:
+    def __str__(self: Self, /) -> str:
         "This method returns the core message."
         ans: str
         x: Any
@@ -64,19 +60,8 @@ class AmbiguousOptionMessage(Message):
             return
         self._possibilities = tuple(map(str, value))
 
-    @property
-    def prog(self: Self, /) -> str:
-        return self._prog
-
-    @prog.setter
-    def prog(self: Self, value: object, /) -> None:
-        if isinstance(value, NotImplementedType):
-            return
-        self._prog = str(value)
-
     def todict(self: Self, /) -> dict[str, Any]:
         return dict(
             option=self.option,
             possibilities=self.possibilities,
-            prog=self.prog,
         )

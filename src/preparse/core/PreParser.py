@@ -25,7 +25,6 @@ class PreParser(Copyable):
         "_expandsabbr",
         "_is_posix",
         "_longopts",
-        "_prog",
         "_reconcilesorders",
         "_shortopts",
         "_special",
@@ -34,7 +33,6 @@ class PreParser(Copyable):
     _expandsabbr: bool
     _is_posix: bool
     _longopts: tuple[str, ...] | None
-    _prog: str
     _reconcilesorders: bool
     _shortopts: str | None
     _special: Tuning
@@ -57,7 +55,6 @@ class PreParser(Copyable):
         longopts: (
             tuple[object, ...] | None | NotImplementedType
         ) = NotImplemented,
-        prog: object = NotImplemented,
         reconcilesorders: SupportsBool | NotImplementedType = NotImplemented,
         shortopts: object = NotImplemented,
         special: int | NotImplementedType = NotImplemented,
@@ -66,7 +63,6 @@ class PreParser(Copyable):
         self._expandsabbr = True
         self._is_posix = False
         self._longopts = ()
-        self.prog = None
         self._reconcilesorders = True
         self._shortopts = ""
         self._special = Tuning.MAINTAIN
@@ -75,7 +71,6 @@ class PreParser(Copyable):
             self.expandsabbr = other.expandsabbr
             self.is_posix = other.is_posix
             self.longopts = other.longopts
-            self.prog = other.prog
             self.reconcilesorders = other.reconcilesorders
             self.shortopts = other.shortopts
             self.special = other.special
@@ -83,7 +78,6 @@ class PreParser(Copyable):
         self.expandsabbr = expandsabbr
         self.is_posix = is_posix
         self.longopts = longopts
-        self.prog = prog
         self.reconcilesorders = reconcilesorders
         self.shortopts = shortopts
         self.special = special
@@ -100,7 +94,6 @@ class PreParser(Copyable):
         ans["expandsabbr"] = self.expandsabbr
         ans["is_posix"] = self.is_posix
         ans["longopts"] = self.longopts
-        ans["prog"] = self.prog
         ans["reconcilesorders"] = self.reconcilesorders
         ans["shortopts"] = self.shortopts
         ans["special"] = self.special
@@ -174,21 +167,6 @@ class PreParser(Copyable):
             args,
             **self._dict(),
         )
-
-    @property
-    def prog(self: Self, /) -> str:
-        "This property represents the name of the program."
-        return self._prog
-
-    @prog.setter
-    def prog(self: Self, value: object, /) -> None:
-        "This property represents the name of the program."
-        if isinstance(value, NotImplementedType):
-            return
-        if value is None:
-            self._prog = str(os.path.basename(sys.argv[0]))
-        else:
-            self._prog = str(value)
 
     @property
     def reconcilesorders(self: Self, /) -> bool:

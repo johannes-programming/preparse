@@ -8,7 +8,7 @@ from preparse.abc.Message import Message
 
 class UnallowedArgumentMessage(Message):
 
-    __slots__ = ("_option", "_prog")
+    __slots__ = ("_option",)
     # option is always full key without value
 
     def __init__(
@@ -17,15 +17,12 @@ class UnallowedArgumentMessage(Message):
         /,
         *,
         option: object = NotImplemented,
-        prog: object = NotImplemented,
     ) -> None:
         if not isinstance(other, NotImplementedType):
-            self.prog = other.prog
             self.option = other.option
-        self.prog = prog
         self.option = option
 
-    def getmsg(self: Self) -> str:
+    def __str__(self: Self) -> str:
         "This method returns the core message."
         return "option '%s' doesn't allow an argument" % self.option
 
@@ -39,18 +36,7 @@ class UnallowedArgumentMessage(Message):
             return
         self._option = str(value)
 
-    @property
-    def prog(self: Self, /) -> str:
-        return self._prog
-
-    @prog.setter
-    def prog(self: Self, value: object, /) -> None:
-        if isinstance(value, NotImplementedType):
-            return
-        self._prog = str(value)
-
     def todict(self: Self) -> dict[str, Any]:
         return dict(
             option=self.option,
-            prog=self.prog,
         )
