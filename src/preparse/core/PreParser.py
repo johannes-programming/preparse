@@ -3,7 +3,6 @@ from __future__ import annotations
 __all__: list[str] = ["PreParser"]
 
 import os
-import sys
 from collections.abc import Iterable
 from types import NotImplementedType
 from typing import Any, Optional, Self
