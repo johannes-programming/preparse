@@ -27,6 +27,8 @@ class AmbiguousOptionMessage(Message):
         option: object = NoChange.NO_CHANGE,
         possibilities: Iterable[object] | NoChange = NoChange.NO_CHANGE,
     ) -> None:
+        self._option = ""
+        self._possibilities = ()
         if not isinstance(other, NoChange):
             self.option = other.option
             self.possibilities = other.possibilities

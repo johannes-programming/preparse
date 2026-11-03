@@ -25,6 +25,8 @@ class InvalidOptionMessage(Message):
         is_long: SupportsBool | NoChange = NoChange.NO_CHANGE,
         option: object = NoChange.NO_CHANGE,
     ) -> None:
+        self._is_long = False
+        self._option = ""
         if not isinstance(other, NoChange):
             self.option = other.option
             self.is_long = other.is_long

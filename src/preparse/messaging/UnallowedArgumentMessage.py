@@ -20,6 +20,7 @@ class UnallowedArgumentMessage(Message):
         *,
         option: object = NoChange.NO_CHANGE,
     ) -> None:
+        self._option = ""
         if not isinstance(other, NoChange):
             self.option = other.option
         self.option = option
