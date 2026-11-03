@@ -15,18 +15,21 @@ class Message(Copyable):
 
     def __eq__(self: Self, other: object, /) -> bool | NotImplementedType:
         if isinstance(other, Message):
-            return self.todict() == other.todict()
+            return self._dict() == other._dict()
         else:
             return NotImplemented
 
     def __repr__(self: Self, /) -> str:
-        return datarepr(type(self).__name__, **self.todict())
+        return datarepr(type(self).__name__, **self._dict())
 
     @abstractmethod
     def __str__(self: Self, /) -> str: ...
 
-    def copy(self: Self, /) -> Self:
-        return type(self)(**self.todict())
-
     @abstractmethod
-    def todict(self: Self) -> dict[str, Any]: ...
+    def _dict(self: Self, /) -> dict[str, Any]: ...
+
+    def copy(self: Self, /) -> Self:
+        return type(self)(**self._dict())
+
+    def prog(self: Self, name: object, /) -> str:
+        return f"{name}: {self}"

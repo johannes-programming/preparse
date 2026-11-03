@@ -22,9 +22,14 @@ class UnallowedArgumentMessage(Message):
             self.option = other.option
         self.option = option
 
-    def __str__(self: Self) -> str:
+    def __str__(self: Self, /) -> str:
         "This method returns the core message."
         return "option '%s' doesn't allow an argument" % self.option
+
+    def _dict(self: Self, /) -> dict[str, Any]:
+        return dict(
+            option=self.option,
+        )
 
     @property
     def option(self: Self, /) -> str:
@@ -35,8 +40,3 @@ class UnallowedArgumentMessage(Message):
         if isinstance(value, NotImplementedType):
             return
         self._option = str(value)
-
-    def todict(self: Self) -> dict[str, Any]:
-        return dict(
-            option=self.option,
-        )
