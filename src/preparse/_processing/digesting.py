@@ -63,12 +63,15 @@ def digest_abbr(
 ) -> list[Item]:
     ans: list[Item]
     item: Item
+    option: str
+    options: list[str]
     ans = list(items)
     if abbr == Tuning.MAINTAIN:
         return ans
     options = list()
     for spec in longopts or ():
-        options.append(digest_long_fullkey(spec, short_enabled=short_enabled))
+        option = digest_long_fullkey(spec, short_enabled=short_enabled)
+        options.append(option)
     for item in ans:
         if not isinstance(item, Long):
             continue
@@ -81,9 +84,12 @@ def digest_abbr(
             candidate = item.fullkey[:length]
             if candidate == "--":
                 continue
-            if candidate == item.fullkey or [
+            if candidate == item.fullkey:
+                item.abbrlen = length
+                break
+            if [item.fullkey] == [
                 key for key in options if key.startswith(candidate)
-            ] == [item.fullkey]:
+            ]:
                 item.abbrlen = length
                 break
     return ans
