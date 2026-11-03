@@ -2,10 +2,11 @@ import enum
 import functools
 import io
 import math
+import sys
 import tomllib
 from pathlib import Path
 from typing import Any, Self
-import sys
+
 import tomli_w
 
 
