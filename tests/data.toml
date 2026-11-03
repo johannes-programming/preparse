@@ -35,6 +35,396 @@ solution = [
 special = 2
 warnings = []
 
+[getopt-00001001]
+bundling = 2
+depletion = "DROP"
+expandsabbr = true
+is_posix = false
+longopts = [
+    "foo",
+]
+query = [
+    "--foo",
+]
+reconcilesorders = false
+shortopts = ""
+solution = [
+    "--foo",
+]
+special = 2
+warnings = []
+
+[getopt-00001002]
+bundling = 2
+depletion = "DROP"
+expandsabbr = true
+is_posix = false
+longopts = [
+    "--foo",
+]
+query = [
+    "----foo",
+]
+reconcilesorders = false
+shortopts = ""
+solution = [
+    "----foo",
+]
+special = 2
+warnings = []
+
+[getopt-00001003]
+bundling = 2
+depletion = "DROP"
+expandsabbr = true
+is_posix = false
+longopts = [
+    "-",
+]
+query = [
+    "---",
+]
+reconcilesorders = false
+shortopts = ""
+solution = [
+    "---",
+]
+special = 2
+warnings = []
+
+[getopt-00001004]
+bundling = 2
+depletion = "DROP"
+expandsabbr = true
+is_posix = false
+longopts = [
+    "=",
+]
+query = [
+    "--=42",
+]
+reconcilesorders = false
+shortopts = ""
+solution = [
+    "--=42",
+]
+special = 2
+warnings = []
+
+[getopt-00001005]
+bundling = 2
+depletion = "DROP"
+expandsabbr = true
+is_posix = false
+longopts = [
+    "-foo=?",
+]
+query = [
+    "---foo=42",
+]
+reconcilesorders = false
+shortopts = ""
+solution = [
+    "---foo=42",
+]
+special = 2
+warnings = []
+
+[getopt-00001006]
+bundling = 2
+depletion = "DROP"
+expandsabbr = true
+is_posix = false
+longopts = [
+    "foo=",
+]
+query = [
+    "--foo",
+    "42",
+]
+reconcilesorders = false
+shortopts = ""
+solution = [
+    "--foo",
+    "42",
+]
+special = 2
+warnings = []
+
+[getopt-00001007]
+bundling = 2
+depletion = "DROP"
+expandsabbr = true
+is_posix = false
+longopts = [
+    "foo=?",
+]
+query = [
+    "--foo",
+]
+reconcilesorders = false
+shortopts = ""
+solution = [
+    "--foo",
+]
+special = 2
+warnings = []
+
+[getopt-00001008]
+bundling = 2
+depletion = "DROP"
+expandsabbr = true
+is_posix = false
+longopts = [
+    "--foo=",
+]
+query = [
+    "----foo=42",
+]
+reconcilesorders = false
+shortopts = ""
+solution = [
+    "----foo=42",
+]
+special = 2
+warnings = []
+
+[getopt-00001009]
+bundling = 2
+depletion = "DROP"
+expandsabbr = true
+is_posix = false
+longopts = [
+    "-foo",
+]
+query = [
+    "---foo",
+]
+reconcilesorders = false
+shortopts = ""
+solution = [
+    "---foo",
+]
+special = 2
+warnings = []
+
+[getopt-00001010]
+bundling = 2
+depletion = "DROP"
+expandsabbr = true
+is_posix = false
+longopts = [
+    "foo",
+]
+query = [
+    "---foo",
+]
+reconcilesorders = false
+shortopts = ""
+solution = [
+    "---foo",
+]
+special = 2
+warnings = [
+    "unrecognized option '---foo'",
+]
+
+[getopt-00001011]
+bundling = 2
+depletion = "DROP"
+expandsabbr = true
+is_posix = false
+longopts = [
+    "foo",
+]
+query = [
+    "-foo",
+]
+reconcilesorders = false
+shortopts = nan
+solution = [
+    "-foo",
+]
+special = 2
+warnings = []
+
+[getopt-00001012]
+bundling = 2
+depletion = "DROP"
+expandsabbr = true
+is_posix = false
+longopts = [
+    "--foo",
+]
+query = [
+    "---foo",
+]
+reconcilesorders = false
+shortopts = nan
+solution = [
+    "---foo",
+]
+special = 2
+warnings = []
+
+[getopt-00001013]
+bundling = 2
+depletion = "DROP"
+expandsabbr = true
+is_posix = false
+longopts = [
+    "-",
+]
+query = [
+    "--=42",
+]
+reconcilesorders = false
+shortopts = nan
+solution = [
+    "--=42",
+]
+special = 2
+warnings = [
+    "option '--' doesn't allow an argument",
+]
+
+[getopt-00001014]
+bundling = 2
+depletion = "DROP"
+expandsabbr = true
+is_posix = false
+longopts = [
+    "=",
+]
+query = [
+    "-=42",
+]
+reconcilesorders = false
+shortopts = nan
+solution = [
+    "-=42",
+]
+special = 2
+warnings = []
+
+[getopt-00001015]
+bundling = 2
+depletion = "DROP"
+expandsabbr = true
+is_posix = false
+longopts = [
+    "-foo=?",
+]
+query = [
+    "--foo=42",
+]
+reconcilesorders = false
+shortopts = nan
+solution = [
+    "--foo=42",
+]
+special = 2
+warnings = []
+
+[getopt-00001016]
+bundling = 2
+depletion = "DROP"
+expandsabbr = true
+is_posix = false
+longopts = [
+    "foo=",
+]
+query = [
+    "-foo",
+    "42",
+]
+reconcilesorders = false
+shortopts = nan
+solution = [
+    "-foo",
+    "42",
+]
+special = 2
+warnings = []
+
+[getopt-00001017]
+bundling = 2
+depletion = "DROP"
+expandsabbr = true
+is_posix = false
+longopts = [
+    "foo=?",
+]
+query = [
+    "-foo",
+]
+reconcilesorders = false
+shortopts = nan
+solution = [
+    "-foo",
+]
+special = 2
+warnings = []
+
+[getopt-00001018]
+bundling = 2
+depletion = "DROP"
+expandsabbr = true
+is_posix = false
+longopts = [
+    "--foo=",
+]
+query = [
+    "---foo=42",
+]
+reconcilesorders = false
+shortopts = nan
+solution = [
+    "---foo=42",
+]
+special = 2
+warnings = []
+
+[getopt-00001019]
+bundling = 2
+depletion = "DROP"
+expandsabbr = true
+is_posix = false
+longopts = [
+    "-foo",
+]
+query = [
+    "-foo",
+]
+reconcilesorders = false
+shortopts = nan
+solution = [
+    "-foo",
+]
+special = 2
+warnings = [
+    "unrecognized option '-foo'",
+]
+
+[getopt-00001020]
+bundling = 2
+depletion = "DROP"
+expandsabbr = true
+is_posix = false
+longopts = [
+    "foo=?",
+]
+query = [
+    "-foo=42",
+]
+reconcilesorders = false
+shortopts = nan
+solution = [
+    "-foo=42",
+]
+special = 2
+warnings = []
+
 [man_longerr_amb]
 bundling = 2
 expandsabbr = true
