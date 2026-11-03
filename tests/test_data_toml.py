@@ -47,6 +47,7 @@ class TestDataToml(unittest.TestCase):
 
     def parse(
         self: Self,
+        /,
         *,
         query: Any,
         solution: Any,
@@ -54,44 +55,21 @@ class TestDataToml(unittest.TestCase):
         **kwargs: Any,
     ) -> None:
         answer: list[Any]
-        data: dict[str, Any]
         erranswer: list[Any]
-        msg: str
         parser: PreParser
         superanswer: list[Any]
 
         # TOML arrays become lists; TOML `false` stands for Python None,
         # which disables the corresponding option syntax in PreParser.
         parser = PreParser(**kwargs)
-        data = dict(
-            query=query,
-            solution=solution,
-            warnings=warnings,
-            **kwargs,
-        )
         answer, messages = parser.parse_args(query)
         erranswer = list(map(str, messages))
         superanswer = parser.parse_args(answer)[0]
-        msg = "\n\ndata=%s,\nanswer=%s,\nsuperanswer=%s,\n\n" % (
-            data,
-            answer,
-            superanswer,
-        )
-        self.assertEqual(answer, superanswer, msg=msg)
-        msg = "\n\ndata=%s,\nanswer=%s,\nsolution=%s,\n\n" % (
-            data,
-            answer,
-            solution,
-        )
-        self.assertEqual(answer, solution, msg=msg)
+        self.assertEqual(answer, superanswer, msg="idempotence failed!")
+        self.assertEqual(answer, solution, msg="wrong answer!")
         if warnings is None:
             return
-        msg = "\n\ndata=%s,\nerranswer=%s,\nwarnings=%s,\n\n" % (
-            data,
-            erranswer,
-            warnings,
-        )
-        self.assertEqual(erranswer, warnings, msg=msg)
+        self.assertEqual(erranswer, warnings, msg="wrong messages!")
 
 
 if __name__ == "__main__":
