@@ -15,7 +15,7 @@ from preparse.enum.Tuning import Tuning
 def process(
     args: Optional[Iterable[object]] = None,
     *,
-    shortsopts: str | None,
+    shortopts: str | None,
     longopts: tuple[str, ...] | None,
     bundling: Tuning,
     expandsabbr: bool,
@@ -30,7 +30,7 @@ def process(
     items = pull(args)
     items, messages = parse(
         items,
-        shortsopts=shortsopts,
+        shortopts=shortopts,
         longopts=longopts,
         expectsabbr=expectsabbr,
         expectsposix=expectsposix,
@@ -39,7 +39,7 @@ def process(
     items = digest(
         items,
         long_enabled=longopts is not None,
-        short_enabled=shortsopts is not None,
+        short_enabled=shortopts is not None,
         bundling=bundling,
         expandsabbr=expandsabbr,
         expectsposix=expectsposix,

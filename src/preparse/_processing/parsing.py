@@ -38,7 +38,7 @@ def parse_bundling(
     arg: str,
     *,
     cause: FunctionType,
-    shortsopts: str,
+    shortopts: str,
 ) -> Bundle:
     ans: Bundle
     x: int
@@ -48,7 +48,7 @@ def parse_bundling(
         if x == 0:
             continue
         ans.chars += y
-        mode = short_argmode(y, shortsopts)
+        mode = short_argmode(y, shortopts)
         if mode is None:
             cause(PIOW, option=y, islong=False)
             continue
@@ -76,7 +76,7 @@ def parse_cause(
 def parse_generator(
     items: list[Any],
     *,
-    shortsopts: str | None,
+    shortopts: str | None,
     longopts: tuple[str, ...] | None,
     expectsabbr: bool,
     expectsposix: bool,
@@ -87,7 +87,7 @@ def parse_generator(
     cause: FunctionType
     item: Any
     last: Any
-    broken = shortsopts is None and longopts is None
+    broken = shortopts is None and longopts is None
     cause = parse_cause(prog=prog, warn=warn)
     last = None
     for item in items:
@@ -113,7 +113,7 @@ def parse_generator(
             continue
         last = parse_option(
             item.value,
-            shortsopts=shortsopts,
+            shortopts=shortopts,
             longopts=longopts,
             cause=cause,
             expectsabbr=expectsabbr,
@@ -134,21 +134,21 @@ def parse_generator(
 def parse_islong(
     arg: str,
     *,
-    shortsopts: str | None,
+    shortopts: str | None,
     longopts: tuple[str, ...] | None,
 ) -> bool:
-    if longopts is not None and shortsopts is not None:
+    if longopts is not None and shortopts is not None:
         return arg.startswith("--")
-    return shortsopts is None
+    return shortopts is None
 
 
-def short_argmode(option: str, shortsopts: str) -> str | None:
+def short_argmode(option: str, shortopts: str) -> str | None:
     """Read a short-option spec: no suffix, :, or :: (optional)."""
-    for index, char in enumerate(shortsopts):
+    for index, char in enumerate(shortopts):
         if char == option and char != ":":
-            if shortsopts[index + 1 : index + 3] == "::":
+            if shortopts[index + 1 : index + 3] == "::":
                 return "::"
-            if shortsopts[index + 1 : index + 2] == ":":
+            if shortopts[index + 1 : index + 2] == ":":
                 return ":"
             return ""
     return None
@@ -216,10 +216,10 @@ def parse_option(
     *,
     cause: FunctionType,
     expectsabbr: bool,
-    shortsopts: str | None,
+    shortopts: str | None,
     longopts: tuple[str, ...] | None,
 ) -> Option:
-    if parse_islong(arg, shortsopts=shortsopts, longopts=longopts):
+    if parse_islong(arg, shortopts=shortopts, longopts=longopts):
         return parse_long(
             arg,
             cause=cause,
@@ -229,5 +229,5 @@ def parse_option(
     return parse_bundling(
         arg,
         cause=cause,
-        shortsopts=shortsopts if shortsopts is not None else "",
+        shortopts=shortopts if shortopts is not None else "",
     )

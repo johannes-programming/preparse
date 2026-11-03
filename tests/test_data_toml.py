@@ -60,8 +60,8 @@ class TestDataToml(unittest.TestCase):
         # TOML arrays become lists; TOML `false` stands for Python None,
         # which disables the corresponding option syntax in PreParser.
         options = dict(kwargs)
-        options["shortsopts"] = (
-            None if options["shortsopts"] is False else options["shortsopts"]
+        options["shortopts"] = (
+            None if options["shortopts"] is False else options["shortopts"]
         )
         options["longopts"] = (
             None
