@@ -1,6 +1,6 @@
 __all__: list[str] = ["parse"]
 
-from typing import Any, Generator
+from typing import Any
 
 from preparse._items.Bundle import Bundle
 from preparse._items.Item import Item
@@ -8,6 +8,7 @@ from preparse._items.Long import Long
 from preparse._items.Option import Option
 from preparse._items.Special import Special
 from preparse.abc.Message import Message
+from preparse.enum.Depletion import Depletion
 from preparse.messaging.AmbiguousOptionMessage import (
     AmbiguousOptionMessage as PAOW,
 )
@@ -28,6 +29,7 @@ def parse(
     shortopts: str | None,
     longopts: tuple[str, ...] | None,
     is_posix: bool,
+    depletion: Depletion,
 ) -> tuple[list[Item], list[Message]]:
     broken: bool
     item: Any
@@ -74,7 +76,8 @@ def parse(
             messages.append(PRAW(option=last.fullkey, is_long=True))
         else:
             messages.append(PRAW(option=last.chars[-1], is_long=False))
-        preparsed.append(last)
+        if depletion == Depletion.REINTERPRET:
+            preparsed.append(last)
     return preparsed, messages
 
 
