@@ -35,9 +35,9 @@ class AmbiguousOptionMessage(Message):
         "This method returns the core message."
         ans: str
         x: Any
-        ans = "option '%s' is ambiguous; possibilities:" % self.option
+        ans = f"option '{self.option}' is ambiguous; possibilities:"
         for x in self.possibilities:
-            ans += " '%s'" % x
+            ans += f" '{x}'"
         return ans
 
     def _dict(self: Self, /) -> dict[str, Any]:
