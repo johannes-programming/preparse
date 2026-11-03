@@ -90,7 +90,7 @@ class Utils(enum.Enum):
         """Load the converted TOML test data."""
         file: Path
         stream: io.BufferedReader
-        file = Path(__file__).parent / "data.toml"
+        file = Path(__file__).parent.parent / "tests"/"data.toml"
         with file.open("rb") as stream:
             return tomllib.load(stream)
 
