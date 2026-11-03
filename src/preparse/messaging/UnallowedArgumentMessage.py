@@ -24,7 +24,7 @@ class UnallowedArgumentMessage(Message):
 
     def __str__(self: Self, /) -> str:
         "This method returns the core message."
-        return "option '%s' doesn't allow an argument" % self.option
+        return f"option '{self.option}' doesn't allow an argument"
 
     def _dict(self: Self, /) -> dict[str, Any]:
         return dict(

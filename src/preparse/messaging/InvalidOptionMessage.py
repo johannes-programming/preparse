@@ -32,7 +32,7 @@ class InvalidOptionMessage(Message):
     def __str__(self: Self, /) -> str:
         "This method returns the core message."
         if self.is_long:
-            return f"unrecognized option '{ self.option}'"
+            return f"unrecognized option '{self.option}'"
         else:
             return f"invalid option -- '{self.option}'"
 
