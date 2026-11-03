@@ -228,38 +228,62 @@ The ``PreParser`` does not make any unforced changes to the aspect in question.
 These classes are subclasses of ``Message`` that are specifically designed to communicate issues with parsing.
 They are returned by ``parse_args`` and can be handled by the caller.
 
-``class preparse.messaging.AmbiguousOptionMessage.AmbiguousOptionMessage(other: Self | NoChange = NoChange.NO_CHANGE, /, *, option: object = NoChange.NO_CHANGE, possibilities: Iterable[object] | NoChange = NoChange.NO_CHANGE)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.messaging.AmbiguousOptionMessage.AmbiguousOptionMessage(other: AmbiguousOptionMessage | NoChange = NoChange.NO_CHANGE, /, *, option: object = NoChange.NO_CHANGE, possibilities: Iterable[object] | NoChange = NoChange.NO_CHANGE)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This ``class`` reports ambiguous options.
 This can only happen for long options.
-The ``option`` property holds the original option spelling.
-The ``possibilities`` property holds a tuple of candidate options.
-The constructor can also copy another instance.
 
-``class preparse.messaging.InvalidOptionMessage.InvalidOptionMessage(other: Self | NoChange = NoChange.NO_CHANGE, /, *, is_long: SupportsBool | NoChange = NoChange.NO_CHANGE, option: object = NoChange.NO_CHANGE)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``option: str = ""``
+""""""""""""""""""""
+
+This ``property`` represents the offending option.
+
+``possibilities: tuple[str, ...] = ()``
+"""""""""""""""""""""""""""""""""""""""
+
+This ``property`` holds a tuple of candidate options.
+
+``class preparse.messaging.InvalidOptionMessage.InvalidOptionMessage(other: InvalidOptionMessage | NoChange = NoChange.NO_CHANGE, /, *, is_long: SupportsBool | NoChange = NoChange.NO_CHANGE, option: object = NoChange.NO_CHANGE)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This ``class`` reports invalid options.
-The ``option`` property holds the option, and the boolean ``is_long`` property
-indicates whether it was interpreted as a long option.
-The constructor can also copy another instance.
 
-``class preparse.messaging.RequiredArgumentMessage.RequiredArgumentMessage(other: Self | NoChange = NoChange.NO_CHANGE, /, *, is_long: SupportsBool | NoChange = NoChange.NO_CHANGE, option: object = NoChange.NO_CHANGE)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``option: str = ""``
+""""""""""""""""""""
+
+This ``property`` represents the offending option.
+
+``is_long: bool = False``
+"""""""""""""""""""""""""
+
+This ``property`` indicates whether it was interpreted as a long option.
+
+``class preparse.messaging.RequiredArgumentMessage.RequiredArgumentMessage(other: RequiredArgumentMessage | NoChange = NoChange.NO_CHANGE, /, *, is_long: SupportsBool | NoChange = NoChange.NO_CHANGE, option: object = NoChange.NO_CHANGE)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This ``class`` reports missing required arguments.
-The ``option`` property holds the option, and the boolean ``is_long`` property
-indicates whether it was interpreted as a long option.
-The constructor can also copy another instance.
 
-``class preparse.messaging.UnallowedArgumentMessage.UnallowedArgumentMessage(other: Self | NoChange = NoChange.NO_CHANGE, /, *, option: object = NoChange.NO_CHANGE)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``option: str = ""``
+""""""""""""""""""""
+
+This ``property`` represents the offending option.
+
+``is_long: bool = False``
+"""""""""""""""""""""""""
+
+This ``property`` indicates whether it was interpreted as a long option.
+
+``class preparse.messaging.UnallowedArgumentMessage.UnallowedArgumentMessage(other: UnallowedArgumentMessage | NoChange = NoChange.NO_CHANGE, /, *, option: object = NoChange.NO_CHANGE)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This ``class`` reports arguments supplied to options that do not allow them.
 This can only happen for long options.
-The ``option`` property holds the full option name.
-The constructor can also copy another instance.
+
+``option: str = ""``
+""""""""""""""""""""
+
+This ``property`` represents the offending option.
 
 ``preparse.typing``
 ~~~~~~~~~~~~~~~~~~~

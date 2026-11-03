@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 __all__: list[str] = ["AmbiguousOptionMessage"]
 
 from collections.abc import Iterable
@@ -19,7 +21,7 @@ class AmbiguousOptionMessage(Message):
     @setdoc.basic
     def __init__(
         self: Self,
-        other: Self | NoChange = NoChange.NO_CHANGE,
+        other: AmbiguousOptionMessage | NoChange = NoChange.NO_CHANGE,
         /,
         *,
         option: object = NoChange.NO_CHANGE,
