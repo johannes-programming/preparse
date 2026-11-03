@@ -23,10 +23,11 @@ from preparse.typing.SupportsBool import SupportsBool
 class PreParser(Copyable):
 
     __slots__ = (
+        "_abbr",
         "_bundling",
         "_depletion",
-        "_abbr",
         "_is_posix",
+        "_joined",
         "_longopts",
         "_reconcilesorders",
         "_shortopts",
@@ -36,6 +37,7 @@ class PreParser(Copyable):
     _depletion: Depletion
     _abbr: Tuning
     _is_posix: bool
+    _joined: Tuning
     _longopts: tuple[str, ...] | None
     _reconcilesorders: bool
     _shortopts: str | None
@@ -53,36 +55,40 @@ class PreParser(Copyable):
         other: PreParser | NoChange = NoChange.NO_CHANGE,
         /,
         *,
+        abbr: int | NoChange = NoChange.NO_CHANGE,
         bundling: int | NoChange = NoChange.NO_CHANGE,
         depletion: Depletion | NoChange = NoChange.NO_CHANGE,
-        abbr: Tuning | NoChange = NoChange.NO_CHANGE,
         is_posix: SupportsBool | Infer | NoChange = NoChange.NO_CHANGE,
+        joined: int | NoChange = NoChange.NO_CHANGE,
         longopts: tuple[object, ...] | None | NoChange = NoChange.NO_CHANGE,
         reconcilesorders: SupportsBool | NoChange = NoChange.NO_CHANGE,
         shortopts: object = NoChange.NO_CHANGE,
         special: int | NoChange = NoChange.NO_CHANGE,
     ) -> None:
+        self._abbr = Tuning.MINIMIZE
         self._bundling = Tuning.MAINTAIN
         self._depletion = Depletion.REINTERPRET
-        self._abbr = Tuning.MINIMIZE
         self._is_posix = False
+        self._joined = Tuning.MAINTAIN
         self._longopts = ()
         self._reconcilesorders = True
         self._shortopts = ""
         self._special = Tuning.MAINTAIN
         if not isinstance(other, NoChange):
+            self.abbr = other.abbr
             self.bundling = other.bundling
             self.depletion = other.depletion
-            self.abbr = other.abbr
             self.is_posix = other.is_posix
+            self.joined = other.joined
             self.longopts = other.longopts
             self.reconcilesorders = other.reconcilesorders
             self.shortopts = other.shortopts
             self.special = other.special
+        self.abbr = abbr
         self.bundling = bundling
         self.depletion = depletion
-        self.abbr = abbr
         self.is_posix = is_posix
+        self.joined = joined
         self.longopts = longopts
         self.reconcilesorders = reconcilesorders
         self.shortopts = shortopts
@@ -99,12 +105,24 @@ class PreParser(Copyable):
         ans["bundling"] = self.bundling
         ans["depletion"] = self.depletion
         ans["abbr"] = self.abbr
+        ans["joined"] = self.joined
         ans["is_posix"] = self.is_posix
         ans["longopts"] = self.longopts
         ans["reconcilesorders"] = self.reconcilesorders
         ans["shortopts"] = self.shortopts
         ans["special"] = self.special
         return ans
+
+    @property
+    def abbr(self: Self, /) -> Tuning:
+        "This property determines how long options are abbreviated."
+        return self._abbr
+
+    @abbr.setter
+    def abbr(self: Self, value: int | NoChange, /) -> None:
+        if isinstance(value, NoChange):
+            return
+        self._abbr = Tuning(value)
 
     @property
     def bundling(self: Self, /) -> Tuning:
@@ -133,17 +151,6 @@ class PreParser(Copyable):
         self._depletion = value
 
     @property
-    def abbr(self: Self, /) -> Tuning:
-        "This property determines how long options are abbreviated."
-        return self._abbr
-
-    @abbr.setter
-    def abbr(self: Self, value: Tuning | NoChange, /) -> None:
-        if isinstance(value, NoChange):
-            return
-        self._abbr = Tuning(value)
-
-    @property
     def is_posix(self: Self, /) -> bool:
         return self._is_posix
 
@@ -157,6 +164,17 @@ class PreParser(Copyable):
             self._is_posix = "POSIXLY_CORRECT" in os.environ
         else:
             self._is_posix = bool(value)
+
+    @property
+    def joined(self: Self, /) -> Tuning:
+        "This property determines whether option values share the option token."
+        return self._joined
+
+    @joined.setter
+    def joined(self: Self, value: int | NoChange, /) -> None:
+        if isinstance(value, NoChange):
+            return
+        self._joined = Tuning(value)
 
     @property
     def longopts(self: Self, /) -> tuple[str, ...] | None:

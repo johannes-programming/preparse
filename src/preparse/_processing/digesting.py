@@ -18,6 +18,7 @@ def digest(
     short_enabled: bool,
     bundling: Tuning,
     abbr: Tuning,
+    joined: Tuning,
     longopts: tuple[str, ...] | None,
     is_posix: bool,
     reconcilesorders: bool,
@@ -31,6 +32,7 @@ def digest(
         longopts=longopts,
         short_enabled=short_enabled,
     )
+    ans = digest_joined(ans, joined=joined)
     ans = digest_special(
         ans,
         long_enabled=long_enabled,
@@ -52,6 +54,16 @@ def digest(
         long_enabled=long_enabled,
     )
     return ans
+
+
+def digest_joined(items: list[Item], *, joined: Tuning) -> list[Item]:
+    """Normalize the separation of option values without changing their content."""
+    if joined == Tuning.MAINTAIN:
+        return items
+    for item in items:
+        if isinstance(item, Option) and item.right is not None:
+            item.joined = joined == Tuning.MAXIMIZE
+    return items
 
 
 def digest_abbr(
