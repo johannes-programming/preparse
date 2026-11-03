@@ -1,5 +1,6 @@
 __all__: list[str] = ["Message"]
 
+import sys
 from abc import abstractmethod
 from types import NotImplementedType
 from typing import Any, Self
@@ -32,7 +33,6 @@ class Message(Copyable):
         return type(self)(**self._dict())
 
     def prog(self: Self, name: object, /) -> str:
-        if name is None:
-            return str(self)
-        else:
-            return f"{name}: {self}"
+        x: object
+        x = sys.argv[0] if name is None else name
+        return f"{x}: {self}"
