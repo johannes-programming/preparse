@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 __all__: list[str] = ["UnallowedArgumentMessage"]
 
 from typing import Any, Self
@@ -13,7 +15,7 @@ class UnallowedArgumentMessage(Message):
 
     def __init__(
         self: Self,
-        other: Self | NoChange = NoChange.NO_CHANGE,
+        other: UnallowedArgumentMessage | NoChange = NoChange.NO_CHANGE,
         /,
         *,
         option: object = NoChange.NO_CHANGE,

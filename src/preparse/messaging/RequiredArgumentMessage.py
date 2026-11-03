@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 __all__: list[str] = ["RequiredArgumentMessage"]
 
 from typing import Any, Self
@@ -16,7 +18,7 @@ class RequiredArgumentMessage(Message):
 
     def __init__(
         self: Self,
-        other: Self | NoChange = NoChange.NO_CHANGE,
+        other: RequiredArgumentMessage | NoChange = NoChange.NO_CHANGE,
         /,
         *,
         is_long: SupportsBool | NoChange = NoChange.NO_CHANGE,

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 __all__: list[str] = ["InvalidOptionMessage"]
 
 
@@ -17,7 +19,7 @@ class InvalidOptionMessage(Message):
 
     def __init__(
         self: Self,
-        other: Self | NoChange = NoChange.NO_CHANGE,
+        other: InvalidOptionMessage | NoChange = NoChange.NO_CHANGE,
         /,
         *,
         is_long: SupportsBool | NoChange = NoChange.NO_CHANGE,
