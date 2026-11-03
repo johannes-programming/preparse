@@ -73,7 +73,7 @@ warnings = [
 [man_shorterr]
 bundling = 2
 expandsabbr = false
-expectsabbr = false
+expectsabbr = true
 expectsposix = false
 longopts = nan
 prog = "HelloWorld"
@@ -1000,7 +1000,7 @@ warnings = [
 [run00028go]
 bundling = 2
 expandsabbr = false
-expectsabbr = false
+expectsabbr = true
 expectsposix = true
 longopts = nan
 prog = "HelloWorld"
@@ -1020,7 +1020,7 @@ warnings = [
 [run00029go]
 bundling = 0
 expandsabbr = false
-expectsabbr = false
+expectsabbr = true
 expectsposix = false
 longopts = [
     "-f",
@@ -1042,7 +1042,7 @@ warnings = []
 [run00030go]
 bundling = 0
 expandsabbr = false
-expectsabbr = false
+expectsabbr = true
 expectsposix = false
 longopts = []
 prog = "HelloWorld"
