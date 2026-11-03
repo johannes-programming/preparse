@@ -10,7 +10,6 @@ from typing import Any, Optional, Self, TypeVar
 
 import setdoc
 from datarepr import datarepr
-from tofunc import tofunc
 
 from preparse._processing import process
 from preparse.abc.Copyable import Copyable
