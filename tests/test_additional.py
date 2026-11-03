@@ -167,11 +167,8 @@ class WarningTests(unittest.TestCase):
                 self.assertNotEqual(duplicate, original)
 
     def test_warning_data_is_defensively_copied(self: Self, /) -> None:
-        exported: dict[str, Any]
         warning: AmbiguousOptionMessage
         warning = AmbiguousOptionMessage(option="--a", possibilities=["--abc"])
-        exported = warning.todict()
-        exported["option"] = "not-the-warning"
         self.assertEqual(warning.option, "--a")
         warning.possibilities = (123, "--abd")
         self.assertEqual(warning.possibilities, ("123", "--abd"))

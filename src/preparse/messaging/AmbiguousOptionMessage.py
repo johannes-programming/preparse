@@ -40,6 +40,12 @@ class AmbiguousOptionMessage(Message):
             ans += " '%s'" % x
         return ans
 
+    def _dict(self: Self, /) -> dict[str, Any]:
+        return dict(
+            option=self.option,
+            possibilities=self.possibilities,
+        )
+
     @property
     def option(self: Self, /) -> str:
         return self._option
@@ -59,9 +65,3 @@ class AmbiguousOptionMessage(Message):
         if isinstance(value, NotImplementedType):
             return
         self._possibilities = tuple(map(str, value))
-
-    def todict(self: Self, /) -> dict[str, Any]:
-        return dict(
-            option=self.option,
-            possibilities=self.possibilities,
-        )
