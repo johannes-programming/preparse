@@ -54,10 +54,12 @@ class PreParser(Copyable):
         bundling: int | NotImplementedType = NotImplemented,
         expandsabbr: SupportsBool | NotImplementedType = NotImplemented,
         expectsposix: SupportsBool | NotImplementedType = NotImplemented,
-        longopts: tuple[str, ...] | None | NotImplementedType = NotImplemented,
+        longopts: (
+            tuple[object, ...] | None | NotImplementedType
+        ) = NotImplemented,
         prog: object = NotImplemented,
         reconcilesorders: SupportsBool | NotImplementedType = NotImplemented,
-        shortopts: str | None | NotImplementedType = NotImplemented,
+        shortopts: object = NotImplemented,
         special: int | NotImplementedType = NotImplemented,
     ) -> None:
         self._bundling = Tuning.MAINTAIN
@@ -140,11 +142,14 @@ class PreParser(Copyable):
 
     @longopts.setter
     def longopts(
-        self: Self, value: tuple[str, ...] | None | NotImplementedType, /
+        self: Self, value: tuple[object, ...] | None | NotImplementedType, /
     ) -> None:
         if isinstance(value, NotImplementedType):
             return
-        self._longopts = None if value is None else tuple(value)
+        if value is None:
+            self._longopts = None
+        else:
+            self._longopts = tuple(map(str, value))
 
     def parse_args(
         self: Self,
@@ -189,12 +194,13 @@ class PreParser(Copyable):
         return self._shortopts
 
     @shortopts.setter
-    def shortopts(
-        self: Self, value: str | None | NotImplementedType, /
-    ) -> None:
+    def shortopts(self: Self, value: object, /) -> None:
         if isinstance(value, NotImplementedType):
             return
-        self._shortopts = value
+        if value is None:
+            self._shortopts = None
+        else:
+            self._shortopts = str(value)
 
     @property
     def special(self: Self, /) -> Tuning:
