@@ -38,10 +38,10 @@ class WarningTests(unittest.TestCase):
             all(isinstance(w, InvalidOptionMessage) for w in warnings)
         )
         self.assertEqual(
-            (warnings[0].option, warnings[0].islong), ("--unknown", True)
+            (warnings[0].option, warnings[0].is_long), ("--unknown", True)
         )
         self.assertEqual(
-            (warnings[1].option, warnings[1].islong), ("z", False)
+            (warnings[1].option, warnings[1].is_long), ("z", False)
         )
         self.assertEqual(str(warnings[0]), "unrecognized option '--unknown'")
         self.assertEqual(str(warnings[1]), "invalid option -- 'z'")
@@ -55,7 +55,7 @@ class WarningTests(unittest.TestCase):
         preparsed, warnings = parser.parse_args(["-xy"])
         self.assertEqual(preparsed, ["-xy"])
         self.assertEqual([w.option for w in warnings], ["x", "y"])
-        self.assertTrue(all(not w.islong for w in warnings))
+        self.assertTrue(all(not w.is_long for w in warnings))
 
     def test_ambiguous_abbreviation_reports_candidates(self: Self, /) -> None:
         parser: PreParser
@@ -77,12 +77,12 @@ class WarningTests(unittest.TestCase):
 
     def test_missing_value_for_long_and_short_options(self: Self, /) -> None:
         args: list[str]
-        islong: bool
+        is_long: bool
         message: str
         option: str
         parser: PreParser
         warnings: list[Any]
-        for args, option, islong, message in (
+        for args, option, is_long, message in (
             (
                 ["--output"],
                 "--output",
@@ -103,7 +103,8 @@ class WarningTests(unittest.TestCase):
                 self.assertEqual(len(warnings), 1)
                 self.assertIsInstance(warnings[0], RequiredArgumentMessage)
                 self.assertEqual(
-                    (warnings[0].option, warnings[0].islong), (option, islong)
+                    (warnings[0].option, warnings[0].is_long),
+                    (option, is_long),
                 )
                 self.assertEqual(str(warnings[0]), message)
 
@@ -147,8 +148,8 @@ class WarningTests(unittest.TestCase):
         examples: list[Message]
         original: Message
         examples = [
-            InvalidOptionMessage(option="-x", islong=False),
-            RequiredArgumentMessage(option="--out", islong=True),
+            InvalidOptionMessage(option="-x", is_long=False),
+            RequiredArgumentMessage(option="--out", is_long=True),
             UnallowedArgumentMessage(option="--flag"),
             AmbiguousOptionMessage(
                 option="--fo", possibilities=["--foo", "--force"]

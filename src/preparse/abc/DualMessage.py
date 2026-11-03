@@ -11,7 +11,7 @@ from preparse.typing.SupportsBool import SupportsBool
 class DualMessage(Message):
 
     __slots__ = (
-        "_islong",
+        "_is_long",
         "_option",
     )
 
@@ -20,25 +20,25 @@ class DualMessage(Message):
         other: Self | NotImplementedType = NotImplemented,
         /,
         *,
-        islong: SupportsBool | NotImplementedType = NotImplemented,
+        is_long: SupportsBool | NotImplementedType = NotImplemented,
         option: object = NotImplemented,
     ) -> None:
         if not isinstance(other, NotImplementedType):
             self.option = other.option
-            self.islong = other.islong
+            self.is_long = other.is_long
         self.option = option
-        self.islong = islong
+        self.is_long = is_long
 
     def __str__(self: Self, /) -> str:
         "This method returns the core message."
-        if self.islong:
+        if self.is_long:
             return self._longmsg() % self.option
         else:
             return self._shortmsg() % self.option
 
     def _dict(self: Self, /) -> dict[str, Any]:
         return dict(
-            islong=self.islong,
+            is_long=self.is_long,
             option=self.option,
         )
 
@@ -51,12 +51,12 @@ class DualMessage(Message):
     def _shortmsg() -> str: ...
 
     @property
-    def islong(self: Self, /) -> bool:
-        return self._islong
+    def is_long(self: Self, /) -> bool:
+        return self._is_long
 
-    @islong.setter
-    def islong(self: Self, value: object, /) -> None:
-        self._islong = bool(value)
+    @is_long.setter
+    def is_long(self: Self, value: object, /) -> None:
+        self._is_long = bool(value)
 
     @property
     def option(self: Self, /) -> str:
