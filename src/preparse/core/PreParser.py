@@ -64,7 +64,7 @@ class PreParser(Copyable):
     ) -> None:
         self._bundling = Tuning.MAINTAIN
         self._depletion = Depletion.REINTERPRET
-        self._abbr = Tuning.MAXIMIZE
+        self._abbr = Tuning.MINIMIZE
         self._is_posix = False
         self._longopts = ()
         self._reconcilesorders = True
