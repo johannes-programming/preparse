@@ -1,12 +1,12 @@
 __all__: list[str] = ["AmbiguousOptionMessage"]
 
 from collections.abc import Iterable
-from types import NotImplementedType
 from typing import Any, Self
 
 import setdoc
 
 from preparse.abc.Message import Message
+from preparse.enum.NoChange import NoChange
 
 
 class AmbiguousOptionMessage(Message):
@@ -19,13 +19,13 @@ class AmbiguousOptionMessage(Message):
     @setdoc.basic
     def __init__(
         self: Self,
-        other: Self | NotImplementedType = NotImplemented,
+        other: Self | NoChange = NoChange.NO_CHANGE,
         /,
         *,
-        option: object = NotImplemented,
-        possibilities: Iterable[object] | NotImplementedType = NotImplemented,
+        option: object = NoChange.NO_CHANGE,
+        possibilities: Iterable[object] | NoChange = NoChange.NO_CHANGE,
     ) -> None:
-        if not isinstance(other, NotImplementedType):
+        if not isinstance(other, NoChange):
             self.option = other.option
             self.possibilities = other.possibilities
         self.option = option
@@ -52,7 +52,7 @@ class AmbiguousOptionMessage(Message):
 
     @option.setter
     def option(self: Self, value: object, /) -> None:
-        if isinstance(value, NotImplementedType):
+        if isinstance(value, NoChange):
             return
         self._option = str(value)
 
@@ -62,6 +62,6 @@ class AmbiguousOptionMessage(Message):
 
     @possibilities.setter
     def possibilities(self: Self, value: Iterable[object], /) -> None:
-        if isinstance(value, NotImplementedType):
+        if isinstance(value, NoChange):
             return
         self._possibilities = tuple(map(str, value))

@@ -3,8 +3,9 @@ from __future__ import annotations
 __all__: list[str] = ["Copyable"]
 
 from abc import abstractmethod
-from types import NotImplementedType
 from typing import Self
+
+from preparse.enum.NoChange import NoChange
 
 
 class Copyable:
@@ -14,7 +15,7 @@ class Copyable:
     @abstractmethod
     def __init__(
         self: Self,
-        other: Self | NotImplementedType = NotImplemented,
+        other: Self | NoChange = NoChange.NO_CHANGE,
         /,
     ) -> None: ...
 
