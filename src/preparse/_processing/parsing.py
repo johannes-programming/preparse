@@ -71,9 +71,9 @@ def parse(
     if last is not None:
         # if the last item is starved
         if isinstance(last, Long):
-            messages.append(PRAW(option=last.fullkey, islong=True))
+            messages.append(PRAW(option=last.fullkey, is_long=True))
         else:
-            messages.append(PRAW(option=last.chars[-1], islong=False))
+            messages.append(PRAW(option=last.chars[-1], is_long=False))
         preparsed.append(last)
     return preparsed, messages
 
@@ -94,7 +94,7 @@ def parse_bundling(
         ans.chars += y
         mode = short_argmode(y, shortopts)
         if mode is None:
-            messages.append(PIOW(option=y, islong=False))
+            messages.append(PIOW(option=y, is_long=False))
             continue
         ans.argmode = mode
         if mode == "":
@@ -106,7 +106,7 @@ def parse_bundling(
     return ans
 
 
-def parse_islong(
+def parse_is_long(
     arg: str,
     *,
     shortopts: str | None,
@@ -168,7 +168,7 @@ def parse_long(
         ]
     if not matches:
         ans.argmode = "::"
-        messages.append(PIOW(option=arg, islong=True))
+        messages.append(PIOW(option=arg, is_long=True))
         return ans
     if len(matches) >= 2:
         ans.argmode = "::"
@@ -193,7 +193,7 @@ def parse_option(
     shortopts: str | None,
     longopts: tuple[str, ...] | None,
 ) -> Option:
-    if parse_islong(arg, shortopts=shortopts, longopts=longopts):
+    if parse_is_long(arg, shortopts=shortopts, longopts=longopts):
         return parse_long(
             arg,
             messages=messages,
