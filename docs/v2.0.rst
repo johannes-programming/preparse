@@ -81,8 +81,8 @@ The first positional argument allows copying the configuration from another inst
 Passing ``NoChange.NO_CHANGE`` for a property leaves its current value unchanged.
 The properties are documented with the values they are preset with.
 
-``abbr: Tuning = Tuning.MAXIMIZE``
-"""""""""""""""""""""""""""""""""""""
+``abbr: Tuning = Tuning.MINIMIZE``
+""""""""""""""""""""""""""""""""""
 
 This ``property`` determines the approach to abbreviations.
 

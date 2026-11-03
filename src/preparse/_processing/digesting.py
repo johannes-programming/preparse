@@ -72,18 +72,20 @@ def digest_abbr(
     for item in ans:
         if not isinstance(item, Long):
             continue
-        if abbr == Tuning.MAXIMIZE:
+        if abbr == Tuning.MINIMIZE:
             item.abbrlen = None
-        elif item.fullkey in options:
-            for length in range(2, len(item.fullkey) + 1):
-                candidate = item.fullkey[:length]
-                if candidate == "--":
-                    continue
-                if candidate == item.fullkey or [
-                    key for key in options if key.startswith(candidate)
-                ] == [item.fullkey]:
-                    item.abbrlen = length
-                    break
+            continue
+        if item.fullkey not in options:
+            continue
+        for length in range(2, len(item.fullkey) + 1):
+            candidate = item.fullkey[:length]
+            if candidate == "--":
+                continue
+            if candidate == item.fullkey or [
+                key for key in options if key.startswith(candidate)
+            ] == [item.fullkey]:
+                item.abbrlen = length
+                break
     return ans
 
 

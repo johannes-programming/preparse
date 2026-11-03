@@ -248,51 +248,59 @@ class ConfigurationTests(unittest.TestCase):
     def test_abbreviation_expansion_and_recognition_are_independent(
         self: Self, /
     ) -> None:
-        expands: bool
         output: list[str]
         parser: PreParser
         reported: list[Any]
-        warning_type: type[Message] | None
-        for expands, output, warning_type in (
-            (True, ["--verbose"], None),
-            (False, ["--ver"], None),
-        ):
-            with self.subTest(expands=expands):
-                reported = []
+        with self.subTest(abbr=Tuning.MAXIMIZE):
+            output = ["--v"]
+            parser = PreParser(
+                longopts=("verbose",),
+                abbr=Tuning.MAXIMIZE,
+            )
+            preparsed, reported = parser.parse_args(["--ver"])
+            self.assertEqual(preparsed, output)
+            self.assertEqual(len(reported), 0)
 
-                parser = PreParser(
-                    longopts=("verbose",),
-                    abbr=Tuning.MAXIMIZE if expands else Tuning.MAINTAIN,
-                )
-                preparsed, reported = parser.parse_args(["--ver"])
-                self.assertEqual(preparsed, output)
-                self.assertEqual(len(reported), int(warning_type is not None))
-                if warning_type is not None:
-                    self.assertIsInstance(reported[0], warning_type)
+        with self.subTest(
+            abbr=Tuning.MAINTAIN,
+        ):
+            output = ["--ver"]
+            parser = PreParser(
+                longopts=("verbose",),
+                abbr=Tuning.MAINTAIN,
+            )
+            preparsed, reported = parser.parse_args(["--ver"])
+            self.assertEqual(preparsed, output)
+            self.assertEqual(len(reported), 0)
 
     def test_abbr_tuning_minimizes_without_ambiguity(self: Self, /) -> None:
         parser = PreParser(
             longopts=("verbose", "version", "x", "xml"),
-            abbr=Tuning.MINIMIZE,
+            abbr=Tuning.MAXIMIZE,
         )
-        output, warnings = parser.parse_args(
-            ["--verbose", "--vers", "--x", "--xml", "--unknown"]
-        )
-        self.assertEqual(
-            output, ["--verb", "--vers", "--x", "--xm", "--unknown"]
-        )
-        self.assertEqual(output, parser.parse_args(output)[0])
+        query = ["--verbose", "--vers", "--x", "--xml", "--unknown"]
+        output, warnings = parser.parse_args(query)
+        solution = ["--verb", "--vers", "--x", "--xm", "--unknown"]
+        self.assertEqual(output, solution)
+        superoutput = parser.parse_args(output)[0]
+        self.assertEqual(output, superoutput)
         self.assertEqual(len(warnings), 1)
         self.assertIsInstance(warnings[0], InvalidOptionMessage)
 
         parser = PreParser(
             shortopts=None,
             longopts=("verbose", "version"),
-            abbr=Tuning.MINIMIZE,
+            abbr=Tuning.MAXIMIZE,
         )
-        self.assertEqual(parser.parse_args(["-verbose"])[0], ["-verb"])
+        query = ["-verbose"]
+        output = parser.parse_args(query)[0]
+        solution = ["-verb"]
+        self.assertEqual(output, solution)
         parser = PreParser(longopts=("mode=", "mode"), abbr=Tuning.MINIMIZE)
-        self.assertEqual(parser.parse_args(["--mode"]), (["--mode"], []))
+        query = ["--mode"]
+        output, warnings = parser.parse_args(query)
+        self.assertEqual(output, ["--mode"])
+        self.assertEqual(warnings, [])
 
     def test_no_option_syntax_is_truly_positional_only(self: Self, /) -> None:
         args: list[str]
