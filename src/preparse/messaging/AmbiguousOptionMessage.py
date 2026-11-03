@@ -61,7 +61,9 @@ class AmbiguousOptionMessage(Message):
         return self._possibilities
 
     @possibilities.setter
-    def possibilities(self: Self, value: Iterable[object], /) -> None:
+    def possibilities(
+        self: Self, value: Iterable[object] | NoChange, /
+    ) -> None:
         if isinstance(value, NoChange):
             return
         self._possibilities = tuple(map(str, value))
