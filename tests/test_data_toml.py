@@ -33,6 +33,34 @@ class Utils(enum.Enum):
         return False
 
 
+def getopt_settings(kwargs: dict[str, Any]) -> dict[str, Any]:
+    """Translate the unmodified legacy TOML options to getopt-style specs."""
+    settings = dict(kwargs)
+    allowslong = settings.pop("allowslong", True)
+    allowsshort = settings.pop("allowsshort", True)
+    optdict = settings.pop("optdict", {})
+    shortsopts = "" if allowsshort else None
+    longopts: list[str] | None = [] if allowslong else None
+    for key, nargs in sorted(optdict.items()):
+        # The old optdict treated 2 as an optional attached argument.
+        short_suffix = ("", ":", "::")[nargs]
+        long_suffix = ("", "=", "=?")[nargs]
+        if key.startswith("--"):
+            if longopts is not None:
+                longopts.append(key[2:] + long_suffix)
+            if shortsopts is not None and key == "--":
+                shortsopts += "-" + short_suffix
+        elif key.startswith("-"):
+            if shortsopts is not None and len(key) == 2:
+                shortsopts += key[1:] + short_suffix
+            elif longopts is not None and shortsopts is None:
+                # Single-dash long names are a legacy long-only extension.
+                longopts.append(key + long_suffix)
+    settings["shortsopts"] = shortsopts
+    settings["longopts"] = None if longopts is None else tuple(longopts)
+    return settings
+
+
 class TestDataToml(unittest.TestCase):
 
     def test_0(self: Self) -> None:
@@ -58,7 +86,7 @@ class TestDataToml(unittest.TestCase):
         parser: PreParser
         superanswer: list[Any]
 
-        parser = PreParser(**kwargs)
+        parser = PreParser(**getopt_settings(kwargs))
         data = dict(
             query=query,
             solution=solution,

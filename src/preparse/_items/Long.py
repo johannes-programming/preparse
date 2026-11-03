@@ -6,7 +6,6 @@ from typing import Any, Optional, Self, SupportsIndex
 import setdoc
 
 from preparse._items.Option import Option
-from preparse.enum.Nargs import Nargs
 
 
 class Long(Option):
@@ -15,7 +14,7 @@ class Long(Option):
         "_abbrlen",
         "_fullkey",
         "_joined",
-        "_nargs",
+        "_argmode",
         "_right",
     )
 
@@ -27,13 +26,13 @@ class Long(Option):
         abbrlen: Optional[int] = None,
         fullkey: str,
         joined: bool = False,
-        nargs: Nargs = Nargs.NO_ARGUMENT,
+        argmode: str = "",
         right: Optional[str] = None,
     ) -> None:
         self.abbrlen = abbrlen
         self.fullkey = fullkey
         self.joined = joined
-        self.nargs = nargs
+        self.argmode = argmode
         self.right = right
 
     @property

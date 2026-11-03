@@ -15,13 +15,12 @@ from preparse.enum.Tuning import Tuning
 def process(
     args: Optional[Iterable[object]] = None,
     *,
-    allowslong: bool,
-    allowsshort: bool,
+    shortsopts: str | None,
+    longopts: tuple[str, ...] | None,
     bundling: Tuning,
     expandsabbr: bool,
     expectsabbr: bool,
     expectsposix: bool,
-    optdict: dict[Any, Any],
     prog: str,
     reconcilesorders: bool,
     special: Tuning,
@@ -31,17 +30,16 @@ def process(
     items = pull(args)
     items, messages = parse(
         items,
-        allowslong=allowslong,
-        allowsshort=allowsshort,
+        shortsopts=shortsopts,
+        longopts=longopts,
         expectsabbr=expectsabbr,
         expectsposix=expectsposix,
-        optdict=optdict,
         prog=prog,
     )
     items = digest(
         items,
-        allowslong=allowslong,
-        allowsshort=allowsshort,
+        long_enabled=longopts is not None,
+        short_enabled=shortsopts is not None,
         bundling=bundling,
         expandsabbr=expandsabbr,
         expectsposix=expectsposix,
