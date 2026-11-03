@@ -1,6 +1,6 @@
 __all__: list[str] = ["Bundle"]
 
-from typing import Any, Optional, Self
+from typing import Any, Self
 
 import setdoc
 
@@ -23,7 +23,7 @@ class Bundle(Option):
         chars: str,
         joined: bool = False,
         argmode: str,
-        right: Optional[str] = None,
+        right: str | None = None,
     ) -> None:
         self.chars = chars
         self.joined = joined

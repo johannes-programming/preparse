@@ -207,7 +207,7 @@ class ArgumentInputTests(unittest.TestCase):
         parser: PreParser
         with patch.object(sys, "argv", ["/tmp/mytool.py", "--flag", "tail"]):
             parser = PreParser(longopts=("flag",))
-            preparsed, messages = parser.parse_args(None)
+            preparsed, messages = parser.parse_args(Infer.INFER)
             self.assertEqual(preparsed, ["--flag", "tail"])
             preparsed, messages = parser.parse_args()
             self.assertEqual(preparsed, ["--flag", "tail"])
