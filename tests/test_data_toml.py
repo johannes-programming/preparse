@@ -61,7 +61,9 @@ class TestDataToml(unittest.TestCase):
         superanswer: list[Any]
 
         kwargs_ = dict(kwargs)
-        kwargs_["depletion"] = Depletion(kwargs_["depletion"])
+        kwargs_["depletion"] = Depletion(
+            kwargs_.get("depletion", "REINTERPRET")
+        )
         parser = PreParser(**kwargs_)
         answer, messages = parser.parse_args(query)
         erranswer = list(map(str, messages))
