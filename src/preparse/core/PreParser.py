@@ -21,22 +21,22 @@ from preparse.typing.SupportsBool import SupportsBool
 class PreParser(Copyable):
 
     __slots__ = (
-        "_shortopts",
-        "_longopts",
         "_bundling",
         "_expandsabbr",
         "_expectsposix",
+        "_longopts",
         "_prog",
         "_reconcilesorders",
+        "_shortopts",
         "_special",
     )
-    _shortopts: str | None
-    _longopts: tuple[str, ...] | None
     _bundling: Tuning
     _expandsabbr: bool
     _expectsposix: bool
+    _longopts: tuple[str, ...] | None
     _prog: str
     _reconcilesorders: bool
+    _shortopts: str | None
     _special: Tuning
 
     def __eq__(self: Self, other: object, /) -> bool | NotImplementedType:
