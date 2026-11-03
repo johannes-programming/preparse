@@ -53,74 +53,48 @@ class PreParser(Copyable):
         other: PreParser | NotImplementedType = NotImplemented,
         /,
         *,
-        shortopts: str | None | NotImplementedType = NotImplemented,
-        longopts: tuple[str, ...] | None | NotImplementedType = NotImplemented,
         bundling: int | NotImplementedType = NotImplemented,
         expandsabbr: SupportsBool | NotImplementedType = NotImplemented,
         expectsabbr: SupportsBool | NotImplementedType = NotImplemented,
         expectsposix: SupportsBool | NotImplementedType = NotImplemented,
+        longopts: tuple[str, ...] | None | NotImplementedType = NotImplemented,
         prog: object = NotImplemented,
         reconcilesorders: SupportsBool | NotImplementedType = NotImplemented,
+        shortopts: str | None | NotImplementedType = NotImplemented,
         special: int | NotImplementedType = NotImplemented,
     ) -> None:
-        self._shortopts = ""
-        self._longopts = ()
         self._bundling = Tuning.MAINTAIN
         self._expandsabbr = True
         self._expectsabbr = True
         self._expectsposix = False
+        self._longopts = ()
         self.prog = None
         self._reconcilesorders = True
+        self._shortopts = ""
         self._special = Tuning.MAINTAIN
         if not isinstance(other, NotImplementedType):
-            self.shortopts = other.shortopts
-            self.longopts = other.longopts
             self.bundling = other.bundling
             self.expandsabbr = other.expandsabbr
             self.expectsabbr = other.expectsabbr
             self.expectsposix = other.expectsposix
+            self.longopts = other.longopts
             self.prog = other.prog
             self.reconcilesorders = other.reconcilesorders
+            self.shortopts = other.shortopts
             self.special = other.special
-        self.shortopts = shortopts
-        self.longopts = longopts
         self.bundling = bundling
         self.expandsabbr = expandsabbr
         self.expectsabbr = expectsabbr
         self.expectsposix = expectsposix
+        self.longopts = longopts
         self.prog = prog
         self.reconcilesorders = reconcilesorders
+        self.shortopts = shortopts
         self.special = special
 
     @setdoc.basic
     def __repr__(self: Self, /) -> str:
         return datarepr(type(self).__name__, **self.todict())
-
-    @property
-    def shortopts(self: Self, /) -> str | None:
-        """getopt-style short options; None disables short-option parsing."""
-        return self._shortopts
-
-    @shortopts.setter
-    def shortopts(
-        self: Self, value: str | None | NotImplementedType, /
-    ) -> None:
-        if isinstance(value, NotImplementedType):
-            return
-        self._shortopts = value
-
-    @property
-    def longopts(self: Self, /) -> tuple[str, ...] | None:
-        """getopt-style long options; None disables long-option parsing."""
-        return self._longopts
-
-    @longopts.setter
-    def longopts(
-        self: Self, value: tuple[str, ...] | None | NotImplementedType, /
-    ) -> None:
-        if isinstance(value, NotImplementedType):
-            return
-        self._longopts = None if value is None else tuple(value)
 
     @property
     def bundling(self: Self, /) -> Tuning:
@@ -177,6 +151,19 @@ class PreParser(Copyable):
         else:
             self._expectsposix = bool(value)
 
+    @property
+    def longopts(self: Self, /) -> tuple[str, ...] | None:
+        """getopt-style long options; None disables long-option parsing."""
+        return self._longopts
+
+    @longopts.setter
+    def longopts(
+        self: Self, value: tuple[str, ...] | None | NotImplementedType, /
+    ) -> None:
+        if isinstance(value, NotImplementedType):
+            return
+        self._longopts = None if value is None else tuple(value)
+
     def parse_args(
         self: Self,
         args: Optional[Iterable[object]] = None,
@@ -215,6 +202,19 @@ class PreParser(Copyable):
         self._reconcilesorders = bool(value)
 
     @property
+    def shortopts(self: Self, /) -> str | None:
+        """getopt-style short options; None disables short-option parsing."""
+        return self._shortopts
+
+    @shortopts.setter
+    def shortopts(
+        self: Self, value: str | None | NotImplementedType, /
+    ) -> None:
+        if isinstance(value, NotImplementedType):
+            return
+        self._shortopts = value
+
+    @property
     def special(self: Self, /) -> Tuning:
         "This Tuning property determines the approach towards the special argument."
         return self._special
@@ -230,13 +230,13 @@ class PreParser(Copyable):
         "This method returns a dict representing the current instance."
         ans: dict[str, Any]
         ans = dict()
-        ans["shortopts"] = self.shortopts
-        ans["longopts"] = self.longopts
         ans["bundling"] = self.bundling
         ans["expandsabbr"] = self.expandsabbr
         ans["expectsabbr"] = self.expectsabbr
         ans["expectsposix"] = self.expectsposix
+        ans["longopts"] = self.longopts
         ans["prog"] = self.prog
         ans["reconcilesorders"] = self.reconcilesorders
+        ans["shortopts"] = self.shortopts
         ans["special"] = self.special
         return ans
