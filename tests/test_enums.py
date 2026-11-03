@@ -1,18 +1,8 @@
-__all__: list[str] = ["TestEnums"]
-
 import unittest
-from typing import Self
-
-from preparse.enum.Nargs import Nargs
+from preparse.enum.Tuning import Tuning
 
 
 class TestEnums(unittest.TestCase):
-
-    def test_nargs_enum(self: Self) -> None:
-        self.assertEqual(Nargs.NO_ARGUMENT, 0)
-        self.assertEqual(Nargs.REQUIRED_ARGUMENT, 1)
-        self.assertEqual(Nargs.OPTIONAL_ARGUMENT, 2)
-
-
-if __name__ == "__main__":
-    unittest.main()
+    def test_tuning(self) -> None:
+        self.assertEqual((Tuning.MINIMIZE, Tuning.MAXIMIZE, Tuning.MAINTAIN), (0, 1, 2))
+        self.assertIs(Tuning(777), Tuning.MAINTAIN)
