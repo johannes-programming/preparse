@@ -5,7 +5,7 @@ import math
 import tomllib
 from pathlib import Path
 from typing import Any, Self
-
+import sys
 import tomli_w
 
 
@@ -35,6 +35,7 @@ def main() -> None:
     name: str
     result = dict()
     for name, kwargs in Utils.utils.data.items():
+        print(name, kwargs, file=sys.stderr)
         result[name] = parse(**kwargs)
     print(tomli_w.dumps(result))
 
@@ -67,7 +68,6 @@ def parse(
             ans["warnings"].append(x[len(z) :])
     else:
         ans["warnings"] = warnings
-    ans["warnings"] = warnings
     ans["shortopts"] = "" if allowsshort else float("nan")
     ans["longopts"] = [] if allowslong else float("nan")
     optdict = dict(optdict)
