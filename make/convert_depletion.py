@@ -1,12 +1,12 @@
-
 import enum
 import functools
 import io
 import math
 import tomllib
-import tomli_w
 from pathlib import Path
 from typing import Any, Self
+
+import tomli_w
 
 from preparse.core.PreParser import PreParser
 from preparse.enum.Depletion import Depletion
@@ -20,7 +20,7 @@ class Utils(enum.Enum):
         """Load the converted TOML test data."""
         file: Path
         stream: io.BufferedReader
-        file = Path(__file__).parent / "data.toml"
+        file = Path(__file__).parent.parent / "tests" / "data.toml"
         with file.open("rb") as stream:
             return tomllib.load(stream)
 
@@ -33,18 +33,17 @@ class Utils(enum.Enum):
         return None
 
 
-
 def main() -> None:
     kwargs: dict[str, Any]
     name: str
     data: dict[str, Any]
-    data=dict()
+    data = dict()
     for name, kwargs in Utils.utils.data.items():
         data[name] = dict(kwargs)
         kwargs_ = dict()
         for x, y in kwargs.items():
             kwargs_[x] = Utils.testvalue(y)
-        data[name]["depletion"]=parse(**kwargs_)
+        data[name]["depletion"] = parse(**kwargs_)
     print(tomli_w.dumps(data))
 
 
