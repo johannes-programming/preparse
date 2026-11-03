@@ -13,6 +13,7 @@ from datarepr import datarepr
 from preparse._processing import process
 from preparse.abc.Copyable import Copyable
 from preparse.abc.Message import Message
+from preparse.enum.Infer import Infer
 from preparse.enum.Tuning import Tuning
 from preparse.typing.SupportsBool import SupportsBool
 
@@ -50,7 +51,7 @@ class PreParser(Copyable):
         *,
         bundling: int | NotImplementedType = NotImplemented,
         expandsabbr: SupportsBool | NotImplementedType = NotImplemented,
-        is_posix: SupportsBool | NotImplementedType = NotImplemented,
+        is_posix: SupportsBool | Infer | NotImplementedType = NotImplemented,
         longopts: (
             tuple[object, ...] | None | NotImplementedType
         ) = NotImplemented,
@@ -132,11 +133,11 @@ class PreParser(Copyable):
 
     @is_posix.setter
     def is_posix(
-        self: Self, value: SupportsBool | None | NotImplementedType, /
+        self: Self, value: SupportsBool | Infer | NotImplementedType, /
     ) -> None:
         if isinstance(value, NotImplementedType):
             return
-        if value is None:
+        if isinstance(value, Infer):
             self._is_posix = "POSIXLY_CORRECT" in os.environ
         else:
             self._is_posix = bool(value)
