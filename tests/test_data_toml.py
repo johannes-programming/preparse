@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any, Self
 
 from preparse.core.PreParser import PreParser
+from preparse.enum.Depletion import Depletion
 
 
 class Utils(enum.Enum):
@@ -59,9 +60,9 @@ class TestDataToml(unittest.TestCase):
         parser: PreParser
         superanswer: list[Any]
 
-        # TOML arrays become lists; TOML `false` stands for Python None,
-        # which disables the corresponding option syntax in PreParser.
-        parser = PreParser(**kwargs)
+        kwargs_ = dict(kwargs)
+        kwargs_["depletion"] = Depletion(kwargs_["depletion"])
+        parser = PreParser(**kwargs_)
         answer, messages = parser.parse_args(query)
         erranswer = list(map(str, messages))
         superanswer = parser.parse_args(answer)[0]
