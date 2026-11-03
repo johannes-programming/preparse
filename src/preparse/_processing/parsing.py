@@ -1,6 +1,5 @@
 __all__: list[str] = ["parse"]
 
-from types import FunctionType
 from typing import Any, Generator
 
 from preparse._items.Bundle import Bundle
@@ -23,11 +22,59 @@ from preparse.messaging.UnallowedArgumentMessage import (
 )
 
 
-def parse(args: list[Item], **kwargs: Any) -> tuple[list[Item], list[Message]]:
+def parse(
+    items: list[Any],
+    *,
+    shortopts: str | None,
+    longopts: tuple[str, ...] | None,
+    is_posix: bool,
+) -> tuple[list[Item], list[Message]]:
+    broken: bool
+    item: Any
+    last: Any
     messages: list[Message]
+    preparsed: list[Item]
     messages = list()
-
-    preparsed = list(parse_generator(args, messages=messages, **kwargs))
+    preparsed = list()
+    broken = shortopts is None and longopts is None
+    last = None
+    for item in items:
+        if broken:
+            # if we are in the positional-only part
+            preparsed.append(item)
+            continue
+        if last is not None:
+            # if the last item hungers for a value
+            last.right = item.value
+            last.joined = False
+            preparsed.append(last)
+            last = None
+            continue
+        if item.value == "--":
+            preparsed.append(Special())
+            broken = True
+            continue
+        if item.isobvious():
+            # if the item is positional
+            preparsed.append(item)
+            broken = is_posix
+            continue
+        last = parse_option(
+            item.value,
+            shortopts=shortopts,
+            longopts=longopts,
+            messages=messages,
+        )
+        if not last.ishungry():
+            preparsed.append(last)
+            last = None
+    if last is not None:
+        # if the last item is starved
+        if isinstance(last, Long):
+            messages.append(PRAW(option=last.fullkey, islong=True))
+        else:
+            messages.append(PRAW(option=last.chars[-1], islong=False))
+        preparsed.append(last)
     return preparsed, messages
 
 
@@ -57,59 +104,6 @@ def parse_bundling(
             ans.right = arg[x + 1 :]
         return ans
     return ans
-
-
-def parse_generator(
-    items: list[Any],
-    *,
-    shortopts: str | None,
-    longopts: tuple[str, ...] | None,
-    messages: list[Message],
-    is_posix: bool,
-) -> Generator[Any, Any, Any]:
-    broken: bool
-    item: Any
-    last: Any
-    broken = shortopts is None and longopts is None
-    last = None
-    for item in items:
-        if broken:
-            # if we are in the positional-only part
-            yield item
-            continue
-        if last is not None:
-            # if the last item hungers for a value
-            last.right = item.value
-            last.joined = False
-            yield last
-            last = None
-            continue
-        if item.value == "--":
-            yield Special()
-            broken = True
-            continue
-        if item.isobvious():
-            # if the item is positional
-            yield item
-            broken = is_posix
-            continue
-        last = parse_option(
-            item.value,
-            shortopts=shortopts,
-            longopts=longopts,
-            messages=messages,
-        )
-        if not last.ishungry():
-            yield last
-            last = None
-    if last is None:
-        # if the last item is not starved
-        return
-    if isinstance(last, Long):
-        messages.append(PRAW(option=last.fullkey, islong=True))
-    else:
-        messages.append(PRAW(option=last.chars[-1], islong=False))
-    yield last
 
 
 def parse_islong(
