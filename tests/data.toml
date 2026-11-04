@@ -6563,7 +6563,7 @@ warnings = [
 [coverage_depletion_0033]
 abbr = 0
 bundling = 0
-depletion = "REINTERPRET"
+depletion = "DROP"
 is_posix = true
 longopts = nan
 query = [
@@ -6577,7 +6577,6 @@ solution = [
     "-a",
     "-b",
     "run_33",
-    "-q",
 ]
 special = 0
 warnings = [
@@ -6612,7 +6611,7 @@ warnings = [
 [coverage_depletion_0035]
 abbr = 0
 bundling = 2
-depletion = "REINTERPRET"
+depletion = "DROP"
 is_posix = false
 longopts = [
     "payload=",
@@ -6626,7 +6625,6 @@ query = [
 reconcilesorders = true
 shortopts = "z:x:y::"
 solution = [
-    "-z",
     "input_35.txt",
 ]
 special = 2
@@ -6661,7 +6659,7 @@ warnings = [
 [coverage_depletion_0037]
 abbr = 0
 bundling = 1
-depletion = "REINTERPRET"
+depletion = "DROP"
 is_posix = false
 longopts = [
     "module=",
@@ -6677,8 +6675,6 @@ reconcilesorders = true
 shortopts = "b:ac:"
 solution = [
     "-a",
-    "--module",
-    "--",
     "--",
     "payload_37",
 ]
@@ -6765,10 +6761,10 @@ warnings = [
 [coverage_depletion_0041]
 abbr = 0
 bundling = 2
-depletion = "REINTERPRET"
+depletion = "DROP"
 is_posix = false
 longopts = [
-    "config=",
+    "config=?",
     "verbose",
     "mode=?",
 ]
@@ -6783,9 +6779,7 @@ solution = [
     "--config",
 ]
 special = 2
-warnings = [
-    "option '--config' requires an argument",
-]
+warnings = []
 
 [coverage_depletion_0042]
 abbr = 2
@@ -6816,7 +6810,7 @@ warnings = []
 [coverage_depletion_0043]
 abbr = 0
 bundling = 1
-depletion = "REINTERPRET"
+depletion = "DROP"
 is_posix = false
 longopts = [
     "export=",
@@ -6829,18 +6823,15 @@ query = [
     "-y",
 ]
 reconcilesorders = true
-shortopts = "y:ab:c::"
+shortopts = "y::ab:c::"
 solution = [
     "-ab",
     "run_43",
     "-y",
     "--",
-    "--",
 ]
 special = 1
-warnings = [
-    "option requires an argument -- 'y'",
-]
+warnings = []
 
 [coverage_depletion_0044]
 abbr = 2
@@ -6914,7 +6905,7 @@ warnings = [
 [coverage_depletion_0047]
 abbr = 0
 bundling = 2
-depletion = "REINTERPRET"
+depletion = "DROP"
 is_posix = false
 longopts = [
     "module=",
@@ -6930,7 +6921,6 @@ reconcilesorders = true
 shortopts = "c:ab:"
 solution = [
     "-a",
-    "-c",
     "payload_47",
 ]
 special = 2
@@ -6966,7 +6956,7 @@ warnings = []
 [coverage_depletion_0049]
 abbr = 0
 bundling = 1
-depletion = "REINTERPRET"
+depletion = "DROP"
 is_posix = false
 longopts = [
     "target=",
@@ -6981,8 +6971,6 @@ reconcilesorders = true
 shortopts = "x:a:b"
 solution = [
     "--mode=fast",
-    "--target",
-    "--",
     "--",
 ]
 special = 1
@@ -7017,7 +7005,7 @@ warnings = [
 [coverage_depletion_0051]
 abbr = 0
 bundling = 0
-depletion = "REINTERPRET"
+depletion = "DROP"
 is_posix = true
 longopts = [
     "config=",
@@ -7029,15 +7017,13 @@ query = [
     "-q",
 ]
 reconcilesorders = true
-shortopts = "q:a:b:c"
+shortopts = "q::::::a:b:c"
 solution = [
     "--verbose",
     "-q",
 ]
 special = 0
-warnings = [
-    "option requires an argument -- 'q'",
-]
+warnings = []
 
 [coverage_depletion_0052]
 abbr = 2
@@ -7070,10 +7056,10 @@ warnings = [
 [coverage_depletion_0053]
 abbr = 0
 bundling = 2
-depletion = "REINTERPRET"
+depletion = "DROP"
 is_posix = false
 longopts = [
-    "export=",
+    "export=?",
     "verbose",
     "mode=?",
 ]
@@ -7090,9 +7076,7 @@ solution = [
     "--export",
 ]
 special = 2
-warnings = [
-    "option '--export' requires an argument",
-]
+warnings = []
 
 [coverage_depletion_0054]
 abbr = 2
@@ -7121,7 +7105,7 @@ warnings = [
 [coverage_depletion_0055]
 abbr = 0
 bundling = 1
-depletion = "REINTERPRET"
+depletion = "DROP"
 is_posix = false
 longopts = nan
 query = [
@@ -7129,17 +7113,14 @@ query = [
     "-b",
 ]
 reconcilesorders = true
-shortopts = "b:x:y::z"
+shortopts = "b::x:y::z"
 solution = [
     "-b",
-    "--",
     "--",
     "input_55.txt",
 ]
 special = 1
-warnings = [
-    "option requires an argument -- 'b'",
-]
+warnings = []
 
 [coverage_depletion_0056]
 abbr = 2
