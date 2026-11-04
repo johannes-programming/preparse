@@ -47,6 +47,8 @@ def digest(
         short_enabled=short_enabled,
         is_posix=is_posix,
         reconcilesorders=reconcilesorders,
+        special=special,
+        longopts=longopts,
     )
     ans = digest_bundling(
         ans,
@@ -137,24 +139,43 @@ def digest_bundling_min(
 
 
 def digest_bundling_max(items: list[Item]) -> list[Item]:
-    ans: list[Item]
-    item: Item
-    ans = list()
-    for item in items:
+    """Combine short options without treating positional tokens as a hard barrier.
+
+    Adjacent bundles are always combined when the earlier bundle has no
+    argument.  A *single, isolated* short option can also join an earlier
+    compatible bundle across intervening positionals.  A subsequent run of
+    adjacent short options stays together rather than being moved across
+    positionals when order reconciliation has not already done so.
+
+    Never combine across a long option or a ``--`` delimiter, and never put
+    another option after a bundle that carries an argument.
+    """
+    ans: list[Item] = []
+    for index, item in enumerate(items):
         if not isinstance(item, Bundle):
             ans.append(item)
             continue
-        if len(ans) == 0:
+
+        candidate = len(ans) - 1
+        adjacent_bundle = candidate >= 0 and isinstance(ans[candidate], Bundle)
+        isolated_short_option = len(item.chars) == 1 and (
+            index + 1 == len(items) or not isinstance(items[index + 1], Bundle)
+        )
+        if not adjacent_bundle and isolated_short_option:
+            # A lone short option may join an earlier bundle across one or
+            # more positional arguments.  Long options and ``--`` are barriers.
+            while candidate >= 0 and isinstance(ans[candidate], Positional):
+                candidate -= 1
+
+        if (
+            candidate >= 0
+            and isinstance(ans[candidate], Bundle)
+            and ans[candidate].right is None
+        ):
+            item.chars = ans[candidate].chars + item.chars
+            ans[candidate] = item
+        else:
             ans.append(item)
-            continue
-        if not isinstance(ans[-1], Bundle):
-            ans.append(item)
-            continue
-        if ans[-1].right is not None:
-            ans.append(item)
-            continue
-        item.chars = ans[-1].chars + item.chars
-        ans[-1] = item
     return ans
 
 
@@ -165,6 +186,8 @@ def digest_order(
     short_enabled: bool,
     is_posix: bool,
     reconcilesorders: bool,
+    special: Tuning,
+    longopts: tuple[str, ...] | None,
 ) -> list[Item]:
     ans: list[Any]
     comp: bool
@@ -191,7 +214,21 @@ def digest_order(
         if not ans[index].isobvious():
             comp = False
     if not comp:
-        ans.insert(index + 1, Special())
+        insert_at = index + 1
+        if special == Tuning.MAINTAIN and isinstance(ans[-1], Positional):
+            if ans[-1].value.split("=", 1)[0] in (
+                digest_long_fullkey(spec, short_enabled=short_enabled)
+                for spec in (longopts or ())
+            ):
+                if any(
+                    isinstance(item, Positional) and item.value == "--"
+                    for item in ans[index + 1 : -1]
+                ):
+                    if ans[index + 1].value != "-":
+                        return ans
+                else:
+                    insert_at = len(ans) - 1
+        ans.insert(insert_at, Special())
     return ans
 
 
@@ -208,29 +245,52 @@ def digest_special(
     if special == Tuning.MINIMIZE:
         return digest_special_min(items, **kwargs)
     if special == Tuning.MAXIMIZE:
-        return digest_special_max(items)
+        return digest_special_max(
+            items,
+            insert_leading=kwargs["long_enabled"] or kwargs["short_enabled"],
+        )
     return list(items)
 
 
-def digest_special_max(items: list[Item]) -> list[Item]:
-    ans: list[Any]
-    index: int
-    ans = list(items)
-    index = len(items)
-    while True:
-        index -= 1
-        if index == -1:
-            break
-        if isinstance(ans[index], Special):
-            break
-        if isinstance(ans[index], Positional):
-            continue
-        if ans[index].ishungry():
-            ans[index].joined = False
-            ans[index].right = "--"
-        ans.insert(index + 1, Special())
-        break
-    return ans
+def digest_special_max(
+    items: list[Item], *, insert_leading: bool = True
+) -> list[Item]:
+    """Maximize the number of arguments following ``--``.
+
+    Parsed options must remain before the delimiter, while positional items
+    can be moved behind it.  Preserve the order within each group and retain
+    the positional items that were already behind an existing delimiter.
+
+    Unlike general order reconciliation, this grouping is part of the
+    requested ``special=MAXIMIZE`` transformation, so it applies even when
+    ``reconcilesorders`` is false.
+    """
+    ans: list[Item] = list(items)
+    if not insert_leading:
+        # With all option parsing disabled, ``--`` is not a delimiter.
+        return ans
+
+    options: list[Item] = []
+    positional: list[Item] = []
+    trailing: list[Item] = []
+    found_special = False
+    for item in ans:
+        if found_special:
+            trailing.append(item)
+        elif isinstance(item, Special):
+            found_special = True
+        elif isinstance(item, Option):
+            options.append(item)
+        else:
+            positional.append(item)
+
+    # A required-value option at the end of the option section can consume
+    # the literal "--"; a separate delimiter is then still necessary.
+    if options and options[-1].ishungry():
+        options[-1].joined = False
+        options[-1].right = "--"
+
+    return options + [Special()] + positional + trailing
 
 
 def digest_special_min(
