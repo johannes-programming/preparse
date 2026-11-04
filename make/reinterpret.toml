@@ -1,0 +1,4571 @@
+[coverage_depletion_0059]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "target=",
+    "verbose",
+    "mode=?",
+]
+query = [
+    "--mode=fast",
+    "-o",
+]
+reconcilesorders = true
+shortopts = "o:a:b"
+solution = [
+    "--mode=fast",
+    "-o",
+]
+special = 2
+warnings = [
+    "option requires an argument -- 'o'",
+]
+
+[coverage_depletion_0061]
+abbr = 0
+bundling = 1
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "config=",
+    "verbose",
+    "mode=?",
+]
+query = [
+    "--verbose",
+    "--config",
+]
+reconcilesorders = true
+shortopts = "y:a:b:c"
+solution = [
+    "--verbose",
+    "--config",
+    "--",
+    "--",
+]
+special = 1
+warnings = [
+    "option '--config' requires an argument",
+]
+
+[coverage_depletion_0065]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "payload=",
+    "verbose",
+    "mode=?",
+]
+query = [
+    "input_65.txt",
+    "-payload",
+]
+reconcilesorders = true
+shortopts = nan
+solution = [
+    "-payload",
+    "input_65.txt",
+]
+special = 2
+warnings = [
+    "option '-payload' requires an argument",
+]
+
+[coverage_depletion_0067]
+abbr = 0
+bundling = 1
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "module=",
+    "verbose",
+    "mode=?",
+]
+query = [
+    "payload_67",
+    "-a",
+    "-x",
+]
+reconcilesorders = true
+shortopts = "x:abc:"
+solution = [
+    "-ax",
+    "--",
+    "--",
+    "payload_67",
+]
+special = 1
+warnings = [
+    "option requires an argument -- 'x'",
+]
+
+[coverage_depletion_0069]
+abbr = 0
+bundling = 0
+depletion = "REINTERPRET"
+is_posix = true
+longopts = [
+    "target=",
+    "verbose",
+    "mode=?",
+]
+query = [
+    "--mode=fast",
+    "--target",
+]
+reconcilesorders = true
+shortopts = "q:a:b"
+solution = [
+    "--mode=fast",
+    "--target",
+]
+special = 0
+warnings = [
+    "option '--target' requires an argument",
+]
+
+[coverage_depletion_0071]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "config=",
+    "verbose",
+    "mode=?",
+]
+query = [
+    "--verbose",
+    "-z",
+]
+reconcilesorders = true
+shortopts = "z:a:b:c"
+solution = [
+    "--verbose",
+    "-z",
+]
+special = 2
+warnings = [
+    "option requires an argument -- 'z'",
+]
+
+[coverage_depletion_0073]
+abbr = 0
+bundling = 1
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "export=",
+    "verbose",
+    "mode=?",
+]
+query = [
+    "-ab",
+    "run_73",
+    "--export",
+]
+reconcilesorders = true
+shortopts = "b:a:c::"
+solution = [
+    "-ab",
+    "--export",
+    "--",
+    "--",
+    "run_73",
+]
+special = 1
+warnings = [
+    "option '--export' requires an argument",
+]
+
+[coverage_depletion_0077]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = nan
+query = [
+    "payload_77",
+    "-a",
+    "-o",
+]
+reconcilesorders = true
+shortopts = "o:abc:"
+solution = [
+    "-a",
+    "-o",
+    "payload_77",
+]
+special = 2
+warnings = [
+    "option requires an argument -- 'o'",
+]
+
+[coverage_depletion_0079]
+abbr = 0
+bundling = 1
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "target=",
+    "verbose",
+    "mode=?",
+]
+query = [
+    "--mode=fast",
+    "-y",
+]
+reconcilesorders = true
+shortopts = "y:a:b"
+solution = [
+    "--mode=fast",
+    "-y",
+    "--",
+    "--",
+]
+special = 1
+warnings = [
+    "option requires an argument -- 'y'",
+]
+
+[coverage_depletion_0081]
+abbr = 0
+bundling = 0
+depletion = "REINTERPRET"
+is_posix = true
+longopts = [
+    "config=",
+    "verbose",
+    "mode=?",
+]
+query = [
+    "--verbose",
+    "--config",
+]
+reconcilesorders = true
+shortopts = "a::b:c"
+solution = [
+    "--verbose",
+    "--config",
+]
+special = 0
+warnings = [
+    "option '--config' requires an argument",
+]
+
+[coverage_depletion_0083]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "export=",
+    "verbose",
+    "mode=?",
+]
+query = [
+    "-ab",
+    "run_83",
+    "-c",
+]
+reconcilesorders = true
+shortopts = "c:ab:::"
+solution = [
+    "-ab",
+    "-c",
+    "run_83",
+]
+special = 2
+warnings = [
+    "option requires an argument -- 'c'",
+]
+
+[coverage_depletion_0085]
+abbr = 0
+bundling = 1
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "payload=",
+    "verbose",
+    "mode=?",
+]
+query = [
+    "input_85.txt",
+    "--payload",
+]
+reconcilesorders = true
+shortopts = "x::y::z"
+solution = [
+    "--payload",
+    "--",
+    "--",
+    "input_85.txt",
+]
+special = 1
+warnings = [
+    "option '--payload' requires an argument",
+]
+
+[coverage_depletion_0089]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "target=",
+    "verbose",
+    "mode=?",
+]
+query = [
+    "--mode=fast",
+    "--target",
+]
+reconcilesorders = true
+shortopts = "z:a:b"
+solution = [
+    "--mode=fast",
+    "--target",
+]
+special = 2
+warnings = [
+    "option '--target' requires an argument",
+]
+
+[coverage_depletion_0091]
+abbr = 0
+bundling = 1
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "config=",
+    "verbose",
+    "mode=?",
+]
+query = [
+    "-q",
+    "-config",
+]
+reconcilesorders = true
+shortopts = nan
+solution = [
+    "-q",
+    "-config",
+    "--",
+    "--",
+]
+special = 1
+warnings = [
+    "unrecognized option '-q'",
+    "option '-config' requires an argument",
+]
+
+[coverage_depletion_0093]
+abbr = 0
+bundling = 0
+depletion = "REINTERPRET"
+is_posix = true
+longopts = [
+    "export=",
+    "verbose",
+    "mode=?",
+]
+query = [
+    "-ab",
+    "run_93",
+    "--export",
+]
+reconcilesorders = true
+shortopts = "v:ab:c::"
+solution = [
+    "-a",
+    "-b",
+    "run_93",
+    "--export",
+]
+special = 0
+warnings = [
+    "option '--export' requires an argument",
+]
+
+[coverage_depletion_0095]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "payload=",
+    "verbose",
+    "mode=?",
+]
+query = [
+    "input_95.txt",
+    "-o",
+]
+reconcilesorders = true
+shortopts = "o:x:y::z"
+solution = [
+    "-o",
+    "input_95.txt",
+]
+special = 2
+warnings = [
+    "option requires an argument -- 'o'",
+]
+
+[coverage_depletion_0097]
+abbr = 0
+bundling = 1
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "module=",
+    "verbose",
+    "mode=?",
+]
+query = [
+    "payload_97",
+    "-a",
+    "--module",
+]
+reconcilesorders = true
+shortopts = "y:abc:"
+solution = [
+    "-a",
+    "--module",
+    "--",
+    "--",
+    "payload_97",
+]
+special = 1
+warnings = [
+    "option '--module' requires an argument",
+]
+
+[coverage_depletion_0101]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "config=",
+    "verbose",
+    "mode=?",
+]
+query = [
+    "--verbose",
+    "--config",
+]
+reconcilesorders = true
+shortopts = "c:a:b:"
+solution = [
+    "--verbose",
+    "--config",
+]
+special = 2
+warnings = [
+    "option '--config' requires an argument",
+]
+
+[coverage_depletion_0103]
+abbr = 0
+bundling = 1
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "export=",
+    "verbose",
+    "mode=?",
+]
+query = [
+    "-ab",
+    "run_103",
+    "-x",
+]
+reconcilesorders = true
+shortopts = "x:ab:c::"
+solution = [
+    "-ab",
+    "run_103",
+    "-x",
+    "--",
+    "--",
+]
+special = 1
+warnings = [
+    "option requires an argument -- 'x'",
+]
+
+[coverage_depletion_0107]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "module=",
+    "verbose",
+    "mode=?",
+]
+query = [
+    "payload_107",
+    "-a",
+    "-z",
+]
+reconcilesorders = true
+shortopts = "z:abc:"
+solution = [
+    "-a",
+    "-z",
+    "payload_107",
+]
+special = 2
+warnings = [
+    "option requires an argument -- 'z'",
+]
+
+[coverage_depletion_0109]
+abbr = 0
+bundling = 1
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "target=",
+    "verbose",
+    "mode=?",
+]
+query = [
+    "--mode=fast",
+    "--target",
+]
+reconcilesorders = true
+shortopts = "b:a:"
+solution = [
+    "--mode=fast",
+    "--target",
+    "--",
+    "--",
+]
+special = 1
+warnings = [
+    "option '--target' requires an argument",
+]
+
+[coverage_depletion_0111]
+abbr = 0
+bundling = 0
+depletion = "REINTERPRET"
+is_posix = true
+longopts = [
+    "config=",
+    "verbose",
+    "mode=?",
+]
+query = [
+    "--verbose",
+    "-v",
+]
+reconcilesorders = true
+shortopts = "v:a:b:c"
+solution = [
+    "--verbose",
+    "-v",
+]
+special = 0
+warnings = [
+    "option requires an argument -- 'v'",
+]
+
+[coverage_depletion_0113]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "export=",
+    "verbose",
+    "mode=?",
+]
+query = [
+    "-ab",
+    "run_113",
+    "--export",
+]
+reconcilesorders = true
+shortopts = "o:ab:c::"
+solution = [
+    "-ab",
+    "run_113",
+    "--export",
+]
+special = 2
+warnings = [
+    "option '--export' requires an argument",
+]
+
+[coverage_depletion_0115]
+abbr = 0
+bundling = 1
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "payload=",
+    "verbose",
+    "mode=?",
+]
+query = [
+    "input_115.txt",
+    "-y",
+]
+reconcilesorders = true
+shortopts = "y:x:::z"
+solution = [
+    "-y",
+    "--",
+    "--",
+    "input_115.txt",
+]
+special = 1
+warnings = [
+    "option requires an argument -- 'y'",
+]
+
+[coverage_depletion_0119]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "target=",
+    "verbose",
+    "mode=?",
+]
+query = [
+    "--mode=fast",
+    "-c",
+]
+reconcilesorders = true
+shortopts = "c:a:b"
+solution = [
+    "--mode=fast",
+    "-c",
+]
+special = 2
+warnings = [
+    "option requires an argument -- 'c'",
+]
+
+[coverage_interactions_0005]
+abbr = 2
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = true
+longopts = [
+    "output=",
+    "out=?",
+    "option",
+    "optimize",
+]
+query = [
+    "-b",
+    "--v",
+    "-x",
+]
+reconcilesorders = false
+shortopts = "x:y::z"
+solution = [
+    "-b",
+    "--v",
+    "-x",
+    "--",
+    "--",
+]
+special = 1
+warnings = [
+    "invalid option -- 'b'",
+    "unrecognized option '--v'",
+    "option requires an argument -- 'x'",
+]
+
+[coverage_interactions_0033]
+abbr = 2
+bundling = 0
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "save",
+    "safe",
+    "safe-mode",
+    "set=",
+]
+query = [
+    "--out",
+    "--ré",
+    "-b",
+]
+reconcilesorders = false
+shortopts = "ab:c::"
+solution = [
+    "--out",
+    "--ré",
+    "-b",
+]
+special = 2
+warnings = [
+    "unrecognized option '--out'",
+    "unrecognized option '--ré'",
+    "option requires an argument -- 'b'",
+]
+
+[coverage_interactions_0055]
+abbr = 0
+bundling = 1
+depletion = "REINTERPRET"
+is_posix = true
+longopts = [
+    "x",
+    "xx=",
+    "xxx=?",
+    "xxxx",
+]
+query = [
+    "-b",
+    "--v",
+    "-x",
+]
+reconcilesorders = true
+shortopts = "x:y::z"
+solution = [
+    "-b",
+    "--v",
+    "-x",
+]
+special = 0
+warnings = [
+    "invalid option -- 'b'",
+    "unrecognized option '--v'",
+    "option requires an argument -- 'x'",
+]
+
+[getopt-00000003]
+is_posix = false
+longopts = []
+query = []
+reconcilesorders = true
+shortopts = ""
+solution = [
+    "--",
+]
+special = 1
+warnings = []
+depletion = "REINTERPRET"
+
+[getopt-00000003a]
+is_posix = true
+longopts = []
+query = []
+reconcilesorders = true
+shortopts = ""
+solution = [
+    "--",
+]
+special = 1
+warnings = []
+depletion = "REINTERPRET"
+
+[getopt-00000003b]
+is_posix = false
+longopts = []
+query = []
+reconcilesorders = false
+shortopts = ""
+solution = [
+    "--",
+]
+special = 1
+warnings = []
+depletion = "REINTERPRET"
+
+[getopt-00000003c]
+is_posix = true
+longopts = []
+query = []
+reconcilesorders = false
+shortopts = ""
+solution = [
+    "--",
+]
+special = 1
+warnings = []
+depletion = "REINTERPRET"
+
+[getopt-00000004]
+is_posix = true
+longopts = [
+    "foo=?",
+    "bar",
+]
+query = [
+    "--foo=hello",
+    "42",
+    "--bar",
+]
+reconcilesorders = true
+shortopts = ""
+solution = [
+    "--foo=hello",
+    "42",
+    "--",
+    "--bar",
+]
+special = 2
+warnings = []
+depletion = "REINTERPRET"
+
+[getopt-00000004a]
+is_posix = true
+longopts = [
+    "foo=?",
+    "bar",
+]
+query = [
+    "--foo=hello",
+    "42",
+    "--bar",
+]
+reconcilesorders = true
+shortopts = ""
+solution = [
+    "--foo=hello",
+    "--",
+    "42",
+    "--bar",
+]
+special = 1
+warnings = []
+depletion = "REINTERPRET"
+
+[getopt-00000004b]
+is_posix = true
+longopts = [
+    "foo=?",
+    "bar",
+]
+query = [
+    "--foo=hello",
+    "42",
+    "--bar",
+]
+reconcilesorders = false
+shortopts = ""
+solution = [
+    "--foo=hello",
+    "42",
+    "--bar",
+]
+special = 2
+warnings = []
+depletion = "REINTERPRET"
+
+[getopt-00000004c]
+is_posix = true
+longopts = [
+    "foo=?",
+    "bar",
+]
+query = [
+    "--foo=hello",
+    "42",
+    "--bar",
+]
+reconcilesorders = false
+shortopts = ""
+solution = [
+    "--foo=hello",
+    "--",
+    "42",
+    "--bar",
+]
+special = 1
+warnings = []
+depletion = "REINTERPRET"
+
+[getopt-00000005]
+is_posix = true
+longopts = [
+    "foo=?",
+    "bar",
+]
+query = [
+    "42",
+    "--bar",
+]
+reconcilesorders = true
+shortopts = ""
+solution = [
+    "42",
+    "--",
+    "--bar",
+]
+special = 2
+warnings = []
+depletion = "REINTERPRET"
+
+[getopt-00000005a]
+is_posix = true
+longopts = [
+    "foo=?",
+    "bar",
+]
+query = [
+    "42",
+    "--bar",
+]
+reconcilesorders = true
+shortopts = ""
+solution = [
+    "--",
+    "42",
+    "--bar",
+]
+special = 1
+warnings = []
+depletion = "REINTERPRET"
+
+[getopt-00000005b]
+is_posix = true
+longopts = [
+    "foo=?",
+    "bar",
+]
+query = [
+    "42",
+    "--bar",
+]
+reconcilesorders = false
+shortopts = ""
+solution = [
+    "42",
+    "--bar",
+]
+special = 2
+warnings = []
+depletion = "REINTERPRET"
+
+[getopt-00000005c]
+is_posix = true
+longopts = [
+    "foo=?",
+    "bar",
+]
+query = [
+    "42",
+    "--bar",
+]
+reconcilesorders = false
+shortopts = ""
+solution = [
+    "--",
+    "42",
+    "--bar",
+]
+special = 1
+warnings = []
+depletion = "REINTERPRET"
+
+[getopt-00000006a]
+abbr = 2
+bundling = 2
+is_posix = false
+longopts = [
+    "stuff=?",
+    "help",
+    "outfile=",
+    "verbose",
+]
+query = [
+    "--hel",
+    "qwerty",
+    "--outfile=hello.log",
+    "Lorem",
+    "--",
+    "Ipsum",
+]
+reconcilesorders = false
+shortopts = "s::ho:v"
+solution = [
+    "--hel",
+    "qwerty",
+    "--outfile=hello.log",
+    "Lorem",
+    "Ipsum",
+]
+special = 0
+warnings = []
+depletion = "REINTERPRET"
+
+[getopt-00000006b]
+abbr = 2
+bundling = 2
+is_posix = false
+longopts = [
+    "stuff=?",
+    "help",
+    "outfile=",
+    "verbose",
+]
+query = [
+    "--hel",
+    "qwerty",
+    "--outfile=hello.log",
+    "Lorem",
+    "--",
+    "Ipsum",
+]
+reconcilesorders = false
+shortopts = "s::ho:v"
+solution = [
+    "--hel",
+    "--outfile=hello.log",
+    "--",
+    "qwerty",
+    "Lorem",
+    "Ipsum",
+]
+special = 1
+warnings = []
+depletion = "REINTERPRET"
+
+[getopt-00000006c]
+abbr = 2
+bundling = 2
+is_posix = false
+longopts = [
+    "stuff=?",
+    "help",
+    "outfile=",
+    "verbose",
+]
+query = [
+    "--hel",
+    "qwerty",
+    "--outfile=hello.log",
+    "Lorem",
+    "--",
+    "Ipsum",
+]
+reconcilesorders = false
+shortopts = "s::ho:v"
+solution = [
+    "--hel",
+    "qwerty",
+    "--outfile=hello.log",
+    "Lorem",
+    "--",
+    "Ipsum",
+]
+special = 2
+warnings = []
+depletion = "REINTERPRET"
+
+[getopt-00000006d]
+abbr = 2
+bundling = 2
+is_posix = false
+longopts = [
+    "stuff=?",
+    "help",
+    "outfile=",
+    "verbose",
+]
+query = [
+    "--hel",
+    "qwerty",
+    "--outfile=hello.log",
+    "Lorem",
+    "--",
+    "Ipsum",
+]
+reconcilesorders = true
+shortopts = "s::ho:v"
+solution = [
+    "--hel",
+    "--outfile=hello.log",
+    "qwerty",
+    "Lorem",
+    "Ipsum",
+]
+special = 0
+warnings = []
+depletion = "REINTERPRET"
+
+[getopt-00000006e]
+abbr = 2
+bundling = 2
+is_posix = false
+longopts = [
+    "stuff=?",
+    "help",
+    "outfile=",
+    "verbose",
+]
+query = [
+    "--hel",
+    "qwerty",
+    "--outfile=hello.log",
+    "Lorem",
+    "--",
+    "Ipsum",
+]
+reconcilesorders = true
+shortopts = "s::ho:v"
+solution = [
+    "--hel",
+    "--outfile=hello.log",
+    "--",
+    "qwerty",
+    "Lorem",
+    "Ipsum",
+]
+special = 1
+warnings = []
+depletion = "REINTERPRET"
+
+[getopt-00000006f]
+abbr = 2
+bundling = 2
+is_posix = false
+longopts = [
+    "stuff=?",
+    "help",
+    "outfile=",
+    "verbose",
+]
+query = [
+    "--hel",
+    "qwerty",
+    "--outfile=hello.log",
+    "Lorem",
+    "--",
+    "Ipsum",
+]
+reconcilesorders = true
+shortopts = "s::ho:v"
+solution = [
+    "--hel",
+    "--outfile=hello.log",
+    "--",
+    "qwerty",
+    "Lorem",
+    "Ipsum",
+]
+special = 2
+warnings = []
+depletion = "REINTERPRET"
+
+[man_shorterr]
+abbr = 2
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = nan
+query = [
+    "HelloWorld",
+    "-v",
+    "-=file.txt",
+    "-zqux",
+    "-ooutput",
+    "arg1",
+    "-b",
+]
+reconcilesorders = false
+shortopts = "b:z::df:ho::v"
+solution = [
+    "HelloWorld",
+    "-v",
+    "-=file.txt",
+    "-zqux",
+    "-ooutput",
+    "arg1",
+    "-b",
+]
+special = 2
+warnings = [
+    "invalid option -- '='",
+    "option requires an argument -- 'b'",
+]
+
+[man_special_max_hungry]
+abbr = 0
+bundling = 0
+depletion = "REINTERPRET"
+is_posix = false
+longopts = nan
+query = [
+    "-x",
+    "-y",
+    "-z",
+]
+reconcilesorders = false
+shortopts = "x:y:z:"
+solution = [
+    "-x",
+    "-y",
+    "-z",
+    "--",
+    "--",
+]
+special = 1
+warnings = [
+    "option requires an argument -- 'z'",
+]
+
+[run00005go]
+abbr = 2
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "foo=",
+    "bar",
+]
+query = [
+    "--foo",
+]
+reconcilesorders = false
+shortopts = ""
+solution = [
+    "--foo",
+]
+special = 2
+warnings = [
+    "option '--foo' requires an argument",
+]
+
+[run00009go]
+abbr = 2
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "foo=",
+    "bar",
+]
+query = [
+    "--foo",
+]
+reconcilesorders = false
+shortopts = ""
+solution = [
+    "--foo",
+]
+special = 2
+warnings = [
+    "option '--foo' requires an argument",
+]
+
+[run00014go]
+abbr = 2
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "foo=",
+    "bar",
+]
+query = [
+    "--foo",
+]
+reconcilesorders = false
+shortopts = ""
+solution = [
+    "--foo",
+]
+special = 2
+warnings = [
+    "option '--foo' requires an argument",
+]
+
+[run00021go]
+abbr = 2
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "foo=",
+    "bar",
+]
+query = [
+    "--foo",
+]
+reconcilesorders = false
+shortopts = ""
+solution = [
+    "--foo",
+]
+special = 2
+warnings = [
+    "option '--foo' requires an argument",
+]
+
+[run00026go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=?",
+    "debug",
+    "foo=",
+    "help",
+    "output=?",
+    "verbose",
+]
+query = [
+    "--bar",
+]
+reconcilesorders = true
+shortopts = ""
+solution = [
+    "--bar",
+]
+special = 2
+warnings = [
+    "option '--bar' requires an argument",
+]
+
+[run00027go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=?",
+    "debug",
+    "foo=",
+    "help",
+    "output=?",
+    "verbose",
+]
+query = [
+    "--v",
+    "--=file.txt",
+    "--baz=qux",
+    "--o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = true
+shortopts = ""
+solution = [
+    "--verbose",
+    "--=file.txt",
+    "--baz=qux",
+    "--output=output",
+    "--bar",
+    "arg1",
+]
+special = 2
+warnings = [
+    "option '--=file.txt' is ambiguous; possibilities: '--bar' '--baz' '--debug' '--foo' '--help' '--output' '--verbose'",
+    "option '--bar' requires an argument",
+]
+
+[run01135go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "-bar=",
+    "-baz=?",
+    "-debug",
+    "foo=",
+    "help",
+    "output=?",
+    "verbose",
+]
+query = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = true
+shortopts = nan
+solution = [
+    "-verbose",
+    "-=file.txt",
+    "--baz=qux",
+    "-output=output",
+    "--bar",
+    "arg1",
+]
+special = 2
+warnings = nan
+
+[run01153go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "-bar=",
+    "-baz=?",
+    "-debug",
+    "foo=",
+    "help",
+    "output=?",
+    "verbose",
+]
+query = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = true
+shortopts = nan
+solution = [
+    "-verbose",
+    "--=file.txt",
+    "--baz=qux",
+    "-output=output",
+    "--bar",
+    "arg1",
+]
+special = 2
+warnings = nan
+
+[run03529go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=?",
+    "foo=",
+    "output=?",
+]
+query = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = true
+shortopts = "o:x"
+solution = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "--bar",
+    "arg1",
+]
+special = 2
+warnings = nan
+
+[run03547go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=?",
+    "foo=",
+    "output=?",
+]
+query = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = true
+shortopts = "o:x"
+solution = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "--bar",
+    "arg1",
+]
+special = 2
+warnings = nan
+
+[run03655go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "foo=",
+    "output=?",
+]
+query = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = true
+shortopts = "f:v"
+solution = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "--bar",
+    "arg1",
+]
+special = 2
+warnings = nan
+
+[run03673go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "foo=",
+    "output=?",
+]
+query = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = true
+shortopts = "f:v"
+solution = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "--bar",
+    "arg1",
+]
+special = 2
+warnings = nan
+
+[run03907go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "foo=",
+    "output=?",
+    "silent",
+]
+query = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = true
+shortopts = "o:v"
+solution = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "--bar",
+    "arg1",
+]
+special = 2
+warnings = nan
+
+[run03925go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "foo=",
+    "output=?",
+    "silent",
+]
+query = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = true
+shortopts = "o:v"
+solution = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "--bar",
+    "arg1",
+]
+special = 2
+warnings = nan
+
+[run04159go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "foo=",
+    "output=?",
+]
+query = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = true
+shortopts = "f:v"
+solution = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "--bar",
+    "arg1",
+]
+special = 2
+warnings = nan
+
+[run04177go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "foo=",
+    "output=?",
+]
+query = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = true
+shortopts = "f:v"
+solution = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "--bar",
+    "arg1",
+]
+special = 2
+warnings = nan
+
+[run04537go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=?",
+    "foo=",
+    "output=?",
+]
+query = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = true
+shortopts = "-::o:x"
+solution = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "--bar",
+    "arg1",
+]
+special = 2
+warnings = nan
+
+[run04555go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=?",
+    "foo=",
+    "output=?",
+]
+query = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = true
+shortopts = "-::o:x"
+solution = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "--bar",
+    "arg1",
+]
+special = 2
+warnings = nan
+
+[run04663go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "foo=",
+    "output=?",
+]
+query = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = true
+shortopts = "-:f:v"
+solution = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "--bar",
+    "arg1",
+]
+special = 2
+warnings = nan
+
+[run04681go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "foo=",
+    "output=?",
+]
+query = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = true
+shortopts = "-:f:v"
+solution = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "--bar",
+    "arg1",
+]
+special = 2
+warnings = nan
+
+[run04915go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "foo=",
+    "output=?",
+    "silent",
+]
+query = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = true
+shortopts = "-o:v"
+solution = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "--bar",
+    "arg1",
+]
+special = 2
+warnings = nan
+
+[run04933go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "foo=",
+    "output=?",
+    "silent",
+]
+query = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = true
+shortopts = "-o:v"
+solution = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "--bar",
+    "arg1",
+]
+special = 2
+warnings = nan
+
+[run05167go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "foo=",
+    "output=?",
+]
+query = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = true
+shortopts = "-:f:v"
+solution = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "--bar",
+    "arg1",
+]
+special = 2
+warnings = nan
+
+[run05185go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "foo=",
+    "output=?",
+]
+query = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = true
+shortopts = "-:f:v"
+solution = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "--bar",
+    "arg1",
+]
+special = 2
+warnings = nan
+
+[run05293go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=?",
+    "foo=",
+    "output=?",
+    "verbose",
+]
+query = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = true
+shortopts = "o:vx"
+solution = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "--bar",
+    "arg1",
+]
+special = 2
+warnings = nan
+
+[run05311go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=?",
+    "foo=",
+    "output=?",
+    "verbose",
+]
+query = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = true
+shortopts = "o:vx"
+solution = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "--bar",
+    "arg1",
+]
+special = 2
+warnings = nan
+
+[run06679go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "foo=",
+    "output=?",
+    "verbose",
+]
+query = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = true
+shortopts = "o:vx"
+solution = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "--bar",
+    "arg1",
+]
+special = 2
+warnings = nan
+
+[run06697go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "foo=",
+    "output=?",
+    "verbose",
+]
+query = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = true
+shortopts = "o:vx"
+solution = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "--bar",
+    "arg1",
+]
+special = 2
+warnings = nan
+
+[run07183go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=?",
+    "config=",
+    "foo=",
+    "log=?",
+    "out=?",
+    "output=?",
+    "trace",
+    "verbo",
+]
+query = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = true
+shortopts = "f:vx"
+solution = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "--bar",
+    "arg1",
+]
+special = 2
+warnings = nan
+
+[run07201go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=?",
+    "config=",
+    "foo=",
+    "log=?",
+    "out=?",
+    "output=?",
+    "trace",
+    "verbo",
+]
+query = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = true
+shortopts = "f:vx"
+solution = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "--bar",
+    "arg1",
+]
+special = 2
+warnings = nan
+
+[run08821go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "-bar=",
+    "-baz=?",
+    "-debug",
+    "foo=",
+    "help",
+    "output=?",
+    "verbose",
+]
+query = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = false
+shortopts = nan
+solution = [
+    "-verbose",
+    "-=file.txt",
+    "--baz=qux",
+    "-output=output",
+    "arg1",
+    "--bar",
+]
+special = 2
+warnings = nan
+
+[run08839go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "-bar=",
+    "-baz=?",
+    "-debug",
+    "foo=",
+    "help",
+    "output=?",
+    "verbose",
+]
+query = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = false
+shortopts = nan
+solution = [
+    "-verbose",
+    "--=file.txt",
+    "--baz=qux",
+    "-output=output",
+    "arg1",
+    "--bar",
+]
+special = 2
+warnings = nan
+
+[run11215go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=?",
+    "foo=",
+    "output=?",
+]
+query = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = false
+shortopts = "o:x"
+solution = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+special = 2
+warnings = nan
+
+[run11233go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=?",
+    "foo=",
+    "output=?",
+]
+query = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = false
+shortopts = "o:x"
+solution = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+special = 2
+warnings = nan
+
+[run11341go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "foo=",
+    "output=?",
+]
+query = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = false
+shortopts = "f:v"
+solution = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+special = 2
+warnings = nan
+
+[run11359go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "foo=",
+    "output=?",
+]
+query = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = false
+shortopts = "f:v"
+solution = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+special = 2
+warnings = nan
+
+[run11593go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "foo=",
+    "output=?",
+    "silent",
+]
+query = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = false
+shortopts = "o:v"
+solution = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+special = 2
+warnings = nan
+
+[run11611go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "foo=",
+    "output=?",
+    "silent",
+]
+query = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = false
+shortopts = "o:v"
+solution = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+special = 2
+warnings = nan
+
+[run11845go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "foo=",
+    "output=?",
+]
+query = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = false
+shortopts = "f:v"
+solution = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+special = 2
+warnings = nan
+
+[run11863go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "foo=",
+    "output=?",
+]
+query = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = false
+shortopts = "f:v"
+solution = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+special = 2
+warnings = nan
+
+[run12223go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=?",
+    "foo=",
+    "output=?",
+]
+query = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = false
+shortopts = "-::o:x"
+solution = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+special = 2
+warnings = nan
+
+[run12241go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=?",
+    "foo=",
+    "output=?",
+]
+query = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = false
+shortopts = "-::o:x"
+solution = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+special = 2
+warnings = nan
+
+[run12349go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "foo=",
+    "output=?",
+]
+query = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = false
+shortopts = "-:f:v"
+solution = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+special = 2
+warnings = nan
+
+[run12367go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "foo=",
+    "output=?",
+]
+query = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = false
+shortopts = "-:f:v"
+solution = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+special = 2
+warnings = nan
+
+[run12601go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "foo=",
+    "output=?",
+    "silent",
+]
+query = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = false
+shortopts = "-o:v"
+solution = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+special = 2
+warnings = nan
+
+[run12619go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "foo=",
+    "output=?",
+    "silent",
+]
+query = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = false
+shortopts = "-o:v"
+solution = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+special = 2
+warnings = nan
+
+[run12853go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "foo=",
+    "output=?",
+]
+query = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = false
+shortopts = "-:f:v"
+solution = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+special = 2
+warnings = nan
+
+[run12871go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "foo=",
+    "output=?",
+]
+query = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = false
+shortopts = "-:f:v"
+solution = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+special = 2
+warnings = nan
+
+[run12979go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=?",
+    "foo=",
+    "output=?",
+    "verbose",
+]
+query = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = false
+shortopts = "o:vx"
+solution = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+special = 2
+warnings = nan
+
+[run12997go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=?",
+    "foo=",
+    "output=?",
+    "verbose",
+]
+query = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = false
+shortopts = "o:vx"
+solution = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+special = 2
+warnings = nan
+
+[run14365go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "foo=",
+    "output=?",
+    "verbose",
+]
+query = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = false
+shortopts = "o:vx"
+solution = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+special = 2
+warnings = nan
+
+[run14383go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "foo=",
+    "output=?",
+    "verbose",
+]
+query = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = false
+shortopts = "o:vx"
+solution = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+special = 2
+warnings = nan
+
+[run14869go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=?",
+    "config=",
+    "foo=",
+    "log=?",
+    "out=?",
+    "output=?",
+    "trace",
+    "verbo",
+]
+query = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = false
+shortopts = "f:vx"
+solution = [
+    "-v",
+    "-=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+special = 2
+warnings = nan
+
+[run14887go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=?",
+    "config=",
+    "foo=",
+    "log=?",
+    "out=?",
+    "output=?",
+    "trace",
+    "verbo",
+]
+query = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+reconcilesorders = false
+shortopts = "f:vx"
+solution = [
+    "-v",
+    "--=file.txt",
+    "--baz=qux",
+    "-o=output",
+    "arg1",
+    "--bar",
+]
+special = 2
+warnings = nan
+
+[run29683go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=?",
+    "foo=",
+    "hello=",
+    "out=?",
+]
+query = [
+    "--verbo",
+    "--output=log.txt",
+    "--foo=bar",
+    "-x",
+    "input1",
+    "input2",
+    "input3",
+    "--fo",
+]
+reconcilesorders = true
+shortopts = "Vo:x"
+solution = [
+    "--verbo",
+    "--output=log.txt",
+    "--foo=bar",
+    "-x",
+    "--foo",
+    "input1",
+    "input2",
+    "input3",
+]
+special = 2
+warnings = nan
+
+[run29695go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=?",
+    "foo=",
+    "hello=",
+    "out=?",
+]
+query = [
+    "-x",
+    "-v",
+    "-b=2",
+    "--quiet",
+    "-f",
+    "file1",
+    "--foo",
+]
+reconcilesorders = true
+shortopts = "Vo:x"
+solution = [
+    "-x",
+    "-v",
+    "-b=2",
+    "--quiet",
+    "-f",
+    "--foo",
+    "file1",
+]
+special = 2
+warnings = nan
+
+[run29729go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=",
+    "fo=",
+    "foo=",
+    "out=?",
+    "output=?",
+    "ver=?",
+    "verbose",
+    "version=",
+]
+query = [
+    "--foo",
+    "value1",
+    "positional1",
+    "--bar",
+    "value2",
+    "positional2",
+    "--baz",
+]
+reconcilesorders = true
+shortopts = "Bb:o::vx"
+solution = [
+    "--foo",
+    "value1",
+    "--bar",
+    "value2",
+    "--baz",
+    "positional1",
+    "positional2",
+]
+special = 2
+warnings = nan
+
+[run29766go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=",
+    "fo=",
+    "foo=",
+    "out=?",
+    "output=?",
+    "ver=?",
+    "verbose",
+    "version=",
+]
+query = [
+    "-f42",
+    "-v",
+    "file1.txt",
+    "-o",
+    "output.txt",
+    "arg1",
+    "arg2",
+    "--baz",
+]
+reconcilesorders = true
+shortopts = "Bb:o::vx"
+solution = [
+    "-f42",
+    "-v",
+    "-o",
+    "--baz",
+    "file1.txt",
+    "output.txt",
+    "arg1",
+    "arg2",
+]
+special = 2
+warnings = nan
+
+[run29776go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=",
+    "fo=",
+    "foo=",
+    "out=?",
+    "output=?",
+    "ver=?",
+    "verbose",
+    "version=",
+]
+query = [
+    "-vf",
+    "42",
+    "-c",
+    "config.cfg",
+    "--output=result.log",
+    "arg1",
+    "arg2",
+    "--baz",
+]
+reconcilesorders = true
+shortopts = "Bb:o::vx"
+solution = [
+    "-vf",
+    "-c",
+    "--output=result.log",
+    "--baz",
+    "42",
+    "config.cfg",
+    "arg1",
+    "arg2",
+]
+special = 2
+warnings = nan
+
+[run29777go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=",
+    "fo=",
+    "foo=",
+    "out=?",
+    "output=?",
+    "ver=?",
+    "verbose",
+    "version=",
+]
+query = [
+    "--verbo",
+    "--output=log.txt",
+    "--foo=bar",
+    "-x",
+    "input1",
+    "input2",
+    "input3",
+    "--fo",
+]
+reconcilesorders = true
+shortopts = "Bb:o::vx"
+solution = [
+    "--verbose",
+    "--output=log.txt",
+    "--foo=bar",
+    "-x",
+    "--fo",
+    "input1",
+    "input2",
+    "input3",
+]
+special = 2
+warnings = nan
+
+[run29782go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=",
+    "fo=",
+    "foo=",
+    "out=?",
+    "output=?",
+    "ver=?",
+    "verbose",
+    "version=",
+]
+query = [
+    "-vf42",
+    "-cfile.cfg",
+    "--out=result.txt",
+    "positional1",
+    "--baz",
+]
+reconcilesorders = true
+shortopts = "Bb:o::vx"
+solution = [
+    "-vf42",
+    "-cfile.cfg",
+    "--out=result.txt",
+    "--baz",
+    "positional1",
+]
+special = 2
+warnings = nan
+
+[run29789go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=",
+    "fo=",
+    "foo=",
+    "out=?",
+    "output=?",
+    "ver=?",
+    "verbose",
+    "version=",
+]
+query = [
+    "-x",
+    "-v",
+    "-b=2",
+    "--quiet",
+    "-f",
+    "file1",
+    "--foo",
+]
+reconcilesorders = true
+shortopts = "Bb:o::vx"
+solution = [
+    "-x",
+    "-v",
+    "-b=2",
+    "--quiet",
+    "-f",
+    "--foo",
+    "file1",
+]
+special = 2
+warnings = nan
+
+[run30193go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "config=",
+    "file=",
+    "path=",
+    "set=",
+]
+query = [
+    "--verbo",
+    "medium",
+    "arg1",
+    "--output=final.log",
+    "arg2",
+    "arg3",
+    "-vf",
+]
+reconcilesorders = true
+shortopts = "f:p:"
+solution = [
+    "--verbo",
+    "--output=final.log",
+    "-vf",
+    "medium",
+    "arg1",
+    "arg2",
+    "arg3",
+]
+special = 2
+warnings = nan
+
+[run30529go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=?",
+    "fo=",
+    "out=?",
+]
+query = [
+    "--verbo",
+    "--output=log.txt",
+    "--foo=bar",
+    "-x",
+    "input1",
+    "input2",
+    "input3",
+    "--fo",
+]
+reconcilesorders = true
+shortopts = "f::o:qv"
+solution = [
+    "--verbo",
+    "--output=log.txt",
+    "--foo=bar",
+    "-x",
+    "--fo",
+    "input1",
+    "input2",
+    "input3",
+]
+special = 2
+warnings = nan
+
+[run30623go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "fo=",
+    "foo=",
+    "output=?",
+    "verbo",
+    "verbose",
+]
+query = [
+    "--verbo",
+    "--output=log.txt",
+    "--foo=bar",
+    "-x",
+    "input1",
+    "input2",
+    "input3",
+    "--fo",
+]
+reconcilesorders = true
+shortopts = "f:vx"
+solution = [
+    "--verbo",
+    "--output=log.txt",
+    "--foo=bar",
+    "-x",
+    "--fo",
+    "input1",
+    "input2",
+    "input3",
+]
+special = 2
+warnings = nan
+
+[run30635go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "fo=",
+    "foo=",
+    "output=?",
+    "verbo",
+    "verbose",
+]
+query = [
+    "-x",
+    "-v",
+    "-b=2",
+    "--quiet",
+    "-f",
+    "file1",
+    "--foo",
+]
+reconcilesorders = true
+shortopts = "f:vx"
+solution = [
+    "-x",
+    "-v",
+    "-b=2",
+    "--quiet",
+    "-f",
+    "file1",
+    "--foo",
+]
+special = 2
+warnings = nan
+
+[run30663go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "fo=",
+    "foo=",
+    "output=?",
+    "verbo",
+    "verbose",
+]
+query = [
+    "--verbo",
+    "medium",
+    "arg1",
+    "--output=final.log",
+    "arg2",
+    "arg3",
+    "-vf",
+]
+reconcilesorders = true
+shortopts = "f:vx"
+solution = [
+    "--verbo",
+    "--output=final.log",
+    "-vf",
+    "medium",
+    "arg1",
+    "arg2",
+    "arg3",
+]
+special = 2
+warnings = nan
+
+[run30811go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "config=",
+    "file=",
+    "foo=",
+    "input=",
+    "output=",
+]
+query = [
+    "--verbo",
+    "--output=log.txt",
+    "--foo=bar",
+    "-x",
+    "input1",
+    "input2",
+    "input3",
+    "--fo",
+]
+reconcilesorders = true
+shortopts = "b:c:o:"
+solution = [
+    "--verbo",
+    "--output=log.txt",
+    "--foo=bar",
+    "-x",
+    "--foo",
+    "input1",
+    "input2",
+    "input3",
+]
+special = 2
+warnings = nan
+
+[run30823go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "config=",
+    "file=",
+    "foo=",
+    "input=",
+    "output=",
+]
+query = [
+    "-x",
+    "-v",
+    "-b=2",
+    "--quiet",
+    "-f",
+    "file1",
+    "--foo",
+]
+reconcilesorders = true
+shortopts = "b:c:o:"
+solution = [
+    "-x",
+    "-v",
+    "-b=2",
+    "--quiet",
+    "-f",
+    "--foo",
+    "file1",
+]
+special = 2
+warnings = nan
+
+[run31039go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "file=",
+    "output=?",
+    "path=",
+    "quick",
+]
+query = [
+    "--verbo",
+    "medium",
+    "arg1",
+    "--output=final.log",
+    "arg2",
+    "arg3",
+    "-vf",
+]
+reconcilesorders = true
+shortopts = "f:o::vx"
+solution = [
+    "--verbo",
+    "--output=final.log",
+    "-vf",
+    "medium",
+    "arg1",
+    "arg2",
+    "arg3",
+]
+special = 2
+warnings = nan
+
+[run31301go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = []
+query = [
+    "-v",
+    "-x",
+    "-f42",
+    "-b=2",
+    "-c",
+    "comp.cfg",
+    "-d",
+]
+reconcilesorders = true
+shortopts = "a:b::cd:ef:"
+solution = [
+    "-v",
+    "-x",
+    "-f42",
+    "-b=2",
+    "-c",
+    "-d",
+    "comp.cfg",
+]
+special = 2
+warnings = nan
+
+[run31321go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = []
+query = [
+    "--verbo",
+    "medium",
+    "arg1",
+    "--output=final.log",
+    "arg2",
+    "arg3",
+    "-vf",
+]
+reconcilesorders = true
+shortopts = "a:b::cd:ef:"
+solution = [
+    "--verbo",
+    "--output=final.log",
+    "-vf",
+    "medium",
+    "arg1",
+    "arg2",
+    "arg3",
+]
+special = 2
+warnings = nan
+
+[run31375go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "debug",
+    "error=",
+    "file=",
+    "foo=",
+    "logfile=?",
+    "output=?",
+    "retry=",
+    "silent",
+    "timeout=",
+]
+query = [
+    "--verbo",
+    "--output=log.txt",
+    "--foo=bar",
+    "-x",
+    "input1",
+    "input2",
+    "input3",
+    "--fo",
+]
+reconcilesorders = true
+shortopts = "d::m:t::vx"
+solution = [
+    "--verbo",
+    "--output=log.txt",
+    "--foo=bar",
+    "-x",
+    "--foo",
+    "input1",
+    "input2",
+    "input3",
+]
+special = 2
+warnings = nan
+
+[run31387go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "debug",
+    "error=",
+    "file=",
+    "foo=",
+    "logfile=?",
+    "output=?",
+    "retry=",
+    "silent",
+    "timeout=",
+]
+query = [
+    "-x",
+    "-v",
+    "-b=2",
+    "--quiet",
+    "-f",
+    "file1",
+    "--foo",
+]
+reconcilesorders = true
+shortopts = "d::m:t::vx"
+solution = [
+    "-x",
+    "-v",
+    "-b=2",
+    "--quiet",
+    "-f",
+    "--foo",
+    "file1",
+]
+special = 2
+warnings = nan
+
+[run31469go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "comp=",
+    "fo=",
+    "out=?",
+    "output=?",
+    "verb=?",
+]
+query = [
+    "--verbo",
+    "--output=log.txt",
+    "--foo=bar",
+    "-x",
+    "input1",
+    "input2",
+    "input3",
+    "--fo",
+]
+reconcilesorders = true
+shortopts = "c:f:o:v"
+solution = [
+    "--verbo",
+    "--output=log.txt",
+    "--foo=bar",
+    "-x",
+    "--fo",
+    "input1",
+    "input2",
+    "input3",
+]
+special = 2
+warnings = nan
+
+[run31509go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "comp=",
+    "fo=",
+    "out=?",
+    "output=?",
+    "verb=?",
+]
+query = [
+    "--verbo",
+    "medium",
+    "arg1",
+    "--output=final.log",
+    "arg2",
+    "arg3",
+    "-vf",
+]
+reconcilesorders = true
+shortopts = "c:f:o:v"
+solution = [
+    "--verbo",
+    "--output=final.log",
+    "-vf",
+    "medium",
+    "arg1",
+    "arg2",
+    "arg3",
+]
+special = 2
+warnings = nan
+
+[run31563go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=?",
+    "foo=",
+    "hello=",
+    "out=?",
+]
+query = [
+    "--verbo",
+    "--output=log.txt",
+    "--foo=bar",
+    "-x",
+    "input1",
+    "input2",
+    "input3",
+    "--fo",
+]
+reconcilesorders = false
+shortopts = "Vo:x"
+solution = [
+    "--verbo",
+    "--output=log.txt",
+    "--foo=bar",
+    "-x",
+    "input1",
+    "input2",
+    "input3",
+    "--foo",
+]
+special = 2
+warnings = nan
+
+[run31575go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=?",
+    "foo=",
+    "hello=",
+    "out=?",
+]
+query = [
+    "-x",
+    "-v",
+    "-b=2",
+    "--quiet",
+    "-f",
+    "file1",
+    "--foo",
+]
+reconcilesorders = false
+shortopts = "Vo:x"
+solution = [
+    "-x",
+    "-v",
+    "-b=2",
+    "--quiet",
+    "-f",
+    "file1",
+    "--foo",
+]
+special = 2
+warnings = nan
+
+[run31609go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=",
+    "fo=",
+    "foo=",
+    "out=?",
+    "output=?",
+    "ver=?",
+    "verbose",
+    "version=",
+]
+query = [
+    "--foo",
+    "value1",
+    "positional1",
+    "--bar",
+    "value2",
+    "positional2",
+    "--baz",
+]
+reconcilesorders = false
+shortopts = "Bb:o::vx"
+solution = [
+    "--foo",
+    "value1",
+    "positional1",
+    "--bar",
+    "value2",
+    "positional2",
+    "--baz",
+]
+special = 2
+warnings = nan
+
+[run31646go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=",
+    "fo=",
+    "foo=",
+    "out=?",
+    "output=?",
+    "ver=?",
+    "verbose",
+    "version=",
+]
+query = [
+    "-f42",
+    "-v",
+    "file1.txt",
+    "-o",
+    "output.txt",
+    "arg1",
+    "arg2",
+    "--baz",
+]
+reconcilesorders = false
+shortopts = "Bb:o::vx"
+solution = [
+    "-f42",
+    "-v",
+    "file1.txt",
+    "-o",
+    "output.txt",
+    "arg1",
+    "arg2",
+    "--baz",
+]
+special = 2
+warnings = nan
+
+[run31656go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=",
+    "fo=",
+    "foo=",
+    "out=?",
+    "output=?",
+    "ver=?",
+    "verbose",
+    "version=",
+]
+query = [
+    "-vf",
+    "42",
+    "-c",
+    "config.cfg",
+    "--output=result.log",
+    "arg1",
+    "arg2",
+    "--baz",
+]
+reconcilesorders = false
+shortopts = "Bb:o::vx"
+solution = [
+    "-vf",
+    "42",
+    "-c",
+    "config.cfg",
+    "--output=result.log",
+    "arg1",
+    "arg2",
+    "--baz",
+]
+special = 2
+warnings = nan
+
+[run31657go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=",
+    "fo=",
+    "foo=",
+    "out=?",
+    "output=?",
+    "ver=?",
+    "verbose",
+    "version=",
+]
+query = [
+    "--verbo",
+    "--output=log.txt",
+    "--foo=bar",
+    "-x",
+    "input1",
+    "input2",
+    "input3",
+    "--fo",
+]
+reconcilesorders = false
+shortopts = "Bb:o::vx"
+solution = [
+    "--verbose",
+    "--output=log.txt",
+    "--foo=bar",
+    "-x",
+    "input1",
+    "input2",
+    "input3",
+    "--fo",
+]
+special = 2
+warnings = nan
+
+[run31662go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=",
+    "fo=",
+    "foo=",
+    "out=?",
+    "output=?",
+    "ver=?",
+    "verbose",
+    "version=",
+]
+query = [
+    "-vf42",
+    "-cfile.cfg",
+    "--out=result.txt",
+    "positional1",
+    "--baz",
+]
+reconcilesorders = false
+shortopts = "Bb:o::vx"
+solution = [
+    "-vf42",
+    "-cfile.cfg",
+    "--out=result.txt",
+    "positional1",
+    "--baz",
+]
+special = 2
+warnings = nan
+
+[run31669go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=",
+    "fo=",
+    "foo=",
+    "out=?",
+    "output=?",
+    "ver=?",
+    "verbose",
+    "version=",
+]
+query = [
+    "-x",
+    "-v",
+    "-b=2",
+    "--quiet",
+    "-f",
+    "file1",
+    "--foo",
+]
+reconcilesorders = false
+shortopts = "Bb:o::vx"
+solution = [
+    "-x",
+    "-v",
+    "-b=2",
+    "--quiet",
+    "-f",
+    "file1",
+    "--foo",
+]
+special = 2
+warnings = nan
+
+[run32073go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "config=",
+    "file=",
+    "path=",
+    "set=",
+]
+query = [
+    "--verbo",
+    "medium",
+    "arg1",
+    "--output=final.log",
+    "arg2",
+    "arg3",
+    "-vf",
+]
+reconcilesorders = false
+shortopts = "f:p:"
+solution = [
+    "--verbo",
+    "medium",
+    "arg1",
+    "--output=final.log",
+    "arg2",
+    "arg3",
+    "-vf",
+]
+special = 2
+warnings = nan
+
+[run32409go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "bar=",
+    "baz=?",
+    "fo=",
+    "out=?",
+]
+query = [
+    "--verbo",
+    "--output=log.txt",
+    "--foo=bar",
+    "-x",
+    "input1",
+    "input2",
+    "input3",
+    "--fo",
+]
+reconcilesorders = false
+shortopts = "f::o:qv"
+solution = [
+    "--verbo",
+    "--output=log.txt",
+    "--foo=bar",
+    "-x",
+    "input1",
+    "input2",
+    "input3",
+    "--fo",
+]
+special = 2
+warnings = nan
+
+[run32503go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "fo=",
+    "foo=",
+    "output=?",
+    "verbo",
+    "verbose",
+]
+query = [
+    "--verbo",
+    "--output=log.txt",
+    "--foo=bar",
+    "-x",
+    "input1",
+    "input2",
+    "input3",
+    "--fo",
+]
+reconcilesorders = false
+shortopts = "f:vx"
+solution = [
+    "--verbo",
+    "--output=log.txt",
+    "--foo=bar",
+    "-x",
+    "input1",
+    "input2",
+    "input3",
+    "--fo",
+]
+special = 2
+warnings = nan
+
+[run32515go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "fo=",
+    "foo=",
+    "output=?",
+    "verbo",
+    "verbose",
+]
+query = [
+    "-x",
+    "-v",
+    "-b=2",
+    "--quiet",
+    "-f",
+    "file1",
+    "--foo",
+]
+reconcilesorders = false
+shortopts = "f:vx"
+solution = [
+    "-x",
+    "-v",
+    "-b=2",
+    "--quiet",
+    "-f",
+    "file1",
+    "--foo",
+]
+special = 2
+warnings = nan
+
+[run32543go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "fo=",
+    "foo=",
+    "output=?",
+    "verbo",
+    "verbose",
+]
+query = [
+    "--verbo",
+    "medium",
+    "arg1",
+    "--output=final.log",
+    "arg2",
+    "arg3",
+    "-vf",
+]
+reconcilesorders = false
+shortopts = "f:vx"
+solution = [
+    "--verbo",
+    "medium",
+    "arg1",
+    "--output=final.log",
+    "arg2",
+    "arg3",
+    "-vf",
+]
+special = 2
+warnings = nan
+
+[run32691go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "config=",
+    "file=",
+    "foo=",
+    "input=",
+    "output=",
+]
+query = [
+    "--verbo",
+    "--output=log.txt",
+    "--foo=bar",
+    "-x",
+    "input1",
+    "input2",
+    "input3",
+    "--fo",
+]
+reconcilesorders = false
+shortopts = "b:c:o:"
+solution = [
+    "--verbo",
+    "--output=log.txt",
+    "--foo=bar",
+    "-x",
+    "input1",
+    "input2",
+    "input3",
+    "--foo",
+]
+special = 2
+warnings = nan
+
+[run32703go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "config=",
+    "file=",
+    "foo=",
+    "input=",
+    "output=",
+]
+query = [
+    "-x",
+    "-v",
+    "-b=2",
+    "--quiet",
+    "-f",
+    "file1",
+    "--foo",
+]
+reconcilesorders = false
+shortopts = "b:c:o:"
+solution = [
+    "-x",
+    "-v",
+    "-b=2",
+    "--quiet",
+    "-f",
+    "file1",
+    "--foo",
+]
+special = 2
+warnings = nan
+
+[run32919go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "file=",
+    "output=?",
+    "path=",
+    "quick",
+]
+query = [
+    "--verbo",
+    "medium",
+    "arg1",
+    "--output=final.log",
+    "arg2",
+    "arg3",
+    "-vf",
+]
+reconcilesorders = false
+shortopts = "f:o::vx"
+solution = [
+    "--verbo",
+    "medium",
+    "arg1",
+    "--output=final.log",
+    "arg2",
+    "arg3",
+    "-vf",
+]
+special = 2
+warnings = nan
+
+[run33181go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = []
+query = [
+    "-v",
+    "-x",
+    "-f42",
+    "-b=2",
+    "-c",
+    "comp.cfg",
+    "-d",
+]
+reconcilesorders = false
+shortopts = "a:b::cd:ef:"
+solution = [
+    "-v",
+    "-x",
+    "-f42",
+    "-b=2",
+    "-c",
+    "comp.cfg",
+    "-d",
+]
+special = 2
+warnings = nan
+
+[run33201go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = []
+query = [
+    "--verbo",
+    "medium",
+    "arg1",
+    "--output=final.log",
+    "arg2",
+    "arg3",
+    "-vf",
+]
+reconcilesorders = false
+shortopts = "a:b::cd:ef:"
+solution = [
+    "--verbo",
+    "medium",
+    "arg1",
+    "--output=final.log",
+    "arg2",
+    "arg3",
+    "-vf",
+]
+special = 2
+warnings = nan
+
+[run33255go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "debug",
+    "error=",
+    "file=",
+    "foo=",
+    "logfile=?",
+    "output=?",
+    "retry=",
+    "silent",
+    "timeout=",
+]
+query = [
+    "--verbo",
+    "--output=log.txt",
+    "--foo=bar",
+    "-x",
+    "input1",
+    "input2",
+    "input3",
+    "--fo",
+]
+reconcilesorders = false
+shortopts = "d::m:t::vx"
+solution = [
+    "--verbo",
+    "--output=log.txt",
+    "--foo=bar",
+    "-x",
+    "input1",
+    "input2",
+    "input3",
+    "--foo",
+]
+special = 2
+warnings = nan
+
+[run33267go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "debug",
+    "error=",
+    "file=",
+    "foo=",
+    "logfile=?",
+    "output=?",
+    "retry=",
+    "silent",
+    "timeout=",
+]
+query = [
+    "-x",
+    "-v",
+    "-b=2",
+    "--quiet",
+    "-f",
+    "file1",
+    "--foo",
+]
+reconcilesorders = false
+shortopts = "d::m:t::vx"
+solution = [
+    "-x",
+    "-v",
+    "-b=2",
+    "--quiet",
+    "-f",
+    "file1",
+    "--foo",
+]
+special = 2
+warnings = nan
+
+[run33349go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "comp=",
+    "fo=",
+    "out=?",
+    "output=?",
+    "verb=?",
+]
+query = [
+    "--verbo",
+    "--output=log.txt",
+    "--foo=bar",
+    "-x",
+    "input1",
+    "input2",
+    "input3",
+    "--fo",
+]
+reconcilesorders = false
+shortopts = "c:f:o:v"
+solution = [
+    "--verbo",
+    "--output=log.txt",
+    "--foo=bar",
+    "-x",
+    "input1",
+    "input2",
+    "input3",
+    "--fo",
+]
+special = 2
+warnings = nan
+
+[run33389go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = false
+longopts = [
+    "comp=",
+    "fo=",
+    "out=?",
+    "output=?",
+    "verb=?",
+]
+query = [
+    "--verbo",
+    "medium",
+    "arg1",
+    "--output=final.log",
+    "arg2",
+    "arg3",
+    "-vf",
+]
+reconcilesorders = false
+shortopts = "c:f:o:v"
+solution = [
+    "--verbo",
+    "medium",
+    "arg1",
+    "--output=final.log",
+    "arg2",
+    "arg3",
+    "-vf",
+]
+special = 2
+warnings = nan
+
+[run34395go]
+abbr = 0
+bundling = 2
+depletion = "REINTERPRET"
+is_posix = true
+longopts = [
+    "fo=",
+    "foo=",
+    "output=?",
+    "verbo",
+    "verbose",
+]
+query = [
+    "-x",
+    "-v",
+    "-b=2",
+    "--quiet",
+    "-f",
+    "file1",
+    "--foo",
+]
+reconcilesorders = false
+shortopts = "f:vx"
+solution = [
+    "-x",
+    "-v",
+    "-b=2",
+    "--quiet",
+    "-f",
+    "file1",
+    "--foo",
+]
+special = 2
+warnings = nan
+

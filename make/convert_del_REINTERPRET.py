@@ -38,7 +38,8 @@ def main() -> None:
     name: str
     ans = dict()
     for name, kwargs in Utils.utils.data.items():
-        if kwargs["depletion"] == "REINTERPRET":
+        kwargs["depletion"] = kwargs.get("depletion", "REINTERPRET")
+        if kwargs["depletion"] != "REINTERPRET":
             continue
         ans[name] = kwargs
     print(tomli_w.dumps(ans))
