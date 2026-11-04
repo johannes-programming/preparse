@@ -25398,6 +25398,2680 @@ warnings = [
     "unrecognized option '-b'",
 ]
 
+[gap_abbr_001]
+abbr = 1
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "verbose",
+    "version",
+]
+query = [
+    "--verbose",
+    "--version",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--verb",
+    "--vers",
+]
+special = 2
+warnings = []
+
+[gap_abbr_002]
+abbr = 1
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "verbose",
+    "version",
+    "verify",
+]
+query = [
+    "--verbose",
+    "--version",
+    "--verify",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--verb",
+    "--vers",
+    "--veri",
+]
+special = 2
+warnings = []
+
+[gap_abbr_003]
+abbr = 1
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "alpha",
+    "alpine",
+    "all",
+]
+query = [
+    "--alpha",
+    "--alpine",
+    "--all",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--alph",
+    "--alpi",
+    "--all",
+]
+special = 2
+warnings = []
+
+[gap_abbr_004]
+abbr = 1
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "output=",
+    "optimize",
+]
+query = [
+    "--output",
+    "value",
+    "--optimize",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--ou",
+    "value",
+    "--op",
+]
+special = 2
+warnings = []
+
+[gap_abbr_005]
+abbr = 1
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "output=",
+    "option",
+]
+query = [
+    "--output=x",
+    "--option",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--ou=x",
+    "--op",
+]
+special = 2
+warnings = []
+
+[gap_abbr_006]
+abbr = 1
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "mode",
+    "model",
+]
+query = [
+    "--mode",
+    "--model",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--mode",
+    "--model",
+]
+special = 2
+warnings = []
+
+[gap_abbr_007]
+abbr = 1
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "read",
+    "ready",
+    "reader",
+]
+query = [
+    "--read",
+    "--ready",
+    "--reader",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--read",
+    "--ready",
+    "--reade",
+]
+special = 2
+warnings = []
+
+[gap_abbr_008]
+abbr = 1
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "config=",
+    "conflict",
+]
+query = [
+    "--config=file",
+    "--conflict",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--confi=file",
+    "--confl",
+]
+special = 2
+warnings = []
+
+[gap_abbr_009]
+abbr = 1
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "café",
+    "caffè",
+]
+query = [
+    "--café",
+    "--caffè",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--café",
+    "--caff",
+]
+special = 2
+warnings = []
+
+[gap_abbr_010]
+abbr = 1
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "résumé",
+    "réseau",
+]
+query = [
+    "--résumé",
+    "--réseau",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--résu",
+    "--rése",
+]
+special = 2
+warnings = []
+
+[gap_abbr_011]
+abbr = 1
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "verbose",
+    "version",
+]
+query = [
+    "-verbose",
+    "-version",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = nan
+solution = [
+    "-verb",
+    "-vers",
+]
+special = 2
+warnings = []
+
+[gap_abbr_012]
+abbr = 1
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "output=",
+]
+query = [
+    "-output",
+    "data",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = nan
+solution = [
+    "-o",
+    "data",
+]
+special = 2
+warnings = []
+
+[gap_abbr_013]
+abbr = 1
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "verbose",
+    "version",
+    "verb",
+]
+query = [
+    "--vers",
+    "--verb",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--vers",
+    "--verb",
+]
+special = 2
+warnings = []
+
+[gap_abbr_014]
+abbr = 1
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "mode=",
+    "model",
+    "monitor",
+]
+query = [
+    "--mo",
+    "--mode",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--mo",
+]
+special = 2
+warnings = [
+    "option '--mo' is ambiguous; possibilities: '--mode' '--model' '--monitor'",
+    "option '--mode' requires an argument",
+]
+
+[gap_abbr_015]
+abbr = 1
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "alpha",
+    "alpine",
+]
+query = [
+    "--a",
+    "--alpine",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--a",
+    "--alpi",
+]
+special = 2
+warnings = [
+    "option '--a' is ambiguous; possibilities: '--alpha' '--alpine'",
+]
+
+[gap_abbr_016]
+abbr = 1
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "alpha=",
+    "alpine",
+]
+query = [
+    "--alpha=42",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--alph=42",
+]
+special = 2
+warnings = []
+
+[gap_abbr_017]
+abbr = 2
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "verbose",
+    "version",
+]
+query = [
+    "--ver",
+    "--verbose",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--ver",
+    "--verbose",
+]
+special = 2
+warnings = [
+    "option '--ver' is ambiguous; possibilities: '--verbose' '--version'",
+]
+
+[gap_abbr_018]
+abbr = 2
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "verbose",
+    "version",
+]
+query = [
+    "-ver",
+    "-verbose",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = nan
+solution = [
+    "-ver",
+    "-verbose",
+]
+special = 2
+warnings = [
+    "option '-ver' is ambiguous; possibilities: '-verbose' '-version'",
+]
+
+[gap_abbr_019]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "mode",
+    "mode=",
+    "model",
+]
+query = [
+    "--mo",
+    "--mode",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--mo",
+    "--mode",
+]
+special = 2
+warnings = [
+    "option '--mo' is ambiguous; possibilities: '--mode' '--mode' '--model'",
+]
+
+[gap_abbr_020]
+abbr = 1
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "case",
+    "cat",
+    "carbon",
+]
+query = [
+    "--case",
+    "--cat",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--cas",
+    "--cat",
+]
+special = 2
+warnings = []
+
+[gap_bundle_001]
+abbr = 0
+bundling = 0
+is_posix = false
+joined = 2
+longopts = [
+    "flag",
+]
+query = [
+    "-abc",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abc"
+solution = [
+    "-a",
+    "-b",
+    "-c",
+]
+special = 2
+warnings = []
+
+[gap_bundle_002]
+abbr = 0
+bundling = 1
+is_posix = false
+joined = 2
+longopts = [
+    "flag",
+]
+query = [
+    "-a",
+    "-b",
+    "-c",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abc"
+solution = [
+    "-abc",
+]
+special = 2
+warnings = []
+
+[gap_bundle_003]
+abbr = 0
+bundling = 1
+is_posix = false
+joined = 2
+longopts = [
+    "flag",
+]
+query = [
+    "-a",
+    "file",
+    "-b",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "ab"
+solution = [
+    "-ab",
+    "file",
+]
+special = 2
+warnings = []
+
+[gap_bundle_004]
+abbr = 0
+bundling = 1
+is_posix = false
+joined = 2
+longopts = [
+    "flag",
+]
+query = [
+    "-a",
+    "--flag",
+    "-b",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "ab"
+solution = [
+    "-a",
+    "--flag",
+    "-b",
+]
+special = 2
+warnings = []
+
+[gap_bundle_005]
+abbr = 0
+bundling = 1
+is_posix = false
+joined = 2
+longopts = [
+    "flag",
+]
+query = [
+    "-a",
+    "--",
+    "-b",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "ab"
+solution = [
+    "-a",
+    "--",
+    "-b",
+]
+special = 2
+warnings = []
+
+[gap_bundle_006]
+abbr = 0
+bundling = 0
+is_posix = false
+joined = 2
+longopts = [
+    "flag",
+]
+query = [
+    "-abc42",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abc:"
+solution = [
+    "-a",
+    "-b",
+    "-c42",
+]
+special = 2
+warnings = []
+
+[gap_bundle_007]
+abbr = 0
+bundling = 1
+is_posix = false
+joined = 2
+longopts = [
+    "flag",
+]
+query = [
+    "-a",
+    "-b",
+    "-c",
+    "tail",
+]
+reconciles_orders = true
+reserve = nan
+shortopts = "abc"
+solution = [
+    "-abc",
+    "tail",
+]
+special = 2
+warnings = []
+
+[gap_bundle_008]
+abbr = 0
+bundling = 1
+is_posix = false
+joined = 2
+longopts = [
+    "flag",
+]
+query = [
+    "-ab",
+    "-c",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abc"
+solution = [
+    "-abc",
+]
+special = 2
+warnings = []
+
+[gap_bundle_009]
+abbr = 0
+bundling = 0
+is_posix = false
+joined = 2
+longopts = [
+    "flag",
+]
+query = [
+    "-acdata",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "ac::"
+solution = [
+    "-a",
+    "-cdata",
+]
+special = 2
+warnings = []
+
+[gap_bundle_010]
+abbr = 0
+bundling = 1
+is_posix = false
+joined = 1
+longopts = [
+    "flag",
+]
+query = [
+    "-a",
+    "-c",
+    "data",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "ac:"
+solution = [
+    "-acdata",
+]
+special = 2
+warnings = []
+
+[gap_bundle_011]
+abbr = 0
+bundling = 1
+is_posix = true
+joined = 2
+longopts = [
+    "flag",
+]
+query = [
+    "-a",
+    "file",
+    "-b",
+    "end",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "ab"
+solution = [
+    "-a",
+    "file",
+    "-b",
+    "end",
+]
+special = 2
+warnings = []
+
+[gap_bundle_012]
+abbr = 0
+bundling = 0
+is_posix = false
+joined = 2
+longopts = [
+    "flag",
+]
+query = [
+    "-ab",
+    "--flag",
+    "-c",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abc"
+solution = [
+    "-a",
+    "-b",
+    "--flag",
+    "-c",
+]
+special = 0
+warnings = []
+
+[gap_edge_001]
+abbr = 1
+bundling = 2
+is_posix = false
+joined = 0
+longopts = nan
+query = []
+reconciles_orders = false
+reserve = nan
+shortopts = nan
+solution = []
+special = 2
+warnings = []
+
+[gap_edge_002]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "flag",
+]
+query = [
+    "",
+    "--",
+    "",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "a"
+solution = [
+    "--",
+    "",
+    "",
+]
+special = 1
+warnings = []
+
+[gap_edge_003]
+abbr = 1
+bundling = 2
+is_posix = false
+joined = 1
+longopts = nan
+query = [
+    "-x",
+    "--invalid",
+    "--",
+    "-z",
+    "",
+    "tail",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = nan
+solution = [
+    "-x",
+    "--invalid",
+    "--",
+    "-z",
+    "",
+    "tail",
+]
+special = 0
+warnings = []
+
+[gap_edge_004]
+abbr = 0
+bundling = 1
+is_posix = false
+joined = 2
+longopts = [
+    "flag",
+]
+query = [
+    "-a",
+    "--flag",
+    "first",
+    "-b",
+    "second",
+    "--flag",
+    "third",
+    "-a",
+    "fourth",
+    "-b",
+    "fifth",
+    "sixth",
+]
+reconciles_orders = true
+reserve = nan
+shortopts = "ab"
+solution = [
+    "-a",
+    "--flag",
+    "-b",
+    "--flag",
+    "-ab",
+    "first",
+    "second",
+    "third",
+    "fourth",
+    "fifth",
+    "sixth",
+]
+special = 2
+warnings = []
+
+[gap_joined_001]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 0
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "-f42",
+    "--output=report.txt",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "-f",
+    "42",
+    "--output",
+    "report.txt",
+]
+special = 2
+warnings = []
+
+[gap_joined_002]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 0
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "--output=one=two",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--output",
+    "one=two",
+]
+special = 2
+warnings = []
+
+[gap_joined_003]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 0
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "--config=",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--config",
+    "",
+]
+special = 2
+warnings = []
+
+[gap_joined_004]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 0
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "-o--flag",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "-o",
+    "--flag",
+]
+special = 2
+warnings = []
+
+[gap_joined_005]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 0
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "-fdata",
+    "--maybe=yes",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "-f",
+    "data",
+    "--maybe",
+    "yes",
+]
+special = 2
+warnings = []
+
+[gap_joined_006]
+abbr = 0
+bundling = 2
+is_posix = true
+joined = 0
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "-f42",
+    "--output=x",
+    "tail",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "-f",
+    "42",
+    "--output",
+    "x",
+    "tail",
+]
+special = 2
+warnings = []
+
+[gap_joined_007]
+abbr = 1
+bundling = 2
+is_posix = false
+joined = 0
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "--output=/tmp/é",
+    "-fβ",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--o",
+    "/tmp/é",
+    "-f",
+    "β",
+]
+special = 2
+warnings = []
+
+[gap_joined_008]
+abbr = 0
+bundling = 0
+is_posix = false
+joined = 0
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "-af42",
+    "--config=path",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "-a",
+    "-f",
+    "42",
+    "--config",
+    "path",
+]
+special = 2
+warnings = []
+
+[gap_joined_009]
+abbr = 1
+bundling = 2
+is_posix = false
+joined = 0
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "--out=doc",
+    "-fval",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--o",
+    "doc",
+    "-f",
+    "val",
+]
+special = 2
+warnings = []
+
+[gap_joined_010]
+abbr = 0
+bundling = 1
+is_posix = false
+joined = 0
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "-oA=B",
+    "--output=B=C",
+]
+reconciles_orders = true
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "-o",
+    "A=B",
+    "--output",
+    "B=C",
+]
+special = 2
+warnings = []
+
+[gap_joined_011]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 0
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "--flag=value",
+    "--output=data",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--flag",
+    "value",
+    "--output",
+    "data",
+]
+special = 2
+warnings = [
+    "option '--flag' doesn't allow an argument",
+]
+
+[gap_joined_012]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 0
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "--output=one",
+    "--",
+    "-f42",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--output",
+    "one",
+    "--",
+    "-f42",
+]
+special = 0
+warnings = []
+
+[gap_joined_013]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 1
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "-f",
+    "42",
+    "--output",
+    "report.txt",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "-f42",
+    "--output=report.txt",
+]
+special = 2
+warnings = []
+
+[gap_joined_014]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 1
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "--config",
+    "",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--config=",
+]
+special = 2
+warnings = []
+
+[gap_joined_015]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 1
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "--output",
+    "a=b",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--output=a=b",
+]
+special = 2
+warnings = []
+
+[gap_joined_016]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 1
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "-o",
+    "-x",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "-o-x",
+]
+special = 2
+warnings = []
+
+[gap_joined_017]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 1
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "-f",
+    "spaces in value",
+    "--output",
+    "x y",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "-fspaces in value",
+    "--output=x y",
+]
+special = 2
+warnings = []
+
+[gap_joined_018]
+abbr = 0
+bundling = 1
+is_posix = false
+joined = 1
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "-a",
+    "-o",
+    "42",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "-ao42",
+]
+special = 2
+warnings = []
+
+[gap_joined_019]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 1
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "-f",
+    "2026",
+    "item",
+    "--flag",
+]
+reconciles_orders = true
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "-f2026",
+    "--flag",
+    "item",
+]
+special = 2
+warnings = []
+
+[gap_joined_020]
+abbr = 1
+bundling = 2
+is_posix = false
+joined = 1
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "--out",
+    "file",
+    "--ver",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--o=file",
+    "--ver",
+]
+special = 2
+warnings = [
+    "option '--ver' is ambiguous; possibilities: '--verbose' '--version'",
+]
+
+[gap_joined_021]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 1
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "--maybe",
+    "next",
+    "--output",
+    "file",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--maybe",
+    "next",
+    "--output=file",
+]
+special = 2
+warnings = []
+
+[gap_joined_022]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 1
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "-cdata",
+    "--output",
+    "next",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "-cdata",
+    "--output=next",
+]
+special = 2
+warnings = []
+
+[gap_joined_023]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 1
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "-f",
+    "42",
+    "--",
+    "file",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "-f42",
+    "--",
+    "file",
+]
+special = 1
+warnings = []
+
+[gap_joined_024]
+abbr = 0
+bundling = 2
+is_posix = true
+joined = 1
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "--output",
+    "résumé",
+    "-f",
+    "🦊",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--output=résumé",
+    "-f🦊",
+]
+special = 0
+warnings = []
+
+[gap_reserve_001]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "-f",
+]
+reconciles_orders = false
+reserve = [
+    false,
+    "fallback",
+]
+shortopts = "abf:o:c::"
+solution = [
+    "-f",
+    "fallback",
+]
+special = 2
+warnings = [
+    "option requires an argument -- 'f'",
+]
+
+[gap_reserve_002]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "-f",
+]
+reconciles_orders = false
+reserve = [
+    true,
+    "fallback",
+]
+shortopts = "abf:o:c::"
+solution = [
+    "-ffallback",
+]
+special = 2
+warnings = [
+    "option requires an argument -- 'f'",
+]
+
+[gap_reserve_003]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "--output",
+]
+reconciles_orders = false
+reserve = [
+    false,
+    "fallback",
+]
+shortopts = "abf:o:c::"
+solution = [
+    "--output",
+    "fallback",
+]
+special = 2
+warnings = [
+    "option '--output' requires an argument",
+]
+
+[gap_reserve_004]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "--output",
+]
+reconciles_orders = false
+reserve = [
+    true,
+    "fallback",
+]
+shortopts = "abf:o:c::"
+solution = [
+    "--output=fallback",
+]
+special = 2
+warnings = [
+    "option '--output' requires an argument",
+]
+
+[gap_reserve_005]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "--config",
+]
+reconciles_orders = false
+reserve = [
+    false,
+    "",
+]
+shortopts = "abf:o:c::"
+solution = [
+    "--config",
+    "",
+]
+special = 2
+warnings = [
+    "option '--config' requires an argument",
+]
+
+[gap_reserve_006]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "--config",
+]
+reconciles_orders = false
+reserve = [
+    true,
+    "",
+]
+shortopts = "abf:o:c::"
+solution = [
+    "--config=",
+]
+special = 2
+warnings = [
+    "option '--config' requires an argument",
+]
+
+[gap_reserve_007]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "-o",
+]
+reconciles_orders = false
+reserve = [
+    false,
+    "--",
+]
+shortopts = "abf:o:c::"
+solution = [
+    "-o",
+    "--",
+]
+special = 2
+warnings = [
+    "option requires an argument -- 'o'",
+]
+
+[gap_reserve_008]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "-o",
+]
+reconciles_orders = false
+reserve = [
+    true,
+    "--",
+]
+shortopts = "abf:o:c::"
+solution = [
+    "-o--",
+]
+special = 2
+warnings = [
+    "option requires an argument -- 'o'",
+]
+
+[gap_reserve_009]
+abbr = 1
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "--out",
+]
+reconciles_orders = false
+reserve = [
+    false,
+    "reserved",
+]
+shortopts = "abf:o:c::"
+solution = [
+    "--o",
+    "reserved",
+]
+special = 2
+warnings = [
+    "option '--output' requires an argument",
+]
+
+[gap_reserve_010]
+abbr = 1
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "--out",
+]
+reconciles_orders = false
+reserve = [
+    true,
+    "reserved",
+]
+shortopts = "abf:o:c::"
+solution = [
+    "--o=reserved",
+]
+special = 2
+warnings = [
+    "option '--output' requires an argument",
+]
+
+[gap_reserve_011]
+abbr = 0
+bundling = 0
+is_posix = false
+joined = 2
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "-af",
+]
+reconciles_orders = false
+reserve = [
+    false,
+    "end",
+]
+shortopts = "abf:o:c::"
+solution = [
+    "-a",
+    "-f",
+    "end",
+]
+special = 2
+warnings = [
+    "option requires an argument -- 'f'",
+]
+
+[gap_reserve_012]
+abbr = 0
+bundling = 1
+is_posix = false
+joined = 2
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "-af",
+]
+reconciles_orders = false
+reserve = [
+    true,
+    "end",
+]
+shortopts = "abf:o:c::"
+solution = [
+    "-afend",
+]
+special = 2
+warnings = [
+    "option requires an argument -- 'f'",
+]
+
+[gap_reserve_013]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 0
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "--output",
+]
+reconciles_orders = false
+reserve = [
+    false,
+    "A=B",
+]
+shortopts = "abf:o:c::"
+solution = [
+    "--output",
+    "A=B",
+]
+special = 2
+warnings = [
+    "option '--output' requires an argument",
+]
+
+[gap_reserve_014]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 1
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "--output",
+]
+reconciles_orders = false
+reserve = [
+    true,
+    "A=B",
+]
+shortopts = "abf:o:c::"
+solution = [
+    "--output=A=B",
+]
+special = 2
+warnings = [
+    "option '--output' requires an argument",
+]
+
+[gap_reserve_015]
+abbr = 0
+bundling = 2
+is_posix = true
+joined = 2
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "--output",
+]
+reconciles_orders = false
+reserve = [
+    false,
+    "-x",
+]
+shortopts = "abf:o:c::"
+solution = [
+    "--output",
+    "-x",
+]
+special = 2
+warnings = [
+    "option '--output' requires an argument",
+]
+
+[gap_reserve_016]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "verbose",
+    "version",
+    "output=",
+    "config=",
+    "maybe=?",
+    "flag",
+    "mode",
+]
+query = [
+    "-f",
+]
+reconciles_orders = false
+reserve = [
+    true,
+    "🧩",
+]
+shortopts = "abf:o:c::"
+solution = [
+    "-f🧩",
+    "--",
+]
+special = 1
+warnings = [
+    "option requires an argument -- 'f'",
+]
+
+[gap_reserve_017]
+abbr = 1
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "output=",
+]
+query = [
+    "-output",
+]
+reconciles_orders = false
+reserve = [
+    true,
+    "42",
+]
+shortopts = nan
+solution = [
+    "-o=42",
+]
+special = 2
+warnings = [
+    "option '-output' requires an argument",
+]
+
+[gap_reserve_018]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = nan
+query = [
+    "-f",
+]
+reconciles_orders = false
+reserve = [
+    false,
+    "tail",
+]
+shortopts = "abf:o:c::"
+solution = [
+    "-f",
+    "tail",
+]
+special = 0
+warnings = [
+    "option requires an argument -- 'f'",
+]
+
+[gap_special_001]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "flag",
+]
+query = [
+    "--flag",
+    "--",
+    "file",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--flag",
+    "file",
+]
+special = 0
+warnings = []
+
+[gap_special_002]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "flag",
+]
+query = [
+    "--flag",
+    "--",
+    "-x",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--flag",
+    "--",
+    "-x",
+]
+special = 0
+warnings = []
+
+[gap_special_003]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "flag",
+]
+query = [
+    "--",
+    "file",
+    "-x",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--",
+    "file",
+    "-x",
+]
+special = 0
+warnings = []
+
+[gap_special_004]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "flag",
+]
+query = [
+    "--flag",
+    "file",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--flag",
+    "--",
+    "file",
+]
+special = 1
+warnings = []
+
+[gap_special_005]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "flag",
+]
+query = [
+    "file",
+    "--flag",
+    "tail",
+]
+reconciles_orders = true
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--flag",
+    "--",
+    "file",
+    "tail",
+]
+special = 1
+warnings = []
+
+[gap_special_006]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "flag",
+]
+query = [
+    "--flag",
+    "--",
+    "tail",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--flag",
+    "--",
+    "tail",
+]
+special = 1
+warnings = []
+
+[gap_special_007]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "flag",
+]
+query = [
+    "-a",
+    "--",
+    "-b",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "ab"
+solution = [
+    "-a",
+    "--",
+    "-b",
+]
+special = 1
+warnings = []
+
+[gap_special_008]
+abbr = 0
+bundling = 2
+is_posix = true
+joined = 2
+longopts = [
+    "flag",
+]
+query = [
+    "-a",
+    "file",
+    "-b",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "ab"
+solution = [
+    "-a",
+    "--",
+    "file",
+    "-b",
+]
+special = 1
+warnings = []
+
+[gap_special_009]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "flag",
+]
+query = [
+    "--",
+    "--flag",
+    "file",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--",
+    "--flag",
+    "file",
+]
+special = 1
+warnings = []
+
+[gap_special_010]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "flag",
+]
+query = [
+    "--flag",
+    "--",
+    "--",
+    "file",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--flag",
+    "--",
+    "--",
+    "file",
+]
+special = 0
+warnings = []
+
+[gap_special_011]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "flag",
+]
+query = [
+    "--flag",
+    "--",
+    "-x",
+    "file",
+]
+reconciles_orders = true
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--flag",
+    "--",
+    "-x",
+    "file",
+]
+special = 1
+warnings = []
+
+[gap_special_012]
+abbr = 0
+bundling = 2
+is_posix = true
+joined = 2
+longopts = [
+    "flag",
+]
+query = [
+    "--flag",
+    "first",
+    "second",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--flag",
+    "--",
+    "first",
+    "second",
+]
+special = 1
+warnings = []
+
+[gap_warnings_001]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "flag",
+]
+query = [
+    "-z",
+    "--unknown",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abc"
+solution = [
+    "-z",
+    "--unknown",
+]
+special = 2
+warnings = [
+    "invalid option -- 'z'",
+    "unrecognized option '--unknown'",
+]
+
+[gap_warnings_002]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "flag",
+]
+query = [
+    "-zx",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "ab"
+solution = [
+    "-zx",
+]
+special = 2
+warnings = [
+    "invalid option -- 'z'",
+    "invalid option -- 'x'",
+]
+
+[gap_warnings_003]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "mode",
+    "model",
+]
+query = [
+    "--mo",
+    "--bad",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--mo",
+    "--bad",
+]
+special = 2
+warnings = [
+    "option '--mo' is ambiguous; possibilities: '--mode' '--model'",
+    "unrecognized option '--bad'",
+]
+
+[gap_warnings_004]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "flag",
+]
+query = [
+    "--flag=value",
+    "--bogus",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--flag=value",
+    "--bogus",
+]
+special = 2
+warnings = [
+    "option '--flag' doesn't allow an argument",
+    "unrecognized option '--bogus'",
+]
+
+[gap_warnings_005]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "flag",
+    "mode",
+]
+query = [
+    "--flag=",
+    "--mode=x",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--flag=",
+    "--mode=x",
+]
+special = 2
+warnings = [
+    "option '--flag' doesn't allow an argument",
+    "option '--mode' doesn't allow an argument",
+]
+
+[gap_warnings_006]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "flag",
+]
+query = [
+    "-z",
+    "-y",
+    "--bad",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abc"
+solution = [
+    "-z",
+    "-y",
+    "--bad",
+]
+special = 2
+warnings = [
+    "invalid option -- 'z'",
+    "invalid option -- 'y'",
+    "unrecognized option '--bad'",
+]
+
+[gap_warnings_007]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "output=",
+]
+query = [
+    "--out",
+    "-z",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "z"
+solution = [
+    "--output",
+    "-z",
+]
+special = 2
+warnings = []
+
+[gap_warnings_008]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "résumé",
+    "réseau",
+    "résistance",
+]
+query = [
+    "--rés",
+    "--ré",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--rés",
+    "--ré",
+]
+special = 2
+warnings = [
+    "option '--rés' is ambiguous; possibilities: '--résumé' '--réseau' '--résistance'",
+    "option '--ré' is ambiguous; possibilities: '--résumé' '--réseau' '--résistance'",
+]
+
+[gap_warnings_009]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "foo",
+]
+query = [
+    "--foo=bar",
+    "--foo",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "abf:o:c::"
+solution = [
+    "--foo=bar",
+    "--foo",
+]
+special = 2
+warnings = [
+    "option '--foo' doesn't allow an argument",
+]
+
+[gap_warnings_010]
+abbr = 0
+bundling = 2
+is_posix = false
+joined = 2
+longopts = [
+    "xyz",
+    "xylo",
+]
+query = [
+    "--x",
+    "-q",
+]
+reconciles_orders = false
+reserve = nan
+shortopts = "ab"
+solution = [
+    "--x",
+    "-q",
+]
+special = 2
+warnings = [
+    "option '--x' is ambiguous; possibilities: '--xyz' '--xylo'",
+    "invalid option -- 'q'",
+]
+
 [getopt-00000001]
 abbr = 0
 bundling = 2
