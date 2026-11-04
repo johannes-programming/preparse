@@ -34,7 +34,7 @@ class PreParser(Copyable):
         "_special",
     )
     _bundling: Tuning
-    _depletion: Depletion
+    _depletion: Depletion | tuple[bool, str]
     _abbr: Tuning
     _is_posix: bool
     _joined: Tuning
@@ -57,7 +57,9 @@ class PreParser(Copyable):
         *,
         abbr: int | NoChange = NoChange.NO_CHANGE,
         bundling: int | NoChange = NoChange.NO_CHANGE,
-        depletion: Depletion | NoChange = NoChange.NO_CHANGE,
+        depletion: (
+            Depletion | tuple[SupportsBool, object] | NoChange
+        ) = NoChange.NO_CHANGE,
         is_posix: SupportsBool | Infer | NoChange = NoChange.NO_CHANGE,
         joined: int | NoChange = NoChange.NO_CHANGE,
         longopts: tuple[object, ...] | None | NoChange = NoChange.NO_CHANGE,
@@ -141,14 +143,24 @@ class PreParser(Copyable):
         return type(self)(self)
 
     @property
-    def depletion(self: Self, /) -> Depletion:
+    def depletion(self: Self, /) -> Depletion | tuple[SupportsBool, object]:
         return self._depletion
 
     @depletion.setter
-    def depletion(self: Self, value: Depletion | NoChange, /) -> None:
+    def depletion(
+        self: Self,
+        value: Depletion | tuple[SupportsBool, object] | NoChange,
+        /,
+    ) -> None:
+        x: SupportsBool
+        y: object
         if isinstance(value, NoChange):
             return
-        self._depletion = value
+        if isinstance(value, Depletion):
+            self._depletion = value
+            return
+        x, y = value
+        self._depletion = bool(x), str(y)
 
     @property
     def is_posix(self: Self, /) -> bool:
