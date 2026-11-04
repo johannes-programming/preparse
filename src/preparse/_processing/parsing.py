@@ -1,5 +1,6 @@
 __all__: list[str] = ["parse"]
 
+import operator
 from typing import Any
 
 from preparse._items.Bundle import Bundle
@@ -162,11 +163,12 @@ def parse_long(
     messages: list[Message],
     shortopts_allowed: bool,
 ) -> Long:
-    ans: Any
+    ans: Long
     key: Any
     matches: Any
-    options: Any
-    parts: Any
+    message: Message
+    options: list[tuple[str, str]]
+    parts: list[str]
     parts = arg.split("=", 1)
     ans = Long(fullkey=parts.pop(0))
     if parts:
@@ -182,9 +184,7 @@ def parse_long(
     matches = [(key, mode) for key, mode in options if key == ans.fullkey]
     if matches:
         # getopt prefers an exact bare name over its argument variants.
-        matches = [
-            min(matches, key=lambda match: ("", ":", "::").index(match[1]))
-        ]
+        matches = [min(matches, key=operator.itemgetter(1))]
     else:
         matches = [
             (key, mode) for key, mode in options if key.startswith(ans.fullkey)
@@ -195,12 +195,11 @@ def parse_long(
         return ans
     if len(matches) >= 2:
         ans.argmode = "::"
-        messages.append(
-            AOM(
-                option=arg,
-                possibilities=[key for key, _ in matches],
-            )
+        message = AOM(
+            option=arg,
+            possibilities=map(operator.itemgetter(0), matches),
         )
+        messages.append(message)
         return ans
     key, ans.argmode = matches[0]
     ans.fullkey = key
