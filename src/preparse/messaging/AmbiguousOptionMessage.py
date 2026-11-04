@@ -5,8 +5,6 @@ __all__: list[str] = ["AmbiguousOptionMessage"]
 from collections.abc import Iterable
 from typing import Any, Self
 
-import setdoc
-
 from preparse.abc.Message import Message
 from preparse.enum.NoChange import NoChange
 
@@ -18,7 +16,6 @@ class AmbiguousOptionMessage(Message):
         "_possibilities",
     )
 
-    @setdoc.basic
     def __init__(
         self: Self,
         other: AmbiguousOptionMessage | NoChange = NoChange.NO_CHANGE,

@@ -7,7 +7,6 @@ from collections.abc import Iterable
 from types import NotImplementedType
 from typing import Any, Self
 
-import setdoc
 from datarepr import datarepr
 
 from preparse._processing import process
@@ -48,7 +47,6 @@ class PreParser(Copyable):
         else:
             return NotImplemented
 
-    @setdoc.basic
     def __init__(
         self: Self,
         other: PreParser | NoChange = NoChange.NO_CHANGE,
@@ -95,7 +93,6 @@ class PreParser(Copyable):
         self.shortopts = shortopts
         self.special = special
 
-    @setdoc.basic
     def __repr__(self: Self, /) -> str:
         return datarepr(type(self).__name__, **self._dict())
 
@@ -136,10 +133,6 @@ class PreParser(Copyable):
         if isinstance(value, NoChange):
             return
         self._bundling = Tuning(value)
-
-    @setdoc.basic
-    def copy(self: Self, /) -> Self:
-        return type(self)(self)
 
     @property
     def reserve(self: Self, /) -> tuple[SupportsBool, object] | None:
@@ -194,7 +187,7 @@ class PreParser(Copyable):
 
     @longopts.setter
     def longopts(
-        self: Self, value: tuple[object, ...] | None | NoChange, /
+        self: Self, value: Iterable[object] | None | NoChange, /
     ) -> None:
         if isinstance(value, NoChange):
             return

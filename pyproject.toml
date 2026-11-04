@@ -19,9 +19,7 @@ classifiers = [
 ]
 dependencies = [
     "datarepr>=1.2,<2",
-    "frozendict>=2.4.7,<3",
     "setdoc>=1.3.11,<2",
-    "typing_extensions>=4.16,<5",
 ]
 description = "This project preparses args for further parsing later on."
 keywords = []

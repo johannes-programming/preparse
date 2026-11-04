@@ -41,6 +41,6 @@ class Option(Item):
     def right(self: Self, x: object, /) -> None:
         self._right = None if x is None else str(x)  # type: ignore[misc]
 
-    @classmethod
-    def sortkey(cls: type[Self]) -> int:
+    @staticmethod
+    def sortkey() -> int:
         return 0

@@ -3,8 +3,6 @@ __all__: list[str] = ["Long"]
 import operator
 from typing import Self, SupportsIndex
 
-import setdoc
-
 from preparse._items.Option import Option
 
 
@@ -18,7 +16,6 @@ class Long(Option):
         "_right",
     )
 
-    @setdoc.basic
     def __init__(
         self: Self,
         /,
