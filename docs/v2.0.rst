@@ -165,8 +165,6 @@ a single dash can introduce a long option.
 """""""""""""""""""""""""""""""""""""
 
 This ``property`` determines the approach to the special argument ``"--"``.
-``Tuning.MINIMIZE`` removes an unnecessary separator, ``Tuning.MAXIMIZE`` inserts
-one where appropriate, and ``Tuning.MAINTAIN`` avoids unforced changes.
 
 ``preparse.enum``
 ~~~~~~~~~~~~~~~~~
