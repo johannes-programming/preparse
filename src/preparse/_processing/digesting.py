@@ -60,7 +60,7 @@ def digest(
 
 def digest_joined(items: list[Item], *, joined: Tuning) -> list[Item]:
     """Normalize the separation of option values without changing their content."""
-    item: Any
+    item: Item
     if joined == Tuning.MAINTAIN:
         return items
     for item in items:
@@ -78,11 +78,12 @@ def digest_abbr(
 ) -> list[Item]:
     ans: list[Item]
     item: Item
+    keys: list[str]
     option: str
     options: list[str]
-    candidate: Any
-    length: Any
-    spec: Any
+    candidate: str
+    length: int
+    spec: str
     ans = list(items)
     if abbr == Tuning.MAINTAIN:
         return ans
@@ -105,9 +106,8 @@ def digest_abbr(
             if candidate == item.fullkey:
                 item.abbrlen = length
                 break
-            if [item.fullkey] == [
-                key for key in options if key.startswith(candidate)
-            ]:
+            keys = [key for key in options if key.startswith(candidate)]
+            if [item.fullkey] == keys:
                 item.abbrlen = length
                 break
     return ans
@@ -155,7 +155,7 @@ def digest_bundling_max(items: list[Item]) -> list[Item]:
     another option after a bundle that carries an argument.
     """
     adjacent_bundle: Any
-    candidate: Any
+    candidate: int
     index: Any
     isolated_short_option: Any
     item: Any
@@ -171,7 +171,7 @@ def digest_bundling_max(items: list[Item]) -> list[Item]:
         isolated_short_option = len(item.chars) == 1 and (
             index + 1 == len(items) or not isinstance(items[index + 1], Bundle)
         )
-        if not adjacent_bundle and isolated_short_option:
+        if isolated_short_option and not adjacent_bundle:
             # A lone short option may join an earlier bundle across one or
             # more positional arguments.  Long options and ``--`` are barriers.
             while candidate >= 0 and isinstance(ans[candidate], Positional):
@@ -347,7 +347,7 @@ def digest_special_min(
 
 
 def digest_long_fullkey(spec: str, *, short_enabled: bool) -> str:
-    ans: Any
+    ans: str
     if short_enabled:
         ans = "--" + spec
     else:
