@@ -10,8 +10,6 @@ from pathlib import Path
 from typing import Any, Self
 
 from preparse.core.PreParser import PreParser
-from preparse.enum.Depletion import Depletion
-from preparse.enum.Tuning import Tuning
 
 
 class Utils(enum.Enum):
@@ -61,13 +59,7 @@ class TestDataToml(unittest.TestCase):
         parser: PreParser
         superanswer: list[Any]
 
-        kwargs_ = dict(kwargs)
-        depletion = kwargs_.get("depletion", "DROP")
-        if isinstance(depletion, str):
-            kwargs_["depletion"] = Depletion(depletion)
-        else:
-            kwargs_["depletion"] = tuple(depletion)
-        parser = PreParser(**kwargs_)
+        parser = PreParser(**kwargs)
         answer, messages = parser.parse_args(query)
         erranswer = list(map(str, messages))
         superanswer = parser.parse_args(answer)[0]
