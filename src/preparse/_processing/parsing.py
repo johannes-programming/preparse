@@ -29,7 +29,7 @@ def parse(
     shortopts: str | None,
     longopts: tuple[str, ...] | None,
     is_posix: bool,
-    depletion: Depletion,
+    depletion: Depletion | tuple[bool, str],
 ) -> tuple[list[Item], list[Message]]:
     broken: bool
     item: Any
@@ -70,14 +70,18 @@ def parse(
         if not last.ishungry():
             preparsed.append(last)
             last = None
-    if last is not None:
-        # if the last item is starved
-        if isinstance(last, Long):
-            messages.append(PRAW(option=last.fullkey, is_long=True))
-        else:
-            messages.append(PRAW(option=last.chars[-1], is_long=False))
-        if depletion == Depletion.REINTERPRET:
-            preparsed.append(last)
+    if last is None:
+        return preparsed, messages
+    # if the last item is starved
+    if isinstance(last, Long):
+        messages.append(PRAW(option=last.fullkey, is_long=True))
+    else:
+        messages.append(PRAW(option=last.chars[-1], is_long=False))
+    if not isinstance(depletion, Depletion):
+        last.joined, last.right = depletion
+        preparsed.append(last)
+    if depletion == Depletion.REINTERPRET:
+        preparsed.append(last)
     return preparsed, messages
 
 

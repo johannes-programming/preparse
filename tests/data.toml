@@ -25808,6 +25808,28 @@ solution = [
 special = 2
 warnings = []
 
+[getopt-00000002]
+abbr = 2
+bundling = 2
+depletion = [
+    true,
+    "42",
+]
+is_posix = false
+longopts = [
+    "foo=",
+]
+query = [
+    "-foo",
+]
+reconcilesorders = false
+shortopts = nan
+solution = [
+    "-foo=42",
+]
+special = 2
+warnings = nan
+
 [getopt-00001001]
 abbr = 0
 bundling = 2
