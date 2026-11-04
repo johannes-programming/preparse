@@ -8,7 +8,6 @@ from preparse._items.Long import Long
 from preparse._items.Option import Option
 from preparse._items.Special import Special
 from preparse.abc.Message import Message
-from preparse.enum.Depletion import Depletion
 from preparse.messaging.AmbiguousOptionMessage import (
     AmbiguousOptionMessage as PAOW,
 )
@@ -29,7 +28,7 @@ def parse(
     shortopts: str | None,
     longopts: tuple[str, ...] | None,
     is_posix: bool,
-    depletion: Depletion | tuple[bool, str],
+    depletion: tuple[bool, str] | None,
 ) -> tuple[list[Item], list[Message]]:
     broken: bool
     item: Any
@@ -77,7 +76,7 @@ def parse(
         messages.append(PRAW(option=last.fullkey, is_long=True))
     else:
         messages.append(PRAW(option=last.chars[-1], is_long=False))
-    if not isinstance(depletion, Depletion):
+    if depletion is not None:
         last.joined, last.right = depletion
         preparsed.append(last)
     return preparsed, messages

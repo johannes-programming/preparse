@@ -13,7 +13,6 @@ from datarepr import datarepr
 from preparse._processing import process
 from preparse.abc.Copyable import Copyable
 from preparse.abc.Message import Message
-from preparse.enum.Depletion import Depletion
 from preparse.enum.Infer import Infer
 from preparse.enum.NoChange import NoChange
 from preparse.enum.Tuning import Tuning
@@ -34,7 +33,7 @@ class PreParser(Copyable):
         "_special",
     )
     _bundling: Tuning
-    _depletion: Depletion | tuple[bool, str]
+    _depletion: tuple[bool, str] | None
     _abbr: Tuning
     _is_posix: bool
     _joined: Tuning
@@ -58,7 +57,7 @@ class PreParser(Copyable):
         abbr: int | NoChange = NoChange.NO_CHANGE,
         bundling: int | NoChange = NoChange.NO_CHANGE,
         depletion: (
-            Depletion | tuple[SupportsBool, object] | NoChange
+            tuple[SupportsBool, object] | NoChange | None
         ) = NoChange.NO_CHANGE,
         is_posix: SupportsBool | Infer | NoChange = NoChange.NO_CHANGE,
         joined: int | NoChange = NoChange.NO_CHANGE,
@@ -69,7 +68,7 @@ class PreParser(Copyable):
     ) -> None:
         self._abbr = Tuning.MINIMIZE
         self._bundling = Tuning.MAINTAIN
-        self._depletion = Depletion.DROP
+        self._depletion = None
         self._is_posix = False
         self._joined = Tuning.MAINTAIN
         self._longopts = ()
@@ -143,21 +142,21 @@ class PreParser(Copyable):
         return type(self)(self)
 
     @property
-    def depletion(self: Self, /) -> Depletion | tuple[SupportsBool, object]:
+    def depletion(self: Self, /) -> tuple[SupportsBool, object] | None:
         return self._depletion
 
     @depletion.setter
     def depletion(
         self: Self,
-        value: Depletion | tuple[SupportsBool, object] | NoChange,
+        value: tuple[SupportsBool, object] | NoChange | None,
         /,
     ) -> None:
         x: SupportsBool
         y: object
         if isinstance(value, NoChange):
             return
-        if isinstance(value, Depletion):
-            self._depletion = value
+        if value is None:
+            self._depletion = None
             return
         x, y = value
         self._depletion = bool(x), str(y)

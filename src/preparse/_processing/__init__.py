@@ -8,7 +8,6 @@ from preparse._processing.digesting import digest
 from preparse._processing.parsing import parse
 from preparse._processing.pulling import pull
 from preparse.abc.Message import Message
-from preparse.enum.Depletion import Depletion
 from preparse.enum.Infer import Infer
 from preparse.enum.Tuning import Tuning
 
@@ -18,7 +17,7 @@ def process(
     *,
     abbr: Tuning,
     bundling: Tuning,
-    depletion: Depletion | tuple[bool, str],
+    depletion: tuple[bool, str] | None,
     is_posix: bool,
     joined: Tuning,
     longopts: tuple[str, ...] | None,
