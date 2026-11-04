@@ -14,7 +14,7 @@ class Option(Item):
     _argmode: Literal["", ":", "::"]
     _right: str | None
 
-    def ishungry(self: Self, /) -> bool:
+    def is_hungry(self: Self, /) -> bool:
         return (self.right is None) and (self.argmode == ":")
 
     @property
