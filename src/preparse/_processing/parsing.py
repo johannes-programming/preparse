@@ -6,32 +6,32 @@ from preparse._items.Bundle import Bundle
 from preparse._items.Item import Item
 from preparse._items.Long import Long
 from preparse._items.Option import Option
+from preparse._items.Positional import Positional
 from preparse._items.Special import Special
 from preparse.abc.Message import Message
 from preparse.messaging.AmbiguousOptionMessage import (
-    AmbiguousOptionMessage as PAOW,
+    AmbiguousOptionMessage as AOM,
 )
-from preparse.messaging.InvalidOptionMessage import (
-    InvalidOptionMessage as PIOW,
-)
+from preparse.messaging.InvalidOptionMessage import InvalidOptionMessage as IOM
 from preparse.messaging.RequiredArgumentMessage import (
-    RequiredArgumentMessage as PRAW,
+    RequiredArgumentMessage as RAM,
 )
 from preparse.messaging.UnallowedArgumentMessage import (
-    UnallowedArgumentMessage as PUAW,
+    UnallowedArgumentMessage as UAM,
 )
+from preparse.namedtuple.Reserve import Reserve
 
 
 def parse(
-    items: list[Any],
+    items: list[str],
     *,
     is_posix: bool,
     longopts: tuple[str, ...] | None,
-    reserve: tuple[bool, str] | None,
+    reserve: Reserve | None,
     shortopts: str | None,
 ) -> tuple[list[Item], list[Message]]:
     broken: bool
-    item: Any
+    item: str
     last: Any
     messages: list[Message]
     preparsed: list[Item]
@@ -42,26 +42,26 @@ def parse(
     for item in items:
         if broken:
             # if we are in the positional-only part
-            preparsed.append(item)
+            preparsed.append(Positional(item))
             continue
         if last is not None:
             # if the last item hungers for a value
-            last.right = item.value
+            last.right = item
             last.joined = False
             preparsed.append(last)
             last = None
             continue
-        if item.value == "--":
+        if item == "--":
             preparsed.append(Special())
             broken = True
             continue
-        if item.isobvious():
+        if Positional(item).isobvious():
             # if the item is positional
-            preparsed.append(item)
+            preparsed.append(Positional(item))
             broken = is_posix
             continue
         last = parse_option(
-            item.value,
+            item,
             shortopts=shortopts,
             longopts=longopts,
             messages=messages,
@@ -73,9 +73,9 @@ def parse(
         return preparsed, messages
     # if the last item is starved
     if isinstance(last, Long):
-        messages.append(PRAW(option=last.fullkey, is_long=True))
+        messages.append(RAM(option=last.fullkey, is_long=True))
     else:
-        messages.append(PRAW(option=last.chars[-1], is_long=False))
+        messages.append(RAM(option=last.chars[-1], is_long=False))
     if reserve is not None:
         last.joined, last.right = reserve
         preparsed.append(last)
@@ -99,7 +99,7 @@ def parse_bundling(
         ans.chars += y
         mode = short_argmode(y, shortopts)
         if mode is None:
-            messages.append(PIOW(option=y, is_long=False))
+            messages.append(IOM(option=y, is_long=False))
             continue
         ans.argmode = mode
         if mode == "":
@@ -191,12 +191,12 @@ def parse_long(
         ]
     if not matches:
         ans.argmode = "::"
-        messages.append(PIOW(option=arg, is_long=True))
+        messages.append(IOM(option=arg, is_long=True))
         return ans
     if len(matches) >= 2:
         ans.argmode = "::"
         messages.append(
-            PAOW(
+            AOM(
                 option=arg,
                 possibilities=[key for key, _ in matches],
             )
@@ -205,7 +205,7 @@ def parse_long(
     key, ans.argmode = matches[0]
     ans.fullkey = key
     if ans.argmode == "" and ans.right is not None:
-        messages.append(PUAW(option=ans.fullkey))
+        messages.append(UAM(option=ans.fullkey))
     return ans
 
 

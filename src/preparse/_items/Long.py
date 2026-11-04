@@ -1,7 +1,7 @@
 __all__: list[str] = ["Long"]
 
 import operator
-from typing import Self, SupportsIndex
+from typing import Literal, Self, SupportsIndex
 
 from preparse._items.Option import Option
 
@@ -21,7 +21,7 @@ class Long(Option):
         /,
         *,
         abbrlen: int | None = None,
-        argmode: str = "",
+        argmode: Literal["", ":", "::"] = "",
         fullkey: str,
         joined: bool = False,
         right: str | None = None,

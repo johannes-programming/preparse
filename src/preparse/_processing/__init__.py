@@ -12,6 +12,7 @@ from preparse.abc.Message import Message
 from preparse.enum.Infer import Infer
 from preparse.enum.Tuning import Tuning
 from preparse.namedtuple.PreParsed import PreParsed
+from preparse.namedtuple.Reserve import Reserve
 
 
 def process(
@@ -23,17 +24,16 @@ def process(
     joined: Tuning,
     longopts: tuple[str, ...] | None,
     reconciles_orders: bool,
-    reserve: tuple[bool, str] | None,
+    reserve: Reserve | None,
     shortopts: str | None,
     special: Tuning,
 ) -> tuple[list[str], list[Message]]:
     "This method parses args."
     items: list[Item]
-    messages: Any
-    preparsed: Any
-    items = pull(args)
+    messages: list[Message]
+    args_ = pull(args)
     items, messages = parse(
-        items,
+        args_,
         shortopts=shortopts,
         longopts=longopts,
         is_posix=is_posix,
@@ -51,8 +51,8 @@ def process(
         reconciles_orders=reconciles_orders,
         special=special,
     )
-    preparsed = deparse(items)
+    args_ = deparse(items)
     return PreParsed(
-        args=preparsed,
+        args=args_,
         messages=messages,
     )

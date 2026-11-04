@@ -1,7 +1,7 @@
 __all__: list[str] = ["Option"]
 
 import operator
-from typing import Self, SupportsIndex
+from typing import Literal, Self, SupportsIndex
 
 from preparse._items.Item import Item
 
@@ -11,7 +11,7 @@ class Option(Item):
     __slots__ = ()
 
     _joined: bool
-    _argmode: str
+    _argmode: Literal["", ":", "::"]
     _right: str | None
 
     def ishungry(self: Self, /) -> bool:
@@ -30,7 +30,7 @@ class Option(Item):
         return self._argmode
 
     @argmode.setter
-    def argmode(self: Self, value: str, /) -> None:
+    def argmode(self: Self, value: Literal["", ":", "::"], /) -> None:
         self._argmode = value
 
     @property
