@@ -1,6 +1,7 @@
 __all__: list[str] = ["process"]
 
 from collections.abc import Iterable
+from typing import Any
 
 from preparse._items.Item import Item
 from preparse._processing.deparsing import deparse
@@ -17,16 +18,18 @@ def process(
     *,
     abbr: Tuning,
     bundling: Tuning,
-    reserve: tuple[bool, str] | None,
     is_posix: bool,
     joined: Tuning,
     longopts: tuple[str, ...] | None,
     reconciles_orders: bool,
+    reserve: tuple[bool, str] | None,
     shortopts: str | None,
     special: Tuning,
 ) -> tuple[list[str], list[Message]]:
     "This method parses args."
     items: list[Item]
+    messages: Any
+    preparsed: Any
     items = pull(args)
     items, messages = parse(
         items,

@@ -21,9 +21,9 @@ class Long(Option):
         /,
         *,
         abbrlen: int | None = None,
+        argmode: str = "",
         fullkey: str,
         joined: bool = False,
-        argmode: str = "",
         right: str | None = None,
     ) -> None:
         self.abbrlen = abbrlen

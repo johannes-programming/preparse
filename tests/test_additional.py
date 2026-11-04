@@ -31,6 +31,7 @@ class WarningTests(unittest.TestCase):
     def test_long_and_short_invalid_options(self: Self, /) -> None:
         parser: PreParser
         warnings: list[Any]
+        preparsed: Any
         parser = PreParser(longopts=("good",))
         preparsed, warnings = parser.parse_args(["--unknown", "-z"])
         self.assertEqual(preparsed, ["--unknown", "-z"])
@@ -52,6 +53,7 @@ class WarningTests(unittest.TestCase):
     ) -> None:
         parser: PreParser
         warnings: list[Any]
+        preparsed: Any
         parser = PreParser()
         preparsed, warnings = parser.parse_args(["-xy"])
         self.assertEqual(preparsed, ["-xy"])
@@ -62,6 +64,7 @@ class WarningTests(unittest.TestCase):
         parser: PreParser
         warning: AmbiguousOptionMessage
         warnings: list[Any]
+        preparsed: Any
         parser = PreParser(longopts=("alpha", "alpine"))
         preparsed, warnings = parser.parse_args(["--al"])
         self.assertEqual(preparsed, ["--al"])
@@ -81,6 +84,7 @@ class WarningTests(unittest.TestCase):
         message: str
         parser: PreParser
         warnings: list[Any]
+        preparsed: Any
         args = ["--output"]
         message = "option '--output' requires an argument"
         parser = PreParser(shortopts="o:", longopts=("output=",))
@@ -96,6 +100,11 @@ class WarningTests(unittest.TestCase):
         self.assertEqual(str(warnings[0]), message)
 
     def test_missing_value_for_short_options(self: Self, /) -> None:
+        args: Any
+        message: Any
+        parser: Any
+        preparsed: Any
+        warnings: Any
         args = ["-o"]
         message = "option requires an argument -- 'o'"
         parser = PreParser(shortopts="o:", longopts=("output=",))
@@ -110,6 +119,7 @@ class WarningTests(unittest.TestCase):
     def test_value_on_flag_is_not_silently_accepted(self: Self, /) -> None:
         parser: PreParser
         warnings: list[Any]
+        preparsed: Any
         parser = PreParser(longopts=("flag",))
         preparsed, warnings = parser.parse_args(["--flag=on"])
         self.assertEqual(preparsed, ["--flag=on"])
@@ -125,6 +135,7 @@ class WarningTests(unittest.TestCase):
         args: list[str]
         parser: PreParser
         warnings: list[Any]
+        preparsed: Any
         parser = PreParser(longopts=("flag", "maybe=?", "output="))
         args = ["--flag", "--output", "file", "--maybe=auto"]
         preparsed, warnings = parser.parse_args(args)
@@ -135,6 +146,8 @@ class WarningTests(unittest.TestCase):
         self: Self, /
     ) -> None:
         parser: PreParser
+        messages: Any
+        preparsed: Any
         parser = PreParser()
         preparsed, messages = parser.parse_args(["--unknown"])
         self.assertEqual(len(messages), 1)
@@ -177,6 +190,8 @@ class WarningTests(unittest.TestCase):
 class ArgumentInputTests(unittest.TestCase):
     def test_empty_list_and_tuple(self: Self, /) -> None:
         parser: PreParser
+        messages: Any
+        preparsed: Any
         parser = PreParser()
         preparsed, messages = parser.parse_args([])
         self.assertEqual(preparsed, [])
@@ -188,6 +203,8 @@ class ArgumentInputTests(unittest.TestCase):
     def test_generator_is_consumed_once(self: Self, /) -> None:
         consumed: list[Any]
         parser: PreParser
+        messages: Any
+        preparsed: Any
         parser = PreParser(longopts=("flag",))
         consumed = []
 
@@ -203,6 +220,8 @@ class ArgumentInputTests(unittest.TestCase):
 
     def test_hollow(self: Self, /) -> None:
         parser: PreParser
+        messages: Any
+        preparsed: Any
         with patch.object(sys, "argv", ["/tmp/mytool.py", "--flag", "tail"]):
             parser = PreParser(longopts=("flag",))
             preparsed, messages = parser.parse_args(Infer.INFER)
@@ -216,6 +235,8 @@ class ArgumentInputTests(unittest.TestCase):
         self: Self, /
     ) -> None:
         parser: PreParser
+        messages: Any
+        preparsed: Any
         parser = PreParser(longopts=None, shortopts=None)
         preparsed, messages = parser.parse_args([7, None, True, "-z"])
         self.assertEqual(
@@ -249,6 +270,7 @@ class ConfigurationTests(unittest.TestCase):
         output: list[str]
         parser: PreParser
         reported: list[Any]
+        preparsed: Any
         with self.subTest(abbr=Tuning.MAXIMIZE):
             output = ["--v"]
             parser = PreParser(
@@ -272,6 +294,12 @@ class ConfigurationTests(unittest.TestCase):
             self.assertEqual(len(reported), 0)
 
     def test_abbr_tuning_minimizes_without_ambiguity_0(self: Self, /) -> None:
+        output: Any
+        parser: Any
+        query: Any
+        solution: Any
+        superoutput: Any
+        warnings: Any
         parser = PreParser(
             longopts=("verbose", "version", "x", "xml"),
             abbr=Tuning.MAXIMIZE,
@@ -286,6 +314,10 @@ class ConfigurationTests(unittest.TestCase):
         self.assertIsInstance(warnings[0], InvalidOptionMessage)
 
     def test_abbr_tuning_minimizes_without_ambiguity_1(self: Self, /) -> None:
+        output: Any
+        parser: Any
+        query: Any
+        solution: Any
         parser = PreParser(
             shortopts=None,
             longopts=("verbose", "version"),
@@ -297,6 +329,10 @@ class ConfigurationTests(unittest.TestCase):
         self.assertEqual(output, solution)
 
     def test_abbr_tuning_minimizes_without_ambiguity_2(self: Self, /) -> None:
+        output: Any
+        parser: Any
+        query: Any
+        warnings: Any
         parser = PreParser(longopts=("mode=", "mode"), abbr=Tuning.MINIMIZE)
         query = ["--mode"]
         output, warnings = parser.parse_args(query)
@@ -307,6 +343,7 @@ class ConfigurationTests(unittest.TestCase):
         args: list[str]
         parser: PreParser
         recorded: list[Message]
+        preparsed: Any
         parser = PreParser(
             longopts=None,
             shortopts=None,
@@ -324,6 +361,7 @@ class ConfigurationTests(unittest.TestCase):
     ) -> None:
         parser: PreParser
         recorded: list[Any]
+        preparsed: Any
         parser = PreParser(
             longopts=None,
             shortopts="-x:",
@@ -340,6 +378,8 @@ class ConfigurationTests(unittest.TestCase):
         parser: PreParser
         posix: bool
         reconcile: bool
+        messages: Any
+        preparsed: Any
         cases = (
             (False, True, ["--flag", "file", "tail"]),
             (True, False, ["file", "--flag", "tail"]),
@@ -365,6 +405,8 @@ class ConfigurationTests(unittest.TestCase):
         expected: Any
         parser: PreParser
         tuning: Tuning
+        messages: Any
+        preparsed: Any
         cases = (
             (Tuning.MINIMIZE, ["--flag", "--", "file"], ["--flag", "file"]),
             (Tuning.MINIMIZE, ["--flag", "--", "-x"], ["--flag", "--", "-x"]),
@@ -386,6 +428,8 @@ class ConfigurationTests(unittest.TestCase):
         expected: Any
         parser: PreParser
         tuning: Tuning
+        messages: Any
+        preparsed: Any
         for tuning, args, expected in (
             (Tuning.MINIMIZE, ["-ab", "--flag"], ["-a", "-b", "--flag"]),
             (Tuning.MAXIMIZE, ["-a", "-b", "--flag"], ["-ab", "--flag"]),
@@ -402,6 +446,7 @@ class ConfigurationTests(unittest.TestCase):
 
 class GetoptConfigurationTests(unittest.TestCase):
     def test_default_and_disabled_option_kinds(self: Self, /) -> None:
+        parser: Any
         parser = PreParser()
         self.assertEqual(parser.shortopts, "")
         self.assertEqual(parser.longopts, ())
@@ -413,6 +458,10 @@ class GetoptConfigurationTests(unittest.TestCase):
         )
 
     def test_short_and_long_argument_modes(self: Self, /) -> None:
+        original: Any
+        output: Any
+        parser: Any
+        warnings: Any
         parser = PreParser(
             shortopts="ab:c::",
             longopts=("flag", "output=", "maybe=?"),
@@ -435,6 +484,9 @@ class GetoptConfigurationTests(unittest.TestCase):
         self.assertIsInstance(warnings[0], RequiredArgumentMessage)
 
     def test_getopt_exact_long_option_takes_precedence(self: Self, /) -> None:
+        parser: Any
+        result: Any
+        warnings: Any
         parser = PreParser(longopts=("mode=", "mode"))
         result, warnings = parser.parse_args(["--mode"])
         self.assertEqual(result, ["--mode"])
@@ -446,6 +498,9 @@ class GetoptConfigurationTests(unittest.TestCase):
     def test_optional_arguments_do_not_consume_following_token(
         self: Self, /
     ) -> None:
+        parser: Any
+        result: Any
+        warnings: Any
         parser = PreParser(shortopts="x::", longopts=("maybe=?",))
         result, warnings = parser.parse_args(
             ["-x", "value", "--maybe", "tail"]
@@ -454,6 +509,10 @@ class GetoptConfigurationTests(unittest.TestCase):
         self.assertEqual(warnings, [])
 
     def test_joined_tuning(self: Self, /) -> None:
+        args: Any
+        expected: Any
+        parser: Any
+        tuning: Any
         for tuning, args, expected in (
             (
                 Tuning.MINIMIZE,
@@ -478,6 +537,7 @@ class GetoptConfigurationTests(unittest.TestCase):
                 self.assertEqual(parser.parse_args(args), (expected, []))
 
     def test_joined_optional_and_valueless(self: Self, /) -> None:
+        parser: Any
         parser = PreParser(
             shortopts="ab::",
             longopts=("flag", "maybe=?"),
@@ -493,6 +553,8 @@ class GetoptConfigurationTests(unittest.TestCase):
         )
 
     def test_joined_copy_and_override(self: Self, /) -> None:
+        derived: Any
+        original: Any
         original = PreParser(joined=Tuning.MAXIMIZE)
         self.assertIs(original.copy().joined, Tuning.MAXIMIZE)
         derived = PreParser(original, joined=Tuning.MINIMIZE)
@@ -501,6 +563,8 @@ class GetoptConfigurationTests(unittest.TestCase):
         self.assertIs(PreParser().joined, Tuning.MAINTAIN)
 
     def test_copy_carries_all_config_and_is_independent(self: Self, /) -> None:
+        copy: Any
+        original: Any
         original = PreParser(
             shortopts="a",
             longopts=None,
@@ -520,6 +584,8 @@ class GetoptConfigurationTests(unittest.TestCase):
     def test_construction_from_another_parser_allows_overrides(
         self: Self, /
     ) -> None:
+        derived: Any
+        original: Any
         original = PreParser(longopts=("one",), abbr=Tuning.MAXIMIZE)
         derived = PreParser(original, abbr=Tuning.MAINTAIN, longopts=("two=",))
         self.assertIs(derived.abbr, Tuning.MAINTAIN)
@@ -528,12 +594,15 @@ class GetoptConfigurationTests(unittest.TestCase):
         self.assertEqual(original.longopts, ("one",))
 
     def test_parser_repr(self: Self, /) -> None:
+        parser: Any
         parser = PreParser(longopts=("flag",))
         self.assertIn("PreParser", repr(parser))
 
     def test_tuning_enum_valid_values_and_missing_fallback(
         self: Self, /
     ) -> None:
+        parser: Any
+        unknown: Any
         self.assertEqual(Tuning.MINIMIZE, 0)
         self.assertEqual(Tuning.MAXIMIZE, 1)
         self.assertEqual(Tuning.MAINTAIN, 2)
