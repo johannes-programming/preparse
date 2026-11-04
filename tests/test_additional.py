@@ -311,7 +311,7 @@ class ConfigurationTests(unittest.TestCase):
             longopts=None,
             shortopts=None,
             is_posix=True,
-            reconcilesorders=True,
+            reconciles_orders=True,
         )
         args = ["--unrecognized", "-x", "--", "file"]
         preparsed, recorded = parser.parse_args(args)
@@ -346,11 +346,11 @@ class ConfigurationTests(unittest.TestCase):
             (True, True, ["--", "file", "--flag", "tail"]),
         )
         for posix, reconcile, expected in cases:
-            with self.subTest(posix=posix, reconcilesorders=reconcile):
+            with self.subTest(posix=posix, reconciles_orders=reconcile):
                 parser = PreParser(
                     longopts=("flag",),
                     is_posix=posix,
-                    reconcilesorders=reconcile,
+                    reconciles_orders=reconcile,
                 )
                 preparsed, messages = parser.parse_args(
                     ["file", "--flag", "tail"]
@@ -507,7 +507,7 @@ class GetoptConfigurationTests(unittest.TestCase):
             bundling=Tuning.MINIMIZE,
             abbr=Tuning.MAINTAIN,
             is_posix=True,
-            reconcilesorders=False,
+            reconciles_orders=False,
             special=Tuning.MAXIMIZE,
         )
         copy = original.copy()

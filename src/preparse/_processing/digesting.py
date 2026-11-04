@@ -21,7 +21,7 @@ def digest(
     joined: Tuning,
     longopts: tuple[str, ...] | None,
     is_posix: bool,
-    reconcilesorders: bool,
+    reconciles_orders: bool,
     special: Tuning,
 ) -> list[Item]:
     ans: list[Item]
@@ -38,7 +38,7 @@ def digest(
         long_enabled=long_enabled,
         short_enabled=short_enabled,
         is_posix=is_posix,
-        reconcilesorders=reconcilesorders,
+        reconciles_orders=reconciles_orders,
         special=special,
     )
     ans = digest_order(
@@ -46,7 +46,7 @@ def digest(
         long_enabled=long_enabled,
         short_enabled=short_enabled,
         is_posix=is_posix,
-        reconcilesorders=reconcilesorders,
+        reconciles_orders=reconciles_orders,
         special=special,
         longopts=longopts,
     )
@@ -185,7 +185,7 @@ def digest_order(
     long_enabled: bool,
     short_enabled: bool,
     is_posix: bool,
-    reconcilesorders: bool,
+    reconciles_orders: bool,
     special: Tuning,
     longopts: tuple[str, ...] | None,
 ) -> list[Item]:
@@ -195,7 +195,7 @@ def digest_order(
     ans = list(items)
     if not (long_enabled or short_enabled):
         return ans
-    if not reconcilesorders:
+    if not reconciles_orders:
         return ans
     if not is_posix:
         ans.sort(key=digest_order_key)
@@ -263,7 +263,7 @@ def digest_special_max(
 
     Unlike general order reconciliation, this grouping is part of the
     requested ``special=MAXIMIZE`` transformation, so it applies even when
-    ``reconcilesorders`` is false.
+    ``reconciles_orders`` is false.
     """
     ans: list[Item] = list(items)
     if not insert_leading:
@@ -299,7 +299,7 @@ def digest_special_min(
     long_enabled: bool,
     short_enabled: bool,
     is_posix: bool,
-    reconcilesorders: bool,
+    reconciles_orders: bool,
 ) -> list[Item]:
     ans: list[Any]
     index: int
@@ -308,7 +308,7 @@ def digest_special_min(
     ans = list(items)
     isdel = True
     isposix = is_posix and not (
-        reconcilesorders and (long_enabled or short_enabled)
+        reconciles_orders and (long_enabled or short_enabled)
     )
     index = len(items)
     while True:
