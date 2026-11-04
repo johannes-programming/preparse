@@ -80,8 +80,6 @@ def parse(
     if not isinstance(depletion, Depletion):
         last.joined, last.right = depletion
         preparsed.append(last)
-    if depletion == Depletion.REINTERPRET:
-        preparsed.append(last)
     return preparsed, messages
 
 

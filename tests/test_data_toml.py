@@ -62,7 +62,7 @@ class TestDataToml(unittest.TestCase):
         superanswer: list[Any]
 
         kwargs_ = dict(kwargs)
-        depletion = kwargs_.get("depletion", "REINTERPRET")
+        depletion = kwargs_.get("depletion", "DROP")
         if isinstance(depletion, str):
             kwargs_["depletion"] = Depletion(depletion)
         else:

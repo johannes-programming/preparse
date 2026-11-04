@@ -76,38 +76,36 @@ class WarningTests(unittest.TestCase):
             " '--alpha' '--alpine'",
         )
 
-    def test_missing_value_for_long_and_short_options(self: Self, /) -> None:
+    def test_missing_value_for_long_options(self: Self, /) -> None:
         args: list[str]
-        is_long: bool
         message: str
-        option: str
         parser: PreParser
         warnings: list[Any]
-        for args, option, is_long, message in (
-            (
-                ["--output"],
-                "--output",
-                True,
-                "option '--output' requires an argument",
-            ),
-            (
-                ["-o"],
-                "o",
-                False,
-                "option requires an argument -- 'o'",
-            ),
-        ):
-            with self.subTest(args=args):
-                parser = PreParser(shortopts="o:", longopts=("output=",))
-                preparsed, warnings = parser.parse_args(args)
-                self.assertEqual(preparsed, args)
-                self.assertEqual(len(warnings), 1)
-                self.assertIsInstance(warnings[0], RequiredArgumentMessage)
-                self.assertEqual(
-                    (warnings[0].option, warnings[0].is_long),
-                    (option, is_long),
-                )
-                self.assertEqual(str(warnings[0]), message)
+        args = ["--output"]
+        message = "option '--output' requires an argument"
+        parser = PreParser(shortopts="o:", longopts=("output=",))
+        preparsed, warnings = parser.parse_args(args)
+        self.assertEqual(preparsed, [])
+        self.assertEqual(len(warnings), 1)
+        self.assertIsInstance(warnings[0], RequiredArgumentMessage)
+        self.assertEqual(warnings[0].option, "--output")
+        self.assertEqual(
+            warnings[0].is_long,
+            True,
+        )
+        self.assertEqual(str(warnings[0]), message)
+
+    def test_missing_value_for_short_options(self: Self, /) -> None:
+        args = ["-o"]
+        message = "option requires an argument -- 'o'"
+        parser = PreParser(shortopts="o:", longopts=("output=",))
+        preparsed, warnings = parser.parse_args(args)
+        self.assertEqual(preparsed, [])
+        self.assertEqual(len(warnings), 1)
+        self.assertIsInstance(warnings[0], RequiredArgumentMessage)
+        self.assertEqual(warnings[0].option, "o")
+        self.assertEqual(warnings[0].is_long, False)
+        self.assertEqual(str(warnings[0]), message)
 
     def test_value_on_flag_is_not_silently_accepted(self: Self, /) -> None:
         parser: PreParser
@@ -432,7 +430,7 @@ class GetoptConfigurationTests(unittest.TestCase):
         self.assertEqual(output, original)
         self.assertEqual(warnings, [])
         output, warnings = parser.parse_args(["-b"])
-        self.assertEqual(output, ["-b"])
+        self.assertEqual(output, [])
         self.assertEqual(len(warnings), 1)
         self.assertIsInstance(warnings[0], RequiredArgumentMessage)
 
