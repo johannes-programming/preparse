@@ -33,11 +33,11 @@ class Long(Option):
         self.right = right
 
     @property
-    def abbr(self: Self) -> str:
+    def abbr(self: Self, /) -> str:
         return self.fullkey[: self.abbrlen]
 
     @property
-    def abbrlen(self: Self) -> int | None:
+    def abbrlen(self: Self, /) -> int | None:
         return self._abbrlen
 
     @abbrlen.setter
@@ -47,7 +47,7 @@ class Long(Option):
         else:
             self._abbrlen = operator.index(x)
 
-    def deparse(self: Self) -> list[str]:
+    def deparse(self: Self, /) -> list[str]:
         if self.right is None:
             return [self.abbr]
         elif self.joined:
@@ -56,9 +56,9 @@ class Long(Option):
             return [self.abbr, self.right]
 
     @property
-    def fullkey(self: Self) -> str:
+    def fullkey(self: Self, /) -> str:
         return self._fullkey
 
     @fullkey.setter
-    def fullkey(self: Self, x: object) -> None:
+    def fullkey(self: Self, x: object, /) -> None:
         self._fullkey = str(x)

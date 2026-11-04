@@ -276,19 +276,19 @@ def digest_special_max(
     requested ``special=MAXIMIZE`` transformation, so it applies even when
     ``reconciles_orders`` is false.
     """
-    found_special: Any
-    item: Any
     ans: list[Item]
+    found_special: bool
+    item: Item
+    options: list[Item]
+    positional: list[Item]
+    trailing: list[Item]
     ans = list(items)
     if not insert_leading:
         # With all option parsing disabled, ``--`` is not a delimiter.
         return ans
 
-    options: list[Item]
     options = []
-    positional: list[Item]
     positional = []
-    trailing: list[Item]
     trailing = []
     found_special = False
     for item in ans:

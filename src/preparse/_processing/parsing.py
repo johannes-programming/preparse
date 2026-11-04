@@ -1,12 +1,11 @@
 __all__: list[str] = ["parse"]
 
 import operator
-from typing import Any
+from typing import Any, Literal
 
 from preparse._items.Bundle import Bundle
 from preparse._items.Item import Item
 from preparse._items.Long import Long
-from preparse._items.Option import Option
 from preparse._items.Positional import Positional
 from preparse._items.Special import Special
 from preparse.abc.Message import Message
@@ -90,9 +89,9 @@ def parse_bundling(
     shortopts: str,
 ) -> Bundle:
     ans: Bundle
+    mode: Literal["", ":", "::"] | None
     x: int
     y: str
-    mode: Any
     ans = Bundle(chars="", argmode="")
     for x, y in enumerate(arg):
         if x == 0:
@@ -123,7 +122,9 @@ def parse_is_long(
     return shortopts is None
 
 
-def short_argmode(option: str, shortopts: str) -> str | None:
+def short_argmode(
+    option: str, shortopts: str
+) -> Literal["", ":", "::"] | None:
     """Read a short-option spec: no suffix, :, or :: (optional)."""
     char: Any
     index: Any
