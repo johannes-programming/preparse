@@ -1,6 +1,6 @@
 __all__: list[str] = ["Positional"]
 
-from typing import Any, Self
+from typing import Self
 
 from preparse._items.Item import Item
 
@@ -9,7 +9,7 @@ class Positional(Item):
 
     __slots__ = ("_value",)
 
-    def __init__(self: Self, /, value: Any) -> None:
+    def __init__(self: Self, /, value: str) -> None:
         self.value = value
 
     def deparse(self: Self, /) -> list[str]:

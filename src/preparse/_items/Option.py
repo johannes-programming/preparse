@@ -14,11 +14,11 @@ class Option(Item):
     _argmode: str
     _right: str | None
 
-    def ishungry(self: Self) -> bool:
+    def ishungry(self: Self, /) -> bool:
         return (self.right is None) and (self.argmode == ":")
 
     @property
-    def joined(self: Self) -> bool:
+    def joined(self: Self, /) -> bool:
         return self._joined
 
     @joined.setter
@@ -26,7 +26,7 @@ class Option(Item):
         self._joined = bool(operator.index(x))  # type: ignore[misc]
 
     @property
-    def argmode(self: Self) -> str:
+    def argmode(self: Self, /) -> str:
         return self._argmode
 
     @argmode.setter
@@ -34,7 +34,7 @@ class Option(Item):
         self._argmode = value
 
     @property
-    def right(self: Self) -> str | None:
+    def right(self: Self, /) -> str | None:
         return self._right
 
     @right.setter
