@@ -24,21 +24,21 @@ class PreParser(Copyable):
     __slots__ = (
         "_abbr",
         "_bundling",
-        "_depletion",
         "_is_posix",
         "_joined",
         "_longopts",
         "_reconcilesorders",
+        "_reverse",
         "_shortopts",
         "_special",
     )
     _bundling: Tuning
-    _depletion: tuple[bool, str] | None
     _abbr: Tuning
     _is_posix: bool
     _joined: Tuning
     _longopts: tuple[str, ...] | None
     _reconcilesorders: bool
+    _reverse: tuple[bool, str] | None
     _shortopts: str | None
     _special: Tuning
 
@@ -56,42 +56,42 @@ class PreParser(Copyable):
         *,
         abbr: int | NoChange = NoChange.NO_CHANGE,
         bundling: int | NoChange = NoChange.NO_CHANGE,
-        depletion: (
-            tuple[SupportsBool, object] | NoChange | None
-        ) = NoChange.NO_CHANGE,
         is_posix: SupportsBool | Infer | NoChange = NoChange.NO_CHANGE,
         joined: int | NoChange = NoChange.NO_CHANGE,
         longopts: tuple[object, ...] | None | NoChange = NoChange.NO_CHANGE,
         reconcilesorders: SupportsBool | NoChange = NoChange.NO_CHANGE,
+        reverse: (
+            tuple[SupportsBool, object] | NoChange | None
+        ) = NoChange.NO_CHANGE,
         shortopts: object = NoChange.NO_CHANGE,
         special: int | NoChange = NoChange.NO_CHANGE,
     ) -> None:
         self._abbr = Tuning.MINIMIZE
         self._bundling = Tuning.MAINTAIN
-        self._depletion = None
         self._is_posix = False
         self._joined = Tuning.MAINTAIN
         self._longopts = ()
         self._reconcilesorders = True
+        self._reverse = None
         self._shortopts = ""
         self._special = Tuning.MAINTAIN
         if not isinstance(other, NoChange):
             self.abbr = other.abbr
             self.bundling = other.bundling
-            self.depletion = other.depletion
             self.is_posix = other.is_posix
             self.joined = other.joined
             self.longopts = other.longopts
             self.reconcilesorders = other.reconcilesorders
+            self.reverse = other.reverse
             self.shortopts = other.shortopts
             self.special = other.special
         self.abbr = abbr
         self.bundling = bundling
-        self.depletion = depletion
         self.is_posix = is_posix
         self.joined = joined
         self.longopts = longopts
         self.reconcilesorders = reconcilesorders
+        self.reverse = reverse
         self.shortopts = shortopts
         self.special = special
 
@@ -104,12 +104,12 @@ class PreParser(Copyable):
         ans: dict[str, Any]
         ans = dict()
         ans["bundling"] = self.bundling
-        ans["depletion"] = self.depletion
         ans["abbr"] = self.abbr
         ans["joined"] = self.joined
         ans["is_posix"] = self.is_posix
         ans["longopts"] = self.longopts
         ans["reconcilesorders"] = self.reconcilesorders
+        ans["reverse"] = self.reverse
         ans["shortopts"] = self.shortopts
         ans["special"] = self.special
         return ans
@@ -142,11 +142,11 @@ class PreParser(Copyable):
         return type(self)(self)
 
     @property
-    def depletion(self: Self, /) -> tuple[SupportsBool, object] | None:
-        return self._depletion
+    def reverse(self: Self, /) -> tuple[SupportsBool, object] | None:
+        return self._reverse
 
-    @depletion.setter
-    def depletion(
+    @reverse.setter
+    def reverse(
         self: Self,
         value: tuple[SupportsBool, object] | NoChange | None,
         /,
@@ -156,10 +156,10 @@ class PreParser(Copyable):
         if isinstance(value, NoChange):
             return
         if value is None:
-            self._depletion = None
+            self._reverse = None
             return
         x, y = value
-        self._depletion = bool(x), str(y)
+        self._reverse = bool(x), str(y)
 
     @property
     def is_posix(self: Self, /) -> bool:

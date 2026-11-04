@@ -17,7 +17,7 @@ def process(
     *,
     abbr: Tuning,
     bundling: Tuning,
-    depletion: tuple[bool, str] | None,
+    reverse: tuple[bool, str] | None,
     is_posix: bool,
     joined: Tuning,
     longopts: tuple[str, ...] | None,
@@ -33,7 +33,7 @@ def process(
         shortopts=shortopts,
         longopts=longopts,
         is_posix=is_posix,
-        depletion=depletion,
+        reverse=reverse,
     )
     items = digest(
         items,
