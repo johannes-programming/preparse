@@ -2,8 +2,6 @@ __all__: list[str] = ["Bundle"]
 
 from typing import Any, Self
 
-import setdoc
-
 from preparse._items.Option import Option
 
 
@@ -16,9 +14,9 @@ class Bundle(Option):
         "_right",
     )
 
-    @setdoc.basic
     def __init__(
         self: Self,
+        /,
         *,
         chars: str,
         joined: bool = False,
