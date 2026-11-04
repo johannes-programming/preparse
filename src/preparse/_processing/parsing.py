@@ -33,7 +33,7 @@ def parse(
 ) -> tuple[list[Item], list[Message]]:
     broken: bool
     item: str
-    last: Any
+    last: Bundle | Long | None
     messages: list[Message]
     preparsed: list[Item]
     messages = list()
@@ -214,7 +214,7 @@ def parse_option(
     longopts: tuple[str, ...] | None,
     messages: list[Message],
     shortopts: str | None,
-) -> Option:
+) -> Bundle | Long:
     if parse_is_long(arg, shortopts=shortopts, longopts=longopts):
         return parse_long(
             arg,
