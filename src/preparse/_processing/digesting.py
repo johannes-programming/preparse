@@ -303,7 +303,7 @@ def digest_special_max(
 
     # A required-value option at the end of the option section can consume
     # the literal "--"; a separate delimiter is then still necessary.
-    if options and options[-1].ishungry():
+    if options and options[-1].is_hungry():
         options[-1].joined = False
         options[-1].right = "--"
 

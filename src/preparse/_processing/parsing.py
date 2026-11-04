@@ -67,7 +67,7 @@ def parse(
             longopts=longopts,
             messages=messages,
         )
-        if not last.ishungry():
+        if not last.is_hungry():
             preparsed.append(last)
             last = None
     if last is None:
