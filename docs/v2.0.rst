@@ -52,7 +52,7 @@ This method returns a copy of the current instance.
 ``class preparse.abc.Message.Message``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This abstract base ``class`` is the base for all message types.
+This abstract base ``class``, inheritting from ``Copyable``, is the base for all message types.
 The message itself is produced by ``str(message)``;
 instances support copying, equality comparison and a readable representation.
 
@@ -70,12 +70,11 @@ If ``Infer.INFER`` is passed, ``sys.argv[0]`` is used.
 ``preparse.core``
 ~~~~~~~~~~~~~~~~~
 
-The ``PreParser`` class in ``preparse.core`` can also be imported directly from ``preparse``.
+``class preparse.core.PreParser.PreParser(other: PreParser | NoChange = NoChange.NO_CHANGE, /, *, abbr: int | NoChange = NoChange.NO_CHANGE, bundling: int | NoChange = NoChange.NO_CHANGE, is_posix: SupportsBool | Infer | NoChange = NoChange.NO_CHANGE, joined: int | NoChange = NoChange.NO_CHANGE, longopts: tuple[object, ...] | None | NoChange = NoChange.NO_CHANGE, reconciles_orders: SupportsBool | NoChange = NoChange.NO_CHANGE, reserve: tuple[SupportsBool, object] | NoChange = NoChange.NO_CHANGE, shortopts: object = NoChange.NO_CHANGE, special: int | NoChange = NoChange.NO_CHANGE)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-``class preparse.core.PreParser.PreParser(other: PreParser | NoChange = NoChange.NO_CHANGE, /, *, bundling: int | NoChange = NoChange.NO_CHANGE, depletion: Depletion | NoChange = NoChange.NO_CHANGE, abbr: int | NoChange = NoChange.NO_CHANGE, is_posix: SupportsBool | Infer | NoChange = NoChange.NO_CHANGE, joined: int | NoChange = NoChange.NO_CHANGE, longopts: tuple[object, ...] | None | NoChange = NoChange.NO_CHANGE, reconciles_orders: SupportsBool | NoChange = NoChange.NO_CHANGE, shortopts: object = NoChange.NO_CHANGE, special: int | NoChange = NoChange.NO_CHANGE)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-This class is the centerpiece of ``preparse``.
+This ``class``, inheritting from ``Copyable``, is the centerpiece of ``preparse``.
+It can also be imported directly from ``preparse``.
 It describes the supported options and determines how the arguments are preparsed.
 The first positional argument allows copying the configuration from another instance of ``PreParser``.
 Passing ``NoChange.NO_CHANGE`` for a ``property`` leaves its current value unchanged.
@@ -93,11 +92,6 @@ This ``property`` determines the approach to bundling of short options.
 ``Tuning.MINIMIZE`` splits bundles, ``Tuning.MAXIMIZE`` combines compatible short options,
 and ``Tuning.MAINTAIN`` preserves the bundling unless another rule requires a change.
 
-``copy() -> Self``
-""""""""""""""""""
-
-This method returns a copy of the current instance.
-
 ``is_posix: bool = False``
 """"""""""""""""""""""""""
 
@@ -107,7 +101,7 @@ If ``Infer.INFER`` is assigned to the ``property``, the value is inferred from
 the presence of the ``POSIXLY_CORRECT`` environment variable.
 
 ``joined: Tuning = Tuning.MAINTAIN``
-"""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""
 
 Controls whether option arguments share a command-line string with their options.
 
@@ -122,10 +116,10 @@ Each entry is converted to ``str``.
 Assigning ``None`` disables long-option parsing.
 If both types of options are enabled, long options are recognized by the prefix ``"--"``.
 
-``parse_args(args: Iterable[object] | Infer = Infer.INFER) -> tuple[list[str], list[Message]]``
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+``parse_args(args: Iterable[object] | Infer = Infer.INFER) -> PreParsed``
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-This method is at the core of the class.
+This method is at the core of the ``class``.
 It returns a tuple containing the preparsed list of arguments and a list of messages.
 If ``Infer.INFER`` is passed as ``args`` then ``sys.argv[1:]`` is used.
 The arguments may be any iterable of objects; each argument is converted to ``str``.
@@ -140,8 +134,8 @@ This boolean ``property`` determines whether compatibility with both POSIX order
 and interleaving options with positional arguments should be enforced.
 The resulting arguments may be reordered or a special ``"--"`` inserted to preserve their interpretation.
 
-``reserve: tuple[bool, str] | None = None``
-"""""""""""""""""""""""""""""""""""""""""""
+``reserve: Reserve | None = None``
+""""""""""""""""""""""""""""""""""
 
 ``shortopts: str | None = ""``
 """"""""""""""""""""""""""""""
@@ -162,18 +156,6 @@ This ``property`` determines the approach to the special argument ``"--"``.
 
 ``preparse.enum``
 ~~~~~~~~~~~~~~~~~
-
-``class preparse.enum.Depletion.Depletion``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-This enum inherits from ``enum.Enum``.
-It determines what happens to an option missing a required argument.
-
-``DROP = "DROP"``
-"""""""""""""""""
-
-``REINTERPRET = "REINTERPRET"``
-"""""""""""""""""""""""""""""""
 
 ``class preparse.enum.Infer.Infer``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -279,6 +261,27 @@ This can only happen for long options.
 """"""""""""""""""""
 
 This ``property`` represents the offending option.
+
+``preparse.namedtuple``
+~~~~~~~~~~~~~~~~~~~~~~~
+
+``preparse.namedtuple.PreParsed.PreParsed(args: list[str], messages: list[Message])``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+``args: list[str]``
+"""""""""""""""""""
+
+``messages: list[Message]``
+"""""""""""""""""""""""""""
+
+``preparse.namedtuple.Reserve.Reserve(joined: bool, arg: str)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+``joined: bool``
+""""""""""""""""
+
+``arg: str``
+""""""""""""
 
 ``preparse.typing``
 ~~~~~~~~~~~~~~~~~~~
