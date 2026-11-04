@@ -70,8 +70,8 @@ If ``Infer.INFER`` is passed, ``sys.argv[0]`` is used.
 ``preparse.core``
 ~~~~~~~~~~~~~~~~~
 
-``class preparse.core.PreParser.PreParser(other: PreParser | NoChange = NoChange.NO_CHANGE, /, *, abbr: int | NoChange = NoChange.NO_CHANGE, bundling: int | NoChange = NoChange.NO_CHANGE, is_posix: SupportsBool | Infer | NoChange = NoChange.NO_CHANGE, joined: int | NoChange = NoChange.NO_CHANGE, longopts: tuple[object, ...] | None | NoChange = NoChange.NO_CHANGE, reconciles_orders: SupportsBool | NoChange = NoChange.NO_CHANGE, reserve: tuple[SupportsBool, object] | NoChange = NoChange.NO_CHANGE, shortopts: object = NoChange.NO_CHANGE, special: int | NoChange = NoChange.NO_CHANGE)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.core.PreParser.PreParser(other: PreParser | NoChange = NoChange.NO_CHANGE, /, *, abbr: int | NoChange = NoChange.NO_CHANGE, bundling: int | NoChange = NoChange.NO_CHANGE, is_posix: SupportsBool | Infer | NoChange = NoChange.NO_CHANGE, joined: int | NoChange = NoChange.NO_CHANGE, longopts: Iterable[object] | None | NoChange = NoChange.NO_CHANGE, reconciles_orders: SupportsBool | NoChange = NoChange.NO_CHANGE, reserve: tuple[SupportsBool, object] | None | NoChange = NoChange.NO_CHANGE, shortopts: object = NoChange.NO_CHANGE, special: int | NoChange = NoChange.NO_CHANGE)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This ``class``, inheritting from ``Copyable``, is the centerpiece of ``preparse``.
 It can also be imported directly from ``preparse``.
@@ -89,8 +89,6 @@ This ``property`` determines the approach to abbreviations.
 """"""""""""""""""""""""""""""""""""""
 
 This ``property`` determines the approach to bundling of short options.
-``Tuning.MINIMIZE`` splits bundles, ``Tuning.MAXIMIZE`` combines compatible short options,
-and ``Tuning.MAINTAIN`` preserves the bundling unless another rule requires a change.
 
 ``is_posix: bool = False``
 """"""""""""""""""""""""""
