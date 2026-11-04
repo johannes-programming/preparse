@@ -1,6 +1,6 @@
 __all__: list[str] = ["Bundle"]
 
-from typing import Any, Self
+from typing import Literal, Self
 
 from preparse._items.Option import Option
 
@@ -18,7 +18,7 @@ class Bundle(Option):
         self: Self,
         /,
         *,
-        argmode: str,
+        argmode: Literal["", ":", "::"],
         chars: str,
         joined: bool = False,
         right: str | None = None,
