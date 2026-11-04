@@ -15,6 +15,8 @@ from preparse.abc.Message import Message
 from preparse.enum.Infer import Infer
 from preparse.enum.NoChange import NoChange
 from preparse.enum.Tuning import Tuning
+from preparse.namedtuple.PreParsed import PreParsed
+from preparse.namedtuple.Reserve import Reserve
 from preparse.typing.SupportsBool import SupportsBool
 
 
@@ -37,7 +39,7 @@ class PreParser(Copyable):
     _joined: Tuning
     _longopts: tuple[str, ...] | None
     _reconciles_orders: bool
-    _reserve: tuple[bool, str] | None
+    _reserve: Reserve | None
     _shortopts: str | None
     _special: Tuning
 
@@ -135,26 +137,6 @@ class PreParser(Copyable):
         self._bundling = Tuning(value)
 
     @property
-    def reserve(self: Self, /) -> tuple[SupportsBool, object] | None:
-        return self._reserve
-
-    @reserve.setter
-    def reserve(
-        self: Self,
-        value: tuple[SupportsBool, object] | NoChange | None,
-        /,
-    ) -> None:
-        x: SupportsBool
-        y: object
-        if isinstance(value, NoChange):
-            return
-        if value is None:
-            self._reserve = None
-            return
-        x, y = value
-        self._reserve = bool(x), str(y)
-
-    @property
     def is_posix(self: Self, /) -> bool:
         return self._is_posix
 
@@ -199,7 +181,7 @@ class PreParser(Copyable):
     def parse_args(
         self: Self,
         args: Iterable[object] | Infer = Infer.INFER,
-    ) -> tuple[list[str], list[Message]]:
+    ) -> PreParsed:
         "This method parses args."
         return process(
             args,
@@ -217,6 +199,26 @@ class PreParser(Copyable):
         if isinstance(value, NoChange):
             return
         self._reconciles_orders = bool(value)
+
+    @property
+    def reserve(self: Self, /) -> Reserve | None:
+        return self._reserve
+
+    @reserve.setter
+    def reserve(
+        self: Self,
+        value: tuple[SupportsBool, object] | NoChange | None,
+        /,
+    ) -> None:
+        x: SupportsBool
+        y: object
+        if isinstance(value, NoChange):
+            return
+        if value is None:
+            self._reserve = None
+            return
+        x, y = value
+        self._reserve = Reserve(bool(x), str(y))
 
     @property
     def shortopts(self: Self, /) -> str | None:
