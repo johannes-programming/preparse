@@ -11,6 +11,7 @@ from preparse._processing.pulling import pull
 from preparse.abc.Message import Message
 from preparse.enum.Infer import Infer
 from preparse.enum.Tuning import Tuning
+from preparse.namedtuple.PreParsed import PreParsed
 
 
 def process(
@@ -51,4 +52,7 @@ def process(
         special=special,
     )
     preparsed = deparse(items)
-    return preparsed, messages
+    return PreParsed(
+        args=preparsed,
+        messages=messages,
+    )
