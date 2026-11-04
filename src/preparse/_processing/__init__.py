@@ -21,7 +21,7 @@ def process(
     is_posix: bool,
     joined: Tuning,
     longopts: tuple[str, ...] | None,
-    reconcilesorders: bool,
+    reconciles_orders: bool,
     shortopts: str | None,
     special: Tuning,
 ) -> tuple[list[str], list[Message]]:
@@ -44,7 +44,7 @@ def process(
         joined=joined,
         longopts=longopts,
         is_posix=is_posix,
-        reconcilesorders=reconcilesorders,
+        reconciles_orders=reconciles_orders,
         special=special,
     )
     preparsed = deparse(items)

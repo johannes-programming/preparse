@@ -72,8 +72,8 @@ If ``Infer.INFER`` is passed, ``sys.argv[0]`` is used.
 
 The ``PreParser`` class in ``preparse.core`` can also be imported directly from ``preparse``.
 
-``class preparse.core.PreParser.PreParser(other: PreParser | NoChange = NoChange.NO_CHANGE, /, *, bundling: int | NoChange = NoChange.NO_CHANGE, depletion: Depletion | NoChange = NoChange.NO_CHANGE, abbr: int | NoChange = NoChange.NO_CHANGE, is_posix: SupportsBool | Infer | NoChange = NoChange.NO_CHANGE, joined: int | NoChange = NoChange.NO_CHANGE, longopts: tuple[object, ...] | None | NoChange = NoChange.NO_CHANGE, reconcilesorders: SupportsBool | NoChange = NoChange.NO_CHANGE, shortopts: object = NoChange.NO_CHANGE, special: int | NoChange = NoChange.NO_CHANGE)``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``class preparse.core.PreParser.PreParser(other: PreParser | NoChange = NoChange.NO_CHANGE, /, *, bundling: int | NoChange = NoChange.NO_CHANGE, depletion: Depletion | NoChange = NoChange.NO_CHANGE, abbr: int | NoChange = NoChange.NO_CHANGE, is_posix: SupportsBool | Infer | NoChange = NoChange.NO_CHANGE, joined: int | NoChange = NoChange.NO_CHANGE, longopts: tuple[object, ...] | None | NoChange = NoChange.NO_CHANGE, reconciles_orders: SupportsBool | NoChange = NoChange.NO_CHANGE, shortopts: object = NoChange.NO_CHANGE, special: int | NoChange = NoChange.NO_CHANGE)``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This class is the centerpiece of ``preparse``.
 It describes the supported options and determines how the arguments are preparsed.
@@ -142,8 +142,8 @@ The messages describe ambiguities, invalid options, missing required arguments,
 and arguments supplied to options that do not allow them.
 No message is emitted as a Python warning or exception automatically.
 
-``reconcilesorders: bool = True``
-"""""""""""""""""""""""""""""""""
+``reconciles_orders: bool = True``
+""""""""""""""""""""""""""""""""""
 
 This boolean ``property`` determines whether compatibility with both POSIX ordering
 and interleaving options with positional arguments should be enforced.
