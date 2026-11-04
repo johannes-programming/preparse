@@ -98,15 +98,6 @@ and ``Tuning.MAINTAIN`` preserves the bundling unless another rule requires a ch
 
 This method returns a copy of the current instance.
 
-``depletion: Depletion = Depletion.REINTERPRET``
-""""""""""""""""""""""""""""""""""""""""""""""""
-
-This ``property`` determines how an option requiring an argument is handled
-if no argument is supplied.
-``Depletion.DROP`` discards the incomplete option from the preparsed arguments,
-while ``Depletion.REINTERPRET`` preserves it.
-Both settings produce a ``RequiredArgumentMessage``.
-
 ``is_posix: bool = False``
 """"""""""""""""""""""""""
 
@@ -148,6 +139,9 @@ No message is emitted as a Python warning or exception automatically.
 This boolean ``property`` determines whether compatibility with both POSIX ordering
 and interleaving options with positional arguments should be enforced.
 The resulting arguments may be reordered or a special ``"--"`` inserted to preserve their interpretation.
+
+``reserve: tuple[bool, str] | None = None``
+"""""""""""""""""""""""""""""""""""""""""""
 
 ``shortopts: str | None = ""``
 """"""""""""""""""""""""""""""

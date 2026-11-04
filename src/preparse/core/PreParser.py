@@ -28,7 +28,7 @@ class PreParser(Copyable):
         "_joined",
         "_longopts",
         "_reconciles_orders",
-        "_reverse",
+        "_reserve",
         "_shortopts",
         "_special",
     )
@@ -38,7 +38,7 @@ class PreParser(Copyable):
     _joined: Tuning
     _longopts: tuple[str, ...] | None
     _reconciles_orders: bool
-    _reverse: tuple[bool, str] | None
+    _reserve: tuple[bool, str] | None
     _shortopts: str | None
     _special: Tuning
 
@@ -60,7 +60,7 @@ class PreParser(Copyable):
         joined: int | NoChange = NoChange.NO_CHANGE,
         longopts: tuple[object, ...] | None | NoChange = NoChange.NO_CHANGE,
         reconciles_orders: SupportsBool | NoChange = NoChange.NO_CHANGE,
-        reverse: (
+        reserve: (
             tuple[SupportsBool, object] | NoChange | None
         ) = NoChange.NO_CHANGE,
         shortopts: object = NoChange.NO_CHANGE,
@@ -72,7 +72,7 @@ class PreParser(Copyable):
         self._joined = Tuning.MAINTAIN
         self._longopts = ()
         self._reconciles_orders = True
-        self._reverse = None
+        self._reserve = None
         self._shortopts = ""
         self._special = Tuning.MAINTAIN
         if not isinstance(other, NoChange):
@@ -82,7 +82,7 @@ class PreParser(Copyable):
             self.joined = other.joined
             self.longopts = other.longopts
             self.reconciles_orders = other.reconciles_orders
-            self.reverse = other.reverse
+            self.reserve = other.reserve
             self.shortopts = other.shortopts
             self.special = other.special
         self.abbr = abbr
@@ -91,7 +91,7 @@ class PreParser(Copyable):
         self.joined = joined
         self.longopts = longopts
         self.reconciles_orders = reconciles_orders
-        self.reverse = reverse
+        self.reserve = reserve
         self.shortopts = shortopts
         self.special = special
 
@@ -109,7 +109,7 @@ class PreParser(Copyable):
         ans["is_posix"] = self.is_posix
         ans["longopts"] = self.longopts
         ans["reconciles_orders"] = self.reconciles_orders
-        ans["reverse"] = self.reverse
+        ans["reserve"] = self.reserve
         ans["shortopts"] = self.shortopts
         ans["special"] = self.special
         return ans
@@ -142,11 +142,11 @@ class PreParser(Copyable):
         return type(self)(self)
 
     @property
-    def reverse(self: Self, /) -> tuple[SupportsBool, object] | None:
-        return self._reverse
+    def reserve(self: Self, /) -> tuple[SupportsBool, object] | None:
+        return self._reserve
 
-    @reverse.setter
-    def reverse(
+    @reserve.setter
+    def reserve(
         self: Self,
         value: tuple[SupportsBool, object] | NoChange | None,
         /,
@@ -156,10 +156,10 @@ class PreParser(Copyable):
         if isinstance(value, NoChange):
             return
         if value is None:
-            self._reverse = None
+            self._reserve = None
             return
         x, y = value
-        self._reverse = bool(x), str(y)
+        self._reserve = bool(x), str(y)
 
     @property
     def is_posix(self: Self, /) -> bool:
