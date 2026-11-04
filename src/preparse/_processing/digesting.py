@@ -14,14 +14,14 @@ from preparse.enum.Tuning import Tuning
 def digest(
     items: list[Item],
     *,
-    long_enabled: bool,
-    short_enabled: bool,
-    bundling: Tuning,
     abbr: Tuning,
-    joined: Tuning,
-    longopts: tuple[str, ...] | None,
+    bundling: Tuning,
     is_posix: bool,
+    joined: Tuning,
+    long_enabled: bool,
+    longopts: tuple[str, ...] | None,
     reconciles_orders: bool,
+    short_enabled: bool,
     special: Tuning,
 ) -> list[Item]:
     ans: list[Item]
@@ -60,6 +60,7 @@ def digest(
 
 def digest_joined(items: list[Item], *, joined: Tuning) -> list[Item]:
     """Normalize the separation of option values without changing their content."""
+    item: Any
     if joined == Tuning.MAINTAIN:
         return items
     for item in items:
@@ -79,6 +80,9 @@ def digest_abbr(
     item: Item
     option: str
     options: list[str]
+    candidate: Any
+    length: Any
+    spec: Any
     ans = list(items)
     if abbr == Tuning.MAINTAIN:
         return ans
@@ -112,8 +116,8 @@ def digest_abbr(
 def digest_bundling(
     items: list[Item],
     *,
-    long_enabled: bool,
     bundling: Tuning,
+    long_enabled: bool,
 ) -> list[Item]:
     if bundling == Tuning.MINIMIZE:
         return digest_bundling_min(items, long_enabled=long_enabled)
@@ -150,7 +154,13 @@ def digest_bundling_max(items: list[Item]) -> list[Item]:
     Never combine across a long option or a ``--`` delimiter, and never put
     another option after a bundle that carries an argument.
     """
-    ans: list[Item] = []
+    adjacent_bundle: Any
+    candidate: Any
+    index: Any
+    isolated_short_option: Any
+    item: Any
+    ans: list[Item]
+    ans = []
     for index, item in enumerate(items):
         if not isinstance(item, Bundle):
             ans.append(item)
@@ -182,16 +192,17 @@ def digest_bundling_max(items: list[Item]) -> list[Item]:
 def digest_order(
     items: list[Item],
     *,
-    long_enabled: bool,
-    short_enabled: bool,
     is_posix: bool,
-    reconciles_orders: bool,
-    special: Tuning,
+    long_enabled: bool,
     longopts: tuple[str, ...] | None,
+    reconciles_orders: bool,
+    short_enabled: bool,
+    special: Tuning,
 ) -> list[Item]:
     ans: list[Any]
     comp: bool
     index: int
+    insert_at: Any
     ans = list(items)
     if not (long_enabled or short_enabled):
         return ans
@@ -265,14 +276,20 @@ def digest_special_max(
     requested ``special=MAXIMIZE`` transformation, so it applies even when
     ``reconciles_orders`` is false.
     """
-    ans: list[Item] = list(items)
+    found_special: Any
+    item: Any
+    ans: list[Item]
+    ans = list(items)
     if not insert_leading:
         # With all option parsing disabled, ``--`` is not a delimiter.
         return ans
 
-    options: list[Item] = []
-    positional: list[Item] = []
-    trailing: list[Item] = []
+    options: list[Item]
+    options = []
+    positional: list[Item]
+    positional = []
+    trailing: list[Item]
+    trailing = []
     found_special = False
     for item in ans:
         if found_special:
@@ -296,10 +313,10 @@ def digest_special_max(
 def digest_special_min(
     items: list[Item],
     *,
-    long_enabled: bool,
-    short_enabled: bool,
     is_posix: bool,
+    long_enabled: bool,
     reconciles_orders: bool,
+    short_enabled: bool,
 ) -> list[Item]:
     ans: list[Any]
     index: int
@@ -330,6 +347,7 @@ def digest_special_min(
 
 
 def digest_long_fullkey(spec: str, *, short_enabled: bool) -> str:
+    ans: Any
     if short_enabled:
         ans = "--" + spec
     else:

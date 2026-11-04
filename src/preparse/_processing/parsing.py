@@ -25,10 +25,10 @@ from preparse.messaging.UnallowedArgumentMessage import (
 def parse(
     items: list[Any],
     *,
-    shortopts: str | None,
-    longopts: tuple[str, ...] | None,
     is_posix: bool,
+    longopts: tuple[str, ...] | None,
     reserve: tuple[bool, str] | None,
+    shortopts: str | None,
 ) -> tuple[list[Item], list[Message]]:
     broken: bool
     item: Any
@@ -91,6 +91,7 @@ def parse_bundling(
     ans: Bundle
     x: int
     y: str
+    mode: Any
     ans = Bundle(chars="", argmode="")
     for x, y in enumerate(arg):
         if x == 0:
@@ -113,8 +114,8 @@ def parse_bundling(
 def parse_is_long(
     arg: str,
     *,
-    shortopts: str | None,
     longopts: tuple[str, ...] | None,
+    shortopts: str | None,
 ) -> bool:
     if longopts is not None and shortopts is not None:
         return arg.startswith("--")
@@ -123,6 +124,8 @@ def parse_is_long(
 
 def short_argmode(option: str, shortopts: str) -> str | None:
     """Read a short-option spec: no suffix, :, or :: (optional)."""
+    char: Any
+    index: Any
     for index, char in enumerate(shortopts):
         if char == option and char != ":":
             if shortopts[index + 1 : index + 3] == "::":
@@ -144,6 +147,9 @@ def long_argmode(spec: str) -> tuple[str, str]:
 
 def long_fullkey(spec: str, *, shortopts_allowed: bool) -> tuple[str, str]:
     """Apply the long-option prefix literally, after removing its nargs suffix."""
+    key: Any
+    mode: Any
+    prefix: Any
     key, mode = long_argmode(spec)
     prefix = "--" if shortopts_allowed else "-"
     return prefix + key, mode
@@ -152,10 +158,15 @@ def long_fullkey(spec: str, *, shortopts_allowed: bool) -> tuple[str, str]:
 def parse_long(
     arg: str,
     *,
-    messages: list[Message],
     longopts: tuple[str, ...],
+    messages: list[Message],
     shortopts_allowed: bool,
 ) -> Long:
+    ans: Any
+    key: Any
+    matches: Any
+    options: Any
+    parts: Any
     parts = arg.split("=", 1)
     ans = Long(fullkey=parts.pop(0))
     if parts:
@@ -201,9 +212,9 @@ def parse_long(
 def parse_option(
     arg: str,
     *,
+    longopts: tuple[str, ...] | None,
     messages: list[Message],
     shortopts: str | None,
-    longopts: tuple[str, ...] | None,
 ) -> Option:
     if parse_is_long(arg, shortopts=shortopts, longopts=longopts):
         return parse_long(

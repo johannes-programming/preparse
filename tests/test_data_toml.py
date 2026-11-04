@@ -38,6 +38,9 @@ class TestDataToml(unittest.TestCase):
     def test_0(self: Self) -> None:
         kwargs: dict[str, Any]
         name: str
+        kwargs_: Any
+        x: Any
+        y: Any
         for name, kwargs in Utils.utils.data.items():
             kwargs_ = dict()
             for x, y in kwargs.items():
@@ -59,6 +62,7 @@ class TestDataToml(unittest.TestCase):
         parser: PreParser
         superanswer: list[Any]
 
+        messages: Any
         parser = PreParser(**kwargs)
         answer, messages = parser.parse_args(query)
         erranswer = list(map(str, messages))

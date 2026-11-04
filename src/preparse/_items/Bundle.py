@@ -18,9 +18,9 @@ class Bundle(Option):
         self: Self,
         /,
         *,
+        argmode: str,
         chars: str,
         joined: bool = False,
-        argmode: str,
         right: str | None = None,
     ) -> None:
         self.chars = chars
