@@ -28,7 +28,7 @@ def parse(
     shortopts: str | None,
     longopts: tuple[str, ...] | None,
     is_posix: bool,
-    depletion: tuple[bool, str] | None,
+    reverse: tuple[bool, str] | None,
 ) -> tuple[list[Item], list[Message]]:
     broken: bool
     item: Any
@@ -76,8 +76,8 @@ def parse(
         messages.append(PRAW(option=last.fullkey, is_long=True))
     else:
         messages.append(PRAW(option=last.chars[-1], is_long=False))
-    if depletion is not None:
-        last.joined, last.right = depletion
+    if reverse is not None:
+        last.joined, last.right = reverse
         preparsed.append(last)
     return preparsed, messages
 
