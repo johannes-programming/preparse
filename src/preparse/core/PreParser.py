@@ -58,7 +58,7 @@ class PreParser(Copyable):
         bundling: int | NoChange = NoChange.NO_CHANGE,
         is_posix: SupportsBool | Infer | NoChange = NoChange.NO_CHANGE,
         joined: int | NoChange = NoChange.NO_CHANGE,
-        longopts: tuple[object, ...] | None | NoChange = NoChange.NO_CHANGE,
+        longopts: Iterable[object] | None | NoChange = NoChange.NO_CHANGE,
         reconciles_orders: SupportsBool | NoChange = NoChange.NO_CHANGE,
         reserve: (
             tuple[SupportsBool, object] | NoChange | None
