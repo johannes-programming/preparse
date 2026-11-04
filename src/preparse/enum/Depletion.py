@@ -5,4 +5,3 @@ import enum
 
 class Depletion(enum.Enum):
     DROP = "DROP"
-    REINTERPRET = "REINTERPRET"
