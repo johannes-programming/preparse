@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any, Self
 
 from preparse.core.PreParser import PreParser
+from preparse.messaging.RequiredArgumentMessage import RequiredArgumentMessage
 
 
 class Utils(enum.Enum):
@@ -57,21 +58,26 @@ class TestDataToml(unittest.TestCase):
         warnings: Any,
         **kwargs: Any,
     ) -> None:
-        answer: list[Any]
         erranswer: list[Any]
         parser: PreParser
-        superanswer: list[Any]
 
-        messages: Any
         parser = PreParser(**kwargs)
-        answer, messages = parser.parse_args(query)
-        erranswer = list(map(str, messages))
-        superanswer = parser.parse_args(answer)[0]
-        self.assertEqual(answer, superanswer, msg="idempotence failed!")
-        self.assertEqual(answer, solution, msg="wrong answer!")
-        if warnings is None:
-            return
-        self.assertEqual(erranswer, warnings, msg="wrong messages!")
+        preParsed_a = parser.parse_args(query)
+        preParsed_b = parser.parse_args(preParsed_a.args)
+        if warnings is not None:
+            erranswer = list(map(str, preParsed_a.messages))
+            self.assertEqual(erranswer, warnings, msg="wrong messages!")
+        self.assertEqual(preParsed_a.args, solution, msg="wrong answer!")
+        if RequiredArgumentMessage in map(type, preParsed_a.messages):
+            self.assertIsInstance(
+                preParsed_a.messages.pop(0),
+                RequiredArgumentMessage,
+            )
+        self.assertEqual(
+            preParsed_a,
+            preParsed_b,
+            msg="idempotence failed!",
+        )
 
 
 if __name__ == "__main__":
